@@ -13,7 +13,7 @@ export default async function RootLayout({
 
   const leftMenuItems: MenuItem[] = [
     {
-      title: "Home",
+      title: "Hunt",
       href: "/",
       type: "link",
     },
@@ -33,7 +33,7 @@ export default async function RootLayout({
 
   if (session?.user?.role == "admin") {
     rightMenuItems.push({
-      title: "admin",
+      title: "Admin",
       href: "/admin",
       type: "link",
     });
@@ -48,7 +48,7 @@ export default async function RootLayout({
 
     rightMenuItems.push({
       title: session.user.displayName,
-      href: `/${session.user.username}`,
+      href: `/teams/${session.user.username}`,
       type: "link",
     });
 

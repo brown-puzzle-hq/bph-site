@@ -7,8 +7,10 @@ export default async function Home() {
 
   return (
     <div className="flex grow flex-col items-center justify-center">
-      <h1>Welcome!</h1>
-      {!session?.user?.id && (
+      <h1>Welcome</h1>
+      {session?.user?.id ? (
+        <h1>{session.user.displayName}</h1>
+      ) : (
         <p className="mt-2">
           New to the hunt?{" "}
           <Link href="/register" className="text-blue-600 hover:underline">
