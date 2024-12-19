@@ -23,6 +23,13 @@ import { db } from "~/server/db/index";
 import { errata, guesses, hints, teams } from "~/server/db/schema";
 import { count, eq, isNull, not, sql } from "drizzle-orm";
 
+type hintLeaderboardItem = {
+  displayName: string;
+  username: string;
+  hintsAnswered: number;
+  ranking?: number | null;
+};
+
 export async function Dashboard() {
   const teamCounts = (
     await db
@@ -84,7 +91,7 @@ export async function Dashboard() {
     (await db.select({ count: count() }).from(errata))[0]?.count ?? 0;
 
   // Get hint leaderboard rankings
-  const hintLeaderboard = (
+  const hintLeaderboard: hintLeaderboardItem[] = (
     await db.query.teams.findMany({
       columns: { displayName: true, username: true },
       where: eq(teams.role, "admin"),
@@ -100,50 +107,26 @@ export async function Dashboard() {
       displayName: a.displayName,
       username: a.username,
       hintsAnswered: a.claimedHints.length,
+      ranking: null,
     }))
     .sort((a, b) => b.hintsAnswered - a.hintsAnswered);
 
-  // Initialize medals for 1st, 2nd, and 3rd place
-  const medals: Record<string, number | null> = {
-    "1st": null,
-    "2nd": null,
-    "3rd": null,
-  };
-  var currMedal = "1st";
-  var numberOfMedals = 0;
-
+  // Initialize rankings
+  var currRanking = 1;
   for (let i = 0; i < hintLeaderboard.length; i++) {
-    const curr = hintLeaderboard[i]?.hintsAnswered;
-    const prev = hintLeaderboard[i - 1]?.hintsAnswered;
+    const curr = hintLeaderboard[i];
+    const prev = hintLeaderboard[i - 1];
+
     // Make sure that curr is not undefined or 0
-    if (curr) {
+    if (curr && curr.hintsAnswered > 0) {
       // Initialize the first medal
-      if (i === 0) {
-        medals[currMedal] = i;
-        numberOfMedals++;
-        continue;
-      }
-      // If curr is equal to prev, then also assign the medal to curr
-      if (prev && curr === prev) {
-        medals[currMedal] = i;
-        continue;
+      // If curr is equal to prev, then also assign the current ranking to curr
+      if (i === 0 || (prev && curr.hintsAnswered === prev.hintsAnswered)) {
+        curr.ranking = currRanking;
       } else {
-        // If the number of medals is less than 3, then assign a medal to curr
-        if (numberOfMedals < 3) {
-          if (currMedal === "1st") {
-            currMedal = "2nd";
-            medals[currMedal] = i;
-            numberOfMedals++;
-            continue;
-          } else if (currMedal === "2nd") {
-            currMedal = "3rd";
-            medals[currMedal] = i;
-            numberOfMedals++;
-            continue;
-          }
-        }
+        currRanking = i + 1;
+        curr.ranking = currRanking;
       }
-      break;
     }
   }
 
@@ -269,16 +252,16 @@ export async function Dashboard() {
                       {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
                       <AvatarFallback
                         className={
-                          (medals["1st"] ?? -1) >= index
+                          user.ranking === 1
                             ? "bg-yellow-500 text-white"
-                            : (medals["2nd"] ?? -1) >= index
+                            : user.ranking === 2
                               ? "bg-slate-400 text-white"
-                              : (medals["3rd"] ?? -1) >= index
+                              : user.ranking === 3
                                 ? "bg-yellow-800 text-white"
                                 : ""
                         }
                       >
-                        {index + 1}
+                        {user.ranking ?? ""}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1">
