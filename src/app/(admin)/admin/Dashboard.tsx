@@ -1,12 +1,4 @@
 import Link from "next/link";
-import {
-  Activity,
-  ArrowUpRight,
-  MessageCircleQuestion,
-  Puzzle,
-  UsersRound,
-} from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Activity,
+  ArrowUpRight,
+  MessageCircleQuestion,
+  Puzzle,
+  UsersRound,
+} from "lucide-react";
 
 import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
@@ -32,7 +31,9 @@ type hintLeaderboardItem = {
 };
 
 export async function Dashboard() {
-  const teamCounts = (
+  /* Data cards on the top of the dashboard (chunks 0-3) */
+  // Get the number of teams
+  const numTeams = (
     await db
       .select({ interactionMode: teams.interactionMode, count: count() })
       .from(teams)
@@ -43,11 +44,12 @@ export async function Dashboard() {
     return acc;
   }, {});
 
-  const inPersonTeams = teamCounts["in-person"] ?? 0;
-  const remoteTeams = teamCounts["remote"] ?? 0;
+  const inPersonTeams = numTeams["in-person"] ?? 0;
+  const remoteTeams = numTeams["remote"] ?? 0;
   const totalTeams = inPersonTeams + remoteTeams;
 
-  const guessCounts = (
+  // Get the number of guesses
+  const numGuesses = (
     await db
       .select({ isCorrect: guesses.isCorrect, count: count() })
       .from(guesses)
@@ -57,15 +59,15 @@ export async function Dashboard() {
     return acc;
   }, {});
 
-  const correctGuesses = guessCounts["true"] ?? 0;
-  const incorrectGuesses = guessCounts["false"] ?? 0;
+  const correctGuesses = numGuesses["true"] ?? 0;
+  const incorrectGuesses = numGuesses["false"] ?? 0;
   const totalGuesses = correctGuesses + incorrectGuesses;
-  const percentCorrectGuesses = (
-    (correctGuesses / totalGuesses) *
-    100
-  ).toPrecision(2);
+  const percentCorrectGuesses = ((correctGuesses / totalGuesses) * 100).toFixed(
+    2,
+  );
 
-  const hintCounts = (
+  // Get the number of hints
+  const numHints = (
     await db
       .select({
         answered:
@@ -81,17 +83,87 @@ export async function Dashboard() {
     return acc;
   }, {});
 
-  const answeredHints = hintCounts["true"] ?? 0;
-  const unansweredHints = hintCounts["false"] ?? 0;
+  const answeredHints = numHints["true"] ?? 0;
+  const unansweredHints = numHints["false"] ?? 0;
   const totalHints = answeredHints + unansweredHints;
-  const percentAnsweredHints = ((answeredHints / totalHints) * 100).toPrecision(
-    2,
-  );
+  const percentAnsweredHints = ((answeredHints / totalHints) * 100).toFixed(2);
 
-  const totalErrata =
+  // Get the number of errata
+  const numErrata =
     (await db.select({ count: count() }).from(errata))[0]?.count ?? 0;
 
-  // Get hint leaderboard rankings
+  /* Activity Table (chunk 4) */
+  const data: Record<number, ActivityItem> = {};
+  const startDate = HUNT_START_TIME;
+  const endDate = HUNT_END_TIME;
+
+  // Initialize the data object with all hours between startTime and endTime
+  const totalHours =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+  for (let hour = 0; hour <= totalHours; hour++) {
+    data[hour] = { hour, hints: 0, guesses: 0, solves: 0, registrations: 0 };
+  }
+
+  // Count hints by hour since startTime
+  (
+    await db
+      .select({
+        hour: hints.requestTime,
+        hints: sql<number>`COUNT(*)`.as("count"),
+      })
+      .from(hints)
+      .groupBy(hints.requestTime)
+  ).forEach(({ hour, hints }) => {
+    const key = Math.floor(
+      (hour!.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    );
+    if (data[key]) data[key].hints += Number(hints);
+  });
+
+  // Count guesses and solves by hour since startTime
+  (
+    await db
+      .select({
+        hour: guesses.submitTime,
+        guesses: sql<number>`COUNT(*)`.as("count"),
+        solves:
+          sql<number>`SUM(CASE WHEN ${guesses.isCorrect} THEN 1 ELSE 0 END)`.as(
+            "correct",
+          ),
+      })
+      .from(guesses)
+      .groupBy(guesses.submitTime)
+  ).forEach(({ hour, guesses, solves }) => {
+    const key = Math.floor(
+      (hour!.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    );
+    if (data[key]) {
+      data[key].guesses += Number(guesses);
+      data[key].solves += Number(solves);
+    }
+  });
+
+  // Count registrations
+  (
+    await db
+      .select({
+        hour: teams.createTime,
+        registrations: sql<number>`COUNT(*)`.as("count"),
+      })
+      .from(teams)
+      .groupBy(teams.createTime)
+  ).forEach(({ hour, registrations }) => {
+    const key = Math.floor(
+      (hour!.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    );
+    if (data[key]) {
+      data[key].registrations += Number(registrations);
+    }
+  });
+
+  const activityData = Object.values(data);
+
+  /* Hint Leaderboard Table (chunk 5) */
   const hintLeaderboard: hintLeaderboardItem[] = (
     await db.query.teams.findMany({
       columns: { displayName: true, username: true },
@@ -112,16 +184,14 @@ export async function Dashboard() {
     }))
     .sort((a, b) => b.hintsAnswered - a.hintsAnswered);
 
-  // Initialize rankings
+  // Initialize rankings with tie-rank displacement
+  // So if there are three people in 1st place, the next person will be in 4th place
   var currRanking = 1;
   for (let i = 0; i < hintLeaderboard.length; i++) {
     const curr = hintLeaderboard[i];
     const prev = hintLeaderboard[i - 1];
 
-    // Make sure that curr is not undefined or 0
     if (curr && curr.hintsAnswered > 0) {
-      // Initialize the first medal
-      // If curr is equal to prev, then also assign the current ranking to curr
       if (i === 0 || (prev && curr.hintsAnswered === prev.hintsAnswered)) {
         curr.ranking = currRanking;
       } else {
@@ -130,76 +200,6 @@ export async function Dashboard() {
       }
     }
   }
-
-  // Get activity data
-  // Initialize the data object with all hours between HUNT_START_TIME and HUNT_END_TIME
-  const data: Record<number, ActivityItem> = {};
-
-  const totalHours =
-    (HUNT_END_TIME.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60);
-
-  for (let hour = 0; hour <= totalHours; hour++) {
-    data[hour] = { hour, hints: 0, guesses: 0, solves: 0, registrations: 0 };
-  }
-
-  // Count hints by hour since HUNT_START_TIME
-  (
-    await db
-      .select({
-        hour: hints.requestTime,
-        hints: sql<number>`COUNT(*)`.as("count"),
-      })
-      .from(hints)
-      .groupBy(hints.requestTime)
-  ).forEach(({ hour, hints }) => {
-    const count = Math.floor(
-      (hour!.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60),
-    );
-    if (data[count]) data[count].hints += Number(hints);
-  });
-
-  // Count guesses and solves by hour since HUNT_START_TIME
-  (
-    await db
-      .select({
-        hour: guesses.submitTime,
-        guesses: sql<number>`COUNT(*)`.as("count"),
-        solves:
-          sql<number>`SUM(CASE WHEN ${guesses.isCorrect} THEN 1 ELSE 0 END)`.as(
-            "correct",
-          ),
-      })
-      .from(guesses)
-      .groupBy(guesses.submitTime)
-  ).forEach(({ hour, guesses, solves }) => {
-    const count = Math.floor(
-      (hour!.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60),
-    );
-    if (data[count]) {
-      data[count].guesses += Number(guesses);
-      data[count].solves += Number(solves);
-    }
-  });
-
-  // Count registrations
-  (
-    await db
-      .select({
-        hour: teams.createTime,
-        registrations: sql<number>`COUNT(*)`.as("count"),
-      })
-      .from(teams)
-      .groupBy(teams.createTime)
-  ).forEach(({ hour, registrations }) => {
-    const count = Math.floor(
-      (hour!.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60),
-    );
-    if (data[count]) {
-      data[count].registrations += Number(registrations);
-    }
-  });
-
-  const activityData = Object.values(data);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -247,7 +247,7 @@ export async function Dashboard() {
               <Activity className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalErrata}</div>
+              <div className="text-2xl font-bold">{numErrata}</div>
               <p className="text-muted-foreground text-xs">
                 2 in the last hour
               </p>
