@@ -22,6 +22,7 @@ import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
 import { errata, guesses, hints, teams } from "~/server/db/schema";
 import { count, eq, isNull, not, sql } from "drizzle-orm";
+import { HUNT_END_TIME, HUNT_START_TIME } from "~/hunt.config";
 
 type hintLeaderboardItem = {
   displayName: string;
@@ -131,38 +132,74 @@ export async function Dashboard() {
   }
 
   // Get activity data
+  // Initialize the data object with all hours between HUNT_START_TIME and HUNT_END_TIME
   const data: Record<number, ActivityItem> = {};
+
+  const totalHours =
+    (HUNT_END_TIME.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60);
+
+  for (let hour = 0; hour <= totalHours; hour++) {
+    data[hour] = { hour, hints: 0, guesses: 0, solves: 0, registrations: 0 };
+  }
+
+  // Count hints by hour since HUNT_START_TIME
   (
     await db
       .select({
-        hour: sql<number>`EXTRACT(EPOCH FROM DATE_TRUNC('hour', ${hints.requestTime}))::bigint`.as(
-          "hour",
-        ),
+        hour: hints.requestTime,
         hints: sql<number>`COUNT(*)`.as("count"),
       })
       .from(hints)
-      .groupBy(sql`hour`)
-      .orderBy(sql`hour`)
+      .groupBy(hints.requestTime)
   ).forEach(({ hour, hints }) => {
-    if (!data[hour]) data[hour] = { hour, hints: 0, guesses: 0 };
-    data[hour].hints += hints;
+    const count = Math.floor(
+      (hour!.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60),
+    );
+    if (data[count]) data[count].hints += Number(hints);
   });
+
+  // Count guesses and solves by hour since HUNT_START_TIME
   (
     await db
       .select({
-        hour: sql<number>`EXTRACT(EPOCH FROM DATE_TRUNC('hour', ${guesses.submitTime}))::bigint`.as(
-          "hour",
-        ),
+        hour: guesses.submitTime,
         guesses: sql<number>`COUNT(*)`.as("count"),
+        solves:
+          sql<number>`SUM(CASE WHEN ${guesses.isCorrect} THEN 1 ELSE 0 END)`.as(
+            "correct",
+          ),
       })
       .from(guesses)
-      .groupBy(sql`hour`)
-      .orderBy(sql`hour`)
-  ).forEach(({ hour, guesses }) => {
-    if (!data[hour]) data[hour] = { hour, hints: 0, guesses: 0 };
-    data[hour].guesses += guesses;
+      .groupBy(guesses.submitTime)
+  ).forEach(({ hour, guesses, solves }) => {
+    const count = Math.floor(
+      (hour!.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60),
+    );
+    if (data[count]) {
+      data[count].guesses += Number(guesses);
+      data[count].solves += Number(solves);
+    }
   });
-  const activityData = Object.values(data).sort((a, b) => b.hour - a.hour);
+
+  // Count registrations
+  (
+    await db
+      .select({
+        hour: teams.createTime,
+        registrations: sql<number>`COUNT(*)`.as("count"),
+      })
+      .from(teams)
+      .groupBy(teams.createTime)
+  ).forEach(({ hour, registrations }) => {
+    const count = Math.floor(
+      (hour!.getTime() - HUNT_START_TIME.getTime()) / (1000 * 60 * 60),
+    );
+    if (data[count]) {
+      data[count].registrations += Number(registrations);
+    }
+  });
+
+  const activityData = Object.values(data);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -223,7 +260,8 @@ export async function Dashboard() {
               <div className="grid gap-2">
                 <CardTitle>Activity</CardTitle>
                 <CardDescription>
-                  Hourly registrations, guesses, hints, and solves.
+                  Hourly counts of guesses, hints, solves, and registrations
+                  since the start of the hunt.
                 </CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
