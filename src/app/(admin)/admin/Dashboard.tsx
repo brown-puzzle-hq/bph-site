@@ -16,25 +16,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ActivityItem, ActivityChart } from "./ActivityChart";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
+import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
 import { errata, guesses, hints, teams } from "~/server/db/schema";
 import { count, eq, isNull, not, sql } from "drizzle-orm";
-
-export const description =
-  "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image.";
-
-// type DashboardProps = {
-//   hintRanking: HintRanking;
-//   activityData: ActivityItem[];
-// };
-
-// type HintRanking = {
-//   displayName: string;
-//   username: string;
-//   hintsAnswered: number;
-// }[];
 
 export async function Dashboard() {
   const teamCounts = (
@@ -97,7 +84,7 @@ export async function Dashboard() {
     (await db.select({ count: count() }).from(errata))[0]?.count ?? 0;
 
   // Get hint leaderboard rankings
-  const hintRanking = (
+  const hintLeaderboard = (
     await db.query.teams.findMany({
       columns: { displayName: true, username: true },
       where: eq(teams.role, "admin"),
@@ -115,6 +102,50 @@ export async function Dashboard() {
       hintsAnswered: a.claimedHints.length,
     }))
     .sort((a, b) => b.hintsAnswered - a.hintsAnswered);
+
+  // Initialize medals for 1st, 2nd, and 3rd place
+  const medals: Record<string, number | null> = {
+    "1st": null,
+    "2nd": null,
+    "3rd": null,
+  };
+  var currMedal = "1st";
+  var numberOfMedals = 0;
+
+  for (let i = 0; i < hintLeaderboard.length; i++) {
+    const curr = hintLeaderboard[i]?.hintsAnswered;
+    const prev = hintLeaderboard[i - 1]?.hintsAnswered;
+    // Make sure that curr is not undefined or 0
+    if (curr) {
+      // Initialize the first medal
+      if (i === 0) {
+        medals[currMedal] = i;
+        numberOfMedals++;
+        continue;
+      }
+      // If curr is equal to prev, then also assign the medal to curr
+      if (prev && curr === prev) {
+        medals[currMedal] = i;
+        continue;
+      } else {
+        // If the number of medals is less than 3, then assign a medal to curr
+        if (numberOfMedals < 3) {
+          if (currMedal === "1st") {
+            currMedal = "2nd";
+            medals[currMedal] = i;
+            numberOfMedals++;
+            continue;
+          } else if (currMedal === "2nd") {
+            currMedal = "3rd";
+            medals[currMedal] = i;
+            numberOfMedals++;
+            continue;
+          }
+        }
+      }
+      break;
+    }
+  }
 
   // Get activity data
   const data: Record<number, ActivityItem> = {};
@@ -227,26 +258,43 @@ export async function Dashboard() {
             <CardHeader>
               <CardTitle>Hint Leaderboard</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-8">
-              {hintRanking.map((user, index) => (
-                <div className="flex items-center gap-4" key={user.username}>
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
-                    <AvatarFallback>{index + 1}</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      {user.displayName}
-                    </p>
-                    <p className="text-muted-foreground text-sm text-gray-600">
-                      {user.username}
-                    </p>
+            <CardContent className="grid gap-2">
+              <ScrollArea className="lg:max-h-[75vh]">
+                {hintLeaderboard.map((user, index) => (
+                  <div
+                    className="mb-2 flex items-center gap-4"
+                    key={user.username}
+                  >
+                    <Avatar className="flex h-9 w-9">
+                      {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
+                      <AvatarFallback
+                        className={
+                          (medals["1st"] ?? -1) >= index
+                            ? "bg-yellow-500 text-white"
+                            : (medals["2nd"] ?? -1) >= index
+                              ? "bg-slate-400 text-white"
+                              : (medals["3rd"] ?? -1) >= index
+                                ? "bg-yellow-800 text-white"
+                                : ""
+                        }
+                      >
+                        {index + 1}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <p className="text-sm font-medium leading-none">
+                        {user.displayName}
+                      </p>
+                      <p className="text-muted-foreground text-sm text-gray-500">
+                        {user.username}
+                      </p>
+                    </div>
+                    <div className="ml-auto font-medium">
+                      {user.hintsAnswered}
+                    </div>
                   </div>
-                  <div className="ml-auto font-medium">
-                    {user.hintsAnswered}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </ScrollArea>
             </CardContent>
           </Card>
         </div>
