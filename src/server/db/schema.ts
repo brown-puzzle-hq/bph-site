@@ -179,6 +179,15 @@ export const feedback = createTable("feedback", {
   description: text("feedback").notNull(),
 });
 
+export const members = createTable("member", {
+  id: serial("id").primaryKey(),
+  teamId: varchar("teamId")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+  name: varchar("name"),
+  email: varchar("email"),
+});
+
 export const teamRelations = relations(teams, ({ many }) => ({
   unlocks: many(unlocks),
   guesses: many(guesses),
@@ -186,6 +195,7 @@ export const teamRelations = relations(teams, ({ many }) => ({
   requestedHints: many(hints, { relationName: "requested_hints" }),
   // Hints claimed by this admin "team"
   claimedHints: many(hints, { relationName: "claimed_hints" }),
+  members: many(members),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
@@ -238,5 +248,12 @@ export const erratumRelations = relations(errata, ({ one }) => ({
   puzzle: one(puzzles, {
     fields: [errata.puzzleId],
     references: [puzzles.id],
+  }),
+}));
+
+export const memberRelations = relations(members, ({ one }) => ({
+  team: one(teams, {
+    fields: [members.teamId],
+    references: [teams.id],
   }),
 }));
