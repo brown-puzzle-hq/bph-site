@@ -13,7 +13,7 @@ export default async function RootLayout({
 
   const leftMenuItems: MenuItem[] = [
     {
-      title: "Hunt",
+      title: "Home",
       href: "/",
       type: "link",
     },
@@ -31,14 +31,6 @@ export default async function RootLayout({
 
   const rightMenuItems: MenuItem[] = [];
 
-  if (session?.user?.role == "admin") {
-    rightMenuItems.push({
-      title: "Admin",
-      href: "/admin",
-      type: "link",
-    });
-  }
-
   if (session?.user?.id) {
     leftMenuItems.push({
       title: "Feedback",
@@ -48,9 +40,17 @@ export default async function RootLayout({
 
     rightMenuItems.push({
       title: session.user.displayName,
-      href: `/teams/${session.user.username}`,
+      href: `/${session.user.username}`,
       type: "link",
     });
+
+    if (session?.user?.role == "admin") {
+      rightMenuItems.push({
+        title: "Admin",
+        href: "/admin",
+        type: "link",
+      });
+    }
 
     rightMenuItems.push({
       title: "logout",
