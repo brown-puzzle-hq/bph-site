@@ -52,14 +52,6 @@ export default async function RootLayout({
       type: "link",
     });
 
-    if (session?.user?.role == "admin") {
-      rightMenuItems.push({
-        title: "Admin",
-        href: "/admin",
-        type: "link",
-      });
-    }
-
     rightMenuItems.push({
       title: "logout",
       element: <LogoutButton />,
