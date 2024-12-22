@@ -26,7 +26,7 @@ type Props = {
 
 export function HamburgerMenu({ leftMenuItems, rightMenuItems }: Props) {
   return (
-    <nav className="flex items-center justify-between bg-slate-50 p-4">
+    <nav className="flex items-center justify-between bg-slate-50 p-2 md:p-4">
       {/* Left menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
@@ -75,7 +75,7 @@ export function HamburgerMenu({ leftMenuItems, rightMenuItems }: Props) {
           </Button>
         </SheetTrigger>
         <SheetContent side="top" className="w-full">
-          <nav className="flex flex-col items-center space-y-4 pt-6">
+          <nav className="flex flex-col items-center space-y-2">
             {[...leftMenuItems, ...rightMenuItems].map((item) => (
               <React.Fragment key={item.title}>
                 <SheetTrigger asChild>
