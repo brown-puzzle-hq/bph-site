@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
@@ -26,7 +24,7 @@ type Props = {
 
 export function HamburgerMenu({ leftMenuItems, rightMenuItems }: Props) {
   return (
-    <nav className="flex items-center justify-between bg-slate-50 p-2 md:p-4">
+    <nav className="flex items-center justify-between bg-slate-50 p-[10px] md:p-4">
       {/* Left menu items */}
       <div className="hidden md:block">
         <NavigationMenu>

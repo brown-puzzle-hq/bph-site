@@ -40,7 +40,7 @@ export default async function RootLayout({
   const rightMenuItems: MenuItem[] = [
     {
       title: session!.user!.displayName,
-      href: `/${session!.user!.username}`,
+      href: `/teams/${session!.user!.username}`,
       type: "link",
     },
     {
