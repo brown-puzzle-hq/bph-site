@@ -51,7 +51,7 @@ export default async function RootLayout({
         type: "link",
       });
     }
-  
+
     rightMenuItems.push({
       title: "logout",
       element: <LogoutButton />,
@@ -73,7 +73,9 @@ export default async function RootLayout({
       />
       {/* Navbar spacer */}
       <div className="min-h-56px"></div>
-      <main className="flex pt-4 min-h-[calc(100vh-56px-32px)]">{children}</main>
+      <main className="flex min-h-[calc(100vh-56px-32px)] pt-4">
+        {children}
+      </main>
       <Toaster />
       <footer className="py-2 text-center text-xs">
         <p>
