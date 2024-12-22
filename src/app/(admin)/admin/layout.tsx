@@ -56,20 +56,15 @@ export default async function RootLayout({
   ];
 
   return (
-    <div className="h-full min-h-screen pb-5">
-      <div className="bg-slate-100">
-        {/* Navbar */}
-        <HamburgerMenu
-          leftMenuItems={leftMenuItems}
-          rightMenuItems={rightMenuItems}
-        />
-      </div>
+    <>
+      <HamburgerMenu
+        leftMenuItems={leftMenuItems}
+        rightMenuItems={rightMenuItems}
+      />
       {/* Navbar spacer */}
-      <div className="min-h-[80px]"></div>
-      <main className="mx-5 mb-5 flex min-h-[calc(100vh-80px-5rem)]">
-        {children}
-      </main>
+      <div className="min-h-56px"></div>
+      <main className="flex pt-4 min-h-[calc(100vh-56px)]">{children}</main>
       <Toaster />
-    </div>
+    </>
   );
 }

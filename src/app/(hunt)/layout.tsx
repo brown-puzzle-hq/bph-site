@@ -31,14 +31,6 @@ export default async function RootLayout({
 
   const rightMenuItems: MenuItem[] = [];
 
-  if (session?.user?.role == "admin") {
-    rightMenuItems.push({
-      title: "admin",
-      href: "/admin",
-      type: "link",
-    });
-  }
-
   if (session?.user?.id) {
     leftMenuItems.push({
       title: "Feedback",
@@ -52,6 +44,14 @@ export default async function RootLayout({
       type: "link",
     });
 
+    if (session?.user?.role == "admin") {
+      rightMenuItems.push({
+        title: "Admin",
+        href: "/admin",
+        type: "link",
+      });
+    }
+  
     rightMenuItems.push({
       title: "logout",
       element: <LogoutButton />,
@@ -71,8 +71,9 @@ export default async function RootLayout({
         leftMenuItems={leftMenuItems}
         rightMenuItems={rightMenuItems}
       />
-      <HuntTopNavSpacer />
-      <main className="flex min-h-[calc(100vh-80px-2em)]">{children}</main>
+      {/* Navbar spacer */}
+      <div className="min-h-56px"></div>
+      <main className="flex pt-4 min-h-[calc(100vh-56px-32px)]">{children}</main>
       <Toaster />
       <footer className="py-2 text-center text-xs">
         <p>
