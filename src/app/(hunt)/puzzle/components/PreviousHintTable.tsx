@@ -249,7 +249,7 @@ export default function PreviousHintTable({
               You have an outstanding hint on the puzzle{" "}
               <Link
                 href={`/puzzle/${unansweredHint.puzzleId}`}
-                className="hover:text-link text-blue-500 hover:underline"
+                className="text-blue-500 hover:text-link hover:underline"
               >
                 {unansweredHint.puzzleName}
               </Link>
@@ -379,11 +379,11 @@ export default function PreviousHintTable({
                     <div className="absolute left-0 top-3">
                       {hiddenFollowUps.includes(hint.id) ? (
                         <button onClick={() => handleHideFollowUps(hint.id)}>
-                          <ChevronRight className="text-link h-5 w-5" />
+                          <ChevronRight className="h-5 w-5 text-link" />
                         </button>
                       ) : (
                         <button onClick={() => handleHideFollowUps(hint.id)}>
-                          <ChevronDown className="text-link h-5 w-5" />
+                          <ChevronDown className="h-5 w-5 text-link" />
                         </button>
                       )}
                     </div>
@@ -422,9 +422,7 @@ export default function PreviousHintTable({
                   <TableCell className="break-words pl-10">
                     <div className="flex justify-between pb-2">
                       {followUp.canEdit ? (
-                        <p className="inline rounded-md bg-sky-100 p-1">
-                          Team
-                        </p>
+                        <p className="inline rounded-md bg-sky-100 p-1">Team</p>
                       ) : (
                         <p className="inline rounded-md bg-orange-100 p-1">
                           Staff

@@ -4,10 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { guesses, hints, puzzles } from "~/server/db/schema";
 import PreviousHintTable from "./PreviousHintTable";
 import HintForm from "./HintForm";
-import {
-  canViewPuzzle,
-  getNumberOfHintsRemaining,
-} from "~/hunt.config";
+import { canViewPuzzle, getNumberOfHintsRemaining } from "~/hunt.config";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -94,7 +91,7 @@ export default async function DefaultHintsPage({
     hintsRemaining,
     unansweredHint,
     isSolved,
-  }
+  };
 
   return (
     <div className="w-2/3 min-w-36 p-4">
