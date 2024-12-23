@@ -9,6 +9,7 @@ import {
   getNumberOfHintsRemaining,
 } from "~/hunt.config";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function DefaultHintsPage({
   puzzleId,
@@ -17,8 +18,19 @@ export default async function DefaultHintsPage({
 }) {
   // Get user
   const session = await auth()!;
-  if (!session?.user?.id || !(await canViewPuzzle(puzzleId))) {
+  if (!(await canViewPuzzle(puzzleId))) {
     redirect("/404");
+  }
+
+  if (!session?.user?.id) {
+    return (
+      <div>
+        <Link href="/login" className="text-perwinkle hover:underline">
+          Login
+        </Link>{" "}
+        to see previous hints.
+      </div>
+    );
   }
 
   // Check if puzzle is solved
