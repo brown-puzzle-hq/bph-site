@@ -94,14 +94,12 @@ export async function Dashboard() {
 
   /* Activity Table (chunk 4) */
   const data: Record<number, ActivityItem> = {};
-  const startDate = HUNT_START_TIME.getTime();
-  const endDate = Math.min(
-    Math.max(Date.now(), HUNT_START_TIME.getTime() + 60 * 60 * 1000),
-    HUNT_END_TIME.getTime(),
-  );
+  const startDate = HUNT_START_TIME;
+  const endDate = HUNT_END_TIME;
 
   // Initialize the data object with all hours between startTime and endTime
-  const totalHours = (endDate - startDate) / (1000 * 60 * 60);
+  const totalHours =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
   for (let hour = 0; hour <= totalHours; hour++) {
     data[hour] = { hour, hints: 0, guesses: 0, solves: 0, registrations: 0 };
   }
@@ -116,7 +114,9 @@ export async function Dashboard() {
       .from(hints)
       .groupBy(hints.requestTime)
   ).forEach(({ hour, hints }) => {
-    const key = Math.floor((hour!.getTime() - startDate) / (1000 * 60 * 60));
+    const key = Math.floor(
+      (hour!.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    );
     if (data[key]) data[key].hints += Number(hints);
   });
 
@@ -134,7 +134,9 @@ export async function Dashboard() {
       .from(guesses)
       .groupBy(guesses.submitTime)
   ).forEach(({ hour, guesses, solves }) => {
-    const key = Math.floor((hour!.getTime() - startDate) / (1000 * 60 * 60));
+    const key = Math.floor(
+      (hour!.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    );
     if (data[key]) {
       data[key].guesses += Number(guesses);
       data[key].solves += Number(solves);
@@ -151,7 +153,9 @@ export async function Dashboard() {
       .from(teams)
       .groupBy(teams.createTime)
   ).forEach(({ hour, registrations }) => {
-    const key = Math.floor((hour!.getTime() - startDate) / (1000 * 60 * 60));
+    const key = Math.floor(
+      (hour!.getTime() - startDate.getTime()) / (1000 * 60 * 60),
+    );
     if (data[key]) {
       data[key].registrations += Number(registrations);
     }
