@@ -245,7 +245,7 @@ export async function Dashboard() {
             <CardContent>
               <div className="text-2xl font-bold">{numErrata}</div>
               <p className="text-muted-foreground text-xs">
-                2 in the last hour
+                ??? in the last hour
               </p>
             </CardContent>
           </Card>
