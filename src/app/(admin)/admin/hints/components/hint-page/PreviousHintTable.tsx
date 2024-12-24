@@ -1,35 +1,24 @@
+// This component differs from the original in that it doesn't contain code for hint request
 "use client";
-import Link from "next/link";
 import { useState, startTransition, Fragment } from "react";
+import { useSession } from "next-auth/react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
-import {
-  editMessage,
-  insertFollowUp,
-  insertHintRequest,
-  MessageType,
-} from "../actions";
-import { HUNT_END_TIME } from "@/hunt.config";
+import { editMessage, insertFollowUp, MessageType } from "./actions";
 import { Button } from "~/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 type TableProps = {
   previousHints: PreviousHints;
-  hintState?: HintState;
-};
-
-type HintState = {
-  puzzleId: string;
-  hintsRemaining: number;
-  unansweredHint: { puzzleId: string; puzzleName: string } | null;
-  isSolved: boolean;
 };
 
 type PreviousHints = {
   id: number;
+  teamId: string;
+  claimer: string | null;
   request: string;
   response: string | null;
-  followUps: { id: number; message: string; canEdit: boolean }[];
+  followUps: { id: number; message: string; userId: string }[];
 }[];
 
 type Message = {
@@ -43,57 +32,12 @@ type FollowUp = {
   message: string;
 };
 
-export default function PreviousHintTable({
-  previousHints,
-  hintState,
-}: TableProps) {
+export default function PreviousHintTable({ previousHints }: TableProps) {
+  const { data: session } = useSession();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
-  const [request, setRequest] = useState<string>("");
   const [followUp, setFollowUp] = useState<FollowUp | null>(null);
   const [edit, setEdit] = useState<Message | null>(null);
   const [hiddenFollowUps, setHiddenFollowUps] = useState<number[]>([]);
-
-  const handleChangeRequest = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setRequest(e.target.value);
-  };
-
-  const handleSubmitRequest = async (puzzleId: string, message: string) => {
-    // Optimistic update
-    startTransition(() => {
-      setOptimisticHints((prev) => [
-        ...prev,
-        {
-          id: 0,
-          request,
-          response: null,
-          followUps: [],
-        },
-      ]);
-    });
-
-    setRequest("");
-    const id = await insertHintRequest(puzzleId, message);
-    if (!id) {
-      // Revert optimistic update
-      startTransition(() => {
-        setOptimisticHints((prev) => prev.filter((hint) => hint.id !== 0));
-      });
-    } else {
-      // Update followUpId
-      startTransition(() => {
-        setOptimisticHints((prev) =>
-          prev.map((hint) =>
-            hint.id === 0
-              ? {
-                  ...hint,
-                  id,
-                }
-              : hint,
-          ),
-        );
-      });
-    }
-  };
 
   const handleEdit = (id: number, value: string, type: MessageType) => {
     setEdit({ id, value, type });
@@ -124,6 +68,17 @@ export default function PreviousHintTable({
         await editMessage(id, value, type);
         break;
       case "response":
+        // Optimistic update
+        startTransition(() => {
+          setOptimisticHints((prev) =>
+            prev.map((hint) =>
+              hint.id === id ? { ...hint, response: value } : hint,
+            ),
+          );
+          setEdit(null);
+        });
+        // Insert into database
+        await editMessage(id, value, type);
         break;
       case "follow-up":
         // Optimistic update
@@ -171,7 +126,7 @@ export default function PreviousHintTable({
                 followUps: hint.followUps.concat({
                   id: 0,
                   message,
-                  canEdit: false,
+                  userId: session!.user!.id!,
                 }),
               }
             : hint,
@@ -207,7 +162,7 @@ export default function PreviousHintTable({
                   ...hint,
                   followUps: hint.followUps.map((followUp) =>
                     followUp.id === 0
-                      ? { ...followUp, id: followUpId, canEdit: true }
+                      ? { ...followUp, id: followUpId }
                       : followUp,
                   ),
                 }
@@ -226,102 +181,9 @@ export default function PreviousHintTable({
     setFollowUp({ hintId, message: e.target.value });
   };
 
-  const currDate = new Date();
-  let getFormDescription = null;
-
-  if (hintState) {
-    const { puzzleId, hintsRemaining, unansweredHint, isSolved } = hintState;
-    getFormDescription = () => {
-      if (currDate > HUNT_END_TIME) {
-        return <>Hunt has ended and live hinting has closed.</>;
-      }
-
-      if (isSolved) {
-        return <>You have already solved this puzzle.</>;
-      }
-
-      if (unansweredHint) {
-        if (puzzleId === unansweredHint.puzzleId) {
-          return <>You have an outstanding hint on this puzzle.</>;
-        } else {
-          return (
-            <>
-              You have an outstanding hint on the puzzle{" "}
-              <Link
-                href={`/puzzle/${unansweredHint.puzzleId}`}
-                className="text-blue-500 hover:text-link hover:underline"
-              >
-                {unansweredHint.puzzleName}
-              </Link>
-              .
-            </>
-          );
-        }
-      }
-
-      if (hintsRemaining === 0) {
-        return <>No hints remaining.</>;
-      } else if (hintsRemaining === 1) {
-        return <>1 hint remaining.</>;
-      } else {
-        return <>{hintsRemaining} hints remaining.</>;
-      }
-    };
-  }
-
   return (
     <Table className="table-fixed">
       <TableBody>
-        {/* Hint request row */}
-        {hintState && (
-          <TableRow className="hover:bg-inherit">
-            <TableCell className="w-4"></TableCell>
-            <TableCell className="break-words rounded-lg pb-4">
-              <p className="p-1 font-bold">Request</p>
-              <p className="p-1 text-gray-800">
-                Please provide as much detail as possible to help us understand
-                where you're at and where you're stuck! Specific clues, steps,
-                and hypotheses are all helpful. If you're working with any
-                spreadsheets, diagrams, or external resources, you can include
-                links.
-              </p>
-              <div className="p-1">
-                <AutosizeTextarea
-                  maxHeight={500}
-                  className="resize-none border-black bg-white"
-                  disabled={
-                    hintState.isSolved ||
-                    !!hintState.unansweredHint ||
-                    hintState.hintsRemaining < 1 ||
-                    currDate > HUNT_END_TIME
-                  }
-                  value={request}
-                  onChange={handleChangeRequest}
-                />
-                {getFormDescription && (
-                  <div className="p-1 text-sm text-gray-800">
-                    {getFormDescription()}
-                  </div>
-                )}
-              </div>
-              <div className="p-1">
-                <Button
-                  onClick={() =>
-                    handleSubmitRequest(hintState.puzzleId, request)
-                  }
-                  disabled={
-                    hintState.isSolved ||
-                    !!hintState.unansweredHint ||
-                    hintState.hintsRemaining < 1 ||
-                    currDate > HUNT_END_TIME
-                  }
-                >
-                  Submit
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        )}
         {optimisticHints.map((hint) => (
           <Fragment key={`${hint.id}`}>
             {/* Previous hint request row */}
@@ -329,36 +191,41 @@ export default function PreviousHintTable({
               <TableCell className="w-4 p-0"></TableCell>
               <TableCell className="break-words">
                 <div className="flex justify-between pb-2">
-                  <p className="inline rounded-md bg-sky-100 p-1">Team</p>
-                  <div className="p-1">
-                    {edit?.id !== hint.id ? (
-                      <button
-                        onClick={() =>
-                          handleEdit(hint.id, hint.request, "request")
-                        }
-                        className="text-link hover:underline"
-                      >
-                        Edit
-                      </button>
-                    ) : (
-                      <div className="space-x-2">
+                  <p className="inline rounded-md bg-sky-100 p-1">
+                    {hint.teamId}
+                  </p>
+                  {/* If the hint request was made by the current user, allow edits */}
+                  {hint.teamId === session?.user?.id && (
+                    <div className="p-1">
+                      {edit?.id === hint.id && edit.type === "request" ? (
+                        <div className="space-x-2">
+                          <button
+                            onClick={() =>
+                              handleSubmitEdit(edit.id, edit.value, "request")
+                            }
+                            className="text-link hover:underline"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEdit(null)}
+                            className="text-link hover:underline"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
                         <button
                           onClick={() =>
-                            handleSubmitEdit(edit.id, edit.value, "request")
+                            handleEdit(hint.id, hint.request, "request")
                           }
                           className="text-link hover:underline"
                         >
-                          Save
+                          Edit
                         </button>
-                        <button
-                          onClick={() => setEdit(null)}
-                          className="text-link hover:underline"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="p-1 pb-2">
                   {edit?.type === "request" && edit.id === hint.id ? (
@@ -397,8 +264,50 @@ export default function PreviousHintTable({
                 </TableCell>
                 <TableCell className="break-words">
                   <div className="flex justify-between pb-2">
-                    <p className="inline rounded-md bg-orange-100 p-1">Staff</p>
+                    <p className="inline rounded-md bg-orange-100 p-1">
+                      {hint.claimer}
+                    </p>
                     <div className="flex space-x-2 p-1">
+                      {/* If the hint response was made by the current user, allow edits */}
+                      {hint.teamId === session?.user?.id && (
+                        <div className="p-1">
+                          {edit?.id === hint.id && edit.type === "response" ? (
+                            <div className="space-x-2">
+                              <button
+                                onClick={() =>
+                                  handleSubmitEdit(
+                                    edit.id,
+                                    edit.value,
+                                    "response",
+                                  )
+                                }
+                                className="text-link hover:underline"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() => setEdit(null)}
+                                className="text-link hover:underline"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                handleEdit(
+                                  hint.id,
+                                  hint.response ?? "",
+                                  "response",
+                                )
+                              }
+                              className="text-link hover:underline"
+                            >
+                              Edit
+                            </button>
+                          )}
+                        </div>
+                      )}
                       {followUp?.hintId !== hint.id ? (
                         <button
                           onClick={() => handleFollowUp(hint.id)}
@@ -416,7 +325,18 @@ export default function PreviousHintTable({
                       )}
                     </div>
                   </div>
-                  <div className="p-1 pb-2">{hint.response}</div>
+                  <div className="p-1 pb-2">
+                    {edit?.type === "response" && edit.id === hint.id ? (
+                      <AutosizeTextarea
+                        maxHeight={500}
+                        className="resize-none"
+                        value={edit.value}
+                        onChange={handleChangeEdit}
+                      />
+                    ) : (
+                      hint.response
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -427,14 +347,11 @@ export default function PreviousHintTable({
                   <TableCell className="w-20"></TableCell>
                   <TableCell className="break-words pl-10">
                     <div className="flex justify-between pb-2">
-                      {followUp.canEdit ? (
-                        <p className="inline rounded-md bg-sky-100 p-1">Team</p>
-                      ) : (
-                        <p className="inline rounded-md bg-orange-100 p-1">
-                          Staff
-                        </p>
-                      )}
-                      {followUp.canEdit && (
+                      <p className="inline rounded-md bg-orange-100 p-1">
+                        {followUp.userId}
+                      </p>
+                      {/* If the previous hint follow-up was made by user, allow edits */}
+                      {followUp.userId === session?.user?.id && (
                         <div className="p-1">
                           {edit?.type === "follow-up" &&
                           edit.id === followUp.id ? (

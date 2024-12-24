@@ -18,7 +18,6 @@ import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   INITIAL_PUZZLES,
 } from "~/hunt.config";
-
 import axios from "axios";
 
 export type MessageType = "request" | "response" | "follow-up";
@@ -116,8 +115,8 @@ export async function insertFollowUp(hintId: number, message: string) {
   return result[0]?.id;
 }
 
-/** Inserts a hint into the hint table */
-export async function insertHint(puzzleId: string, hint: string) {
+/** Inserts a hint request into the hint table */
+export async function insertHintRequest(puzzleId: string, hint: string) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Not logged in");
