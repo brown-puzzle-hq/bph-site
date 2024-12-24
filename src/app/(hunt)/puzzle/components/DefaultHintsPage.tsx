@@ -4,12 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { guesses, hints, puzzles } from "~/server/db/schema";
 import PreviousHintTable from "./PreviousHintTable";
 import HintForm from "./HintForm";
-import {
-  canViewPuzzle,
-  getNumberOfHintsRemaining,
-  NUMBER_OF_GUESSES_PER_PUZZLE,
-} from "~/hunt.config";
-import DefaultHeader from "./DefaultHeader";
+import { canViewPuzzle, getNumberOfHintsRemaining } from "~/hunt.config";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -45,10 +40,29 @@ export default async function DefaultHintsPage({
   }));
 
   // Get previous hints
-  const previousHints = await db.query.hints.findMany({
-    where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true, status: true },
-  });
+  const previousHints = (
+    await db.query.hints.findMany({
+      where: and(
+        eq(hints.teamId, session.user.id),
+        eq(hints.puzzleId, puzzleId),
+      ),
+      columns: { id: true, request: true, response: true, status: true },
+      with: {
+        followUps: {
+          columns: { id: true, message: true, userId: true },
+        },
+      },
+    })
+  )
+    // Check whether the user can edit the hint
+    .map((hint) => ({
+      ...hint,
+      followUps: hint.followUps.map((followUp) => ({
+        id: followUp.id,
+        message: followUp.message,
+        canEdit: followUp.userId === session?.user?.id,
+      })),
+    }));
 
   const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
 
@@ -72,21 +86,16 @@ export default async function DefaultHintsPage({
     throw new Error("Puzzle does not exist in database");
   }
 
-  return (
-    <>
-      <div className="mb-4 w-2/3 min-w-36">
-        <HintForm
-          puzzleId={puzzleId}
-          hintsRemaining={hintsRemaining}
-          unansweredHint={unansweredHint}
-          isSolved={isSolved}
-        />
-      </div>
+  const hintState = {
+    puzzleId,
+    hintsRemaining,
+    unansweredHint,
+    isSolved,
+  };
 
-      <h2>Previous Hints</h2>
-      <div className="w-2/3 min-w-36">
-        <PreviousHintTable previousHints={previousHints} />
-      </div>
-    </>
+  return (
+    <div className="w-2/3 min-w-36 p-4">
+      <PreviousHintTable previousHints={previousHints} hintState={hintState} />
+    </div>
   );
 }
