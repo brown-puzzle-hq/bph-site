@@ -89,8 +89,19 @@ export async function Dashboard() {
   const percentAnsweredHints = ((answeredHints / totalHints) * 100).toFixed(2);
 
   // Get the number of errata
-  const numErrata =
-    (await db.select({ count: count() }).from(errata))[0]?.count ?? 0;
+  const numErrata = await db
+    .select({
+      puzzleId: errata.puzzleId,
+      count: count(),
+    })
+    .from(errata)
+    .groupBy(errata.puzzleId);
+
+  const totalErrata = numErrata.reduce((acc, item) => {
+    return acc + item.count;
+  }, 0);
+
+  const numIncorrectPuzzles = numErrata.length;
 
   /* Activity Table (chunk 4) */
   const data: Record<number, ActivityItem> = {};
@@ -247,9 +258,9 @@ export async function Dashboard() {
               <Activity className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{numErrata}</div>
+              <div className="text-2xl font-bold">{totalErrata}</div>
               <p className="text-muted-foreground text-xs">
-                ??? in the last hour
+                Across {numIncorrectPuzzles} puzzles
               </p>
             </CardContent>
           </Card>
