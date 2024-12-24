@@ -89,6 +89,7 @@ export async function Dashboard() {
   const percentAnsweredHints = ((answeredHints / totalHints) * 100).toFixed(2);
 
   // Get the number of errata
+<<<<<<< HEAD
   const numErrata = await db
     .select({
       puzzleId: errata.puzzleId,
@@ -261,6 +262,166 @@ export async function Dashboard() {
               <div className="text-2xl font-bold">{totalErrata}</div>
               <p className="text-muted-foreground text-xs">
                 Across {numIncorrectPuzzles} puzzles
+||||||| f43d6a6
+=======
+  const numErrata =
+    (await db.select({ count: count() }).from(errata))[0]?.count ?? 0;
+
+  /* Activity Table (chunk 4) */
+  const data: Record<number, ActivityItem> = {};
+  const startDate = HUNT_START_TIME.getTime();
+  const endDate = Math.min(
+    Math.max(Date.now(), HUNT_START_TIME.getTime() + 60 * 60 * 1000),
+    HUNT_END_TIME.getTime(),
+  );
+
+  // Initialize the data object with all hours between startTime and endTime
+  const totalHours = (endDate - startDate) / (1000 * 60 * 60);
+  for (let hour = 0; hour <= totalHours; hour++) {
+    data[hour] = { hour, hints: 0, guesses: 0, solves: 0, registrations: 0 };
+  }
+
+  // Count hints by hour since startTime
+  (
+    await db
+      .select({
+        hour: hints.requestTime,
+        hints: sql<number>`COUNT(*)`.as("count"),
+      })
+      .from(hints)
+      .groupBy(hints.requestTime)
+  ).forEach(({ hour, hints }) => {
+    const key = Math.floor((hour!.getTime() - startDate) / (1000 * 60 * 60));
+    if (data[key]) data[key].hints += Number(hints);
+  });
+
+  // Count guesses and solves by hour since startTime
+  (
+    await db
+      .select({
+        hour: guesses.submitTime,
+        guesses: sql<number>`COUNT(*)`.as("count"),
+        solves:
+          sql<number>`SUM(CASE WHEN ${guesses.isCorrect} THEN 1 ELSE 0 END)`.as(
+            "correct",
+          ),
+      })
+      .from(guesses)
+      .groupBy(guesses.submitTime)
+  ).forEach(({ hour, guesses, solves }) => {
+    const key = Math.floor((hour!.getTime() - startDate) / (1000 * 60 * 60));
+    if (data[key]) {
+      data[key].guesses += Number(guesses);
+      data[key].solves += Number(solves);
+    }
+  });
+
+  // Count registrations
+  (
+    await db
+      .select({
+        hour: teams.createTime,
+        registrations: sql<number>`COUNT(*)`.as("count"),
+      })
+      .from(teams)
+      .groupBy(teams.createTime)
+  ).forEach(({ hour, registrations }) => {
+    const key = Math.floor((hour!.getTime() - startDate) / (1000 * 60 * 60));
+    if (data[key]) {
+      data[key].registrations += Number(registrations);
+    }
+  });
+
+  const activityData = Object.values(data);
+
+  /* Hint Leaderboard Table (chunk 5) */
+  const hintLeaderboard: hintLeaderboardItem[] = (
+    await db.query.teams.findMany({
+      columns: { displayName: true, username: true },
+      where: eq(teams.role, "admin"),
+      with: {
+        claimedHints: {
+          where: not(isNull(hints.response)),
+          columns: { id: true },
+        },
+      },
+    })
+  )
+    .map((a) => ({
+      displayName: a.displayName,
+      username: a.username,
+      hintsAnswered: a.claimedHints.length,
+      ranking: null,
+    }))
+    .sort((a, b) => b.hintsAnswered - a.hintsAnswered);
+
+  // Initialize rankings with tie-rank displacement
+  // So if there are three people in 1st place, the next person will be in 4th place
+  var currRanking = 1;
+  for (let i = 0; i < hintLeaderboard.length; i++) {
+    const curr = hintLeaderboard[i];
+    const prev = hintLeaderboard[i - 1];
+
+    if (curr && curr.hintsAnswered > 0) {
+      if (i === 0 || (prev && curr.hintsAnswered === prev.hintsAnswered)) {
+        curr.ranking = currRanking;
+      } else {
+        currRanking = i + 1;
+        curr.ranking = currRanking;
+      }
+    }
+  }
+
+  return (
+    <div className="flex min-h-screen w-full flex-col">
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+          <Card x-chunk="dashboard-01-chunk-0">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Teams</CardTitle>
+              <UsersRound className="text-muted-foreground h-4 w-4" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalTeams}</div>
+              <p className="text-muted-foreground text-xs">
+                {remoteTeams} remote & {inPersonTeams} in-person
+              </p>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Guesses</CardTitle>
+              <Puzzle className="text-muted-foreground h-4 w-4" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalGuesses}</div>
+              <p className="text-muted-foreground text-xs">
+                {percentCorrectGuesses}% correct
+              </p>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Hints</CardTitle>
+              <MessageCircleQuestion className="text-muted-foreground h-4 w-4" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalHints}</div>
+              <p className="text-muted-foreground text-xs">
+                {percentAnsweredHints}% answered
+              </p>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-3">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Errata</CardTitle>
+              <Activity className="text-muted-foreground h-4 w-4" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{numErrata}</div>
+              <p className="text-muted-foreground text-xs">
+                ??? in the last hour
+>>>>>>> 773b05044a192e0e48fd26e83d7bc43868f1028f
               </p>
             </CardContent>
           </Card>
