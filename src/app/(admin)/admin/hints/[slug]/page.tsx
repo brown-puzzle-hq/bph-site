@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
-import { guesses, hints } from "@/db/schema";
+import { guesses, hints, unlocks } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Toast from "../components/hint-page/Toast";
@@ -11,6 +11,40 @@ import PreviousGuessTable from "../components/hint-page/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
 import { FormattedTime } from "~/lib/time";
+import { HUNT_START_TIME } from "~/hunt.config";
+
+type Time = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+function getTimeDifference(date1: Date, date2: Date) {
+  const date1ms = date1.getTime();
+  const date2ms = date2.getTime();
+  const differenceMs = Math.abs(date2ms - date1ms);
+  const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+  const remainingMs = differenceMs % (1000 * 60 * 60 * 24);
+  const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+  const remainingMs2 = remainingMs % (1000 * 60 * 60);
+  const minutes = Math.floor(remainingMs2 / (1000 * 60));
+  const remainingMs3 = remainingMs2 % (1000 * 60);
+  const seconds = Math.floor(remainingMs3 / 1000);
+  return { days, hours, minutes, seconds };
+}
+
+function getTimeDifferenceString(time: Time) {
+  if (time.days > 0) {
+    return `${time.days} ${time.days === 1 ? "day" : "days"}`;
+  } else if (time.hours > 0) {
+    return `${time.hours} ${time.hours === 1 ? "hour" : "hours"}`;
+  } else if (time.minutes > 0) {
+    return `${time.minutes} ${time.minutes === 1 ? "minute" : "minutes"}`;
+  } else {
+    return `${time.seconds} ${time.seconds === 1 ? "second" : "seconds"}`;
+  }
+}
 
 export default async function Page({
   params,
@@ -53,6 +87,18 @@ export default async function Page({
     );
   }
 
+  // If there is no unlock, the unlock time is the start of the hunt
+  const unlockTime =
+    (
+      await db.query.unlocks.findFirst({
+        columns: { unlockTime: true },
+        where: and(
+          eq(unlocks.teamId, hint.teamId),
+          eq(unlocks.puzzleId, hint.puzzleId),
+        ),
+      })
+    )?.unlockTime ?? HUNT_START_TIME;
+
   const previousGuesses = await db.query.guesses.findMany({
     where: and(
       eq(guesses.teamId, hint.teamId),
@@ -80,8 +126,8 @@ export default async function Page({
   });
 
   return (
-    <>
-      <div className="flex w-2/3 min-w-36 grow flex-col">
+    <div className="p-4">
+      <div className="flex min-w-36 grow flex-col">
         <div className="flex flex-col items-center">
           <h1>Answer a Hint</h1>
           <HintStatusBox
@@ -93,7 +139,7 @@ export default async function Page({
         </div>
 
         <div className="flex flex-col items-center overflow-auto rounded-md p-4">
-          <div className="flex w-2/3 justify-between p-4 text-zinc-700 sm:flex-col md:flex-col lg:flex-row">
+          <div className="flex w-2/3 flex-col justify-between p-4 text-zinc-700 lg:flex-row">
             <div>
               <p>
                 <strong>From team </strong>
@@ -114,32 +160,45 @@ export default async function Page({
                 </Link>
               </p>
               <p>
-                <strong>With hint ID </strong>
+                <strong>Hint ID </strong>
                 {hint.id}
               </p>
             </div>
             <div>
               <p>
-                <strong>Requested on </strong>
+                <strong>Requested </strong>
                 <FormattedTime time={hint.requestTime} />
               </p>
               <p>
-                <strong>Claimed on </strong>
+                <strong>Claimed </strong>
                 <FormattedTime time={hint.claimTime} />
               </p>
               <p>
-                <strong>Responded on </strong>
+                <strong>Responded </strong>
                 <FormattedTime time={hint.responseTime} />
               </p>
             </div>
             <div>
               <p>
-                {/* TODO */}
-                <strong>Unlocked </strong> XX days ago
+                <strong>Unlocked </strong>{" "}
+                {getTimeDifferenceString(
+                  getTimeDifference(new Date(), unlockTime),
+                )}{" "}
+                ago
               </p>
               <p>
-                {/* TODO */}
-                <strong>Requested</strong> XX hours ago
+                <strong>Requested</strong>{" "}
+                {getTimeDifferenceString(
+                  getTimeDifference(new Date(), hint.requestTime),
+                )}{" "}
+                ago
+              </p>
+              <p>
+                <strong>Responded</strong>{" "}
+                {hint.responseTime &&
+                  getTimeDifferenceString(
+                    getTimeDifference(hint.requestTime, hint.responseTime),
+                  ) + " later"}
               </p>
             </div>
           </div>
@@ -178,6 +237,6 @@ export default async function Page({
           </Tabs>
         </div>
       </div>
-    </>
+    </div>
   );
 }
