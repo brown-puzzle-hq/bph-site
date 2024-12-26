@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import FeedbackDialog from "~/app/(hunt)/feedback/FeedbackDialog";
+import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
+
 import {
   Form,
   FormControl,
@@ -23,11 +24,9 @@ export const feedbackFormSchema = z.object({
 
 export default function FeedbackForm({
   teamId,
-  showTeam,
   feedbackList,
 }: {
   teamId: string;
-  showTeam: boolean;
   feedbackList: {
     id: number;
     teamId: string;
@@ -95,7 +94,7 @@ export default function FeedbackForm({
           </Button>
         </form>
       </Form>
-      <FeedbackDialog showTeam={showTeam} feedbackList={feedbackList} />
+      <FeedbackDialog showTeam={false} feedbackList={feedbackList} />
     </>
   );
 }
