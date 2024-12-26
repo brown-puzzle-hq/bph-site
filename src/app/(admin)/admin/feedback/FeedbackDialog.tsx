@@ -1,5 +1,12 @@
-import { Alert, AlertDescription } from "~/components/ui/alert";
+import { useRemarkSync } from "react-remark";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardDescription,
+} from "@/components/ui/card";
 import { FormattedTime } from "~/lib/time";
+// import remarkGfm from "remark-gfm";
 
 export default function FeedbackDialog({
   showTeam,
@@ -15,24 +22,29 @@ export default function FeedbackDialog({
 }) {
   return (
     <>
-      {feedbackList.length > 0 && (
-        <Alert className="mt-7 bg-gray-100">
-          {feedbackList.map((e, index) => (
-            <AlertDescription
-              key={e.id}
-              className="overflow-hidden break-words"
-            >
-              {index != 0 && <br />}
-              <p className="whitespace-normal">
+      {feedbackList.length > 0 &&
+        feedbackList.map((feedback) => (
+          <Card className="mt-4" key={feedback.id}>
+            <CardHeader>
+              <CardDescription>
                 <strong>
-                  <FormattedTime time={e.timestamp} />
+                  <FormattedTime time={feedback.timestamp} />
                 </strong>
-                {showTeam && <> ({e.teamId})</>}: {e.description}
-              </p>
-            </AlertDescription>
-          ))}
-        </Alert>
-      )}
+                {showTeam && <p> ({feedback.teamId})</p>}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <article className="prose">
+                {useRemarkSync(
+                  feedback.description,
+                  //   {
+                  //   remarkPlugins: [remarkGfm],
+                  // }
+                ) || <></>}
+              </article>
+            </CardContent>
+          </Card>
+        ))}
     </>
   );
 }
