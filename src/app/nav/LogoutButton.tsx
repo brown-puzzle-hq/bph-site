@@ -1,14 +1,11 @@
 "use client";
-import { useRouter } from "next/dist/client/components/navigation";
+import { redirect } from "next/navigation";
 import { logout } from "./actions";
 
 export function LogoutButton() {
-  const router = useRouter();
-
   const handleLogout = async () => {
     await logout();
-    router.refresh();
-    router.push("/login");
+    redirect("/login");
   };
 
   return (
