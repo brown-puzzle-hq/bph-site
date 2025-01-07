@@ -1,7 +1,6 @@
 import "~/styles/globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
-import { HuntTopNavSpacer } from "../nav/HuntTopNavSpacer";
 import { auth } from "~/server/auth/auth";
 import { LogoutButton } from "../nav/LogoutButton";
 import { HamburgerMenu, MenuItem } from "../nav/HamburgerMenu";
@@ -15,6 +14,11 @@ export default async function RootLayout({
     {
       title: "Home",
       href: "/",
+      type: "link",
+    },
+    {
+      title: "Info",
+      href: "/info",
       type: "link",
     },
     {
