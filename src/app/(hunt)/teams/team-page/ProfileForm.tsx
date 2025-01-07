@@ -1,4 +1,8 @@
 "use client";
+
+import parsePhoneNumberFromString from "libphonenumber-js";
+
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -8,6 +12,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Form,
   FormControl,
@@ -22,6 +27,24 @@ import { updateTeam } from "../actions";
 import { updateMembers } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
+import { watch } from "fs";
+
+const zPhone = z.string().transform((arg, ctx) => {
+  const phone = parsePhoneNumberFromString(arg, {
+    defaultCountry: "US",
+    extract: false,
+  });
+
+  if (phone && phone.isValid()) {
+    return phone.number;
+  }
+
+  ctx.addIssue({
+    code: z.ZodIssueCode.custom,
+    message: "Invalid phone number.",
+  });
+  return z.NEVER;
+});
 
 export const profileFormSchema = z
   .object({
@@ -31,6 +54,10 @@ export const profileFormSchema = z
       .max(50, { message: "Display name must be at most 50 characters long" })
       .or(z.literal("")),
     interactionMode: z.enum(interactionModeEnum.enumValues).optional(),
+    numCommunityMembers: z.coerce.number().optional(),
+    phoneNumber: zPhone,
+    roomNeeded: z.boolean().default(false).optional(),
+    location: z.string().optional(),
     role: z.enum(roleEnum.enumValues).optional(),
     members: z
       .array(
@@ -62,6 +89,10 @@ type TeamInfoFormProps = {
   username: string;
   displayName: string;
   interactionMode: "in-person" | "remote";
+  numCommunityMembers: number;
+  phoneNumber: string;
+  roomNeeded: boolean;
+  location: string;
   role: "admin" | "user";
   members: {
     id: number | undefined;
@@ -72,6 +103,7 @@ type TeamInfoFormProps = {
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
+// TODO: add to database schema
 export function ProfileForm({
   username,
   displayName,
@@ -79,10 +111,9 @@ export function ProfileForm({
   role,
   members,
 }: TeamInfoFormProps) {
-  console.log(username);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const { data: session } = useSession();
+  const [updatedInteractionMode, setUpdatedInteractionMode] =
+    useState<TeamInfoFormProps["interactionMode"]>(interactionMode);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -99,6 +130,14 @@ export function ProfileForm({
     name: "members",
     control: form.control,
   });
+
+  const watchMembers = form.watch("members");
+
+  useEffect(() => {
+    if (watchMembers.length === 0) {
+      append({ name: "", email: "" });
+    }
+  }, [watchMembers]);
 
   const onSubmit = async (data: ProfileFormValues) => {
     const teamResult = await updateTeam(username, {
@@ -129,14 +168,17 @@ export function ProfileForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full p-4 md:w-2/3 lg:w-1/3"
+      >
         {/* Display name field */}
         <FormField
           control={form.control}
           name="displayName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Display name</FormLabel>
+              <FormLabel>Display Name</FormLabel>
               <FormControl>
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
@@ -154,10 +196,12 @@ export function ProfileForm({
           name="interactionMode"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>This team will be competing...</FormLabel>
+              <FormLabel>Interaction Mode</FormLabel>
               <FormControl>
                 <RadioGroup
-                  onValueChange={field.onChange}
+                  onValueChange={(
+                    value: TeamInfoFormProps["interactionMode"],
+                  ) => setUpdatedInteractionMode(value)}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
@@ -180,11 +224,87 @@ export function ProfileForm({
           )}
         />
 
-        <div>
-          <div className="pb-4">
-            <FormLabel>Members</FormLabel>
-          </div>
+        {/* Other fields */}
+        {updatedInteractionMode === "in-person" && (
+          <div className="space-y-8">
+            <FormField
+              control={form.control}
+              name="numCommunityMembers"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Community Team Members
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>
+                  Number of Brown/RISD undergraduates, graduates, faculty, or alumni.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
 
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Primary method of communication, required for in-person
+                    teams.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="roomNeeded"
+              render={({ field }) => (
+                <FormItem className="mb-6 flex flex-row items-center justify-between">
+                  <div>
+                    <FormLabel>Room Needed</FormLabel>
+                    <FormDescription>
+                      Do you need a room on campus?
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Solving Location</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Where can we best find you? (e.g. Barus & Holley 123,
+                    Discord, etc.)
+                  </FormDescription>
+                  <FormMessage>{error}</FormMessage>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+
+        <div className="mb-12">
+          <FormLabel>Members</FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
               {/* Field for member name */}
@@ -193,16 +313,26 @@ export function ProfileForm({
                 name={`members.${index}.name`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormDescription>Name</FormDescription>
                     <FormControl>
                       <Input
+                        className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
                         {...field}
                         value={field.value ?? ""}
-                        // placeholder="Josiah Carberry"
+                        placeholder="Name"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
-                            append({ email: "", name: "" });
+                            if (e.shiftKey) {
+                              const prevField = document.querySelector(
+                                `[name="members.${index - 1}.email"]`,
+                              ) as HTMLInputElement;
+                              prevField?.focus();
+                            } else {
+                              const nextField = document.querySelector(
+                                `[name="members.${index}.email"]`,
+                              ) as HTMLInputElement;
+                              nextField?.focus();
+                            }
                           } else if (e.key === "Backspace" && !field.value) {
                             remove(index);
                             // Move focus back to the previous field
@@ -216,7 +346,6 @@ export function ProfileForm({
                         }}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -227,59 +356,53 @@ export function ProfileForm({
                 name={`members.${index}.email`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormDescription>Email</FormDescription>
                     <FormControl>
                       <Input
+                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${field.value && form.formState.errors.members?.[index] ? "text-red-500" : "text-black"}`}
                         {...field}
                         value={field.value ?? ""}
-                        // placeholder="jcarr@brown.edu"
+                        placeholder="Email"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
-                            append({ email: "", name: "" });
-                          } else if (e.key === "Backspace" && !field.value) {
-                            remove(index);
-                            // Move focus back to the previous field
-                            setTimeout(() => {
+                            if (e.shiftKey) {
                               const prevField = document.querySelector(
-                                `[name="members.${index - 1}.email"]`,
+                                `[name="members.${index}.name"]`,
                               ) as HTMLInputElement;
                               prevField?.focus();
-                            }, 0);
+                            } else if (index === fields.length - 1) {
+                              append({ email: "", name: "" });
+                            } else {
+                              const nextField = document.querySelector(
+                                `[name="members.${index + 1}.name"]`,
+                              ) as HTMLInputElement;
+                              nextField?.focus();
+                            }
+                          } else if (e.key === "Backspace" && !field.value) {
+                            const prevField = document.querySelector(
+                              `[name="members.${index}.name"]`,
+                            ) as HTMLInputElement;
+                            prevField?.focus();
                           }
                         }}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
 
               {/* X button */}
-              <div className="space-y-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-10 w-10 text-gray-400"
-                  onClick={() => remove(index)}
-                >
-                  <X />
-                </Button>
-              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 text-gray-400"
+                onClick={() => remove(index)}
+              >
+                <X />
+              </Button>
             </div>
           ))}
-
-          {/* Button to add members */}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2"
-            onClick={() => append({ name: "", email: "" })}
-          >
-            Add Member
-          </Button>
         </div>
 
         {/* Role field */}
