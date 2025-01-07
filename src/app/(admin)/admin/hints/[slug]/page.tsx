@@ -139,7 +139,7 @@ export default async function Page({
         </div>
 
         <div className="flex flex-col items-center overflow-auto rounded-md">
-          <div className="flex w-full p-6 flex-col justify-between text-zinc-700 md:w-2/3 lg:flex-row">
+          <div className="flex w-full flex-col justify-between p-6 text-zinc-700 md:w-2/3 lg:flex-row">
             <div>
               <p>
                 <strong>From team </strong>
@@ -213,7 +213,10 @@ export default async function Page({
 
           {previousHints.length > 0 && (
             <div className="w-full md:w-2/3">
-              <PreviousHintTable previousHints={previousHints} teamDisplayName={hint.team.displayName}/>
+              <PreviousHintTable
+                previousHints={previousHints}
+                teamDisplayName={hint.team.displayName}
+              />
             </div>
           )}
         </div>

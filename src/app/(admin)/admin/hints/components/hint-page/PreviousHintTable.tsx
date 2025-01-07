@@ -560,15 +560,15 @@ export default function PreviousHintTable({
                     <div>
                       {edit?.type === "follow-up" && edit.id === followUp.id ? (
                         <div className="pt-2">
-                        <AutosizeTextarea
-                          maxHeight={500}
-                          className="resize-none"
-                          value={edit.value}
-                          onChange={(e) => {
-                            if (!edit) return;
-                            setEdit({ ...edit, value: e.target.value });
-                          }}
-                        />
+                          <AutosizeTextarea
+                            maxHeight={500}
+                            className="resize-none"
+                            value={edit.value}
+                            onChange={(e) => {
+                              if (!edit) return;
+                              setEdit({ ...edit, value: e.target.value });
+                            }}
+                          />
                         </div>
                       ) : (
                         followUp.message
