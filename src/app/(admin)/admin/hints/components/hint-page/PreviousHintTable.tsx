@@ -19,6 +19,7 @@ type TableProps = {
   anonymize?: boolean;
   previousHints: PreviousHints;
   hintRequestState?: HintRequestState;
+  teamDisplayName?: string;
 };
 
 // Intitial state
@@ -56,6 +57,7 @@ export default function PreviousHintTable({
   anonymize,
   previousHints,
   hintRequestState,
+  teamDisplayName,
 }: TableProps) {
   const { data: session } = useSession();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
@@ -327,7 +329,7 @@ export default function PreviousHintTable({
                 {/* Top section with the team ID and the edit button */}
                 <div className="flex justify-between pb-2">
                   <p className="inline rounded-md bg-sky-100 p-1">
-                    {anonymize ? "Team" : hint.teamId}
+                    {anonymize ? "Team" : teamDisplayName}
                   </p>
                   {/* If the hint request was made by the current user, allow edits */}
                   {hint.teamId === session?.user?.id && (
@@ -414,6 +416,28 @@ export default function PreviousHintTable({
                       {anonymize ? "Admin" : hint.claimer}
                     </p>
                     <div className="flex space-x-2">
+                      {/* Follow-up button */}
+                      {followUp?.hintId !== hint.id ? (
+                        <button
+                          onClick={() => {
+                            // Hide other follow-ups under the same hint
+                            setHiddenFollowUps((prev) =>
+                              prev.filter((prevId) => prevId !== hint.id),
+                            );
+                            setFollowUp({ hintId: hint.id, message: "" });
+                          }}
+                          className="text-link hover:underline"
+                        >
+                          Reply
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setFollowUp(null)}
+                          className="text-link hover:underline"
+                        >
+                          Cancel
+                        </button>
+                      )}
                       {/* If the response was made by the current user, allow edits */}
                       {hint.claimer === session?.user?.id && (
                         <div className="p-1">
@@ -454,28 +478,6 @@ export default function PreviousHintTable({
                           )}
                         </div>
                       )}
-                      {/* Follow-up button */}
-                      {followUp?.hintId !== hint.id ? (
-                        <button
-                          onClick={() => {
-                            // Hide other follow-ups under the same hint
-                            setHiddenFollowUps((prev) =>
-                              prev.filter((prevId) => prevId !== hint.id),
-                            );
-                            setFollowUp({ hintId: hint.id, message: "" });
-                          }}
-                          className="text-link hover:underline"
-                        >
-                          Follow-Up
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setFollowUp(null)}
-                          className="text-link hover:underline"
-                        >
-                          Cancel
-                        </button>
-                      )}
                     </div>
                   </div>
                   {/* Botton section with hint response */}
@@ -511,7 +513,7 @@ export default function PreviousHintTable({
                     <div className="flex justify-between pb-2">
                       {followUp.userId === hint.teamId ? (
                         <p className={"inline rounded-md bg-sky-100 p-1"}>
-                          {anonymize ? "Team" : followUp.userId}
+                          {anonymize ? "Team" : teamDisplayName}
                         </p>
                       ) : (
                         <p className={"inline rounded-md bg-orange-100 p-1"}>
@@ -584,7 +586,7 @@ export default function PreviousHintTable({
                     <p className="p-1 font-bold">Follow-Up</p>
                     <p className="p-1 text-gray-800">
                       Ask for clarification in this follow-up thread. Follow-ups
-                      don't count toward your total hint limit!
+                      don't count toward your hint limit!
                     </p>
                     <div className="p-1">
                       <AutosizeTextarea

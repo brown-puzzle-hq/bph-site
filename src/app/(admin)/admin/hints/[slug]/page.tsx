@@ -126,7 +126,7 @@ export default async function Page({
   });
 
   return (
-    <div className="p-4">
+    <div>
       <div className="flex min-w-36 grow flex-col">
         <div className="flex flex-col items-center">
           <h1>Answer a Hint</h1>
@@ -138,8 +138,8 @@ export default async function Page({
           />
         </div>
 
-        <div className="flex flex-col items-center overflow-auto rounded-md p-4">
-          <div className="flex w-2/3 flex-col justify-between p-4 text-zinc-700 lg:flex-row">
+        <div className="flex flex-col items-center overflow-auto rounded-md">
+          <div className="flex w-full p-6 flex-col justify-between text-zinc-700 md:w-2/3 lg:flex-row">
             <div>
               <p>
                 <strong>From team </strong>
@@ -203,7 +203,7 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="w-2/3 p-4">
+          <div className="w-full p-6 md:w-2/3">
             <RequestBox hint={hint} />
             {(hint.response ||
               (hint.claimer && hint.claimer.id === session.user.id)) && (
@@ -212,8 +212,8 @@ export default async function Page({
           </div>
 
           {previousHints.length > 0 && (
-            <div className="w-2/3 py-4">
-              <PreviousHintTable previousHints={previousHints} />
+            <div className="w-full md:w-2/3">
+              <PreviousHintTable previousHints={previousHints} teamDisplayName={hint.team.displayName}/>
             </div>
           )}
         </div>
