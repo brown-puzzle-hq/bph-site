@@ -83,7 +83,7 @@ export default async function DefaultHintPage({
   };
 
   return (
-    <div className="w-2/3 min-w-36 p-4">
+    <div className="w-full md:w-2/3">
       <PreviousHintTable
         anonymize={true}
         previousHints={previousHints}
