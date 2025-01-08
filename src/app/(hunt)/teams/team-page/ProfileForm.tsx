@@ -100,7 +100,7 @@ function serializeMembers(members: member[]): string {
 }
 
 function deserializeMembers(memberString: string): member[] {
-  if (!memberString) return [];
+  if (!memberString) return [{ name: "", email: "" }];
   const rows = memberString.split("\n");
   return rows.map((row) => {
     const [name, email] = row.split("\t");
@@ -123,6 +123,7 @@ export function ProfileForm({
   const { data: session } = useSession();
   const members = deserializeMembers(memberString);
   const [error, setError] = useState<string | null>(null);
+  const [memberError, setMemberError] = useState<string | null>(null);
 
   const [updatedInteractionMode, setUpdatedInteractionMode] =
     useState(interactionMode);
@@ -159,6 +160,15 @@ export function ProfileForm({
   useEffect(() => {
     if (watchFields.members.length === 0) {
       append({ name: "", email: "" });
+    }
+    if (
+      !watchFields.members.some(
+        (member: member) => member?.name || member?.email,
+      )
+    ) {
+      setMemberError("At least one member required.");
+    } else {
+      setMemberError(null);
     }
   }, [watchFields]);
 
@@ -452,11 +462,8 @@ export function ProfileForm({
           <FormDescription className="pt-3">
             Press ENTER to add entries.
           </FormDescription>
-          {/* TODO: update dynamically */}
-          <FormMessage>
-            {form.formState.errors.members &&
-              form.formState.errors.members.message}
-          </FormMessage>{" "}
+          {/* TODO: Is there a better way to do this? */}
+          <FormMessage>{memberError}</FormMessage>
         </div>
 
         {/* Role field  */}
