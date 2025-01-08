@@ -74,7 +74,7 @@ export default function Page() {
               read a longer introduction to puzzlehunts{" "}
               <Link
                 href="https://blog.vero.site/post/puzzlehunts"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 no-underline hover:underline"
               >
                 here
               </Link>
@@ -87,7 +87,7 @@ export default function Page() {
               year's{" "}
               <Link
                 href="https://2024.brownpuzzlehunt.com/"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 no-underline hover:underline"
               >
                 hunt
               </Link>
@@ -95,21 +95,21 @@ export default function Page() {
               puzzles from other online hunts such as{" "}
               <Link
                 href="https://galacticpuzzlehunt.com/"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 no-underline hover:underline"
               >
                 Galactic Puzzle Hunt
               </Link>
               ,{" "}
               <Link
                 href="https://teammatehunt.com/"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 no-underline hover:underline"
               >
                 Teammate Hunt
               </Link>
               , or{" "}
               <Link
                 href="https://puzzlepotluck.com/"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 no-underline hover:underline"
               >
                 Puzzle Potluck
               </Link>
@@ -163,7 +163,7 @@ export default function Page() {
               need to print and fill out this{" "}
               <Link
                 href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 no-underline hover:underline"
               >
                 waiver form
               </Link>{" "}
@@ -238,21 +238,21 @@ export default function Page() {
                 Online wordplay solvers like{" "}
                 <Link
                   href="https://nutrimatic.org/"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 no-underline hover:underline"
                 >
                   nutrimatic
                 </Link>
                 ,{" "}
                 <Link
                   href="https://www.quinapalus.com/qat.html"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 no-underline hover:underline"
                 >
                   qat
                 </Link>
                 , or{" "}
                 <Link
                   href="https://onelook.com/"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 no-underline hover:underline"
                 >
                   OneLook
                 </Link>
@@ -261,7 +261,7 @@ export default function Page() {
                 Logic puzzle solvers like{" "}
                 <Link
                   href="https://www.noq.solutions/"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 no-underline hover:underline"
                 >
                   noq
                 </Link>
@@ -270,14 +270,14 @@ export default function Page() {
                 Reverse image searching tools like{" "}
                 <Link
                   href="https://lens.google/"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 no-underline hover:underline"
                 >
                   Google Lens
                 </Link>{" "}
                 or{" "}
                 <Link
                   href="https://tineye.com/"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 no-underline hover:underline"
                 >
                   Tineye
                 </Link>
