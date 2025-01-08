@@ -1,6 +1,6 @@
 "use client";
 
-import parsePhoneNumberFromString from "libphonenumber-js";
+import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
 
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "~/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+import { set, z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -24,10 +24,8 @@ import {
 } from "~/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { updateTeam } from "../actions";
-import { updateMembers } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
-import { watch } from "fs";
 
 const zPhone = z.string().transform((arg, ctx) => {
   const phone = parsePhoneNumberFromString(arg, {
@@ -46,81 +44,106 @@ const zPhone = z.string().transform((arg, ctx) => {
   return z.NEVER;
 });
 
-export const profileFormSchema = z
-  .object({
-    displayName: z
-      .string()
-      .min(1, { message: "Display name is required" })
-      .max(50, { message: "Display name must be at most 50 characters long" })
-      .or(z.literal("")),
-    interactionMode: z.enum(interactionModeEnum.enumValues).optional(),
-    numCommunityMembers: z.coerce.number().optional(),
-    phoneNumber: zPhone,
-    roomNeeded: z.boolean().default(false).optional(),
-    location: z.string().optional(),
-    role: z.enum(roleEnum.enumValues).optional(),
-    members: z
-      .array(
-        z.object({
-          id: z.number().optional(),
-          name: z.string().nullable(),
-          email: z
-            .string()
-            .email({ message: "Please enter a valid email." })
-            .nullable(),
-        }),
-      )
-      .optional(),
-  })
-  .refine(
-    (input) => {
-      // Allow role and interaction mode to be undefined
-      if (input.role !== undefined || input.interactionMode !== undefined)
-        return true;
-      if (input.displayName.length > 0) return false;
-    },
-    {
-      message: "At least one field is required",
-      path: ["displayName"],
-    },
-  );
+export const profileFormSchema = z.object({
+  displayName: z
+    .string()
+    .min(1, { message: "Display name is required" })
+    .max(50, { message: "Display name must be at most 50 characters long" })
+    .or(z.literal("")),
+  interactionMode: z.enum(interactionModeEnum.enumValues),
+  numCommunity: z.string().nullish().or(z.literal("")),
+  phoneNumber: zPhone,
+  roomNeeded: z.boolean().nullish().or(z.literal(false)),
+  solvingLocation: z.string().nullish().or(z.literal("")),
+  role: z.enum(roleEnum.enumValues),
+  members: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        name: z.string().or(z.literal("")),
+        email: z.string().email().or(z.literal("")),
+      }),
+    )
+    .refine(
+      (members) => members.some((member) => member?.name || member?.email),
+      {
+        message: "At least one member required.",
+      },
+    ),
+});
 
 type TeamInfoFormProps = {
   username: string;
   displayName: string;
+  role: "admin" | "user";
   interactionMode: "in-person" | "remote";
-  numCommunityMembers: number;
+  numCommunity: string;
   phoneNumber: string;
   roomNeeded: boolean;
-  location: string;
-  role: "admin" | "user";
-  members: {
-    id: number | undefined;
-    name: string | null | undefined;
-    email: string | null | undefined;
-  }[];
+  solvingLocation: string;
+  memberString: string;
+};
+
+type member = {
+  id?: number;
+  name: string | null | undefined;
+  email: string | null | undefined;
 };
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-// TODO: add to database schema
+function serializeMembers(members: member[]): string {
+  const rows = members
+    .filter((person) => person.name || person.email)
+    .map((person) => `${person.name}\t${person.email}`);
+  return rows.join("\n");
+}
+
+function deserializeMembers(memberString: string): member[] {
+  if (!memberString) return [];
+  const rows = memberString.split("\n");
+  return rows.map((row) => {
+    const [name, email] = row.split("\t");
+    return { id: undefined, name, email };
+  });
+}
+
 export function ProfileForm({
   username,
   displayName,
-  interactionMode,
   role,
-  members,
+  interactionMode,
+  numCommunity,
+  phoneNumber,
+  roomNeeded,
+  solvingLocation,
+  memberString,
 }: TeamInfoFormProps) {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const members = deserializeMembers(memberString);
   const [error, setError] = useState<string | null>(null);
+
   const [updatedInteractionMode, setUpdatedInteractionMode] =
-    useState<TeamInfoFormProps["interactionMode"]>(interactionMode);
+    useState(interactionMode);
+
+  if (phoneNumber) {
+    const parsed = parsePhoneNumberFromString(phoneNumber)?.formatNational();
+    if (parsed) {
+      phoneNumber = parsed;
+    }
+  }
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       displayName,
-      interactionMode,
       role,
+      interactionMode,
+      numCommunity,
+      phoneNumber,
+      roomNeeded,
+      solvingLocation,
       members,
     },
     mode: "onChange",
@@ -131,30 +154,28 @@ export function ProfileForm({
     control: form.control,
   });
 
-  const watchMembers = form.watch("members");
+  const watchFields = form.watch();
 
   useEffect(() => {
-    if (watchMembers.length === 0) {
+    if (watchFields.members.length === 0) {
       append({ name: "", email: "" });
     }
-  }, [watchMembers]);
+  }, [watchFields]);
 
   const onSubmit = async (data: ProfileFormValues) => {
     const teamResult = await updateTeam(username, {
       displayName: data.displayName,
-      interactionMode: data.interactionMode,
       role: data.role,
+      interactionMode: data.interactionMode,
+      numCommunity: data.numCommunity,
+      phoneNumber: data.phoneNumber,
+      roomNeeded: data.roomNeeded,
+      solvingLocation: data.solvingLocation,
+      members: serializeMembers(data.members),
     });
-
-    const memberResult = await updateMembers(username, members);
 
     if (teamResult.error) {
       setError(teamResult.error);
-      return;
-    }
-
-    if (memberResult.error) {
-      setError(memberResult.error);
       return;
     }
 
@@ -163,8 +184,19 @@ export function ProfileForm({
       description: "Your team info has successfully been updated.",
     });
     setError(null);
-    // router.refresh();
+    router.refresh(); // TODO: doesn't seem to work
   };
+
+  const isDirty = () => {
+    const currentValues = form.getValues();
+    return Object.keys(currentValues).some((key) =>
+      key === "members"
+        ? serializeMembers(currentValues[key]) !== memberString
+        : currentValues[key] != form.formState.defaultValues[key],
+    );
+  };
+
+  console.log(form.formState.errors.members);
 
   return (
     <Form {...form}>
@@ -178,7 +210,9 @@ export function ProfileForm({
           name="displayName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Display Name</FormLabel>
+              <FormLabel>
+                Display Name <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
@@ -195,13 +229,18 @@ export function ProfileForm({
           control={form.control}
           name="interactionMode"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Interaction Mode</FormLabel>
+            <FormItem className="mb-8 space-y-3">
+              <FormLabel>
+                Interaction Mode <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={(
                     value: TeamInfoFormProps["interactionMode"],
-                  ) => setUpdatedInteractionMode(value)}
+                  ) => {
+                    setUpdatedInteractionMode(value);
+                    field.onChange(value);
+                  }}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
@@ -219,27 +258,25 @@ export function ProfileForm({
                   </FormItem>
                 </RadioGroup>
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
 
         {/* Other fields */}
         {updatedInteractionMode === "in-person" && (
-          <div className="space-y-8">
+          <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
-              name="numCommunityMembers"
+              name="numCommunity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Community Team Members
-                  </FormLabel>
+                  <FormLabel>Community Team Members</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} type="number" />
                   </FormControl>
                   <FormDescription>
-                  Number of Brown/RISD undergraduates, graduates, faculty, or alumni.
+                    Number of Brown/RISD undergraduates, graduates, faculty, or
+                    alumni.
                   </FormDescription>
                 </FormItem>
               )}
@@ -252,7 +289,15 @@ export function ProfileForm({
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        const formattedNumber = new AsYouType("US").input(
+                          e.target.value,
+                        );
+                        field.onChange(formattedNumber);
+                      }}
+                    />
                   </FormControl>
                   <FormDescription>
                     Primary method of communication, required for in-person
@@ -285,7 +330,7 @@ export function ProfileForm({
 
             <FormField
               control={form.control}
-              name="location"
+              name="solvingLocation"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Solving Location</FormLabel>
@@ -296,15 +341,16 @@ export function ProfileForm({
                     Where can we best find you? (e.g. Barus & Holley 123,
                     Discord, etc.)
                   </FormDescription>
-                  <FormMessage>{error}</FormMessage>
                 </FormItem>
               )}
             />
           </div>
         )}
 
-        <div className="mb-12">
-          <FormLabel>Members</FormLabel>
+        <div className="mb-6">
+          <FormLabel>
+            Team Members <span className="text-red-500">*</span>
+          </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
               {/* Field for member name */}
@@ -358,7 +404,7 @@ export function ProfileForm({
                   <FormItem>
                     <FormControl>
                       <Input
-                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${field.value && form.formState.errors.members?.[index] ? "text-red-500" : "text-black"}`}
+                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "text-red-500" : "text-black"}`}
                         {...field}
                         value={field.value ?? ""}
                         placeholder="Email"
@@ -403,47 +449,59 @@ export function ProfileForm({
               </Button>
             </div>
           ))}
+          <FormDescription className="pt-3">
+            Press ENTER to add entries.
+          </FormDescription>
+          {/* TODO: update dynamically */}
+          <FormMessage>
+            {form.formState.errors.members &&
+              form.formState.errors.members.message}
+          </FormMessage>{" "}
         </div>
 
-        {/* Role field */}
-        {/* {session?.user?.role === "admin" && ( */}
-        {/*   <FormField */}
-        {/*     control={form.control} */}
-        {/*     name="role" */}
-        {/*     render={({ field }) => ( */}
-        {/*       <FormItem className="space-y-3"> */}
-        {/*         <FormLabel>This user should be a...</FormLabel> */}
-        {/*         <FormControl> */}
-        {/*           <RadioGroup */}
-        {/*             onValueChange={field.onChange} */}
-        {/*             defaultValue={field.value} */}
-        {/*             className="flex flex-col space-y-1" */}
-        {/*           > */}
-        {/*             <FormItem className="flex items-center space-x-3 space-y-0"> */}
-        {/*               <FormControl> */}
-        {/*                 <RadioGroupItem value="user" /> */}
-        {/*               </FormControl> */}
-        {/*               <FormLabel className="font-normal"> */}
-        {/*                 Regular user */}
-        {/*               </FormLabel> */}
-        {/*             </FormItem> */}
-        {/*             <FormItem className="flex items-center space-x-3 space-y-0"> */}
-        {/*               <FormControl> */}
-        {/*                 <RadioGroupItem value="admin" /> */}
-        {/*               </FormControl> */}
-        {/*               <FormLabel className="font-normal">Admin</FormLabel> */}
-        {/*             </FormItem> */}
-        {/*           </RadioGroup> */}
-        {/*         </FormControl> */}
-        {/*         <FormMessage /> */}
-        {/*       </FormItem> */}
-        {/*     )} */}
-        {/*   /> */}
-        {/* )} */}
+        {/* Role field  */}
+        {session?.user?.role === "admin" && (
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem className="mb-8 space-y-3">
+                <FormLabel>Team Permissions</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="user" />
+                      </FormControl>
+                      <FormLabel className="font-normal">User</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="admin" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Admin</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        )}
 
-        <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
-          Update team info
-        </Button>
+        {isDirty() && (
+          <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
+            Update
+          </Button>
+        )}
+
+        {/* TODO: just temporary, remove this later */}
+        <div>
+          <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
+        </div>
       </form>
     </Form>
   );

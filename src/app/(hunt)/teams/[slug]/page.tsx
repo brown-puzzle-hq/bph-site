@@ -23,15 +23,6 @@ export default async function Page({
   // Check if slug is a valid username
   const team = await db.query.teams.findFirst({
     where: eq(teams.username, slug),
-    with: {
-      members: {
-        columns: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-    },
   });
 
   if (
@@ -61,7 +52,6 @@ export default async function Page({
     },
   ];
 
-  // return <DefaultTeamPage username={slug} />;
   return (
     <div className="mb-6 flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center pb-6">
@@ -74,9 +64,15 @@ export default async function Page({
         <ProfileForm
           username={slug}
           displayName={team.displayName}
-          interactionMode={team.interactionMode}
           role={team.role}
-          members={team.members}
+          interactionMode={team.interactionMode}
+
+          numCommunity={team.numCommunity}
+          phoneNumber={team.phoneNumber}
+          roomNeeded={team.roomNeeded}
+          solvingLocation={team.solvingLocation}
+
+          memberString={team.members}
         />
       </div>
     </div>

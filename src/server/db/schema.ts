@@ -43,6 +43,17 @@ export const teams = createTable("team", {
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
+
+  // Only for in-person teams
+  numCommunity: varchar("num_community", { length: 31 }).notNull().default(""),
+  phoneNumber: varchar("phone_number", { length: 31 }).notNull().default(""),
+  roomNeeded: boolean("room_needed").notNull().default(false),
+  solvingLocation: varchar("solving_location", { length: 255 })
+    .notNull()
+    .default(""),
+
+  members: text("members").notNull().default(""),
+
   finishTime: timestamp("finish_time", { withTimezone: true }),
   // Time of creation of team
   createTime: timestamp("create_time", { withTimezone: true }),
@@ -199,15 +210,6 @@ export const feedback = createTable("feedback", {
   description: text("feedback").notNull(),
 });
 
-export const members = createTable("member", {
-  id: serial("id").primaryKey(),
-  teamId: varchar("teamId")
-    .notNull()
-    .references(() => teams.id, { onDelete: "cascade" }),
-  name: varchar("name"),
-  email: varchar("email"),
-});
-
 export const teamRelations = relations(teams, ({ many }) => ({
   unlocks: many(unlocks),
   guesses: many(guesses),
@@ -215,7 +217,6 @@ export const teamRelations = relations(teams, ({ many }) => ({
   requestedHints: many(hints, { relationName: "requested_hints" }),
   // Hints claimed by this admin "team"
   claimedHints: many(hints, { relationName: "claimed_hints" }),
-  members: many(members),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
@@ -276,12 +277,5 @@ export const erratumRelations = relations(errata, ({ one }) => ({
   puzzle: one(puzzles, {
     fields: [errata.puzzleId],
     references: [puzzles.id],
-  }),
-}));
-
-export const memberRelations = relations(members, ({ one }) => ({
-  team: one(teams, {
-    fields: [members.teamId],
-    references: [teams.id],
   }),
 }));
