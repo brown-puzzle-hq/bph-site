@@ -2,7 +2,8 @@
 
 import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
 
-import { Plus } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -67,7 +68,7 @@ export const profileFormSchema = z.object({
     .refine(
       (members) => members.some((member) => member?.name || member?.email),
       {
-        message: "At least one member required.",
+        message: "At least one member required",
       },
     ),
 });
@@ -166,7 +167,7 @@ export function ProfileForm({
         (member: member) => member?.name || member?.email,
       )
     ) {
-      setMemberError("At least one member required.");
+      setMemberError("At least one member required");
     } else {
       setMemberError(null);
     }
@@ -321,7 +322,7 @@ export function ProfileForm({
               control={form.control}
               name="roomNeeded"
               render={({ field }) => (
-                <FormItem className="mb-6 flex flex-row items-center justify-between">
+                <FormItem className="mb-8 flex flex-row items-center justify-between">
                   <div>
                     <FormLabel>Room Needed</FormLabel>
                     <FormDescription>
@@ -357,9 +358,12 @@ export function ProfileForm({
           </div>
         )}
 
-        <div className="mb-6">
+        <div className="mb-8">
           <FormLabel>
-            Team Members <span className="text-red-500">*</span>
+            Team Members <span className="text-red-500">*</span>{" "}
+            <span className="text-[0.8rem] font-medium text-red-500">
+              {memberError}
+            </span>
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
@@ -462,8 +466,6 @@ export function ProfileForm({
           <FormDescription className="pt-3">
             Press ENTER to add entries.
           </FormDescription>
-          {/* TODO: Is there a better way to do this? */}
-          <FormMessage>{memberError}</FormMessage>
         </div>
 
         {/* Role field  */}
@@ -472,7 +474,7 @@ export function ProfileForm({
             control={form.control}
             name="role"
             render={({ field }) => (
-              <FormItem className="mb-8 space-y-3">
+              <FormItem className="mb-12 space-y-3">
                 <FormLabel>Team Permissions</FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -499,11 +501,26 @@ export function ProfileForm({
           />
         )}
 
-        {isDirty() && (
-          <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
-            Update
-          </Button>
-        )}
+        <div
+          className={`fixed bottom-3 left-1/2 z-10 flex w-full min-w-[450px] -translate-x-1/2 transform transition-transform duration-300 md:w-2/3 lg:w-1/3 ${
+            isDirty() ? "translate-y-0" : "translate-y-[5rem]"
+          }`}
+        >
+          <Alert className="w-full bg-slate-100 p-2 shadow-lg">
+            <div className="flex items-center justify-between">
+              <AlertDescription className="flex items-center space-x-2">
+                <AlertCircle className="h-4 w-4" />
+                <span>Careful — you have unsaved changes!</span>
+              </AlertDescription>
+              <div className="flex space-x-2">
+                <Button variant="outline" onClick={() => form.reset()}>
+                  Reset
+                </Button>
+                <Button type="submit">Save</Button>
+              </div>
+            </div>
+          </Alert>
+        </div>
 
         {/* TODO: just temporary, remove this later */}
         <div>
