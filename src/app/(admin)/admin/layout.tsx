@@ -61,7 +61,9 @@ export default async function RootLayout({
         leftMenuItems={leftMenuItems}
         rightMenuItems={rightMenuItems}
       />
-      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">{children}</main>
+      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
+        {children}
+      </main>
       <Toaster />
     </>
   );

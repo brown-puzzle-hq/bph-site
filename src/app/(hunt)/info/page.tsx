@@ -55,7 +55,7 @@ export default function Page() {
     <TOCContext.Provider value={values}>
       <div className="flex h-full w-screen">
         <TableOfContents />
-        <div className="flex px-4 w-full md:w-2/3 lg:w-1/2">
+        <div className="flex w-full px-4 md:w-2/3 lg:w-1/2">
           <article className="prose w-full max-w-none">
             <h1>Hunt Information</h1>
             <TOCSection
@@ -301,7 +301,7 @@ export default function Page() {
             </TOCSection>
           </article>
         </div>
-        <div className="hidden w-1/4 lg:block text-center">ART HERE???</div>
+        <div className="hidden w-1/4 text-center lg:block">ART HERE???</div>
       </div>
     </TOCContext.Provider>
   );
