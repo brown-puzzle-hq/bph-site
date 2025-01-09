@@ -53,7 +53,7 @@ export default function Page() {
   const values = useTOCContextValues();
   return (
     <TOCContext.Provider value={values}>
-      <div className="mx-auto flex min-h-screen justify-between p-4">
+      <div className="mx-auto flex min-h-screen justify-between px-4">
         <article className="prose mx-auto min-h-screen max-w-[80ch]">
           <h1>Hunt Information</h1>
           <TOCSection

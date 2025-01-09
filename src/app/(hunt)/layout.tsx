@@ -77,7 +77,7 @@ export default async function RootLayout({
       />
       {/* Navbar spacer */}
       <div className="min-h-56px"></div>
-      <main className="flex min-h-[calc(100vh-56px-32px)] pt-4">
+      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
         {children}
       </main>
       <Toaster />
