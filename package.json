@@ -63,7 +63,9 @@
     "react-dom": "*",
     "react-draggable": "^4.4.6",
     "react-hook-form": "^7.53.0",
+    "react-remark": "^2.1.0",
     "recharts": "^2.14.1",
+    "remark-gfm": "^4.0.0",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.5.4",
@@ -73,6 +75,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
@@ -80,7 +83,7 @@
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
     "drizzle-kit": "^0.24.2",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.4",
     "eslint-plugin-drizzle": "^0.2.3",
     "postcss": "^8.4.39",

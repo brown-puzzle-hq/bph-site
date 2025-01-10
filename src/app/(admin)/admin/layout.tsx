@@ -35,6 +35,11 @@ export default async function RootLayout({
       href: "/admin/errata",
       type: "link",
     },
+    {
+      title: "Feedback",
+      href: "/admin/feedback",
+      type: "link",
+    },
   ];
 
   const rightMenuItems: MenuItem[] = [
