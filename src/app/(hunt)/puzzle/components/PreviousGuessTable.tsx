@@ -23,9 +23,9 @@ export default function PreviousGuessTable({
                 </TableCell>
                 <TableCell>
                   {guess.isCorrect ? (
-                    <p className="text-emerald-600">CORRECT</p>
+                    <p className="text-emerald-600 font-medium">CORRECT</p>
                   ) : (
-                    <p className="text-rose-600">INCORRECT</p>
+                    <p className="text-rose-600 font-medium">INCORRECT</p>
                   )}
                 </TableCell>
                 {/* TODO: actually learn Tailwind */}

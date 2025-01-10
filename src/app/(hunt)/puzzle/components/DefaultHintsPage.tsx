@@ -3,7 +3,6 @@ import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
 import { guesses, hints, puzzles } from "~/server/db/schema";
 import PreviousHintTable from "./PreviousHintTable";
-import HintForm from "./HintForm";
 import { canViewPuzzle, getNumberOfHintsRemaining } from "~/hunt.config";
 import { redirect } from "next/navigation";
 import Link from "next/link";

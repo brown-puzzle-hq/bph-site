@@ -35,8 +35,6 @@ export default function FeedbackForm({
     timestamp: Date;
   }[];
 }) {
-  const [error, setError] = useState<string | null>(null);
-
   const form = useForm<z.infer<typeof feedbackFormSchema>>({
     resolver: zodResolver(feedbackFormSchema),
     defaultValues: {
@@ -47,9 +45,12 @@ export default function FeedbackForm({
   const onSubmit = async (data: z.infer<typeof feedbackFormSchema>) => {
     const result = await insertFeedback(data.description);
     if (result.error) {
-      setError(result.error);
+      toast({
+        title: "Submission failed",
+        description: result.error,
+        status: "error",
+      });
     } else {
-      setError(null);
       const newFeedback = {
         id: feedbackList.length,
         teamId: teamId,
@@ -73,10 +74,8 @@ export default function FeedbackForm({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  Please enter your thoughts on the hunt! Any puzzle errors,
-                  website bugs, and general comments will be enormously helpful
-                  for us.
+                <FormLabel className="flex text-black">
+                  Please enter your thoughts on the hunt! Any puzzle errors, website bugs, and general comments will be enormously helpful for us.
                 </FormLabel>
                 <FormControl>
                   <AutosizeTextarea
@@ -85,12 +84,14 @@ export default function FeedbackForm({
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
-          {error && <p className="text-red-500">{error}</p>}
-          <Button className="bg-gray-900 hover:bg-gray-800" type="submit">
+          <Button
+            className="bg-gray-900 hover:bg-gray-800 my-4"
+            type="submit"
+            disabled={!form.watch("description")}
+          >
             Submit
           </Button>
         </form>

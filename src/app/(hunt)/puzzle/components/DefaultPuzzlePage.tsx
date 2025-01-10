@@ -80,13 +80,12 @@ export default async function DefaultPuzzlePage({
           </div>
         )}
         {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-          <div className="mb-4 text-center text-rose-600">
+          <div className="mb-4 text-center font-medium text-rose-600">
             You have no guesses left. Please contact HQ for help.
           </div>
         )}
       </div>
 
-      <h2>Previous Guesses</h2>
       <div className="mb-4">
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>

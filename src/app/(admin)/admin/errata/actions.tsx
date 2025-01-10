@@ -7,7 +7,7 @@ import { db } from "@/db/index";
 export async function insertErratum(puzzleId: string, description: string) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
-    throw new Error("Not authorized");
+    return { error: "Not authenticated, please ensure you're on an admin account." };
   }
 
   await db.insert(errata).values({

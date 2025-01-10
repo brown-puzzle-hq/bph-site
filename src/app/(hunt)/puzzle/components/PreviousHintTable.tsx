@@ -309,6 +309,13 @@ export default function PreviousHintTable({
                   onClick={() =>
                     handleSubmitRequest(hintState.puzzleId, request)
                   }
+                  disabled={
+                    hintState.isSolved ||
+                    !!hintState.unansweredHint ||
+                    hintState.hintsRemaining < 1 ||
+                    currDate > HUNT_END_TIME ||
+                    !request.trim()
+                  }
                 >
                   Submit
                 </Button>

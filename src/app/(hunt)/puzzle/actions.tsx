@@ -27,7 +27,7 @@ export type MessageType = "request" | "response" | "follow-up";
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in!" };
   }
 
   const puzzle = await db.query.puzzles.findFirst({
@@ -40,7 +40,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
   });
 
   if (!puzzle) {
-    throw new Error("Puzzle not found");
+    return { error: "Puzzle not found!" };
   }
 
   if (puzzle.guesses.length >= NUMBER_OF_GUESSES_PER_PUZZLE) {
@@ -100,7 +100,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
 export async function insertFollowUp(hintId: number, message: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in" };
   }
 
   const result = await db
@@ -120,7 +120,7 @@ export async function insertFollowUp(hintId: number, message: string) {
 export async function insertHint(puzzleId: string, hint: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in" };
   }
 
   // Checks
@@ -206,7 +206,7 @@ export async function editMessage(
 ) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in" };
   }
 
   switch (type) {
