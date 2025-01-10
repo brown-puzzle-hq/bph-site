@@ -9,7 +9,7 @@ import {
   insertHint,
   MessageType,
 } from "../actions";
-import { HUNT_END_TIME } from "@/hunt.config";
+import { IN_PERSON } from "@/hunt.config";
 import { Button } from "~/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
@@ -232,7 +232,7 @@ export default function PreviousHintTable({
   if (hintState) {
     const { puzzleId, hintsRemaining, unansweredHint, isSolved } = hintState;
     getFormDescription = () => {
-      if (currDate > HUNT_END_TIME) {
+      if (currDate > IN_PERSON.END_TIME) {
         return <>Hunt has ended and live hinting has closed.</>;
       }
 
@@ -293,7 +293,7 @@ export default function PreviousHintTable({
                     hintState.isSolved ||
                     !!hintState.unansweredHint ||
                     hintState.hintsRemaining < 1 ||
-                    currDate > HUNT_END_TIME
+                    currDate > IN_PERSON.END_TIME
                   }
                   value={request}
                   onChange={handleChangeRequest}

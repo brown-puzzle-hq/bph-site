@@ -19,7 +19,7 @@ import {
 
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { insertHint } from "../actions";
-import { HUNT_END_TIME } from "~/hunt.config";
+import { IN_PERSON } from "~/hunt.config";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
@@ -56,7 +56,7 @@ export default function HintForm({
   };
 
   function getFormDescription() {
-    if (currDate > HUNT_END_TIME) {
+    if (currDate > IN_PERSON.END_TIME) {
       return <>The hunt has ended and live hinting has been closed.</>;
     }
 
@@ -116,7 +116,7 @@ export default function HintForm({
                     isSolved ||
                     !!unansweredHint ||
                     hintsRemaining < 1 ||
-                    currDate > HUNT_END_TIME
+                    currDate > IN_PERSON.END_TIME
                   }
                   {...field}
                 />
@@ -132,7 +132,7 @@ export default function HintForm({
             isSolved ||
             !!unansweredHint ||
             hintsRemaining < 1 ||
-            currDate > HUNT_END_TIME
+            currDate > IN_PERSON.END_TIME
           }
         >
           Submit

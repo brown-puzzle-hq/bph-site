@@ -7,45 +7,54 @@ import {
   TableOfContents,
 } from "./TableOfContents";
 import Timeline from "./Timeline";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
+
+const formatter = new Intl.DateTimeFormat("en-US", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  timeZoneName: "short",
+});
+
+const timeOnly = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "numeric",
+});
 
 const InPersonTimeline = [
   {
     title: "Kickoff",
-    description:
-      "Kickoff will start promptly on [DATE] at [TIME], in [PLACE], with doors opening at [TIME]. We will collect waivers from non-Brown/RISD participants.",
+    description: `Kickoff will start promptly on ${formatter.format(IN_PERSON.KICKOFF_TIME)}, in MacMillan 117, with doors opening at ${timeOnly.format(IN_PERSON.KICKOFF_DOOR_TIME)}. We will collect waivers from all participants.`,
   },
   {
     title: "Hunt Begins",
-    description:
-      "Puzzles for in-person teams will be released on [DATE] at [TIME].",
+    description: `Puzzles for in-person teams will be released on ${formatter.format(IN_PERSON.START_TIME)}.`,
   },
   {
     title: "Hunt Ends",
-    description:
-      "The in-person hunt will end on [DATE] at [TIME], at which point hints will no longer be answered, the leaderboard will be frozen, and physical puzzles will no longer be available to be picked up.",
+    description: `The in-person hunt will end on ${formatter.format(IN_PERSON.END_TIME)}, at which point hints will no longer be answered, the leaderboard will be frozen, and physical puzzles will no longer be available to be picked up.`,
   },
   {
     title: "Wrap-Up",
-    description:
-      "Wrap-up will be held on [DATE] at [TIME] in [PLACE], with doors opening at [TIME]. This will be livestreamed for online participants.",
+    description: `Wrap-up will be held on ${formatter.format(IN_PERSON.WRAPUP_TIME)} in MacMillan 117, with doors opening at ${timeOnly.format(IN_PERSON.WRAPUP_DOOR_TIME)}. This will be livestreamed for online participants.`,
   },
 ];
 
 const OnlineTimeline = [
   {
     title: "Hunt Begins",
-    description:
-      "Puzzles for online teams will be released on [DATE] at [TIME].",
+    description: `Puzzles for online teams will be released on ${formatter.format(REMOTE.START_TIME)}.`,
   },
   {
     title: "Hunt Ends",
-    description:
-      "The online hunt will end on [DATE] at [TIME]. Hints will no longer be answered and the leaderboard will be frozen.",
+    description: `The online hunt will end on ${formatter.format(REMOTE.END_TIME)}. Hints will no longer be answered and the leaderboard will be frozen.`,
   },
   {
     title: "Wrap-Up",
-    description:
-      "Wrap-up will be held on [DATE] at [TIME]. This will be livestreamed for online participants.",
+    description: `Wrap-up will be held on ${formatter.format(REMOTE.WRAPUP_TIME)}. This will be livestreamed for online participants.`,
   },
 ];
 
@@ -147,10 +156,12 @@ export default function Page() {
               <h2>When and where is this happening?</h2>
               <p>
                 Brown Puzzlehunt is available both as an in-person event and as
-                an online event. The in-person event will being on [DATE] from
-                [TIME] to [TIME]. The online event will begin a week later, on
-                [DATE] from [TIME] to [TIME]. These events are split into two
-                different weeks so we can deliver a better hunt experience!
+                an online event. The in-person event will run from{" "}
+                {formatter.format(IN_PERSON.KICKOFF_TIME)} to{" "}
+                {formatter.format(IN_PERSON.END_TIME)}. The online event will
+                run a week later, from {formatter.format(REMOTE.START_TIME)} to{" "}
+                {formatter.format(REMOTE.END_TIME)}. These events are split into
+                two different weeks so we can deliver a better hunt experience!
               </p>
               <p>
                 The main difference between the in-person and the online event
@@ -160,15 +171,16 @@ export default function Page() {
               </p>
               <h3>In-person timeline</h3>
               <p>
-                The in-person event is on [DATE] from [TIME] to [TIME] at Brown
-                University in Providence, Rhode Island.{" "}
-                <strong>If you are a non-Brown/RISD participant,</strong> you
-                will need to print and fill out this{" "}
+                The in-person event will run from{" "}
+                {formatter.format(IN_PERSON.KICKOFF_TIME)} to{" "}
+                {formatter.format(IN_PERSON.END_TIME)} at Brown University in
+                Providence, Rhode Island. <strong>All participants</strong> will
+                need to print and fill out this{" "}
                 <Link
                   href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf"
                   className="text-blue-500 no-underline hover:underline"
                 >
-                  waiver form
+                  waiver
                 </Link>{" "}
                 in order to come on campus. We will collect these at kickoff.
               </p>
@@ -176,9 +188,9 @@ export default function Page() {
               <h3>Online timeline</h3>
               <p>
                 If you cannot make it to the in-person event, you can also
-                participate online on [DATE] from [TIME] to [TIME]. All puzzles
-                will be available online, except for physical puzzles and
-                runarounds.
+                participate online from {formatter.format(REMOTE.START_TIME)} to{" "}
+                {formatter.format(REMOTE.END_TIME)}. All puzzles will be
+                available online, except for physical puzzles and runarounds.
               </p>
               <Timeline timeline={OnlineTimeline} />
             </TOCSection>
@@ -207,13 +219,13 @@ export default function Page() {
             <TOCSection sectionId={4} tocTitle="How do hints work?">
               <h2>How do hints work? </h2>
               <p>
-                Starting on [DATE] at [TIME], teams will gain one hint request
-                every three hours, which you can use to ask for help on any
-                puzzle. This can be something like a nudge in the right
-                direction (i.e. you give us your progress on the puzzle and we
-                will try to get you unstuck) or an answer to a question (e.g.
-                “Which answers to these crossword clues are wrong?”). You can
-                only have one open hint request at a time.
+                When puzzles drop, teams will gain one hint request every three
+                hours, which you can use to ask for help on any puzzle. This can
+                be something like a nudge in the right direction (i.e. you give
+                us your progress on the puzzle and we will try to get you
+                unstuck) or an answer to a question (e.g. “Which answers to
+                these crossword clues are wrong?”). You can only have one open
+                hint request at a time.
               </p>
               <p>
                 If you are a beginner student team or a team with a strong

@@ -1,8 +1,7 @@
 import { auth } from "@/auth";
-import { HUNT_START_TIME } from "@/hunt.config";
+import { IN_PERSON, INITIAL_PUZZLES } from "@/hunt.config";
 import Link from "next/link";
 import { db } from "@/db/index";
-import { HUNT_END_TIME, INITIAL_PUZZLES } from "@/hunt.config";
 import { and, eq, inArray } from "drizzle-orm";
 import { guesses, puzzles, unlocks } from "~/server/db/schema";
 import PuzzleTable from "./components/PuzzleTable";
@@ -12,7 +11,7 @@ export default async function Home() {
   const session = await auth();
 
   // If the hunt has not yet started, display a message
-  if (new Date() < HUNT_START_TIME) {
+  if (new Date() < IN_PERSON.START_TIME) {
     return (
       <div className="flex grow flex-col items-center text-secondary">
         <div className="mb-6 flex grow flex-col items-center">
@@ -24,7 +23,7 @@ export default async function Home() {
   }
 
   // If the user is not logged in and the hunt has not ended, display a message
-  if (!session?.user?.id && new Date() < HUNT_END_TIME) {
+  if (!session?.user?.id && new Date() < IN_PERSON.END_TIME) {
     return (
       <div className="flex grow flex-col items-center text-secondary">
         <h1 className="mb-2">Puzzles!</h1>
@@ -46,7 +45,7 @@ export default async function Home() {
   }[];
 
   // If the user is logged in and the hunt has not ended
-  if (session?.user?.id && new Date() < HUNT_END_TIME) {
+  if (session?.user?.id && new Date() < IN_PERSON.END_TIME) {
     let initialPuzzles = await db.query.puzzles.findMany({
       columns: { id: true, name: true, answer: true },
       where: inArray(puzzles.id, INITIAL_PUZZLES),
