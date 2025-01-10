@@ -1,9 +1,5 @@
 "use server";
-import {
-  teams,
-  type interactionModeEnum,
-  type roleEnum,
-} from "@/db/schema";
+import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
@@ -37,7 +33,7 @@ export async function updateTeam(
   if (session?.user?.role !== "admin") {
     delete teamProperties.role;
   }
-  
+
   // Update the password
   if (teamProperties.password) {
     const hashedPassword = await new Promise<string>((resolve, reject) => {
@@ -56,10 +52,10 @@ export async function updateTeam(
       .where(eq(teams.username, username))
       .returning({ username: teams.username });
     if (result.length === 0) {
-      return { error: "No team matching the given ID was found" };
+      return { error: "No team matching the given ID was found." };
     }
     return { error: null };
   } catch (error) {
-    return { error: "Unexpected error occurred" };
+    return { error: "An unexpected error occurred." };
   }
 }

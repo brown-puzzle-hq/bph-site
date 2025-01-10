@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "~/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { set, z } from "zod";
+import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -134,7 +134,6 @@ export function ProfileForm({
   const router = useRouter();
   const { data: session } = useSession();
   const members = deserializeMembers(memberString);
-  const [error, setError] = useState<string | null>(null);
   const [memberError, setMemberError] = useState<string | null>(null);
 
   const [updatedInteractionMode, setUpdatedInteractionMode] =
@@ -192,20 +191,17 @@ export function ProfileForm({
     });
 
     if (teamResult.error) {
-      setError(teamResult.error);
+      toast({
+        title: "Update failed",
+        description: teamResult.error,
+        status: "error",
+      });
       return;
     }
 
-    // Save changes button animation might be sufficient
-    // toast({
-    //   title: "Update successful",
-    //   description: "Your team info has successfully been updated.",
-    // });
-
-    setError(null);
     data.phoneNumber = formatPhoneNumber(data.phoneNumber);
     form.reset(data);
-    router.refresh();
+    router.refresh(); // Ideally we remove this but seems like still necessary in some cases
   };
 
   const isDirty = () => {
@@ -299,7 +295,7 @@ export function ProfileForm({
                   </FormControl>
                   <FormDescription>
                     Number of undergraduates, graduates, faculty, or alumni.
-                    Winning requires at least one.
+                    Must have at least one to win.
                   </FormDescription>
                 </FormItem>
               )}
@@ -533,7 +529,14 @@ export function ProfileForm({
                 <Button variant="outline" onClick={() => form.reset()}>
                   Reset
                 </Button>
-                <Button type="submit" disabled={!!Object.keys(form.formState.errors).length || memberError}>Save</Button>
+                <Button
+                  type="submit"
+                  disabled={
+                    !!Object.keys(form.formState.errors).length || memberError
+                  }
+                >
+                  Save
+                </Button>
               </div>
             </div>
           </Alert>
