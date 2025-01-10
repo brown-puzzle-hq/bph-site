@@ -40,7 +40,7 @@ const zPhone = z.string().transform((arg, ctx) => {
 
   ctx.addIssue({
     code: z.ZodIssueCode.custom,
-    message: "Invalid phone number.",
+    message: "Invalid number",
   });
   return z.NEVER;
 });
@@ -48,9 +48,8 @@ const zPhone = z.string().transform((arg, ctx) => {
 export const profileFormSchema = z.object({
   displayName: z
     .string()
-    .min(1, { message: "Display name is required" })
-    .max(50, { message: "Display name must be at most 50 characters long" })
-    .or(z.literal("")),
+    .min(1, { message: "Required" })
+    .max(50, { message: "Max 50 characters" }),
   interactionMode: z.enum(interactionModeEnum.enumValues),
   numCommunity: z.string().nullish().or(z.literal("")),
   phoneNumber: zPhone,
@@ -74,6 +73,7 @@ export const profileFormSchema = z.object({
 });
 
 type TeamInfoFormProps = {
+  variant: "edit" | "register";
   username: string;
   displayName: string;
   role: "admin" | "user";
@@ -109,7 +109,18 @@ function deserializeMembers(memberString: string): member[] {
   });
 }
 
+function formatPhoneNumber(phoneNumber: string): string {
+  const parsed = parsePhoneNumberFromString(phoneNumber);
+  if (parsed && parsed.country === "US") {
+    return parsed.formatNational();
+  } else if (parsed) {
+    return parsed.formatInternational();
+  }
+  return phoneNumber;
+}
+
 export function ProfileForm({
+  variant = "edit",
   username,
   displayName,
   role,
@@ -129,12 +140,7 @@ export function ProfileForm({
   const [updatedInteractionMode, setUpdatedInteractionMode] =
     useState(interactionMode);
 
-  if (phoneNumber) {
-    const parsed = parsePhoneNumberFromString(phoneNumber)?.formatNational();
-    if (parsed) {
-      phoneNumber = parsed;
-    }
-  }
+  phoneNumber = formatPhoneNumber(phoneNumber);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -190,12 +196,16 @@ export function ProfileForm({
       return;
     }
 
-    toast({
-      title: "Update successful",
-      description: "Your team info has successfully been updated.",
-    });
+    // Save changes button animation might be sufficient
+    // toast({
+    //   title: "Update successful",
+    //   description: "Your team info has successfully been updated.",
+    // });
+
     setError(null);
-    router.refresh(); // TODO: doesn't seem to work
+    data.phoneNumber = formatPhoneNumber(data.phoneNumber);
+    form.reset(data);
+    router.refresh();
   };
 
   const isDirty = () => {
@@ -220,9 +230,12 @@ export function ProfileForm({
           control={form.control}
           name="displayName"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Display Name <span className="text-red-500">*</span>
+            <FormItem className="mb-8">
+              <FormLabel className="flex flex-row justify-between">
+                <span className="text-black">
+                  Display name <span className="text-red-500">*</span>
+                </span>
+                <FormMessage />
               </FormLabel>
               <FormControl>
                 <Input placeholder="Josiah Carberry" {...field} />
@@ -230,7 +243,6 @@ export function ProfileForm({
               <FormDescription>
                 This name will be displayed on the leaderboard.
               </FormDescription>
-              <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
@@ -242,7 +254,7 @@ export function ProfileForm({
           render={({ field }) => (
             <FormItem className="mb-8 space-y-3">
               <FormLabel>
-                Interaction Mode <span className="text-red-500">*</span>
+                We will be competing... <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <RadioGroup
@@ -281,13 +293,13 @@ export function ProfileForm({
               name="numCommunity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Community Team Members</FormLabel>
+                  <FormLabel>Brown/RISD team members</FormLabel>
                   <FormControl>
                     <Input {...field} type="number" />
                   </FormControl>
                   <FormDescription>
-                    Number of Brown/RISD undergraduates, graduates, faculty, or
-                    alumni.
+                    Number of undergraduates, graduates, faculty, or alumni.
+                    Winning requires at least one.
                   </FormDescription>
                 </FormItem>
               )}
@@ -298,7 +310,10 @@ export function ProfileForm({
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-black">Phone number</span>
+                    <FormMessage />
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -324,7 +339,7 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem className="mb-8 flex flex-row items-center justify-between">
                   <div>
-                    <FormLabel>Room Needed</FormLabel>
+                    <FormLabel>Room needed</FormLabel>
                     <FormDescription>
                       Do you need a room on campus?
                     </FormDescription>
@@ -344,7 +359,7 @@ export function ProfileForm({
               name="solvingLocation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Solving Location</FormLabel>
+                  <FormLabel>Solving location</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -359,8 +374,10 @@ export function ProfileForm({
         )}
 
         <div className="mb-8">
-          <FormLabel>
-            Team Members <span className="text-red-500">*</span>{" "}
+          <FormLabel className="flex flex-row justify-between">
+            <span>
+              Team members <span className="text-red-500">*</span>
+            </span>
             <span className="text-[0.8rem] font-medium text-red-500">
               {memberError}
             </span>
@@ -372,7 +389,7 @@ export function ProfileForm({
                 control={form.control}
                 name={`members.${index}.name`}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-1/2">
                     <FormControl>
                       <Input
                         className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
@@ -415,7 +432,7 @@ export function ProfileForm({
                 control={form.control}
                 name={`members.${index}.email`}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-1/2">
                     <FormControl>
                       <Input
                         className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "text-red-500" : "text-black"}`}
@@ -475,7 +492,7 @@ export function ProfileForm({
             name="role"
             render={({ field }) => (
               <FormItem className="mb-12 space-y-3">
-                <FormLabel>Team Permissions</FormLabel>
+                <FormLabel>Team permissions</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -516,7 +533,7 @@ export function ProfileForm({
                 <Button variant="outline" onClick={() => form.reset()}>
                   Reset
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button type="submit" disabled={!!Object.keys(form.formState.errors).length || memberError}>Save</Button>
               </div>
             </div>
           </Alert>

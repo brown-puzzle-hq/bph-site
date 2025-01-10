@@ -62,6 +62,7 @@ export default async function Page({
       </div>
       <div className="flex flex-col items-center">
         <ProfileForm
+          variant="edit"
           username={slug}
           displayName={team.displayName}
           role={team.role}

@@ -45,6 +45,7 @@ export const teams = createTable("team", {
   interactionMode: interactionModeEnum("interaction_type").notNull(),
 
   // Only for in-person teams
+  // NOTE: defaults seem to not be working, entries still get added with NULL by default
   numCommunity: varchar("num_community", { length: 31 }).notNull().default(""),
   phoneNumber: varchar("phone_number", { length: 31 }).notNull().default(""),
   roomNeeded: boolean("room_needed").notNull().default(false),
