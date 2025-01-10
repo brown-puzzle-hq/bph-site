@@ -21,13 +21,13 @@ export const IN_PERSON = {
   END_TIME: new Date("2025-04-13T23:00:00Z"),
   WRAPUP_DOOR_TIME: new Date("2025-04-13T23:30:00.000Z"),
   WRAPUP_TIME: new Date("2025-04-14T00:00:00Z"),
-}
+};
 
 export const REMOTE = {
   START_TIME: new Date("2025-04-19T16:00:00.000Z"),
   END_TIME: new Date("2025-04-20T23:00:00Z"),
   WRAPUP_TIME: new Date("2025-04-21T00:00:00Z"),
-}
+};
 
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
@@ -164,7 +164,9 @@ export async function canViewSolution(puzzleId: string) {
     ),
   }));
 
-  return session.user.role == "admin" || isSolved || new Date() > IN_PERSON.END_TIME;
+  return (
+    session.user.role == "admin" || isSolved || new Date() > IN_PERSON.END_TIME
+  );
 }
 
 /** Checks whether the user can view the puzzle. */

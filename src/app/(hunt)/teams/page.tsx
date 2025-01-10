@@ -36,12 +36,17 @@ export default async function Home() {
     })
     .from(teams)
     // Filter out admin teams and teams who registered after the hunt end
-    .where(and(eq(teams.role, "user"), lt(teams.createTime, IN_PERSON.END_TIME)))
+    .where(
+      and(eq(teams.role, "user"), lt(teams.createTime, IN_PERSON.END_TIME)),
+    )
     // Get guesses that were submitted before the hunt end
     // This is used for `correctGuesses` and `lastCorrectGuessTime`
     .leftJoin(
       guesses,
-      and(eq(guesses.teamId, teams.id), lt(guesses.submitTime, IN_PERSON.END_TIME)),
+      and(
+        eq(guesses.teamId, teams.id),
+        lt(guesses.submitTime, IN_PERSON.END_TIME),
+      ),
     )
     .groupBy(teams.id, teams.displayName, teams.finishTime)
     .orderBy(
