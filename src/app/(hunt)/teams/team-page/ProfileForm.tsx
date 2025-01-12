@@ -382,7 +382,7 @@ export function ProfileForm({
                 <FormItem>
                   <FormLabel>Brown/RISD team members</FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" />
+                    <Input {...field} type="number" min="0" />
                   </FormControl>
                   <FormDescription>
                     Number of undergraduates, graduates, faculty, or alumni.

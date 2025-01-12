@@ -76,7 +76,15 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <div className="flex flex-row items-center justify-between">
+                <FormLabel>Password</FormLabel>
+                <Link
+                  href="mailto:brownpuzzlehq@gmail.com"
+                  className="text-sm text-secondary hover:underline"
+                >
+                  Forgot?
+                </Link>
+              </div>
               <FormControl>
                 <Input
                   type="password"
@@ -92,7 +100,7 @@ export function LoginForm() {
         <Button className="hover:bg-otherblue" type="submit">
           Log In
         </Button>
-        <div className="py-2 text-sm">
+        <div className="pt-4 text-sm">
           New to the hunt?{" "}
           <Link href="/register" className="text-secondary hover:underline">
             Register
