@@ -4,7 +4,7 @@ import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
 
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "~/hooks/use-toast";
@@ -109,7 +109,8 @@ function deserializeMembers(memberString: string): member[] {
   });
 }
 
-function formatPhoneNumber(phoneNumber: string): string {
+function formatPhoneNumber(phoneNumber: string | null): string {
+  if (!phoneNumber) return "";
   const parsed = parsePhoneNumberFromString(phoneNumber);
   if (parsed && parsed.country === "US") {
     return parsed.formatNational();
@@ -134,10 +135,6 @@ export function ProfileForm({
   const router = useRouter();
   const { data: session } = useSession();
   const members = deserializeMembers(memberString);
-  const [memberError, setMemberError] = useState<string | null>(null);
-
-  const [updatedInteractionMode, setUpdatedInteractionMode] =
-    useState(interactionMode);
 
   phoneNumber = formatPhoneNumber(phoneNumber);
 
@@ -161,22 +158,11 @@ export function ProfileForm({
     control: form.control,
   });
 
-  const watchFields = form.watch();
-
   useEffect(() => {
-    if (watchFields.members.length === 0) {
+    if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
     }
-    if (
-      !watchFields.members.some(
-        (member: member) => member?.name || member?.email,
-      )
-    ) {
-      setMemberError("At least one member required");
-    } else {
-      setMemberError(null);
-    }
-  }, [watchFields]);
+  });
 
   const onSubmit = async (data: ProfileFormValues) => {
     const teamResult = await updateTeam(username, {
@@ -213,8 +199,6 @@ export function ProfileForm({
     );
   };
 
-  console.log(form.formState.errors.members);
-
   return (
     <Form {...form}>
       <form
@@ -243,36 +227,143 @@ export function ProfileForm({
           )}
         />
 
+        <div className="mb-8">
+          <FormLabel className="flex flex-row justify-between">
+            <span>
+              Team members <span className="text-red-500">*</span>
+            </span>
+            {!form
+              .getValues("members")
+              .some((member: member) => member?.name || member?.email) && (
+              <span className="text-[0.8rem] font-medium text-red-500">
+                At least one member required
+              </span>
+            )}
+          </FormLabel>
+          {fields.map((field, index) => (
+            <div className="flex items-center space-x-2" key={field.id}>
+              {/* Field for member name */}
+              <FormField
+                control={form.control}
+                name={`members.${index}.name`}
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormControl>
+                      <Input
+                        className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
+                        {...field}
+                        value={field.value ?? ""}
+                        placeholder="Name"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            if (e.shiftKey) {
+                              const prevField = document.querySelector(
+                                `[name="members.${index - 1}.email"]`,
+                              ) as HTMLInputElement;
+                              prevField?.focus();
+                            } else {
+                              const nextField = document.querySelector(
+                                `[name="members.${index}.email"]`,
+                              ) as HTMLInputElement;
+                              nextField?.focus();
+                            }
+                          } else if (e.key === "Backspace" && !field.value) {
+                            remove(index);
+                            // Move focus back to the previous field
+                            setTimeout(() => {
+                              const prevField = document.querySelector(
+                                `[name="members.${index - 1}.email"]`,
+                              ) as HTMLInputElement;
+                              prevField?.focus();
+                            }, 0);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {/* Field for member email */}
+              <FormField
+                control={form.control}
+                name={`members.${index}.email`}
+                render={({ field }) => (
+                  <FormItem className="w-1/2">
+                    <FormControl>
+                      <Input
+                        className={`rounded-none border-0 border-b ${form.formState.errors.members?.[index] ? "border-red-300" : ""} p-0 text-black shadow-none focus-visible:ring-transparent`}
+                        {...field}
+                        value={field.value ?? ""}
+                        placeholder="Email"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            if (e.shiftKey) {
+                              const prevField = document.querySelector(
+                                `[name="members.${index}.name"]`,
+                              ) as HTMLInputElement;
+                              prevField?.focus();
+                            } else if (index === fields.length - 1) {
+                              append({ email: "", name: "" });
+                            } else {
+                              const nextField = document.querySelector(
+                                `[name="members.${index + 1}.name"]`,
+                              ) as HTMLInputElement;
+                              nextField?.focus();
+                            }
+                          } else if (e.key === "Backspace" && !field.value) {
+                            const prevField = document.querySelector(
+                              `[name="members.${index}.name"]`,
+                            ) as HTMLInputElement;
+                            prevField?.focus();
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {/* X button */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 text-gray-400"
+                onClick={() => remove(index)}
+              >
+                <X />
+              </Button>
+            </div>
+          ))}
+          <FormDescription className="pt-2">
+            Press ENTER to add entries.
+          </FormDescription>
+        </div>
+
         {/* Interaction mode field */}
         <FormField
           control={form.control}
           name="interactionMode"
           render={({ field }) => (
-            <FormItem className="mb-8 space-y-3">
+            <FormItem className="mb-8 space-y-2">
               <FormLabel>
                 We will be competing... <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <RadioGroup
-                  onValueChange={(
-                    value: TeamInfoFormProps["interactionMode"],
-                  ) => {
-                    setUpdatedInteractionMode(value);
-                    field.onChange(value);
-                  }}
-                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                  value={field.value}
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="in-person" />
-                    </FormControl>
+                    <RadioGroupItem value="in-person" />
                     <FormLabel className="font-normal">In-person</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="remote" />
-                    </FormControl>
+                    <RadioGroupItem value="remote" />
                     <FormLabel className="font-normal">Remote</FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -282,7 +373,7 @@ export function ProfileForm({
         />
 
         {/* Other fields */}
-        {updatedInteractionMode === "in-person" && (
+        {form.getValues("interactionMode") === "in-person" && (
           <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
@@ -369,142 +460,26 @@ export function ProfileForm({
           </div>
         )}
 
-        <div className="mb-8">
-          <FormLabel className="flex flex-row justify-between">
-            <span>
-              Team members <span className="text-red-500">*</span>
-            </span>
-            <span className="text-[0.8rem] font-medium text-red-500">
-              {memberError}
-            </span>
-          </FormLabel>
-          {fields.map((field, index) => (
-            <div className="flex items-center space-x-2" key={field.id}>
-              {/* Field for member name */}
-              <FormField
-                control={form.control}
-                name={`members.${index}.name`}
-                render={({ field }) => (
-                  <FormItem className="w-1/2">
-                    <FormControl>
-                      <Input
-                        className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
-                        {...field}
-                        value={field.value ?? ""}
-                        placeholder="Name"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            if (e.shiftKey) {
-                              const prevField = document.querySelector(
-                                `[name="members.${index - 1}.email"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
-                            } else {
-                              const nextField = document.querySelector(
-                                `[name="members.${index}.email"]`,
-                              ) as HTMLInputElement;
-                              nextField?.focus();
-                            }
-                          } else if (e.key === "Backspace" && !field.value) {
-                            remove(index);
-                            // Move focus back to the previous field
-                            setTimeout(() => {
-                              const prevField = document.querySelector(
-                                `[name="members.${index - 1}.email"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
-                            }, 0);
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {/* Field for member email */}
-              <FormField
-                control={form.control}
-                name={`members.${index}.email`}
-                render={({ field }) => (
-                  <FormItem className="w-1/2">
-                    <FormControl>
-                      <Input
-                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "text-red-500" : "text-black"}`}
-                        {...field}
-                        value={field.value ?? ""}
-                        placeholder="Email"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            if (e.shiftKey) {
-                              const prevField = document.querySelector(
-                                `[name="members.${index}.name"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
-                            } else if (index === fields.length - 1) {
-                              append({ email: "", name: "" });
-                            } else {
-                              const nextField = document.querySelector(
-                                `[name="members.${index + 1}.name"]`,
-                              ) as HTMLInputElement;
-                              nextField?.focus();
-                            }
-                          } else if (e.key === "Backspace" && !field.value) {
-                            const prevField = document.querySelector(
-                              `[name="members.${index}.name"]`,
-                            ) as HTMLInputElement;
-                            prevField?.focus();
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {/* X button */}
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-10 w-10 text-gray-400"
-                onClick={() => remove(index)}
-              >
-                <X />
-              </Button>
-            </div>
-          ))}
-          <FormDescription className="pt-3">
-            Press ENTER to add entries.
-          </FormDescription>
-        </div>
-
         {/* Role field  */}
         {session?.user?.role === "admin" && (
           <FormField
             control={form.control}
             name="role"
             render={({ field }) => (
-              <FormItem className="mb-12 space-y-3">
+              <FormItem className="mb-8 space-y-2">
                 <FormLabel>Team permissions</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                     className="flex flex-col space-y-1"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="user" />
-                      </FormControl>
+                      <RadioGroupItem value="user" />
                       <FormLabel className="font-normal">User</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="admin" />
-                      </FormControl>
+                      <RadioGroupItem value="admin" />
                       <FormLabel className="font-normal">Admin</FormLabel>
                     </FormItem>
                   </RadioGroup>
@@ -532,7 +507,10 @@ export function ProfileForm({
                 <Button
                   type="submit"
                   disabled={
-                    !!Object.keys(form.formState.errors).length || memberError
+                    !!Object.keys(form.formState.errors).length ||
+                    !form
+                      .getValues("members")
+                      .some((member: member) => member?.name || member?.email)
                   }
                 >
                   Save
