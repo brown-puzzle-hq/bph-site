@@ -81,6 +81,7 @@ export function LoginForm() {
                 <Link
                   href="mailto:brownpuzzlehq@gmail.com"
                   className="text-sm text-secondary hover:underline"
+                  tabIndex={-1}
                 >
                   Forgot?
                 </Link>
