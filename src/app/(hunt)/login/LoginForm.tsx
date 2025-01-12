@@ -80,7 +80,7 @@ export function LoginForm() {
                 <FormLabel>Password</FormLabel>
                 <Link
                   href="mailto:brownpuzzlehq@gmail.com"
-                  className="text-sm text-secondary hover:underline"
+                  className="text-sm text-blue-500 hover:underline"
                   tabIndex={-1}
                 >
                   Forgot?
