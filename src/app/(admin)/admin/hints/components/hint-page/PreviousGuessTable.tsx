@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";
-import { FormattedTime } from "~/lib/time";
+import { formatTime } from "~/lib/time";
 
 export default function PreviousGuessTable({
   previousGuesses,
@@ -28,7 +28,6 @@ export default function PreviousGuessTable({
                     <p className="text-rose-600">INCORRECT</p>
                   )}
                 </TableCell>
-                {/* TODO: actually learn Tailwind */}
                 <TableCell
                   className={
                     maxLength < 30
@@ -36,7 +35,7 @@ export default function PreviousGuessTable({
                       : "hidden whitespace-nowrap md:table-cell"
                   }
                 >
-                  <FormattedTime time={guess.submitTime} />
+                  <p>{formatTime(guess.submitTime)}</p>
                 </TableCell>
               </TableRow>
             ))}

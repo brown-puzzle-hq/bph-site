@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { teams } from "~/server/db/schema";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-import { FormattedTime } from "~/lib/time";
+import { formatTime } from "~/lib/time";
 
 // Define the columns for the table using TanStack
 export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
@@ -114,9 +114,7 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
     cell: ({ row }) => {
       const time: Date = row.getValue("createTime");
       return (
-        <div className="w-32 truncate font-medium">
-          <FormattedTime time={time} />
-        </div>
+        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
       );
     },
   },
@@ -137,9 +135,7 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
     cell: ({ row }) => {
       const time: Date = row.getValue("startTime");
       return (
-        <div className="w-32 truncate font-medium">
-          <FormattedTime time={time} />
-        </div>
+        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
       );
     },
   },
@@ -160,9 +156,7 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
     cell: ({ row }) => {
       const time: Date = row.getValue("finishTime");
       return (
-        <div className="w-32 truncate font-medium">
-          <FormattedTime time={time} />
-        </div>
+        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
       );
     },
   },

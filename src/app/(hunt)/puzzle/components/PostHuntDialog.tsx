@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { Alert, AlertDescription } from "~/components/ui/alert";
-import { FormattedTime } from "~/lib/time";
-import { errata } from "~/server/db/schema";
 
 export default function PostHuntDialog() {
   return (

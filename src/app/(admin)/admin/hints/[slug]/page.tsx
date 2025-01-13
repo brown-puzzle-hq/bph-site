@@ -10,41 +10,9 @@ import PreviousHintTable from "../components/hint-page/PreviousHintTable";
 import PreviousGuessTable from "../components/hint-page/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
-import { FormattedTime } from "~/lib/time";
+import { formatTime } from "~/lib/time";
 import { HUNT_START_TIME } from "~/hunt.config";
-
-type Time = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
-
-function getTimeDifference(date1: Date, date2: Date) {
-  const date1ms = date1.getTime();
-  const date2ms = date2.getTime();
-  const differenceMs = Math.abs(date2ms - date1ms);
-  const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-  const remainingMs = differenceMs % (1000 * 60 * 60 * 24);
-  const hours = Math.floor(remainingMs / (1000 * 60 * 60));
-  const remainingMs2 = remainingMs % (1000 * 60 * 60);
-  const minutes = Math.floor(remainingMs2 / (1000 * 60));
-  const remainingMs3 = remainingMs2 % (1000 * 60);
-  const seconds = Math.floor(remainingMs3 / 1000);
-  return { days, hours, minutes, seconds };
-}
-
-function getTimeDifferenceString(time: Time) {
-  if (time.days > 0) {
-    return `${time.days} ${time.days === 1 ? "day" : "days"}`;
-  } else if (time.hours > 0) {
-    return `${time.hours} ${time.hours === 1 ? "hour" : "hours"}`;
-  } else if (time.minutes > 0) {
-    return `${time.minutes} ${time.minutes === 1 ? "minute" : "minutes"}`;
-  } else {
-    return `${time.seconds} ${time.seconds === 1 ? "second" : "seconds"}`;
-  }
-}
+import { getTimeDifference, getTimeDifferenceString } from "~/lib/time";
 
 export default async function Page({
   params,
@@ -139,10 +107,10 @@ export default async function Page({
         </div>
 
         <div className="flex flex-col items-center overflow-auto rounded-md">
-          <div className="flex w-full flex-col justify-between p-6 text-zinc-700 md:w-2/3 lg:flex-row">
+          <div className="flex w-full flex-col justify-between p-6 text-sm text-zinc-700 md:w-2/3 lg:flex-row">
             <div>
               <p>
-                <strong>From team </strong>
+                <span className="font-semibold">Team </span>
                 <Link
                   href={`/admin/teams/${hint.team.username}`}
                   className="text-blue-600 hover:underline"
@@ -151,7 +119,7 @@ export default async function Page({
                 </Link>
               </p>
               <p>
-                <strong>For puzzle </strong>{" "}
+                <span className="font-semibold">Puzzle </span>
                 <Link
                   href={`/puzzle/${hint.puzzleId}`}
                   className="text-blue-600 hover:underline"
@@ -160,47 +128,65 @@ export default async function Page({
                 </Link>
               </p>
               <p>
-                <strong>Hint ID </strong>
+                <span className="font-semibold">Hint #</span>
                 {hint.id}
               </p>
             </div>
             <div>
               <p>
-                <strong>Requested </strong>
-                <FormattedTime time={hint.requestTime} />
-              </p>
-              <p>
-                <strong>Claimed </strong>
-                <FormattedTime time={hint.claimTime} />
-              </p>
-              <p>
-                <strong>Responded </strong>
-                <FormattedTime time={hint.responseTime} />
-              </p>
-            </div>
-            <div>
-              <p>
-                <strong>Unlocked </strong>{" "}
-                {getTimeDifferenceString(
+                <span className="font-semibold">Puzzle unlocked </span>
+                {`${formatTime(unlockTime)} 
+                (${getTimeDifferenceString(
                   getTimeDifference(new Date(), unlockTime),
-                )}{" "}
-                ago
+                )} ago)`}
               </p>
               <p>
-                <strong>Requested</strong>{" "}
-                {getTimeDifferenceString(
+                <span className="font-semibold">Hint requested </span>
+                {`${formatTime(hint.requestTime)} 
+                (${getTimeDifferenceString(
                   getTimeDifference(new Date(), hint.requestTime),
-                )}{" "}
-                ago
+                )} ago)`}
               </p>
               <p>
-                <strong>Responded</strong>{" "}
+                <span className="font-semibold">Hint claimed </span>
+                {hint.claimTime &&
+                  `${formatTime(hint.claimTime)} 
+                (${getTimeDifferenceString(
+                  getTimeDifference(new Date(), hint.claimTime),
+                )} ago)`}
+              </p>
+              <p>
+                <span className="font-semibold">Hint responded </span>
                 {hint.responseTime &&
-                  getTimeDifferenceString(
-                    getTimeDifference(hint.requestTime, hint.responseTime),
-                  ) + " later"}
+                  `${formatTime(hint.responseTime)} 
+                (${getTimeDifferenceString(
+                  getTimeDifference(new Date(), hint.responseTime),
+                )} ago)`}
               </p>
             </div>
+            {/* <div> */}
+            {/*   <p> */}
+            {/*     <strong>Unlocked </strong>{" "} */}
+            {/*     {getTimeDifferenceString( */}
+            {/*       getTimeDifference(new Date(), unlockTime), */}
+            {/*     )}{" "} */}
+            {/*     ago */}
+            {/*   </p> */}
+            {/*   <p> */}
+            {/*     <strong>Requested</strong>{" "} */}
+            {/*     {getTimeDifferenceString( */}
+            {/*       getTimeDifference(new Date(), hint.requestTime), */}
+            {/*     )}{" "} */}
+            {/*     ago */}
+            {/*   </p> */}
+            {/*   <p> */}
+            {/*     <strong>Responded</strong>{" "} */}
+            {/*     {hint.responseTime && */}
+            {/*       getTimeDifferenceString( */}
+            {/*         getTimeDifference(hint.requestTime, hint.responseTime), */}
+            {/*       ) + " later"} */}
+            {/*   </p> */}
+            {/* </div> */}
           </div>
 
           <div className="w-full p-6 md:w-2/3">

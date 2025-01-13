@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { FormattedTime } from "~/lib/time";
+import { formatTime } from "~/lib/time";
 
 export default function FeedbackDialog({
   showTeam,
@@ -20,9 +20,7 @@ export default function FeedbackDialog({
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             {index != 0 && <br />}
             <p className="whitespace-normal">
-              <strong>
-                <FormattedTime time={e.timestamp} />
-              </strong>
+              <span className="font-semibold">{formatTime(e.timestamp)}</span>
               {showTeam && <> ({e.teamId})</>}: {e.description}
             </p>
           </AlertDescription>
