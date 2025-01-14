@@ -176,7 +176,7 @@ export function ProfileForm({
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
-    const teamResult = await updateTeam(username, {
+    const result = await updateTeam(username, {
       displayName: data.displayName,
       role: data.role,
       interactionMode: data.interactionMode,
@@ -187,10 +187,10 @@ export function ProfileForm({
       members: serializeMembers(data.members),
     });
 
-    if (teamResult.error) {
+    if (result.error) {
       toast({
         title: "Update failed",
-        description: teamResult.error,
+        description: result.error,
       });
       return;
     }
@@ -375,7 +375,7 @@ export function ProfileForm({
           control={form.control}
           name="interactionMode"
           render={({ field }) => (
-            <FormItem className="mb-8 space-y-2">
+            <FormItem className="mb-8 space-y-3">
               <FormLabel>
                 We will be competing... <span className="text-red-500">*</span>
               </FormLabel>
