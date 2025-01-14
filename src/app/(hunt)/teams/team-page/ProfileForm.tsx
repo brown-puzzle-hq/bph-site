@@ -29,6 +29,10 @@ import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 
 const zPhone = z.string().transform((arg, ctx) => {
+  if (!arg) {
+    return "";
+  }
+
   const phone = parsePhoneNumberFromString(arg, {
     defaultCountry: "US",
     extract: false,
@@ -51,10 +55,10 @@ export const profileFormSchema = z.object({
     .min(1, { message: "Required" })
     .max(50, { message: "Max 50 characters" }),
   interactionMode: z.enum(interactionModeEnum.enumValues),
-  numCommunity: z.string().nullish().or(z.literal("")),
+  numCommunity: z.string(),
   phoneNumber: zPhone,
-  roomNeeded: z.boolean().nullish().or(z.literal(false)),
-  solvingLocation: z.string().nullish().or(z.literal("")),
+  roomNeeded: z.boolean().default(false),
+  solvingLocation: z.string(),
   role: z.enum(roleEnum.enumValues),
   members: z
     .array(
@@ -73,7 +77,6 @@ export const profileFormSchema = z.object({
 });
 
 type TeamInfoFormProps = {
-  variant: "edit" | "register";
   username: string;
   displayName: string;
   role: "admin" | "user";
@@ -85,22 +88,22 @@ type TeamInfoFormProps = {
   memberString: string;
 };
 
-type member = {
+type Member = {
   id?: number;
-  name: string | null | undefined;
-  email: string | null | undefined;
+  name: string | undefined;
+  email: string | undefined;
 };
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-function serializeMembers(members: member[]): string {
+function serializeMembers(members: Member[]): string {
   const rows = members
     .filter((person) => person.name || person.email)
     .map((person) => `${person.name}\t${person.email}`);
   return rows.join("\n");
 }
 
-function deserializeMembers(memberString: string): member[] {
+function deserializeMembers(memberString: string): Member[] {
   if (!memberString) return [{ name: "", email: "" }];
   const rows = memberString.split("\n");
   return rows.map((row) => {
@@ -121,7 +124,6 @@ function formatPhoneNumber(phoneNumber: string | null): string {
 }
 
 export function ProfileForm({
-  variant = "edit",
   username,
   displayName,
   role,
@@ -133,7 +135,7 @@ export function ProfileForm({
   memberString,
 }: TeamInfoFormProps) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const members = deserializeMembers(memberString);
 
   phoneNumber = formatPhoneNumber(phoneNumber);
@@ -162,6 +164,14 @@ export function ProfileForm({
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
     }
+    if (
+      form
+        .getValues("members")
+        .some((member: Member) => member?.name || member?.email) &&
+      form.formState.errors.members?.message === "At least one member required"
+    ) {
+      form.trigger("members");
+    }
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -180,13 +190,24 @@ export function ProfileForm({
       toast({
         title: "Update failed",
         description: teamResult.error,
-        status: "error",
       });
       return;
     }
 
-    data.phoneNumber = formatPhoneNumber(data.phoneNumber);
-    form.reset(data);
+    if (data.displayName != form.formState.defaultValues?.displayName) {
+      update({ displayName: data.displayName });
+    }
+    if (data.role != form.formState.defaultValues?.role) {
+      update({ role: data.role });
+    }
+    if (data.interactionMode != form.formState.defaultValues?.interactionMode) {
+      update({ interactionMode: data.interactionMode });
+    }
+
+    form.reset({
+      ...data,
+      phoneNumber: formatPhoneNumber(data.phoneNumber),
+    });
     router.refresh(); // Ideally we remove this but seems like still necessary in some cases
   };
 
@@ -195,7 +216,12 @@ export function ProfileForm({
     return Object.keys(currentValues).some((key) =>
       key === "members"
         ? serializeMembers(currentValues[key]) !== memberString
-        : currentValues[key] != form.formState.defaultValues[key],
+        : (currentValues as ProfileFormValues)[
+            key as keyof ProfileFormValues
+          ] !=
+          (form.formState.defaultValues as ProfileFormValues)[
+            key as keyof ProfileFormValues
+          ],
     );
   };
 
@@ -234,7 +260,7 @@ export function ProfileForm({
             </span>
             {!form
               .getValues("members")
-              .some((member: member) => member?.name || member?.email) && (
+              .some((member: Member) => member?.name || member?.email) && (
               <span className="text-[0.8rem] font-medium text-red-500">
                 At least one member required
               </span>
@@ -509,8 +535,8 @@ export function ProfileForm({
                   disabled={
                     !!Object.keys(form.formState.errors).length ||
                     !form
-                      .getValues("members")
-                      .some((member: member) => member?.name || member?.email)
+                      .watch("members")
+                      .some((member: Member) => member?.name || member?.email)
                   }
                 >
                   Save
