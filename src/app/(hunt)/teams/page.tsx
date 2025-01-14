@@ -57,7 +57,7 @@ export default async function Home() {
 
   return (
     <div className="mb-6 flex grow flex-col items-center">
-      <h1 className="mb-2">Leaderboard!</h1>
+      <h1 className="mb-2">In-Person Leaderboard!</h1>
       <div>
         <Table>
           <TableHeader>

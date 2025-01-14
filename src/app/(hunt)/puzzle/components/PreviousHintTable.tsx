@@ -9,9 +9,10 @@ import {
   insertHint,
   MessageType,
 } from "../actions";
-import { IN_PERSON } from "@/hunt.config";
+import { IN_PERSON, REMOTE } from "@/hunt.config";
 import { Button } from "~/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 type TableProps = {
   previousHints: PreviousHints;
@@ -47,6 +48,7 @@ export default function PreviousHintTable({
   previousHints,
   hintState,
 }: TableProps) {
+  const { data: session } = useSession();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
   const [request, setRequest] = useState<string>("");
   const [followUp, setFollowUp] = useState<FollowUp | null>(null);
@@ -232,7 +234,7 @@ export default function PreviousHintTable({
   if (hintState) {
     const { puzzleId, hintsRemaining, unansweredHint, isSolved } = hintState;
     getFormDescription = () => {
-      if (currDate > IN_PERSON.END_TIME) {
+      if (currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)) {
         return <>Hunt has ended and live hinting has closed.</>;
       }
 
@@ -293,7 +295,7 @@ export default function PreviousHintTable({
                     hintState.isSolved ||
                     !!hintState.unansweredHint ||
                     hintState.hintsRemaining < 1 ||
-                    currDate > IN_PERSON.END_TIME
+                    currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)
                   }
                   value={request}
                   onChange={handleChangeRequest}

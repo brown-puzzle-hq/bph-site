@@ -19,7 +19,8 @@ import {
 
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { insertHint } from "../actions";
-import { IN_PERSON } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
@@ -40,6 +41,7 @@ export default function HintForm({
   unansweredHint,
   isSolved,
 }: FormProps) {
+  const { data: session } = useSession();
   const currDate = new Date();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,7 +58,7 @@ export default function HintForm({
   };
 
   function getFormDescription() {
-    if (currDate > IN_PERSON.END_TIME) {
+    if (currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)) {
       return <>The hunt has ended and live hinting has been closed.</>;
     }
 
@@ -116,7 +118,7 @@ export default function HintForm({
                     isSolved ||
                     !!unansweredHint ||
                     hintsRemaining < 1 ||
-                    currDate > IN_PERSON.END_TIME
+                    currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)
                   }
                   {...field}
                 />
@@ -132,7 +134,7 @@ export default function HintForm({
             isSolved ||
             !!unansweredHint ||
             hintsRemaining < 1 ||
-            currDate > IN_PERSON.END_TIME
+            currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)
           }
         >
           Submit

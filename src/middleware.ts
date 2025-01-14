@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/auth.config";
-import { IN_PERSON } from "@/hunt.config";
+import { IN_PERSON, REMOTE } from "@/hunt.config";
 
 export const { auth } = NextAuth(authConfig);
 
@@ -30,7 +30,7 @@ export default auth(async (req) => {
     }
 
     // Before the hunt starts
-    if (new Date() < IN_PERSON.START_TIME) {
+    if (new Date() < (req.auth?.user?.interactionMode === "in-person" ? IN_PERSON.START_TIME : REMOTE.START_TIME)) {
       const newUrl = new URL("/puzzle", req.nextUrl.origin);
       return Response.redirect(newUrl);
     }
