@@ -110,6 +110,7 @@ function serializeMembers(members: Member[]): string {
 
 export function RegisterForm({}: RegisterFormProps) {
   const router = useRouter();
+  router.prefetch("/");
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -415,7 +416,7 @@ export function RegisterForm({}: RegisterFormProps) {
         />
 
         {/* Other fields */}
-        {form.getValues("interactionMode") === "in-person" && (
+        {form.watch("interactionMode") === "in-person" && (
           <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
