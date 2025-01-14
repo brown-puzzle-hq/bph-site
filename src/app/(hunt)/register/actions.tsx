@@ -5,7 +5,7 @@ import { teams, type interactionModeEnum } from "@/db/schema";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
-import axios from "axios";
+import { sendBotMessage } from "~/lib/utils";
 
 /** Inserts a team into the team table */
 export async function insertTeam(
@@ -42,11 +42,8 @@ export async function insertTeam(
       createTime: new Date(),
     });
 
-    if (process.env.DISCORD_WEBHOOK_URL) {
-      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-        content: `:busts_in_silhouette: **New Team**: ${displayName} ([${username}](https://puzzlethon.brownpuzzle.club/teams/${username}))`,
-      });
-    }
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${displayName} ([${username}](https://puzzlethon.brownpuzzle.club/teams/${username}))`;
+    await sendBotMessage(teamMessage);
 
     return login(username, password);
   } catch (error) {
