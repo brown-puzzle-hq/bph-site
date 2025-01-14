@@ -33,7 +33,14 @@ export default async function DefaultSolutionPage({
         </p>
         <p>
           All solutions will be available when the hunt ends on{" "}
-          <FormattedTime time={(session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)} />.
+          <FormattedTime
+            time={
+              session?.user?.interactionMode === "in-person"
+                ? IN_PERSON.END_TIME
+                : REMOTE.END_TIME
+            }
+          />
+          .
         </p>
         <p>
           Please return to the{" "}

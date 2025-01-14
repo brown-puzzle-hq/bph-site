@@ -30,7 +30,12 @@ export default auth(async (req) => {
     }
 
     // Before the hunt starts
-    if (new Date() < (req.auth?.user?.interactionMode === "in-person" ? IN_PERSON.START_TIME : REMOTE.START_TIME)) {
+    if (
+      new Date() <
+      (req.auth?.user?.interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME)
+    ) {
       const newUrl = new URL("/puzzle", req.nextUrl.origin);
       return Response.redirect(newUrl);
     }

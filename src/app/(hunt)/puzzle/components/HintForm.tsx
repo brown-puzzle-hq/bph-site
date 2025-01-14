@@ -58,7 +58,12 @@ export default function HintForm({
   };
 
   function getFormDescription() {
-    if (currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)) {
+    if (
+      currDate >
+      (session?.user?.interactionMode === "in-person"
+        ? IN_PERSON.END_TIME
+        : REMOTE.END_TIME)
+    ) {
       return <>The hunt has ended and live hinting has been closed.</>;
     }
 
@@ -118,7 +123,10 @@ export default function HintForm({
                     isSolved ||
                     !!unansweredHint ||
                     hintsRemaining < 1 ||
-                    currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)
+                    currDate >
+                      (session?.user?.interactionMode === "in-person"
+                        ? IN_PERSON.END_TIME
+                        : REMOTE.END_TIME)
                   }
                   {...field}
                 />
@@ -134,7 +142,10 @@ export default function HintForm({
             isSolved ||
             !!unansweredHint ||
             hintsRemaining < 1 ||
-            currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)
+            currDate >
+              (session?.user?.interactionMode === "in-person"
+                ? IN_PERSON.END_TIME
+                : REMOTE.END_TIME)
           }
         >
           Submit

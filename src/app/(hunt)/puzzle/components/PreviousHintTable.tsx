@@ -234,7 +234,12 @@ export default function PreviousHintTable({
   if (hintState) {
     const { puzzleId, hintsRemaining, unansweredHint, isSolved } = hintState;
     getFormDescription = () => {
-      if (currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)) {
+      if (
+        currDate >
+        (session?.user?.interactionMode === "in-person"
+          ? IN_PERSON.END_TIME
+          : REMOTE.END_TIME)
+      ) {
         return <>Hunt has ended and live hinting has closed.</>;
       }
 
@@ -295,7 +300,10 @@ export default function PreviousHintTable({
                     hintState.isSolved ||
                     !!hintState.unansweredHint ||
                     hintState.hintsRemaining < 1 ||
-                    currDate > (session?.user?.interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME)
+                    currDate >
+                      (session?.user?.interactionMode === "in-person"
+                        ? IN_PERSON.END_TIME
+                        : REMOTE.END_TIME)
                   }
                   value={request}
                   onChange={handleChangeRequest}
