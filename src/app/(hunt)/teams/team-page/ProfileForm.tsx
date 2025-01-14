@@ -97,19 +97,20 @@ type Member = {
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 function serializeMembers(members: Member[]): string {
-  const rows = members
-    .filter((person) => person.name || person.email)
-    .map((person) => `${person.name}\t${person.email}`);
-  return rows.join("\n");
+  return JSON.stringify(
+    members
+      .filter((person) => person.name || person.email)
+      .map((person) => [person.name, person.email]),
+  );
 }
 
 function deserializeMembers(memberString: string): Member[] {
-  if (!memberString) return [{ name: "", email: "" }];
-  const rows = memberString.split("\n");
-  return rows.map((row) => {
-    const [name, email] = row.split("\t");
-    return { id: undefined, name, email };
-  });
+  if (!memberString) return [];
+  return JSON.parse(memberString).map(([name, email]: [string, string]) => ({
+    id: undefined,
+    name,
+    email,
+  }));
 }
 
 function formatPhoneNumber(phoneNumber: string | null): string {
@@ -544,11 +545,6 @@ export function ProfileForm({
               </div>
             </div>
           </Alert>
-        </div>
-
-        {/* TODO: just temporary, remove this later */}
-        <div>
-          <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
         </div>
       </form>
     </Form>

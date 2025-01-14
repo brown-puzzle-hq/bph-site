@@ -17,12 +17,6 @@ export const authConfig = {
         token.interactionMode = user.interactionMode;
       }
       if (trigger === "update") {
-        if (session?.id) {
-          token.id = session.id;
-        }
-        if (session?.username) {
-          token.username = session.username;
-        }
         if (session?.displayName) {
           token.displayName = session.displayName;
         }
