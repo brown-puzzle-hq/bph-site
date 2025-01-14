@@ -53,7 +53,7 @@ export const teams = createTable("team", {
     .notNull()
     .default(""),
 
-  members: text("members").notNull().default(""),
+  members: text("members").notNull().default("[]"),
 
   finishTime: timestamp("finish_time", { withTimezone: true }),
   // Time of creation of team

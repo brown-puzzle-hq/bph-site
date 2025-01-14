@@ -55,10 +55,10 @@ export const profileFormSchema = z.object({
     .min(1, { message: "Required" })
     .max(50, { message: "Max 50 characters" }),
   interactionMode: z.enum(interactionModeEnum.enumValues),
-  numCommunity: z.string(),
+  numCommunity: z.string().max(30, { message: "Max 30 characters" }),
   phoneNumber: zPhone,
   roomNeeded: z.boolean().default(false),
-  solvingLocation: z.string(),
+  solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
   role: z.enum(roleEnum.enumValues),
   members: z
     .array(
@@ -407,7 +407,10 @@ export function ProfileForm({
               name="numCommunity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Brown/RISD team members</FormLabel>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-black">Brown/RISD team members</span>
+                    <FormMessage />
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} type="number" min="0" />
                   </FormControl>
@@ -473,7 +476,10 @@ export function ProfileForm({
               name="solvingLocation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Solving location</FormLabel>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-black">Solving location</span>
+                    <FormMessage />
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
