@@ -240,9 +240,7 @@ export function ProfileForm({
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>
-              Team members <span className="text-red-500">*</span>
-            </span>
+            <span>Team members</span>
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>

@@ -255,9 +255,6 @@ export function RegisterForm({}: RegisterFormProps) {
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
             <span>Team members</span>
-            <span className="text-[0.8rem] font-medium text-red-500">
-              {form.formState.errors.members?.root?.message}
-            </span>
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
