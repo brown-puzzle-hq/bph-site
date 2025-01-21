@@ -7,7 +7,8 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { HUNT_END_TIME } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
+
 import {
   editMessage,
   insertFollowUp,
@@ -229,7 +230,12 @@ export default function PreviousHintTable({
   const getFormDescription = (hintRequestState: HintRequestState) => {
     const { puzzleId, hintsRemaining, unansweredHint, isSolved } =
       hintRequestState;
-    if (new Date() > HUNT_END_TIME) {
+    if (
+      new Date() >
+      (session?.user?.interactionMode === "in-person"
+        ? IN_PERSON.END_TIME
+        : REMOTE.END_TIME)
+    ) {
       return <>Hunt has ended and live hinting has closed.</>;
     }
 
@@ -288,7 +294,10 @@ export default function PreviousHintTable({
                   hintRequestState.isSolved ||
                   !!hintRequestState.unansweredHint ||
                   hintRequestState.hintsRemaining < 1 ||
-                  new Date() > HUNT_END_TIME
+                  new Date() >
+                    (session?.user?.interactionMode === "in-person"
+                      ? IN_PERSON.END_TIME
+                      : REMOTE.END_TIME)
                 }
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}
@@ -304,7 +313,10 @@ export default function PreviousHintTable({
                   hintRequestState.isSolved ||
                   !!hintRequestState.unansweredHint ||
                   hintRequestState.hintsRemaining < 1 ||
-                  new Date() > HUNT_END_TIME
+                  new Date() >
+                    (session?.user?.interactionMode === "in-person"
+                      ? IN_PERSON.END_TIME
+                      : REMOTE.END_TIME)
                 }
               >
                 Submit
