@@ -331,19 +331,20 @@ export function ProfileForm({
               />
 
               {/* X button */}
-              {fields.length > 1 ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-10 w-10 text-gray-400"
-                  onClick={() => remove(index)}
-                >
-                  <X />
-                </Button>
-              ) : (
-                <div className="h-10 w-10"></div>
-              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 text-gray-400 focus-visible:bg-neutral-100 focus-visible:text-neutral-900 focus-visible:ring-0"
+                disabled={
+                  fields.length == 1 &&
+                  form.watch("members")[0]?.name === "" &&
+                  form.watch("members")[0]?.email === ""
+                }
+                onClick={() => remove(index)}
+              >
+                <X />
+              </Button>
             </div>
           ))}
           <FormDescription className="pt-2">
