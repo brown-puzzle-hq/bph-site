@@ -1,5 +1,4 @@
 "use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { teams } from "~/server/db/schema";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";

@@ -76,11 +76,7 @@ export const unlocks = createTable(
     teamId: varchar("team_id")
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
-    unlockTime: timestamp("unlock_time", { withTimezone: true }),
-    // NOTE: Storing the solve time is probably more efficient for querying
-    // But it's also generally a bad idea to have the same information
-    // in two different places.
-    // solveTime: timestamp("solve_time", { withTimezone: true }).notNull(),
+    unlockTime: timestamp("unlock_time", { withTimezone: true }).notNull(),
   },
   (table) => {
     return {
@@ -129,7 +125,7 @@ export const hints = createTable(
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     request: text("request").notNull(),
-    requestTime: timestamp("request_time", { withTimezone: true }),
+    requestTime: timestamp("request_time", { withTimezone: true }).notNull(),
     claimer: varchar("claimer").references(() => teams.id),
     claimTime: timestamp("claim_time", { withTimezone: true }),
     response: text("response"),

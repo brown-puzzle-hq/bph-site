@@ -1,5 +1,5 @@
 import { db } from "~/server/db";
-import DefaultHintsPage from "../../components/DefaultHintsPage";
+import DefaultHintPage from "../../components/DefaultHintPage";
 
 // Send to 404 if route was not generated at build-time
 export const dynamicParams = false;
@@ -16,5 +16,5 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return <DefaultHintsPage puzzleId={slug} />;
+  return <DefaultHintPage puzzleId={slug} />;
 }

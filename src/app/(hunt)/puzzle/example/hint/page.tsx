@@ -1,6 +1,6 @@
-import DefaultHintsPage from "../../components/DefaultHintsPage";
+import DefaultHintPage from "../../components/DefaultHintPage";
 import { puzzleId } from "../data";
 
 export default async function Page() {
-  return <DefaultHintsPage puzzleId={puzzleId} />;
+  return <DefaultHintPage puzzleId={puzzleId} />;
 }
