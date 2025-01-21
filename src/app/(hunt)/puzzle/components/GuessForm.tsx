@@ -28,10 +28,8 @@ const formSchema = z.object({
     sanitizeAnswer,
     z
       .string()
-      .min(1, {
-        message: "Guess must contain at least one alphabetical character",
-      })
-      .max(100, { message: "Answer will not be longer than 100 characters" }),
+      .min(1, { message: "Required" })
+      .max(100, { message: "Max 100 characters" }),
   ),
 });
 
@@ -78,23 +76,28 @@ export default function GuessForm({
                 <Input
                   {...field}
                   onChange={(e) => {
-                    form.setValue("guess", e.target.value, {
-                      shouldValidate: false,
-                    });
+                    form.setValue(
+                      "guess",
+                      e.target.value.toUpperCase().replace(/[^A-Z ]/g, ""),
+                    );
                     setError(null);
                   }}
                   className="bg-white text-black"
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="flex justify-between">
                 {numberOfGuessesLeft}{" "}
                 {numberOfGuessesLeft === 1 ? "guess" : "guesses"} left
+                <FormMessage>{error}</FormMessage>
               </FormDescription>
-              <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
-        <Button className="hover:bg-otherblue" type="submit">
+        <Button
+          className="hover:bg-otherblue"
+          type="submit"
+          disabled={!form.watch("guess")}
+        >
           Submit
         </Button>
       </form>

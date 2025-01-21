@@ -11,7 +11,7 @@ import PreviousGuessTable from "../components/hint-page/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
 import { FormattedTime, ElapsedTime } from "~/lib/time";
-import { HUNT_START_TIME } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 export default async function Page({
   params,
@@ -21,7 +21,7 @@ export default async function Page({
   // Authentication
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not authenticated");
+    throw new Error("Not authorized.");
   }
 
   // Check if slug is a valid number
@@ -64,7 +64,10 @@ export default async function Page({
           eq(unlocks.puzzleId, hint.puzzleId),
         ),
       })
-    )?.unlockTime ?? HUNT_START_TIME;
+    )?.unlockTime ??
+    (session?.user?.interactionMode === "in-person"
+      ? IN_PERSON.START_TIME
+      : REMOTE.START_TIME);
 
   const previousGuesses = await db.query.guesses.findMany({
     where: and(

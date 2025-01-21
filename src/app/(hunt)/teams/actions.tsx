@@ -1,4 +1,5 @@
 "use server";
+
 import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
@@ -6,42 +7,35 @@ import { hash } from "bcryptjs";
 import { auth } from "~/server/auth/auth";
 
 export type TeamProperties = {
-  username?: string;
   displayName?: string;
   password?: string;
-  interactionMode?: (typeof interactionModeEnum.enumValues)[number];
   role?: (typeof roleEnum.enumValues)[number];
+  interactionMode?: (typeof interactionModeEnum.enumValues)[number];
+  numCommunity?: string;
+  phoneNumber?: string;
+  roomNeeded?: boolean;
+  solvingLocation?: string;
+  members?: string;
 };
 
 export async function updateTeam(
-  id: string | undefined,
+  username: string,
   teamProperties: TeamProperties,
 ) {
-  if (!id) {
-    return {
-      error: "Unexpected error occurred",
-    };
-  }
-
-  const user = await db.query.teams.findFirst({
-    where: eq(teams.id, id),
-  });
-
-  if (!user) {
-    return {
-      error: "No team matching the given ID was found",
-    };
-  }
-
+  // Check that the user is either an admin or the user being updated
   const session = await auth();
-  if (session?.user?.id !== id && session?.user?.role !== "admin") {
+  if (session?.user?.username !== username && session?.user?.role !== "admin") {
     return {
-      error: "No team matching the given ID was found",
+      error: "You are not authorized to update this team.",
     };
   }
 
-  if (teamProperties.username) user.username = teamProperties.username;
-  if (teamProperties.displayName) user.displayName = teamProperties.displayName;
+  // Do not allow non-admins to update the role
+  if (session?.user?.role !== "admin") {
+    delete teamProperties.role;
+  }
+
+  // Update the password
   if (teamProperties.password) {
     const hashedPassword = await new Promise<string>((resolve, reject) => {
       hash(teamProperties.password!, 10, (err, hash) => {
@@ -49,17 +43,20 @@ export async function updateTeam(
         resolve(hash);
       });
     });
-    user.password = hashedPassword;
+    teamProperties.password = hashedPassword;
   }
-  if (teamProperties.interactionMode)
-    user.interactionMode = teamProperties.interactionMode;
-  if (teamProperties.role) {
-    if (session?.user?.role === "admin") user.role = teamProperties.role;
-  }
-  await db.update(teams).set(user).where(eq(teams.id, id));
+
   try {
+    const result = await db
+      .update(teams)
+      .set(teamProperties)
+      .where(eq(teams.username, username))
+      .returning({ username: teams.username });
+    if (result.length === 0) {
+      return { error: "No team matching the given ID was found." };
+    }
     return { error: null };
   } catch (error) {
-    return { error: "Unexpected error occurred" };
+    return { error: "An unexpected error occurred." };
   }
 }

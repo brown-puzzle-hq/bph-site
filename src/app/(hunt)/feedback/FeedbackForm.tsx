@@ -36,7 +36,6 @@ export default function FeedbackForm({
   }[];
 }) {
   const [preview, setPreview] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof feedbackFormSchema>>({
     resolver: zodResolver(feedbackFormSchema),
@@ -48,9 +47,11 @@ export default function FeedbackForm({
   const onSubmit = async (data: z.infer<typeof feedbackFormSchema>) => {
     const result = await insertFeedback(data.description);
     if (result.error) {
-      setError(result.error);
+      toast({
+        title: "Submission failed",
+        description: result.error,
+      });
     } else {
-      setError(null);
       const newFeedback = {
         id: feedbackList.length,
         teamId: teamId,
@@ -99,9 +100,14 @@ export default function FeedbackForm({
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-                {error && <p className="text-red-500">{error}</p>}
                 <div className="flex space-x-2">
-                  <Button type="submit">Submit</Button>
+                  <Button
+                    className="my-4 bg-gray-900 hover:bg-gray-800"
+                    type="submit"
+                    disabled={!form.watch("description")}
+                  >
+                    Submit
+                  </Button>
                   <Button
                     type="button"
                     variant="secondary"

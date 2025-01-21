@@ -13,7 +13,7 @@ export type MessageType = "request" | "response" | "follow-up";
 export async function insertHintRequest(puzzleId: string, hint: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in" };
   }
 
   // Checks
@@ -95,20 +95,18 @@ export async function editMessage(
 export async function insertFollowUp(hintId: number, message: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in" };
   }
-  try {
-    const result = await db
-      .insert(followUps)
-      .values({
-        hintId,
-        userId: session.user.id,
-        message,
-        time: new Date(),
-      })
-      .returning({ id: followUps.id });
-    return result[0]?.id ?? null;
-  } catch (_) {
-    return null;
-  }
+
+  const result = await db
+    .insert(followUps)
+    .values({
+      hintId,
+      userId: session.user.id,
+      message,
+      time: new Date(),
+    })
+    .returning({ id: followUps.id });
+
+  return result[0]?.id;
 }

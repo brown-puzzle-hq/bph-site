@@ -10,7 +10,7 @@ import axios from "axios";
 export async function insertFeedback(description: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not authenticated");
+    return { error: "Not authenticated, please ensure you're logged in." };
   }
 
   await db.insert(feedback).values({

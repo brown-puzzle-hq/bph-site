@@ -12,11 +12,13 @@ import {
 } from "~/hunt.config";
 import axios from "axios";
 
+export type MessageType = "request" | "response" | "follow-up";
+
 /** Inserts a guess into the guess table */
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    return { error: "Not logged in!" };
   }
 
   const puzzle = await db.query.puzzles.findFirst({
@@ -29,7 +31,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
   });
 
   if (!puzzle) {
-    throw new Error("Puzzle not found");
+    return { error: "Puzzle not found!" };
   }
 
   if (puzzle.guesses.length >= NUMBER_OF_GUESSES_PER_PUZZLE) {
@@ -118,5 +120,41 @@ export async function insertUnlock(teamId: string, puzzleIds: string[]) {
     revalidatePath("/puzzle");
   } catch (e) {
     throw e;
+  }
+}
+
+/** Edits a hint */
+export async function editMessage(
+  id: number,
+  message: string,
+  type: MessageType,
+) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: "Not logged in" };
+  }
+
+  switch (type) {
+    case "request":
+      await db
+        .update(hints)
+        .set({ request: message })
+        .where(and(eq(hints.id, id), eq(hints.teamId, session.user.id)))
+        .returning({ id: hints.id });
+      break;
+    case "response":
+      await db
+        .update(hints)
+        .set({ response: message })
+        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)));
+      break;
+    case "follow-up":
+      await db
+        .update(followUps)
+        .set({ message })
+        .where(
+          and(eq(followUps.id, id), eq(followUps.userId, session.user.id)),
+        );
+      break;
   }
 }

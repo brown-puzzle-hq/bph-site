@@ -43,6 +43,18 @@ export const teams = createTable("team", {
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
+
+  // Only for in-person teams
+  // NOTE: defaults seem to not be working, entries still get added with NULL by default
+  numCommunity: varchar("num_community", { length: 31 }).notNull().default(""),
+  phoneNumber: varchar("phone_number", { length: 31 }).notNull().default(""),
+  roomNeeded: boolean("room_needed").notNull().default(false),
+  solvingLocation: varchar("solving_location", { length: 255 })
+    .notNull()
+    .default(""),
+
+  members: text("members").notNull().default("[]"),
+
   finishTime: timestamp("finish_time", { withTimezone: true }),
   // Time of creation of team
   createTime: timestamp("create_time", { withTimezone: true }),

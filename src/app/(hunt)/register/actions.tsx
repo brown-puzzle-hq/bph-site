@@ -7,18 +7,24 @@ import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 import axios from "axios";
 
-/** Inserts a team into the team table */
-export async function insertTeam(
-  username: string,
-  displayName: string,
-  password: string,
-  interactionMode: (typeof interactionModeEnum.enumValues)[number],
-) {
-  username = username.toLowerCase();
+export type TeamProperties = {
+  username: string;
+  displayName: string;
+  password: string;
+  interactionMode: (typeof interactionModeEnum.enumValues)[number];
+  members: string;
+  numCommunity?: string;
+  phoneNumber?: string;
+  roomNeeded?: boolean;
+  solvingLocation?: string;
+};
+
+export async function insertTeam(teamProperties: TeamProperties) {
+  teamProperties.username = teamProperties.username.toLowerCase();
 
   const duplicateUsername = await db.query.teams.findFirst({
     columns: { id: true },
-    where: eq(teams.username, username),
+    where: eq(teams.username, teamProperties.username),
   });
 
   if (duplicateUsername) {
@@ -27,29 +33,27 @@ export async function insertTeam(
 
   try {
     const hashedPassword = await new Promise<string>((resolve, reject) => {
-      hash(password, 10, (err, hash) => {
+      hash(teamProperties.password, 10, (err, hash) => {
         if (err) reject(err);
         resolve(hash);
       });
     });
 
     await db.insert(teams).values({
-      username,
-      displayName,
+      ...teamProperties,
       password: hashedPassword,
       role: "user" as const,
-      interactionMode,
       createTime: new Date(),
     });
 
     if (process.env.DISCORD_WEBHOOK_URL) {
       await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-        content: `:busts_in_silhouette: **New Team**: ${displayName} ([${username}](https://puzzlethon.brownpuzzle.club/teams/${username}))`,
+        content: `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.username}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.username}))`,
       });
     }
 
-    return login(username, password);
+    return login(teamProperties.username, teamProperties.password);
   } catch (error) {
-    return { error: "Unexpected error occurred" };
+    return { error: "An unexpected error occurred." };
   }
 }

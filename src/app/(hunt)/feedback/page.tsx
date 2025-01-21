@@ -27,7 +27,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="mx-auto mb-6 flex max-w-4xl grow flex-col p-4">
+    <div className="mx-auto flex max-w-4xl grow flex-col px-4">
       <h1 className="mb-2">Feedback</h1>
       <FeedbackForm teamId={session.user.id} feedbackList={feedbackList} />
     </div>
