@@ -476,13 +476,14 @@ export default function PreviousHintTable({
                             </div>
                           ) : (
                             <button
-                              onClick={() =>
+                              onClick={() => {
+                                setFollowUp(null);
                                 setEdit({
                                   id: hint.id,
                                   value: hint.response ?? "",
                                   type: "response",
-                                })
-                              }
+                                });
+                              }}
                               className="text-link hover:underline"
                             >
                               Edit
@@ -555,13 +556,14 @@ export default function PreviousHintTable({
                             </button>
                           ) : (
                             <button
-                              onClick={() =>
+                              onClick={() => {
+                                setFollowUp(null);
                                 setEdit({
                                   id: followUp.id,
                                   value: followUp.message,
                                   type: "follow-up",
-                                })
-                              }
+                                });
+                              }}
                               className="text-link hover:underline"
                             >
                               Edit
