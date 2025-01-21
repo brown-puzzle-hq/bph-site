@@ -10,9 +10,8 @@ import PreviousHintTable from "../components/hint-page/PreviousHintTable";
 import PreviousGuessTable from "../components/hint-page/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
-import { formatTime } from "~/lib/time";
+import { FormattedTime, ElapsedTime } from "~/lib/time";
 import { HUNT_START_TIME } from "~/hunt.config";
-import { getTimeDifference, getTimeDifferenceString } from "~/lib/time";
 
 export default async function Page({
   params,
@@ -135,58 +134,33 @@ export default async function Page({
             <div>
               <p>
                 <span className="font-semibold">Puzzle unlocked </span>
-                {`${formatTime(unlockTime)} 
-                (${getTimeDifferenceString(
-                  getTimeDifference(new Date(), unlockTime),
-                )} ago)`}
+                <FormattedTime time={unlockTime} />
+                (<ElapsedTime date={unlockTime} /> ago)
               </p>
               <p>
                 <span className="font-semibold">Hint requested </span>
-                {`${formatTime(hint.requestTime)} 
-                (${getTimeDifferenceString(
-                  getTimeDifference(new Date(), hint.requestTime),
-                )} ago)`}
+                <FormattedTime time={hint.requestTime} />
+                (<ElapsedTime date={hint.requestTime} /> ago)
               </p>
               <p>
                 <span className="font-semibold">Hint claimed </span>
-                {hint.claimTime &&
-                  `${formatTime(hint.claimTime)} 
-                (${getTimeDifferenceString(
-                  getTimeDifference(new Date(), hint.claimTime),
-                )} ago)`}
+                {hint.claimTime && (
+                  <>
+                    <FormattedTime time={hint.claimTime} />
+                    (<ElapsedTime date={hint.claimTime} /> ago)
+                  </>
+                )}
               </p>
               <p>
                 <span className="font-semibold">Hint responded </span>
-                {hint.responseTime &&
-                  `${formatTime(hint.responseTime)} 
-                (${getTimeDifferenceString(
-                  getTimeDifference(new Date(), hint.responseTime),
-                )} ago)`}
+                {hint.responseTime && (
+                  <>
+                    <FormattedTime time={hint.responseTime} />
+                    (<ElapsedTime date={hint.responseTime} /> ago)
+                  </>
+                )}
               </p>
             </div>
-            {/* <div> */}
-            {/*   <p> */}
-            {/*     <strong>Unlocked </strong>{" "} */}
-            {/*     {getTimeDifferenceString( */}
-            {/*       getTimeDifference(new Date(), unlockTime), */}
-            {/*     )}{" "} */}
-            {/*     ago */}
-            {/*   </p> */}
-            {/*   <p> */}
-            {/*     <strong>Requested</strong>{" "} */}
-            {/*     {getTimeDifferenceString( */}
-            {/*       getTimeDifference(new Date(), hint.requestTime), */}
-            {/*     )}{" "} */}
-            {/*     ago */}
-            {/*   </p> */}
-            {/*   <p> */}
-            {/*     <strong>Responded</strong>{" "} */}
-            {/*     {hint.responseTime && */}
-            {/*       getTimeDifferenceString( */}
-            {/*         getTimeDifference(hint.requestTime, hint.responseTime), */}
-            {/*       ) + " later"} */}
-            {/*   </p> */}
-            {/* </div> */}
           </div>
 
           <div className="w-full p-6 md:w-2/3">

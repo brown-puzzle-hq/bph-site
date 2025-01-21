@@ -11,7 +11,7 @@ import { sql } from "drizzle-orm";
 import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, guesses } from "~/server/db/schema";
 import { HUNT_END_TIME } from "~/hunt.config";
-import { formatTime } from "~/lib/time";
+import { FormattedTime } from "~/lib/time";
 
 export const fetchCache = "force-no-store";
 
@@ -75,7 +75,9 @@ export default async function Home() {
                 <TableCell className="text-center">
                   {teamRow.correctGuesses ?? 0}
                 </TableCell>
-                <TableCell>{formatTime(teamRow.finishTime)}</TableCell>
+                <TableCell>
+                  <FormattedTime time={teamRow.finishTime} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
