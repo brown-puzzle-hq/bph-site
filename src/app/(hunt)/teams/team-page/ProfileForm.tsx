@@ -331,15 +331,19 @@ export function ProfileForm({
               />
 
               {/* X button */}
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-10 w-10 text-gray-400"
-                onClick={() => remove(index)}
-              >
-                <X />
-              </Button>
+              {fields.length > 1 ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-10 w-10 text-gray-400"
+                  onClick={() => remove(index)}
+                >
+                  <X />
+                </Button>
+              ) : (
+                <div className="h-10 w-10"></div>
+              )}
             </div>
           ))}
           <FormDescription className="pt-2">
