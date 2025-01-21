@@ -70,20 +70,13 @@ export const registerFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    members: z
-      .array(
-        z.object({
-          id: z.number().optional(),
-          name: z.string().or(z.literal("")),
-          email: z.string().email().or(z.literal("")),
-        }),
-      )
-      .refine(
-        (members) => members.some((member) => member?.name || member?.email),
-        {
-          message: "At least one member required",
-        },
-      ),
+    members: z.array(
+      z.object({
+        id: z.number().optional(),
+        name: z.string().or(z.literal("")),
+        email: z.string().email().or(z.literal("")),
+      }),
+    ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -136,14 +129,6 @@ export function RegisterForm({}: RegisterFormProps) {
   useEffect(() => {
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
-    }
-    if (
-      form
-        .watch("members")
-        .some((member: Member) => member?.name || member?.email) &&
-      form.formState.errors.members?.root?.message === "At least one member required"
-    ) {
-      form.trigger("members");
     }
   });
 
@@ -198,6 +183,7 @@ export function RegisterForm({}: RegisterFormProps) {
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
+                Please avoid special characters.
               </FormDescription>
             </FormItem>
           )}
@@ -241,7 +227,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <Input type="password" {...field} />
               </FormControl>
               <FormDescription>
-                You'll probably share this with your team.
+                You'll probably share this with your team. Write it down!
               </FormDescription>
             </FormItem>
           )}
@@ -268,9 +254,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>
-              Team members <span className="text-red-500">*</span>
-            </span>
+            <span>Team members</span>
             <span className="text-[0.8rem] font-medium text-red-500">
               {form.formState.errors.members?.root?.message}
             </span>
@@ -362,15 +346,19 @@ export function RegisterForm({}: RegisterFormProps) {
               />
 
               {/* X button */}
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-10 w-10 text-gray-400"
-                onClick={() => remove(index)}
-              >
-                <X />
-              </Button>
+              {fields.length > 1 ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-10 w-10 text-gray-400"
+                  onClick={() => remove(index)}
+                >
+                  <X />
+                </Button>
+              ) : (
+                <div className="h-10 w-10"></div>
+              )}
             </div>
           ))}
           <FormDescription className="pt-2">
