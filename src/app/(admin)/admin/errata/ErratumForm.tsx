@@ -56,7 +56,6 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
       toast({
         title: "Submission failed",
         description: result.error,
-        status: "error",
       });
     } else {
       const newErrata = {

@@ -11,7 +11,7 @@ import PreviousGuessTable from "../components/hint-page/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
 import { FormattedTime, ElapsedTime } from "~/lib/time";
-import { HUNT_START_TIME } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 export default async function Page({
   params,
@@ -64,7 +64,10 @@ export default async function Page({
           eq(unlocks.puzzleId, hint.puzzleId),
         ),
       })
-    )?.unlockTime ?? HUNT_START_TIME;
+    )?.unlockTime ??
+    (session?.user?.interactionMode === "in-person"
+      ? IN_PERSON.START_TIME
+      : REMOTE.START_TIME);
 
   const previousGuesses = await db.query.guesses.findMany({
     where: and(
@@ -73,29 +76,24 @@ export default async function Page({
     ),
   });
 
-  const previousHints = (
-    await db.query.hints.findMany({
-      where: and(
-        eq(hints.teamId, hint.teamId),
-        eq(hints.puzzleId, hint.puzzleId),
-      ),
-      columns: { id: true, request: true, response: true },
-      with: {
-        followUps: {
-          columns: { id: true, message: true, userId: true },
-        },
+  const previousHints = await db.query.hints.findMany({
+    where: and(
+      eq(hints.teamId, hint.teamId),
+      eq(hints.puzzleId, hint.puzzleId),
+    ),
+    columns: {
+      id: true,
+      request: true,
+      response: true,
+      teamId: true,
+      claimer: true,
+    },
+    with: {
+      followUps: {
+        columns: { id: true, message: true, userId: true },
       },
-    })
-  )
-    // Check whether the user can edit the hint
-    .map((hint) => ({
-      ...hint,
-      followUps: hint.followUps.map((followUp) => ({
-        id: followUp.id,
-        message: followUp.message,
-        canEdit: followUp.userId === session?.user?.id,
-      })),
-    }));
+    },
+  });
 
   return (
     <div>

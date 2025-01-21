@@ -36,7 +36,6 @@ export default function FeedbackForm({
   }[];
 }) {
   const [preview, setPreview] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof feedbackFormSchema>>({
     resolver: zodResolver(feedbackFormSchema),
@@ -101,7 +100,6 @@ export default function FeedbackForm({
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-                {error && <p className="text-red-500">{error}</p>}
                 <div className="flex space-x-2">
                   <Button
                     className="my-4 bg-gray-900 hover:bg-gray-800"
