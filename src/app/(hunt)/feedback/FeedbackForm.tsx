@@ -20,7 +20,7 @@ import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
 import { insertFeedback } from "./actions";
 
 export const feedbackFormSchema = z.object({
-  description: z.string().min(1, { message: "Please submit a message." }),
+  description: z.string().min(1, { message: "Required" }),
 });
 
 export default function FeedbackForm({
@@ -76,7 +76,7 @@ export default function FeedbackForm({
             name="description"
             render={({ field }) => (
               <>
-                <FormItem>
+                <FormItem className="mb-4">
                   <FormDescription>
                     Any puzzle errors, website bugs, or general comments will be
                     enormously helpful for us. This textbox supports Markdown.
@@ -84,7 +84,7 @@ export default function FeedbackForm({
                   <FormControl>
                     {preview ? (
                       <Card>
-                        <div className="p-6">
+                        <div className="p-4">
                           <article className="prose">
                             {useRemarkSync(field.value) || <></>}
                           </article>
@@ -98,14 +98,9 @@ export default function FeedbackForm({
                       />
                     )}
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
-                <div className="flex space-x-2">
-                  <Button
-                    className="my-4 bg-gray-900 hover:bg-gray-800"
-                    type="submit"
-                    disabled={!form.watch("description")}
-                  >
+                <div className="flex mb-4 space-x-2">
+                  <Button type="submit" disabled={field.value === ""}>
                     Submit
                   </Button>
                   <Button
@@ -122,7 +117,7 @@ export default function FeedbackForm({
           />
         </form>
       </Form>
-      <div className="pt-4">
+      <div>
         <FeedbackDialog showTeam={false} feedbackList={feedbackList} />
       </div>
     </div>

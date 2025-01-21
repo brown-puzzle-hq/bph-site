@@ -25,7 +25,7 @@ export default function FeedbackDialog({
       {feedbackList.length > 0 &&
         feedbackList.map((feedback) => (
           <Card className="mt-4" key={feedback.id}>
-            <CardHeader>
+            <CardHeader className="p-4">
               <CardDescription>
                 <strong>
                   <FormattedTime time={feedback.timestamp} />
@@ -33,7 +33,7 @@ export default function FeedbackDialog({
                 {showTeam && <p> ({feedback.teamId})</p>}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-4 pb-4">
               <article className="prose">
                 {useRemarkSync(
                   feedback.description,
