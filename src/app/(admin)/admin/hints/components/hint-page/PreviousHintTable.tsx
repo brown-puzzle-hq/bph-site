@@ -349,13 +349,14 @@ export default function PreviousHintTable({
                         </div>
                       ) : (
                         <button
-                          onClick={() =>
+                          onClick={() => {
+                            setFollowUp(null);
                             setEdit({
                               id: hint.id,
                               value: hint.request,
                               type: "request",
-                            })
-                          }
+                            });
+                          }}
                           className="text-link hover:underline"
                         >
                           Edit
@@ -418,6 +419,7 @@ export default function PreviousHintTable({
                       {followUp?.hintId !== hint.id ? (
                         <button
                           onClick={() => {
+                            setEdit(null);
                             // Hide other follow-ups under the same hint
                             setHiddenFollowUps((prev) =>
                               prev.filter((prevId) => prevId !== hint.id),
