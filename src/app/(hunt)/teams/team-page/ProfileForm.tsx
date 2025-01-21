@@ -1,9 +1,8 @@
 "use client";
 
 import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
-
 import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -60,20 +59,13 @@ export const profileFormSchema = z.object({
   roomNeeded: z.boolean().default(false),
   solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
   role: z.enum(roleEnum.enumValues),
-  members: z
-    .array(
-      z.object({
-        id: z.number().optional(),
-        name: z.string().or(z.literal("")),
-        email: z.string().email().or(z.literal("")),
-      }),
-    )
-    .refine(
-      (members) => members.some((member) => member?.name || member?.email),
-      {
-        message: "At least one member required",
-      },
-    ),
+  members: z.array(
+    z.object({
+      id: z.number().optional(),
+      name: z.string().or(z.literal("")),
+      email: z.string().email().or(z.literal("")),
+    }),
+  ),
 });
 
 type TeamInfoFormProps = {
@@ -165,14 +157,6 @@ export function ProfileForm({
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
     }
-    if (
-      form
-        .getValues("members")
-        .some((member: Member) => member?.name || member?.email) &&
-      form.formState.errors.members?.message === "At least one member required"
-    ) {
-      form.trigger("members");
-    }
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -259,13 +243,6 @@ export function ProfileForm({
             <span>
               Team members <span className="text-red-500">*</span>
             </span>
-            {!form
-              .getValues("members")
-              .some((member: Member) => member?.name || member?.email) && (
-              <span className="text-[0.8rem] font-medium text-red-500">
-                At least one member required
-              </span>
-            )}
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
@@ -539,12 +516,7 @@ export function ProfileForm({
                 </Button>
                 <Button
                   type="submit"
-                  disabled={
-                    !!Object.keys(form.formState.errors).length ||
-                    !form
-                      .watch("members")
-                      .some((member: Member) => member?.name || member?.email)
-                  }
+                  disabled={!!Object.keys(form.formState.errors).length}
                 >
                   Save
                 </Button>
