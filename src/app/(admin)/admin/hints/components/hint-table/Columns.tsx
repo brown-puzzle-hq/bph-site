@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { hints } from "~/server/db/schema";
 import HintStatusBox from "./HintStatusBox";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-import { formatTime } from "~/lib/time";
+import { FormattedTime } from "~/lib/time";
 
 export type HintClaimer = { id: string; displayName: string } | null;
 
@@ -102,7 +102,9 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     cell: ({ row }) => {
       const time: Date = row.getValue("requestTime");
       return (
-        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+        <div className="w-32 truncate font-medium">
+          <FormattedTime time={time} />
+        </div>
       );
     },
   },

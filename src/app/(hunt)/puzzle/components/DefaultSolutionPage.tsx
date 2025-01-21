@@ -3,8 +3,7 @@ import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
 import { canViewSolution, HUNT_END_TIME } from "~/hunt.config";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { formatTime } from "~/lib/time";
+import { FormattedTime } from "~/lib/time";
 
 export default async function DefaultSolutionPage({
   puzzleId,
@@ -32,7 +31,7 @@ export default async function DefaultSolutionPage({
         </p>
         <p>
           All solutions will be available when the hunt ends on{" "}
-          {formatTime(HUNT_END_TIME)}
+          <FormattedTime time={HUNT_END_TIME} />
         </p>
         <p>
           Please return to the{" "}

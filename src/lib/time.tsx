@@ -1,3 +1,6 @@
+"use client";
+import * as React from "react";
+
 type Time = {
   days: number;
   hours: number;
@@ -5,12 +8,12 @@ type Time = {
   seconds: number;
 };
 
-const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
-  dateStyle: "short",
-  timeStyle: "medium",
-});
-
 export function formatTime(time: string | Date | null) {
+  const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "short",
+    timeStyle: "medium",
+  });
+
   if (!time) {
     return "";
   }
@@ -20,7 +23,11 @@ export function formatTime(time: string | Date | null) {
   return dateTimeFormatter.format(time);
 }
 
-export function getTimeDifference(date1: Date, date2: Date) {
+export function FormattedTime({ time }: { time: string | Date | null }) {
+  return <>{formatTime(time)} </>;
+}
+
+function getTimeDifference(date1: Date, date2: Date) {
   const date1ms = date1.getTime();
   const date2ms = date2.getTime();
   const differenceMs = Math.abs(date2ms - date1ms);
@@ -44,4 +51,8 @@ export function getTimeDifferenceString(time: Time) {
   } else {
     return `${time.seconds} ${time.seconds === 1 ? "second" : "seconds"}`;
   }
+}
+
+export function ElapsedTime({ date }: { date: Date }) {
+  return <>{getTimeDifferenceString(getTimeDifference(new Date(), date))}</>;
 }

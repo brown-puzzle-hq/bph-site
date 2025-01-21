@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";
-import { formatTime } from "~/lib/time";
+import { FormattedTime } from "~/lib/time";
 
 export default function PreviousGuessTable({
   previousGuesses,
@@ -35,7 +35,9 @@ export default function PreviousGuessTable({
                       : "hidden whitespace-nowrap md:table-cell"
                   }
                 >
-                  <p>{formatTime(guess.submitTime)}</p>
+                  <p>
+                    <FormattedTime time={guess.submitTime} />
+                  </p>
                 </TableCell>
               </TableRow>
             ))}
