@@ -35,6 +35,11 @@ export default async function RootLayout({
       href: "/admin/errata",
       type: "link",
     },
+    {
+      title: "Feedback",
+      href: "/admin/feedback",
+      type: "link",
+    },
   ];
 
   const rightMenuItems: MenuItem[] = [
@@ -62,8 +67,10 @@ export default async function RootLayout({
         rightMenuItems={rightMenuItems}
       />
       {/* Navbar spacer */}
-      <div className="min-h-56px"></div>
-      <main className="flex min-h-[calc(100vh-56px)] pt-4">{children}</main>
+      <div className="min-h-[56px]"></div>
+      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
+        {children}
+      </main>
       <Toaster />
     </>
   );

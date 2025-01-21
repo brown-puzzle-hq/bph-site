@@ -1,19 +1,13 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
 import { guesses, hints, puzzles } from "~/server/db/schema";
-import PreviousHintTable from "./PreviousHintTable";
-import HintForm from "./HintForm";
-import {
-  canViewPuzzle,
-  getNumberOfHintsRemaining,
-  NUMBER_OF_GUESSES_PER_PUZZLE,
-} from "~/hunt.config";
-import DefaultHeader from "./DefaultHeader";
-import { redirect } from "next/navigation";
-import Link from "next/link";
+import { canViewPuzzle, getNumberOfHintsRemaining } from "~/hunt.config";
+import PreviousHintTable from "~/app/(admin)/admin/hints/components/hint-page/PreviousHintTable";
 
-export default async function DefaultHintsPage({
+export default async function DefaultHintPage({
   puzzleId,
 }: {
   puzzleId: string;
@@ -24,7 +18,8 @@ export default async function DefaultHintsPage({
     redirect("/404");
   }
 
-  if (!session?.user?.id) {
+  const teamId = session?.user?.id;
+  if (!teamId) {
     return (
       <div>
         <Link href="/login" className="text-perwinkle hover:underline">
@@ -38,7 +33,7 @@ export default async function DefaultHintsPage({
   // Check if puzzle is solved
   const isSolved = !!(await db.query.guesses.findFirst({
     where: and(
-      eq(guesses.teamId, session.user.id),
+      eq(guesses.teamId, teamId),
       eq(guesses.puzzleId, puzzleId),
       guesses.isCorrect,
     ),
@@ -46,18 +41,26 @@ export default async function DefaultHintsPage({
 
   // Get previous hints
   const previousHints = await db.query.hints.findMany({
-    where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true, status: true },
+    where: and(eq(hints.teamId, teamId), eq(hints.puzzleId, puzzleId)),
+    columns: {
+      id: true,
+      request: true,
+      response: true,
+      teamId: true,
+      claimer: true,
+    },
+    with: {
+      followUps: {
+        columns: { id: true, message: true, userId: true },
+      },
+    },
   });
 
-  const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
+  const hintsRemaining = await getNumberOfHintsRemaining(teamId);
 
   const query = await db.query.hints.findFirst({
     columns: {},
-    where: and(
-      eq(hints.teamId, session.user.id),
-      eq(hints.status, "no_response"),
-    ),
+    where: and(eq(hints.teamId, teamId), eq(hints.status, "no_response")),
     with: { puzzle: { columns: { id: true, name: true } } },
   });
   const unansweredHint = query
@@ -72,21 +75,21 @@ export default async function DefaultHintsPage({
     throw new Error("Puzzle does not exist in database");
   }
 
-  return (
-    <>
-      <div className="mb-4 w-2/3 min-w-36">
-        <HintForm
-          puzzleId={puzzleId}
-          hintsRemaining={hintsRemaining}
-          unansweredHint={unansweredHint}
-          isSolved={isSolved}
-        />
-      </div>
+  const hintState = {
+    puzzleId,
+    hintsRemaining,
+    unansweredHint,
+    isSolved,
+  };
 
-      <h2>Previous Hints</h2>
-      <div className="w-2/3 min-w-36">
-        <PreviousHintTable previousHints={previousHints} />
-      </div>
-    </>
+  return (
+    <div className="w-full md:w-2/3">
+      <PreviousHintTable
+        anonymize={true}
+        previousHints={previousHints}
+        hintRequestState={hintState}
+        teamDisplayName={session.user?.username}
+      />
+    </div>
   );
 }
