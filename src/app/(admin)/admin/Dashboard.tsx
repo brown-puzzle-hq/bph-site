@@ -21,7 +21,7 @@ import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
 import { errata, guesses, hints, teams } from "~/server/db/schema";
 import { count, eq, isNull, not, sql } from "drizzle-orm";
-import { HUNT_END_TIME, HUNT_START_TIME } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 type hintLeaderboardItem = {
   displayName: string;
@@ -105,8 +105,8 @@ export async function Dashboard() {
 
   /* Activity Table (chunk 4) */
   const data: Record<number, ActivityItem> = {};
-  const startDate = HUNT_START_TIME;
-  const endDate = HUNT_END_TIME;
+  const startDate = IN_PERSON.START_TIME;
+  const endDate = REMOTE.END_TIME;
 
   // Initialize the data object with all hours between startTime and endTime
   const totalHours =

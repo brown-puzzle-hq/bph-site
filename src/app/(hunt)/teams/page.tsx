@@ -10,7 +10,7 @@ import {
 import { sql } from "drizzle-orm";
 import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, guesses } from "~/server/db/schema";
-import { HUNT_END_TIME } from "~/hunt.config";
+import { IN_PERSON } from "~/hunt.config";
 import { FormattedTime } from "~/lib/time";
 
 export const fetchCache = "force-no-store";
@@ -23,7 +23,7 @@ export default async function Home() {
       // Exclude finish time if it is after hunt end
       finishTime: sql<Date | null>`
         CASE 
-          WHEN ${teams.finishTime} > ${HUNT_END_TIME} THEN NULL
+          WHEN ${teams.finishTime} > ${IN_PERSON.END_TIME} THEN NULL
           ELSE ${teams.finishTime}
         END`.as("finish_time"),
       correctGuesses:
@@ -36,12 +36,17 @@ export default async function Home() {
     })
     .from(teams)
     // Filter out admin teams and teams who registered after the hunt end
-    .where(and(eq(teams.role, "user"), lt(teams.createTime, HUNT_END_TIME)))
+    .where(
+      and(eq(teams.role, "user"), lt(teams.createTime, IN_PERSON.END_TIME)),
+    )
     // Get guesses that were submitted before the hunt end
     // This is used for `correctGuesses` and `lastCorrectGuessTime`
     .leftJoin(
       guesses,
-      and(eq(guesses.teamId, teams.id), lt(guesses.submitTime, HUNT_END_TIME)),
+      and(
+        eq(guesses.teamId, teams.id),
+        lt(guesses.submitTime, IN_PERSON.END_TIME),
+      ),
     )
     .groupBy(teams.id, teams.displayName, teams.finishTime)
     .orderBy(
@@ -52,7 +57,7 @@ export default async function Home() {
 
   return (
     <div className="mb-6 flex grow flex-col items-center">
-      <h1 className="mb-2">Leaderboard!</h1>
+      <h1 className="mb-2">In-Person Leaderboard!</h1>
       <div>
         <Table>
           <TableHeader>

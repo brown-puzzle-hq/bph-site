@@ -1,9 +1,10 @@
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
-import { canViewSolution, HUNT_END_TIME } from "~/hunt.config";
+import { canViewSolution, IN_PERSON, REMOTE } from "~/hunt.config";
 import Link from "next/link";
 import { FormattedTime } from "~/lib/time";
+import { useSession } from "next-auth/react";
 
 export default async function DefaultSolutionPage({
   puzzleId,
@@ -12,6 +13,7 @@ export default async function DefaultSolutionPage({
   puzzleId: string;
   solutionBody: React.ReactNode;
 }) {
+  const { data: session } = useSession();
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
@@ -31,7 +33,14 @@ export default async function DefaultSolutionPage({
         </p>
         <p>
           All solutions will be available when the hunt ends on{" "}
-          <FormattedTime time={HUNT_END_TIME} />
+          <FormattedTime
+            time={
+              session?.user?.interactionMode === "in-person"
+                ? IN_PERSON.END_TIME
+                : REMOTE.END_TIME
+            }
+          />
+          .
         </p>
         <p>
           Please return to the{" "}
