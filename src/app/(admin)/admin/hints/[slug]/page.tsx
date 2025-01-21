@@ -1,18 +1,17 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
-import { guesses, hints } from "@/db/schema";
+import { guesses, hints, unlocks } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Toast from "../components/hint-page/Toast";
 import HintStatusBox from "../components/hint-page/HintStatusBox";
-import PreviousHintTable from "../../../../(hunt)/puzzle/components/PreviousHintTable";
-import PreviousGuessTable from "~/app/(hunt)/puzzle/components/PreviousGuessTable";
+import PreviousHintTable from "../components/hint-page/PreviousHintTable";
+import PreviousGuessTable from "../components/hint-page/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FormattedTime } from "~/lib/time";
+import { FormattedTime, ElapsedTime } from "~/lib/time";
+import { HUNT_START_TIME } from "~/hunt.config";
 
 export default async function Page({
   params,
@@ -55,6 +54,18 @@ export default async function Page({
     );
   }
 
+  // If there is no unlock, the unlock time is the start of the hunt
+  const unlockTime =
+    (
+      await db.query.unlocks.findFirst({
+        columns: { unlockTime: true },
+        where: and(
+          eq(unlocks.teamId, hint.teamId),
+          eq(unlocks.puzzleId, hint.puzzleId),
+        ),
+      })
+    )?.unlockTime ?? HUNT_START_TIME;
+
   const previousGuesses = await db.query.guesses.findMany({
     where: and(
       eq(guesses.teamId, hint.teamId),
@@ -62,61 +73,43 @@ export default async function Page({
     ),
   });
 
-  const previousHints = (
-    await db.query.hints.findMany({
-      where: and(
-        eq(hints.teamId, hint.teamId),
-        eq(hints.puzzleId, hint.puzzleId),
-      ),
-      columns: { id: true, request: true, response: true },
-      with: {
-        followUps: {
-          columns: { id: true, message: true, userId: true },
-        },
+  const previousHints = await db.query.hints.findMany({
+    where: and(
+      eq(hints.teamId, hint.teamId),
+      eq(hints.puzzleId, hint.puzzleId),
+    ),
+    columns: {
+      id: true,
+      request: true,
+      response: true,
+      teamId: true,
+      claimer: true,
+    },
+    with: {
+      followUps: {
+        columns: { id: true, message: true, userId: true },
       },
-    })
-  )
-    // Check whether the user can edit the hint
-    .map((hint) => ({
-      ...hint,
-      followUps: hint.followUps.map((followUp) => ({
-        id: followUp.id,
-        message: followUp.message,
-        canEdit: followUp.userId === session?.user?.id,
-      })),
-    }));
+    },
+  });
 
   return (
-    <div className="flex w-2/3 min-w-36 grow flex-col">
-      <div className="flex flex-col items-center">
-        <h1>Answer a Hint</h1>
-        <HintStatusBox
-          hintId={hint.id}
-          claimer={hint.claimer}
-          status={hint.status}
-          userId={session.user.id}
-        />
-      </div>
+    <div>
+      <div className="flex min-w-36 grow flex-col">
+        <div className="flex flex-col items-center">
+          <h1>Answer a Hint</h1>
+          <HintStatusBox
+            hintId={hint.id}
+            claimer={hint.claimer}
+            status={hint.status}
+            userId={session.user.id}
+          />
+        </div>
 
-      <div className="flex flex-col items-center">
-        <Tabs
-          defaultValue="response"
-          className="w-2/3 overflow-auto rounded-md bg-zinc-100 p-4"
-        >
-          <TabsList>
-            <TabsTrigger value="response">Response</TabsTrigger>
-            <TabsTrigger value="guesses">
-              Guesses ({previousGuesses.length})
-            </TabsTrigger>
-            <TabsTrigger value="hints">
-              History ({previousHints.length})
-            </TabsTrigger>
-            <TabsTrigger value="additional">Additional Info</TabsTrigger>
-          </TabsList>
-          <TabsContent value="response">
-            <div className="bg-zinc-100 p-4 text-zinc-700">
+        <div className="flex flex-col items-center overflow-auto rounded-md">
+          <div className="flex w-full flex-col justify-between p-6 text-sm text-zinc-700 md:w-2/3 lg:flex-row">
+            <div>
               <p>
-                <strong>From: </strong>
+                <span className="font-semibold">Team </span>
                 <Link
                   href={`/admin/teams/${hint.team.username}`}
                   className="text-blue-600 hover:underline"
@@ -125,7 +118,7 @@ export default async function Page({
                 </Link>
               </p>
               <p>
-                <strong>For:</strong>{" "}
+                <span className="font-semibold">Puzzle </span>
                 <Link
                   href={`/puzzle/${hint.puzzleId}`}
                   className="text-blue-600 hover:underline"
@@ -133,44 +126,79 @@ export default async function Page({
                   {hint.puzzle.name}
                 </Link>
               </p>
-              <RequestBox hint={hint} />
-              {(hint.response ||
-                (hint.claimer && hint.claimer.id === session.user.id)) && (
-                <ResponseBox hint={hint} />
-              )}
-            </div>
-          </TabsContent>
-          <TabsContent value="guesses">
-            <div className="p-4">
-              <PreviousGuessTable previousGuesses={previousGuesses} />
-            </div>
-          </TabsContent>
-          <TabsContent value="hints">
-            <div className="p-4">
-              <PreviousHintTable previousHints={previousHints} />
-            </div>
-          </TabsContent>
-          <TabsContent value="additional">
-            <div className="p-4">
               <p>
-                <strong>Hint ID: </strong>
+                <span className="font-semibold">Hint #</span>
                 {hint.id}
               </p>
+            </div>
+            <div>
               <p>
-                <strong>Request Time: </strong>
+                <span className="font-semibold">Puzzle unlocked </span>
+                <FormattedTime time={unlockTime} />
+                (<ElapsedTime date={unlockTime} /> ago)
+              </p>
+              <p>
+                <span className="font-semibold">Hint requested </span>
                 <FormattedTime time={hint.requestTime} />
+                (<ElapsedTime date={hint.requestTime} /> ago)
               </p>
               <p>
-                <strong>Claim Time: </strong>
-                <FormattedTime time={hint.claimTime} />
+                <span className="font-semibold">Hint claimed </span>
+                {hint.claimTime && (
+                  <>
+                    <FormattedTime time={hint.claimTime} />
+                    (<ElapsedTime date={hint.claimTime} /> ago)
+                  </>
+                )}
               </p>
               <p>
-                <strong>Response Time: </strong>
-                <FormattedTime time={hint.responseTime} />
+                <span className="font-semibold">Hint responded </span>
+                {hint.responseTime && (
+                  <>
+                    <FormattedTime time={hint.responseTime} />
+                    (<ElapsedTime date={hint.responseTime} /> ago)
+                  </>
+                )}
               </p>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+
+          <div className="w-full p-6 md:w-2/3">
+            <RequestBox hint={hint} />
+            {(hint.response ||
+              (hint.claimer && hint.claimer.id === session.user.id)) && (
+              <ResponseBox hint={hint} />
+            )}
+          </div>
+
+          {previousHints.length > 0 && (
+            <div className="w-full md:w-2/3">
+              <PreviousHintTable
+                previousHints={previousHints}
+                teamDisplayName={hint.team.displayName}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Previous guesses and hints hidden in tabs */}
+        <div className="flex flex-col items-center">
+          <Tabs
+            defaultValue="guesses"
+            className="w-2/3 overflow-auto rounded-md p-4"
+          >
+            <TabsList>
+              <TabsTrigger value="guesses">
+                Guesses ({previousGuesses.length})
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="guesses">
+              <div className="py-4">
+                <PreviousGuessTable previousGuesses={previousGuesses} />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
