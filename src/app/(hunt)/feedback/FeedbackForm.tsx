@@ -2,32 +2,32 @@
 import { toast } from "~/hooks/use-toast";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRemarkSync } from "react-remark";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
-import FeedbackDialog from "~/app/(hunt)/feedback/FeedbackDialog";
+import { Card } from "~/components/ui/card";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
 import { insertFeedback } from "./actions";
-import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 
 export const feedbackFormSchema = z.object({
-  description: z.string().min(1, { message: "Feedback is required" }),
+  description: z.string().min(1, { message: "Please submit a message." }),
 });
 
 export default function FeedbackForm({
   teamId,
-  showTeam,
   feedbackList,
 }: {
   teamId: string;
-  showTeam: boolean;
   feedbackList: {
     id: number;
     teamId: string;
@@ -35,6 +35,9 @@ export default function FeedbackForm({
     timestamp: Date;
   }[];
 }) {
+  const [preview, setPreview] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof feedbackFormSchema>>({
     resolver: zodResolver(feedbackFormSchema),
     defaultValues: {
@@ -48,7 +51,6 @@ export default function FeedbackForm({
       toast({
         title: "Submission failed",
         description: result.error,
-        status: "error",
       });
     } else {
       const newFeedback = {
@@ -63,40 +65,68 @@ export default function FeedbackForm({
       });
       form.reset();
     }
+    setPreview(false);
   };
 
   return (
-    <>
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex text-black">
-                  Please enter your thoughts on the hunt! Any puzzle errors, website bugs, and general comments will be enormously helpful for us.
-                </FormLabel>
-                <FormControl>
-                  <AutosizeTextarea
-                    className="bg-gray-50 text-black"
-                    placeholder="No response yet"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
+              <>
+                <FormItem>
+                  <FormDescription>
+                    Any puzzle errors, website bugs, or general comments will be
+                    enormously helpful for us. This textbox supports Markdown.
+                  </FormDescription>
+                  <FormControl>
+                    {preview ? (
+                      <Card>
+                        <div className="p-6">
+                          <article className="prose">
+                            {useRemarkSync(field.value) || <></>}
+                          </article>
+                        </div>
+                      </Card>
+                    ) : (
+                      <AutosizeTextarea
+                        className="bg-gray-50 text-black"
+                        placeholder="No response yet"
+                        {...field}
+                      />
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+                {error && <p className="text-red-500">{error}</p>}
+                <div className="flex space-x-2">
+                  <Button
+                    className="my-4 bg-gray-900 hover:bg-gray-800"
+                    type="submit"
+                    disabled={!form.watch("description")}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setPreview((value) => !value)}
+                    disabled={field.value === ""}
+                  >
+                    {preview ? "Edit" : "Preview"}
+                  </Button>
+                </div>
+              </>
             )}
           />
-          <Button
-            className="bg-gray-900 hover:bg-gray-800 my-4"
-            type="submit"
-            disabled={!form.watch("description")}
-          >
-            Submit
-          </Button>
         </form>
       </Form>
-      <FeedbackDialog showTeam={showTeam} feedbackList={feedbackList} />
-    </>
+      <div className="pt-4">
+        <FeedbackDialog showTeam={false} feedbackList={feedbackList} />
+      </div>
+    </div>
   );
 }

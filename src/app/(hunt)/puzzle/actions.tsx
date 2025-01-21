@@ -1,24 +1,15 @@
 "use server";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";
-import {
-  puzzles,
-  guesses,
-  hints,
-  followUps,
-  unlocks,
-  teams,
-} from "@/db/schema";
+import { puzzles, guesses, hints, unlocks, teams } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
-  getNumberOfHintsRemaining,
   unlockPuzzleAfterSolve,
   checkFinishHunt,
   NUMBER_OF_GUESSES_PER_PUZZLE,
   INITIAL_PUZZLES,
 } from "~/hunt.config";
-
 import axios from "axios";
 
 export type MessageType = "request" | "response" | "follow-up";
@@ -93,72 +84,6 @@ export async function insertGuess(puzzleId: string, guess: string) {
   if (correct) {
     await unlockPuzzleAfterSolve(session.user.id, puzzleId);
     await checkFinishHunt(session.user.id, puzzleId);
-  }
-}
-
-/** Inserts a follow-up hint into the hint table */
-export async function insertFollowUp(hintId: number, message: string) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { error: "Not logged in" };
-  }
-
-  const result = await db
-    .insert(followUps)
-    .values({
-      hintId,
-      userId: session.user.id,
-      message,
-      time: new Date(),
-    })
-    .returning({ id: followUps.id });
-
-  return result[0]?.id;
-}
-
-/** Inserts a hint into the hint table */
-export async function insertHint(puzzleId: string, hint: string) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { error: "Not logged in" };
-  }
-
-  // Checks
-  const hasHint = (await getNumberOfHintsRemaining(session.user.id)) > 0;
-  const hasUnansweredHint = (await db.query.hints.findFirst({
-    columns: { id: true },
-    where: and(
-      eq(hints.teamId, session.user.id),
-      eq(hints.status, "no_response"),
-    ),
-  }))
-    ? true
-    : false;
-
-  if (hasHint && !hasUnansweredHint) {
-    const result = await db
-      .insert(hints)
-      .values({
-        teamId: session.user.id,
-        puzzleId,
-        request: hint,
-        requestTime: new Date(),
-        status: "no_response",
-      })
-      .returning({ id: hints.id });
-
-    const user = await db.query.teams.findFirst({
-      where: eq(teams.id, session.user.id),
-    });
-
-    // TODO: get specific hint ID
-    if (process.env.DISCORD_WEBHOOK_URL) {
-      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-        content: `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): _${hint}_ <@&1310029428864057504>`,
-      });
-    }
-
-    return result[0]?.id;
   }
 }
 

@@ -42,7 +42,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ActivityChart({ activityData }: ChartProps) {
-  console.log(activityData);
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <LineChart

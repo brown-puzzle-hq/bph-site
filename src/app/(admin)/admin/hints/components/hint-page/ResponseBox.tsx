@@ -18,10 +18,7 @@ export function ResponseBox({ hint }: { hint: HintWithRelations }) {
     ) as HTMLTextAreaElement;
 
     // NOTE: might want to give users their response again
-    const { error, title, response } = await respondToHint(
-      hint.id,
-      textarea.value,
-    );
+    const { error, title } = await respondToHint(hint.id, textarea.value);
 
     if (error) {
       toast({
@@ -59,6 +56,7 @@ export function ResponseBox({ hint }: { hint: HintWithRelations }) {
         <Label htmlFor={`hint-response-${hint.id}`}>Response</Label>
         <AutosizeTextarea
           maxHeight={500}
+          className="resize-none"
           value={hint.response}
           id={`hint-response-${hint.id}`}
           readOnly
