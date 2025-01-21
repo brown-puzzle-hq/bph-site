@@ -22,7 +22,7 @@ export default async function Page({
   // Authentication
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Not authenticated");
+    throw new Error("Not authorized.");
   }
 
   // Check if slug is a valid number

@@ -1,26 +1,24 @@
-import { Separator } from "~/components/ui/separator";
 import { ProfileForm } from "../team-page/ProfileForm";
 import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
 import { teams } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import Toast from "../team-page/Toast";
-import DefaultTeamPage from "../team-page/DefaultTeamPage";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
-
   // Authentication
   const session = await auth();
   if (!session?.user?.id) {
-    return <p>Not authenticated.</p>;
+    redirect("/login");
   }
 
   // Check if slug is a valid username
+  const { slug } = await params;
   const team = await db.query.teams.findFirst({
     where: eq(teams.username, slug),
   });
@@ -37,21 +35,6 @@ export default async function Page({
     );
   }
 
-  const sidebarNavItems = [
-    {
-      title: "Profile",
-      href: `/teams/${slug}#profile`,
-    },
-    {
-      title: "Members",
-      href: `/teams/${slug}#members`,
-    },
-    {
-      title: "Notifications",
-      href: `/teams/${slug}#notifications`,
-    },
-  ];
-
   return (
     <div className="mb-6 flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center pb-6">
@@ -66,12 +49,10 @@ export default async function Page({
           displayName={team.displayName}
           role={team.role}
           interactionMode={team.interactionMode}
-
           numCommunity={team.numCommunity}
           phoneNumber={team.phoneNumber}
           roomNeeded={team.roomNeeded}
           solvingLocation={team.solvingLocation}
-
           memberString={team.members}
         />
       </div>
