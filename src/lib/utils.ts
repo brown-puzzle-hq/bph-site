@@ -7,20 +7,24 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function sendBotMessage(message: string) {
-  if (process.env.DISCORD_WEBHOOK_URL) {
-    if (message.length > 2000) {
-      const chunks = message.match(/.{1,2000}/g);
-      if (chunks) {
-        for (const chunk of chunks) {
-          await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-            content: chunk,
-          });
-        }
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+  if (!webhookUrl) {
+    return;
+  }
+
+  if (message.length > 2000) {
+    const chunks = message.match(/.{1,2000}/g);
+
+    if (chunks) {
+      for (const chunk of chunks) {
+        await axios.post(webhookUrl, {
+          content: chunk,
+        });
       }
-    } else {
-      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-        content: message,
-      });
     }
+  } else {
+    await axios.post(webhookUrl, {
+      content: message,
+    });
   }
 }
