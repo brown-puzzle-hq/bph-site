@@ -136,7 +136,7 @@ export function RegisterForm({}: RegisterFormProps) {
     }
     if (
       form.getValues("members").some((member: Member) => member?.email) &&
-      form.formState.errors.members?.message === "At least one email required"
+      form.formState.errors.members?.root?.message === "At least one email required"
     ) {
       form.trigger("members");
     }
