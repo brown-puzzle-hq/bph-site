@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";
-import { puzzles, guesses, hints, unlocks, teams } from "@/db/schema";
+import { puzzles, guesses, hints, followUps, unlocks, teams } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
