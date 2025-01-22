@@ -1,8 +1,8 @@
 "use server";
 
-import axios from "axios";
 import { and, eq } from "drizzle-orm";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
+import { sendBotMessage } from "~/lib/utils";
 import { auth } from "~/server/auth/auth";
 import { db } from "~/server/db/index";
 import { followUps, hints, teams } from "~/server/db/schema";
@@ -45,11 +45,8 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     });
 
     // TODO: get specific hint ID
-    if (process.env.DISCORD_WEBHOOK_URL) {
-      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-        content: `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): _${hint}_ <@&1310029428864057504>`,
-      });
-    }
+    const hintMessage = `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
+    await sendBotMessage(hintMessage);
 
     return result[0]?.id;
   }
