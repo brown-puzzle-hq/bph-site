@@ -13,11 +13,11 @@ import CopyButton from "./CopyButton";
 export default async function DefaultPuzzlePage({
   puzzleId,
   puzzleBody,
-  copyText,
+  copyText = null
 }: {
   puzzleId: string;
   puzzleBody: React.ReactNode;
-  copyText: string | null;
+  copyText?: string | null;
 }) {
   const session = await auth();
 
