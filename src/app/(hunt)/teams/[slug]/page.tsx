@@ -48,12 +48,13 @@ export default async function Page({
           username={slug}
           displayName={team.displayName}
           role={team.role}
+          memberString={team.members}
           interactionMode={team.interactionMode}
           numCommunity={team.numCommunity}
           phoneNumber={team.phoneNumber}
           roomNeeded={team.roomNeeded}
           solvingLocation={team.solvingLocation}
-          memberString={team.members}
+          remoteBox={team.remoteBox}
         />
       </div>
     </div>

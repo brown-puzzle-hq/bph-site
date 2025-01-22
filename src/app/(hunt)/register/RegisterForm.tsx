@@ -65,11 +65,6 @@ export const registerFormSchema = z
       .min(8, { message: "Min 8 characters" })
       .max(50, { message: "Max 50 characters" }),
     confirmPassword: z.string(),
-    interactionMode: z.enum(interactionModeEnum.enumValues),
-    numCommunity: z.string().max(30, { message: "Max 30 characters" }),
-    phoneNumber: zPhone,
-    roomNeeded: z.boolean().default(false),
-    solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
     members: z
       .array(
         z.object({
@@ -81,6 +76,12 @@ export const registerFormSchema = z
       .refine((members) => members.some((member) => member?.email), {
         message: "At least one email required",
       }),
+    interactionMode: z.enum(interactionModeEnum.enumValues),
+    numCommunity: z.string().max(30, { message: "Max 30 characters" }),
+    phoneNumber: zPhone,
+    roomNeeded: z.boolean().default(false),
+    solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
+    remoteBox: z.boolean().default(false),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -116,12 +117,13 @@ export function RegisterForm({}: RegisterFormProps) {
       displayName: "",
       password: "",
       confirmPassword: "",
+      members: [{ name: "", email: "" }],
       interactionMode: undefined,
       numCommunity: "",
       phoneNumber: "",
       roomNeeded: false,
       solvingLocation: "",
-      members: [{ name: "", email: "" }],
+      remoteBox: false,
     },
   });
 
@@ -136,7 +138,8 @@ export function RegisterForm({}: RegisterFormProps) {
     }
     if (
       form.getValues("members").some((member: Member) => member?.email) &&
-      form.formState.errors.members?.root?.message === "At least one email required"
+      form.formState.errors.members?.root?.message ===
+        "At least one email required"
     ) {
       form.trigger("members");
     }
@@ -147,12 +150,13 @@ export function RegisterForm({}: RegisterFormProps) {
       username: data.username,
       displayName: data.displayName,
       password: data.password,
+      members: serializeMembers(data.members),
       interactionMode: data.interactionMode,
       numCommunity: data.numCommunity,
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      members: serializeMembers(data.members),
+      remoteBox: data.remoteBox,
     });
 
     if (result.error) {
@@ -504,6 +508,31 @@ export function RegisterForm({}: RegisterFormProps) {
                     Where can we best find you? (e.g. Barus & Holley 123,
                     Discord, etc.)
                   </FormDescription>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+        {form.watch("interactionMode") === "remote" && (
+          <div className="mb-8 space-y-8">
+            <FormField
+              control={form.control}
+              name="remoteBox"
+              render={({ field }) => (
+                <FormItem className="mb-8 flex flex-row items-center justify-between">
+                  <div>
+                    <FormLabel>Remote Box</FormLabel>
+                    <FormDescription>
+                      Are you interested in purchasing a box of interactive
+                      puzzles?
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

@@ -42,6 +42,7 @@ export const teams = createTable("team", {
   displayName: varchar("display_name", { length: 255 }).notNull(), // For display
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
+  members: text("members").notNull().default("[]"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
 
   // Only for in-person teams
@@ -52,8 +53,8 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-
-  members: text("members").notNull().default("[]"),
+  
+  remoteBox: boolean("remote_box").notNull().default(false),
 
   finishTime: timestamp("finish_time", { withTimezone: true }),
   // Time of creation of team

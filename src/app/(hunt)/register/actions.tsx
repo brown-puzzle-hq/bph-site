@@ -11,12 +11,13 @@ export type TeamProperties = {
   username: string;
   displayName: string;
   password: string;
-  interactionMode: (typeof interactionModeEnum.enumValues)[number];
   members: string;
+  interactionMode: (typeof interactionModeEnum.enumValues)[number];
   numCommunity?: string;
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
+  remoteBox?: boolean;
 };
 
 export async function insertTeam(teamProperties: TeamProperties) {

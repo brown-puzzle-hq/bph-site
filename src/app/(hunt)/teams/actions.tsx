@@ -10,12 +10,13 @@ export type TeamProperties = {
   displayName?: string;
   password?: string;
   role?: (typeof roleEnum.enumValues)[number];
+  members?: string;
   interactionMode?: (typeof interactionModeEnum.enumValues)[number];
   numCommunity?: string;
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
-  members?: string;
+  remoteBox?: boolean;
 };
 
 export async function updateTeam(

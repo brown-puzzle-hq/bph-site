@@ -53,12 +53,6 @@ export const profileFormSchema = z.object({
     .string()
     .min(1, { message: "Required" })
     .max(50, { message: "Max 50 characters" }),
-  interactionMode: z.enum(interactionModeEnum.enumValues),
-  numCommunity: z.string().max(30, { message: "Max 30 characters" }),
-  phoneNumber: zPhone,
-  roomNeeded: z.boolean().default(false),
-  solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-  role: z.enum(roleEnum.enumValues),
   members: z
     .array(
       z.object({
@@ -70,18 +64,26 @@ export const profileFormSchema = z.object({
     .refine((members) => members.some((member) => member?.email), {
       message: "At least one email required",
     }),
+  interactionMode: z.enum(interactionModeEnum.enumValues),
+  numCommunity: z.string().max(30, { message: "Max 30 characters" }),
+  phoneNumber: zPhone,
+  roomNeeded: z.boolean(),
+  solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
+  remoteBox: z.boolean(),
+  role: z.enum(roleEnum.enumValues),
 });
 
 type TeamInfoFormProps = {
   username: string;
   displayName: string;
   role: "admin" | "user";
+  memberString: string;
   interactionMode: "in-person" | "remote";
   numCommunity: string;
   phoneNumber: string;
   roomNeeded: boolean;
   solvingLocation: string;
-  memberString: string;
+  remoteBox: boolean;
 };
 
 type Member = {
@@ -124,12 +126,13 @@ export function ProfileForm({
   username,
   displayName,
   role,
+  memberString,
   interactionMode,
   numCommunity,
   phoneNumber,
   roomNeeded,
   solvingLocation,
-  memberString,
+  remoteBox,
 }: TeamInfoFormProps) {
   const router = useRouter();
   const { data: session, update } = useSession();
@@ -142,12 +145,13 @@ export function ProfileForm({
     defaultValues: {
       displayName,
       role,
+      members,
       interactionMode,
       numCommunity,
       phoneNumber,
       roomNeeded,
       solvingLocation,
-      members,
+      remoteBox,
     },
     mode: "onChange",
   });
@@ -167,12 +171,13 @@ export function ProfileForm({
     const result = await updateTeam(username, {
       displayName: data.displayName,
       role: data.role,
+      members: serializeMembers(data.members),
       interactionMode: data.interactionMode,
       numCommunity: data.numCommunity,
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      members: serializeMembers(data.members),
+      remoteBox: data.remoteBox,
     });
 
     if (result.error) {
@@ -393,7 +398,7 @@ export function ProfileForm({
         />
 
         {/* Other fields */}
-        {form.getValues("interactionMode") === "in-person" && (
+        {form.getValues("interactionMode") === "in-person" ? (
           <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
@@ -456,7 +461,7 @@ export function ProfileForm({
                   </div>
                   <FormControl>
                     <Switch
-                      checked={field.value}
+                      checked={form.watch("roomNeeded")}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -480,6 +485,30 @@ export function ProfileForm({
                     Where can we best find you? (e.g. Barus & Holley 123,
                     Discord, etc.)
                   </FormDescription>
+                </FormItem>
+              )}
+            />
+          </div>
+        ) : (
+          <div className="mb-8 space-y-8">
+            <FormField
+              control={form.control}
+              name="remoteBox"
+              render={({ field }) => (
+                <FormItem className="mb-8 flex flex-row items-center justify-between">
+                  <div>
+                    <FormLabel>Remote Box</FormLabel>
+                    <FormDescription>
+                      Are you interested in purchasing a box of interactive
+                      puzzles?
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={form.watch("remoteBox")}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
