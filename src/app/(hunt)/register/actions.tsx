@@ -52,8 +52,11 @@ export async function insertTeam(teamProperties: TeamProperties) {
         content: `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.username}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.username}))`,
       });
     }
-
-    return login(teamProperties.username, teamProperties.password);
+    const result = await login(
+      teamProperties.username,
+      teamProperties.password,
+    );
+    return result;
   } catch (error) {
     return { error: "An unexpected error occurred." };
   }
