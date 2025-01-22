@@ -53,7 +53,7 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-  
+
   remoteBox: boolean("remote_box").notNull().default(false),
 
   finishTime: timestamp("finish_time", { withTimezone: true }),
