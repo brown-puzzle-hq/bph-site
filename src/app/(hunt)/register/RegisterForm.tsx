@@ -70,13 +70,17 @@ export const registerFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    members: z.array(
-      z.object({
-        id: z.number().optional(),
-        name: z.string().or(z.literal("")),
-        email: z.string().email().or(z.literal("")),
+    members: z
+      .array(
+        z.object({
+          id: z.number().optional(),
+          name: z.string().or(z.literal("")),
+          email: z.string().email().or(z.literal("")),
+        }),
+      )
+      .refine((members) => members.some((member) => member?.email), {
+        message: "At least one email required",
       }),
-    ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -129,6 +133,12 @@ export function RegisterForm({}: RegisterFormProps) {
   useEffect(() => {
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
+    }
+    if (
+      form.getValues("members").some((member: Member) => member?.email) &&
+      form.formState.errors.members?.message === "At least one email required"
+    ) {
+      form.trigger("members");
     }
   });
 
@@ -254,7 +264,12 @@ export function RegisterForm({}: RegisterFormProps) {
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>Team members</span>
+            <span>
+              Team members <span className="text-red-500">*</span>
+            </span>
+            <span className="text-[0.8rem] font-medium text-red-500">
+              {form.formState.errors.members?.root?.message}
+            </span>
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>

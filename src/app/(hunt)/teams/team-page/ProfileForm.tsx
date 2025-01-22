@@ -59,13 +59,17 @@ export const profileFormSchema = z.object({
   roomNeeded: z.boolean().default(false),
   solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
   role: z.enum(roleEnum.enumValues),
-  members: z.array(
-    z.object({
-      id: z.number().optional(),
-      name: z.string().or(z.literal("")),
-      email: z.string().email().or(z.literal("")),
+  members: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        name: z.string().or(z.literal("")),
+        email: z.string().email().or(z.literal("")),
+      }),
+    )
+    .refine((members) => members.some((member) => member?.email), {
+      message: "At least one email required",
     }),
-  ),
 });
 
 type TeamInfoFormProps = {
@@ -157,6 +161,12 @@ export function ProfileForm({
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
     }
+    if (
+      form.getValues("members").some((member: Member) => member?.email) &&
+      form.formState.errors.members?.message === "At least one email required"
+    ) {
+      form.trigger("members");
+    }
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -240,7 +250,16 @@ export function ProfileForm({
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>Team members</span>
+            <span>
+              Team members <span className="text-red-500">*</span>
+            </span>
+            {!form
+              .getValues("members")
+              .some((member: Member) => member?.email) && (
+              <span className="text-[0.8rem] font-medium text-red-500">
+                At least one email required
+              </span>
+            )}
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
@@ -519,7 +538,12 @@ export function ProfileForm({
                 </Button>
                 <Button
                   type="submit"
-                  disabled={!!Object.keys(form.formState.errors).length}
+                  disabled={
+                    !!Object.keys(form.formState.errors).length ||
+                    !form
+                      .watch("members")
+                      .some((member: Member) => member?.email)
+                  }
                 >
                   Save
                 </Button>
