@@ -10,7 +10,7 @@ import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   INITIAL_PUZZLES,
 } from "~/hunt.config";
-import axios from "axios";
+import { sendBotMessage } from "~/lib/utils";
 
 export type MessageType = "request" | "response" | "follow-up";
 
@@ -73,11 +73,8 @@ export async function insertGuess(puzzleId: string, guess: string) {
     where: eq(teams.id, session.user.id),
   });
 
-  if (process.env.DISCORD_WEBHOOK_URL) {
-    await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-      content: `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`,
-    });
-  }
+  const guessMessage = `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`;
+  await sendBotMessage(guessMessage);
 
   revalidatePath(`/puzzle/${puzzleId}`);
 

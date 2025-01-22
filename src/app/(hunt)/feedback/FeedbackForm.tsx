@@ -99,7 +99,7 @@ export default function FeedbackForm({
                     )}
                   </FormControl>
                 </FormItem>
-                <div className="flex mb-4 space-x-2">
+                <div className="mb-4 flex space-x-2">
                   <Button type="submit" disabled={field.value === ""}>
                     Submit
                   </Button>
