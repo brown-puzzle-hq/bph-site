@@ -46,6 +46,8 @@ export function LoginForm() {
         router.push("/admin");
       } else {
         router.push("/");
+        // Not sure how to refresh nav without this,
+        // but this seems to not be a problem for admin
         router.refresh();
       }
       setError(null);

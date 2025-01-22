@@ -6,6 +6,7 @@ import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 import axios from "axios";
+import { revalidatePath } from "next/cache";
 
 export type TeamProperties = {
   username: string;
@@ -56,6 +57,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
       teamProperties.username,
       teamProperties.password,
     );
+    revalidatePath("/");
     return result;
   } catch (error) {
     return { error: "An unexpected error occurred." };
