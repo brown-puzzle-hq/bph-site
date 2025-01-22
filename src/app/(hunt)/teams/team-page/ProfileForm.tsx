@@ -364,7 +364,7 @@ export function ProfileForm({
             </div>
           ))}
           <FormDescription className="pt-2">
-            Press ENTER to add entries.
+            We recommend 6-8 members. Press ENTER to add entries.
           </FormDescription>
         </div>
 
@@ -456,7 +456,8 @@ export function ProfileForm({
                   <div>
                     <FormLabel>Room needed</FormLabel>
                     <FormDescription>
-                      Do you need a room on campus?
+                      Hunt weekend will be busy. Select this if you'll need a
+                      room.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -497,10 +498,12 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem className="mb-8 flex flex-row items-center justify-between">
                   <div>
-                    <FormLabel>Remote Box</FormLabel>
+                    <FormLabel>Remote box</FormLabel>
                     <FormDescription>
                       Are you interested in purchasing a box of interactive
                       puzzles?
+                      <br />
+                      Please decide soon so we can gauge interest.
                     </FormDescription>
                   </div>
                   <FormControl>
