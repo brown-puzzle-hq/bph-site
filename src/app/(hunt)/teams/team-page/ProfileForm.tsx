@@ -219,12 +219,15 @@ export function ProfileForm({
     return Object.keys(currentValues).some((key) =>
       key === "members"
         ? serializeMembers(currentValues[key]) !== memberString
-        : (currentValues as ProfileFormValues)[
-            key as keyof ProfileFormValues
-          ] !=
-          (form.formState.defaultValues as ProfileFormValues)[
-            key as keyof ProfileFormValues
-          ],
+        : key === "remoteBox"
+          ? currentValues["interactionMode"] === "remote" &&
+            currentValues[key] != remoteBox
+          : (currentValues as ProfileFormValues)[
+              key as keyof ProfileFormValues
+            ] !=
+            (form.formState.defaultValues as ProfileFormValues)[
+              key as keyof ProfileFormValues
+            ],
     );
   };
 
@@ -529,9 +532,9 @@ export function ProfileForm({
                           ) // Map string to boolean
                       }
                       value={
-                        field.value === undefined
+                        form.watch("remoteBox") === undefined
                           ? undefined
-                          : field.value === true
+                          : form.watch("remoteBox")
                             ? "true"
                             : "false"
                       } // Map boolean to string
