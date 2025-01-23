@@ -81,12 +81,20 @@ export const registerFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    remoteBox: z.boolean(),
+    remoteBox: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
+  .refine(
+    (data) =>
+      !(data.interactionMode === "remote" && data.remoteBox === undefined),
+    {
+      message: "Required",
+      path: ["remoteBox"],
+    },
+  );
 
 type RegisterFormProps = {};
 
@@ -193,7 +201,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <FormMessage />
               </FormLabel>
               <FormControl>
-                <Input placeholder="jcarberr" {...field} />
+                <Input placeholder="jcarberr" autoComplete="on" {...field} />
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
@@ -475,7 +483,7 @@ export function RegisterForm({}: RegisterFormProps) {
               control={form.control}
               name="roomNeeded"
               render={({ field }) => (
-                <FormItem className="mb-8 flex flex-row items-center justify-between">
+                <FormItem className="flex flex-row items-center justify-between">
                   <div>
                     <FormLabel>Room needed</FormLabel>
                     <FormDescription>
@@ -520,54 +528,52 @@ export function RegisterForm({}: RegisterFormProps) {
               control={form.control}
               name="remoteBox"
               render={({ field }) => (
-                <FormItem className="mb-8 flex flex-row items-center justify-between">
-                  <div>
-                    <div className="mb-4">
-                      <FormLabel>Remote box</FormLabel>
-                      <FormDescription>
-                        Are you interested in purchasing a box of physical
-                        puzzles? This is non-binding and only offered to remote
-                        teams. <span className="text-red-500">*</span>
-                      </FormDescription>
-                    </div>
-                    <div>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={
-                            (value) =>
-                              field.onChange(
-                                value === "true"
-                                  ? true
-                                  : value === "false"
-                                    ? false
-                                    : undefined,
-                              ) // Map string to boolean
-                          }
-                          value={
-                            field.value === undefined
-                              ? undefined
-                              : field.value === true
-                                ? "true"
-                                : "false"
-                          } // Map boolean to string
-                          className="flex flex-col space-y-1"
-                        >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <RadioGroupItem value="true" />
-                            <FormLabel className="font-normal text-black">
-                              Yes, I might be interested!
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <RadioGroupItem value="false" />
-                            <FormLabel className="font-normal text-black">
-                              No thank you.
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </div>
+                <FormItem>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-black">
+                      Remote box <span className="text-red-500">*</span>
+                    </span>
+                    <FormMessage />
+                  </FormLabel>
+                  <FormDescription>
+                    Are you interested in purchasing a box of physical puzzles?
+                    This is non-binding and only offered to remote teams.
+                  </FormDescription>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={
+                        (value) =>
+                          field.onChange(
+                            value === "true"
+                              ? true
+                              : value === "false"
+                                ? false
+                                : undefined,
+                          ) // Map string to boolean
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : field.value === true
+                            ? "true"
+                            : "false"
+                      } // Map boolean to string
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="true" />
+                        <FormLabel className="font-normal text-black">
+                          Yes, I might be interested!
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="false" />
+                        <FormLabel className="font-normal text-black">
+                          No thank you.
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
                 </FormItem>
               )}
             />

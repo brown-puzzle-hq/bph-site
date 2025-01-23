@@ -48,30 +48,39 @@ const zPhone = z.string().transform((arg, ctx) => {
   return z.NEVER;
 });
 
-export const profileFormSchema = z.object({
-  displayName: z
-    .string()
-    .min(1, { message: "Required" })
-    .max(50, { message: "Max 50 characters" }),
-  members: z
-    .array(
-      z.object({
-        id: z.number().optional(),
-        name: z.string().or(z.literal("")),
-        email: z.string().email().or(z.literal("")),
+export const profileFormSchema = z
+  .object({
+    displayName: z
+      .string()
+      .min(1, { message: "Required" })
+      .max(50, { message: "Max 50 characters" }),
+    members: z
+      .array(
+        z.object({
+          id: z.number().optional(),
+          name: z.string().or(z.literal("")),
+          email: z.string().email().or(z.literal("")),
+        }),
+      )
+      .refine((members) => members.some((member) => member?.email), {
+        message: "At least one email required",
       }),
-    )
-    .refine((members) => members.some((member) => member?.email), {
-      message: "At least one email required",
-    }),
-  interactionMode: z.enum(interactionModeEnum.enumValues),
-  numCommunity: z.string().max(30, { message: "Max 30 characters" }),
-  phoneNumber: zPhone,
-  roomNeeded: z.boolean(),
-  solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-  remoteBox: z.boolean(),
-  role: z.enum(roleEnum.enumValues),
-});
+    interactionMode: z.enum(interactionModeEnum.enumValues),
+    numCommunity: z.string().max(30, { message: "Max 30 characters" }),
+    phoneNumber: zPhone,
+    roomNeeded: z.boolean(),
+    solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
+    remoteBox: z.boolean().optional(),
+    role: z.enum(roleEnum.enumValues),
+  })
+  .refine(
+    (data) =>
+      !(data.interactionMode === "remote" && data.remoteBox === undefined),
+    {
+      message: "Required",
+      path: ["remoteBox"],
+    },
+  );
 
 type TeamInfoFormProps = {
   username: string;
@@ -452,7 +461,7 @@ export function ProfileForm({
               control={form.control}
               name="roomNeeded"
               render={({ field }) => (
-                <FormItem className="mb-8 flex flex-row items-center justify-between">
+                <FormItem className="flex flex-row items-center justify-between">
                   <div>
                     <FormLabel>Room needed</FormLabel>
                     <FormDescription>
@@ -496,54 +505,52 @@ export function ProfileForm({
               control={form.control}
               name="remoteBox"
               render={({ field }) => (
-                <FormItem className="mb-8 flex flex-row items-center justify-between">
-                  <div>
-                    <div className="mb-4">
-                      <FormLabel>Remote box</FormLabel>
-                      <FormDescription>
-                        Are you interested in purchasing a box of physical
-                        puzzles? This is non-binding and only offered to remote
-                        teams. <span className="text-red-500">*</span>
-                      </FormDescription>
-                    </div>
-                    <div>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={
-                            (value) =>
-                              field.onChange(
-                                value === "true"
-                                  ? true
-                                  : value === "false"
-                                    ? false
-                                    : undefined,
-                              ) // Map string to boolean
-                          }
-                          value={
-                            field.value === undefined
-                              ? undefined
-                              : field.value === true
-                                ? "true"
-                                : "false"
-                          } // Map boolean to string
-                          className="flex flex-col space-y-1"
-                        >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <RadioGroupItem value="true" />
-                            <FormLabel className="font-normal text-black">
-                              Yes, I might be interested!
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <RadioGroupItem value="false" />
-                            <FormLabel className="font-normal text-black">
-                              No thank you.
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </div>
+                <FormItem>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-black">
+                      Remote box <span className="text-red-500">*</span>
+                    </span>
+                    <FormMessage />
+                  </FormLabel>
+                  <FormDescription>
+                    Are you interested in purchasing a box of physical puzzles?
+                    This is non-binding and only offered to remote teams.
+                  </FormDescription>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={
+                        (value) =>
+                          field.onChange(
+                            value === "true"
+                              ? true
+                              : value === "false"
+                                ? false
+                                : undefined,
+                          ) // Map string to boolean
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : field.value === true
+                            ? "true"
+                            : "false"
+                      } // Map boolean to string
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="true" />
+                        <FormLabel className="font-normal text-black">
+                          Yes, I might be interested!
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="false" />
+                        <FormLabel className="font-normal text-black">
+                          No thank you.
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
                 </FormItem>
               )}
             />
