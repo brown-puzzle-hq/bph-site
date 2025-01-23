@@ -413,8 +413,13 @@ export function RegisterForm({}: RegisterFormProps) {
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <RadioGroupItem value="in-person" disabled={new Date() > IN_PERSON.END_TIME} />
-                    <FormLabel className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}>
+                    <RadioGroupItem
+                      value="in-person"
+                      disabled={new Date() > IN_PERSON.END_TIME}
+                    />
+                    <FormLabel
+                      className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                    >
                       In-person
                     </FormLabel>
                   </FormItem>
