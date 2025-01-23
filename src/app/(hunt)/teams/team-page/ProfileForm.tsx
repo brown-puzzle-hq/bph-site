@@ -422,7 +422,7 @@ export function ProfileForm({
                     <FormMessage />
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" min="0" />
+                    <Input {...field} type="number" min="0" value={form.watch("numCommunity")} />
                   </FormControl>
                   <FormDescription>
                     Number of undergraduates, graduates, faculty, or alumni.
