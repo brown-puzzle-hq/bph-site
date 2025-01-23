@@ -5,8 +5,8 @@ import { teams, type interactionModeEnum } from "@/db/schema";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
-import axios from "axios";
 import { IN_PERSON } from "~/hunt.config";
+import { sendBotMessage } from "~/lib/utils";
 
 export type TeamProperties = {
   username: string;
@@ -51,16 +51,9 @@ export async function insertTeam(teamProperties: TeamProperties) {
       createTime: new Date(),
     });
 
-    if (process.env.DISCORD_WEBHOOK_URL) {
-      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
-        content: `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.username}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.username}))`,
-      });
-    }
-    const result = await login(
-      teamProperties.username,
-      teamProperties.password,
-    );
-    return result;
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.username}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.username}))`;
+    await sendBotMessage(teamMessage);
+    return login(teamProperties.username, teamProperties.password);
   } catch (error) {
     return { error: "An unexpected error occurred." };
   }
