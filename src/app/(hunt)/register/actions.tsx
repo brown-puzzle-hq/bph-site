@@ -5,22 +5,27 @@ import { teams, type interactionModeEnum } from "@/db/schema";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
+import { IN_PERSON } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/utils";
 
 export type TeamProperties = {
   username: string;
   displayName: string;
   password: string;
-  interactionMode: (typeof interactionModeEnum.enumValues)[number];
   members: string;
+  interactionMode: (typeof interactionModeEnum.enumValues)[number];
   numCommunity?: string;
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
+  remoteBox?: boolean;
 };
 
 export async function insertTeam(teamProperties: TeamProperties) {
   teamProperties.username = teamProperties.username.toLowerCase();
+  if (new Date() > IN_PERSON.END_TIME) {
+    teamProperties.interactionMode = "remote";
+  }
 
   const duplicateUsername = await db.query.teams.findFirst({
     columns: { id: true },
@@ -48,7 +53,6 @@ export async function insertTeam(teamProperties: TeamProperties) {
 
     const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.username}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.username}))`;
     await sendBotMessage(teamMessage);
-
     return login(teamProperties.username, teamProperties.password);
   } catch (error) {
     return { error: "An unexpected error occurred." };

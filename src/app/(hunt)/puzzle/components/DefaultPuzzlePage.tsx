@@ -13,7 +13,7 @@ import CopyButton from "./CopyButton";
 export default async function DefaultPuzzlePage({
   puzzleId,
   puzzleBody,
-  copyText = null
+  copyText = null,
 }: {
   puzzleId: string;
   puzzleBody: React.ReactNode;

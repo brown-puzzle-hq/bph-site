@@ -5,17 +5,19 @@ import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
 import { auth } from "~/server/auth/auth";
+import { IN_PERSON } from "~/hunt.config";
 
 export type TeamProperties = {
   displayName?: string;
   password?: string;
   role?: (typeof roleEnum.enumValues)[number];
+  members?: string;
   interactionMode?: (typeof interactionModeEnum.enumValues)[number];
   numCommunity?: string;
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
-  members?: string;
+  remoteBox?: boolean;
 };
 
 export async function updateTeam(
@@ -33,6 +35,15 @@ export async function updateTeam(
   // Do not allow non-admins to update the role
   if (session?.user?.role !== "admin") {
     delete teamProperties.role;
+  }
+
+  // Restrict interaction mode updates
+  if (
+    new Date() > IN_PERSON.END_TIME ||
+    (new Date() > IN_PERSON.START_TIME &&
+      teamProperties.interactionMode === "remote")
+  ) {
+    teamProperties.interactionMode = undefined;
   }
 
   // Update the password

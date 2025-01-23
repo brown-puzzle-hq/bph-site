@@ -25,6 +25,7 @@ import { insertTeam } from "./actions";
 import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
+import { IN_PERSON } from "~/hunt.config";
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
@@ -65,23 +66,36 @@ export const registerFormSchema = z
       .min(8, { message: "Min 8 characters" })
       .max(50, { message: "Max 50 characters" }),
     confirmPassword: z.string(),
+    members: z
+      .array(
+        z.object({
+          id: z.number().optional(),
+          name: z.string().or(z.literal("")),
+          email: z.string().email().or(z.literal("")),
+        }),
+      )
+      .refine((members) => members.some((member) => member?.email), {
+        message: "At least one email required",
+      }),
     interactionMode: z.enum(interactionModeEnum.enumValues),
     numCommunity: z.string().max(30, { message: "Max 30 characters" }),
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    members: z.array(
-      z.object({
-        id: z.number().optional(),
-        name: z.string().or(z.literal("")),
-        email: z.string().email().or(z.literal("")),
-      }),
-    ),
+    remoteBox: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
+  .refine(
+    (data) =>
+      !(data.interactionMode === "remote" && data.remoteBox === undefined),
+    {
+      message: "Required",
+      path: ["remoteBox"],
+    },
+  );
 
 type RegisterFormProps = {};
 
@@ -112,12 +126,13 @@ export function RegisterForm({}: RegisterFormProps) {
       displayName: "",
       password: "",
       confirmPassword: "",
+      members: [{ name: "", email: "" }],
       interactionMode: undefined,
       numCommunity: "",
       phoneNumber: "",
       roomNeeded: false,
       solvingLocation: "",
-      members: [{ name: "", email: "" }],
+      remoteBox: undefined,
     },
   });
 
@@ -130,6 +145,13 @@ export function RegisterForm({}: RegisterFormProps) {
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
     }
+    if (
+      form.getValues("members").some((member: Member) => member?.email) &&
+      form.formState.errors.members?.root?.message ===
+        "At least one email required"
+    ) {
+      form.trigger("members");
+    }
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
@@ -137,12 +159,13 @@ export function RegisterForm({}: RegisterFormProps) {
       username: data.username,
       displayName: data.displayName,
       password: data.password,
+      members: serializeMembers(data.members),
       interactionMode: data.interactionMode,
       numCommunity: data.numCommunity,
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      members: serializeMembers(data.members),
+      remoteBox: data.remoteBox,
     });
 
     if (result.error) {
@@ -158,6 +181,7 @@ export function RegisterForm({}: RegisterFormProps) {
       description: "Your team has been registered.",
     });
     router.push("/");
+    router.refresh();
   };
 
   return (
@@ -179,7 +203,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <FormMessage />
               </FormLabel>
               <FormControl>
-                <Input placeholder="jcarberr" {...field} />
+                <Input placeholder="jcarberr" autoComplete="on" {...field} />
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
@@ -254,7 +278,12 @@ export function RegisterForm({}: RegisterFormProps) {
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>Team members</span>
+            <span>
+              Team members <span className="text-red-500">*</span>
+            </span>
+            <span className="text-[0.8rem] font-medium text-red-500">
+              {form.formState.errors.members?.root?.message}
+            </span>
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
@@ -360,7 +389,7 @@ export function RegisterForm({}: RegisterFormProps) {
             </div>
           ))}
           <FormDescription className="pt-2">
-            Press ENTER to add entries.
+            We recommend 6-8 members. Press ENTER to add entries.
           </FormDescription>
         </div>
 
@@ -384,8 +413,13 @@ export function RegisterForm({}: RegisterFormProps) {
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <RadioGroupItem value="in-person" />
-                    <FormLabel className="font-normal text-black">
+                    <RadioGroupItem
+                      value="in-person"
+                      disabled={new Date() > IN_PERSON.END_TIME}
+                    />
+                    <FormLabel
+                      className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                    >
                       In-person
                     </FormLabel>
                   </FormItem>
@@ -456,11 +490,12 @@ export function RegisterForm({}: RegisterFormProps) {
               control={form.control}
               name="roomNeeded"
               render={({ field }) => (
-                <FormItem className="mb-8 flex flex-row items-center justify-between">
+                <FormItem className="flex flex-row items-center justify-between">
                   <div>
                     <FormLabel>Room needed</FormLabel>
                     <FormDescription>
-                      Do you need a room on campus?
+                      Hunt weekend will be busy. Select this if you'll need a
+                      room.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -489,6 +524,63 @@ export function RegisterForm({}: RegisterFormProps) {
                     Where can we best find you? (e.g. Barus & Holley 123,
                     Discord, etc.)
                   </FormDescription>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+        {form.watch("interactionMode") === "remote" && (
+          <div className="mb-8 space-y-8">
+            <FormField
+              control={form.control}
+              name="remoteBox"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-black">
+                      Remote box <span className="text-red-500">*</span>
+                    </span>
+                    <FormMessage />
+                  </FormLabel>
+                  <FormDescription>
+                    Are you interested in purchasing a box of physical puzzles?
+                    This is non-binding and only offered to remote teams.
+                  </FormDescription>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={
+                        (value) =>
+                          field.onChange(
+                            value === "true"
+                              ? true
+                              : value === "false"
+                                ? false
+                                : undefined,
+                          ) // Map string to boolean
+                      }
+                      value={
+                        field.value === undefined
+                          ? undefined
+                          : field.value === true
+                            ? "true"
+                            : "false"
+                      } // Map boolean to string
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="true" />
+                        <FormLabel className="font-normal text-black">
+                          Yes, I might be interested!
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="false" />
+                        <FormLabel className="font-normal text-black">
+                          No thank you.
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
                 </FormItem>
               )}
             />
