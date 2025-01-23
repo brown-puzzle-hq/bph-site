@@ -57,7 +57,6 @@ export async function insertTeam(teamProperties: TeamProperties) {
       teamProperties.username,
       teamProperties.password,
     );
-    revalidatePath("/");
     return result;
   } catch (error) {
     return { error: "An unexpected error occurred." };
