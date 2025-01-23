@@ -93,7 +93,7 @@ type TeamInfoFormProps = {
   phoneNumber: string;
   roomNeeded: boolean;
   solvingLocation: string;
-  remoteBox: boolean;
+  remoteBox: boolean | null;
 };
 
 type Member = {
@@ -161,7 +161,7 @@ export function ProfileForm({
       phoneNumber,
       roomNeeded,
       solvingLocation,
-      remoteBox,
+      remoteBox: remoteBox ?? undefined,
     },
     mode: "onChange",
   });
@@ -562,11 +562,11 @@ export function ProfileForm({
                           ) // Map string to boolean
                       }
                       value={
-                        form.watch("remoteBox") === undefined
-                          ? undefined
-                          : form.watch("remoteBox")
-                            ? "true"
-                            : "false"
+                        form.watch("remoteBox") === true
+                          ? "true"
+                          : form.watch("remoteBox") === false
+                            ? "false"
+                            : undefined
                       } // Map boolean to string
                       className="flex flex-col space-y-1"
                     >
@@ -640,7 +640,10 @@ export function ProfileForm({
                     !!Object.keys(form.formState.errors).length ||
                     !form
                       .watch("members")
-                      .some((member: Member) => member?.email)
+                      .some((member: Member) => member?.email) ||
+                    (form.watch("interactionMode") === "remote" &&
+                      form.watch("remoteBox") !== true &&
+                      form.watch("remoteBox") !== false)
                   }
                 >
                   Save
