@@ -175,6 +175,13 @@ export function ProfileForm({
     if (form.getValues("members").length === 0) {
       append({ name: "", email: "" });
     }
+    if (
+      form.getValues("members").some((member: Member) => member?.email) &&
+      form.formState.errors.members?.message ===
+        "At least one email required"
+    ) {
+      form.trigger("members");
+    }
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -651,6 +658,9 @@ export function ProfileForm({
               </div>
             </div>
           </Alert>
+        </div>
+        <div>
+          <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
         </div>
       </form>
     </Form>
