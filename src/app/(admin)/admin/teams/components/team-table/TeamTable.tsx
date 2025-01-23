@@ -70,11 +70,9 @@ export function TeamTable<TData, TValue>({
       <div className="flex items-center justify-between space-x-2 p-4">
         <Input
           placeholder="Filter teams..."
-          value={
-            (table.getColumn("username")?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn("id")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("username")?.setFilterValue(event.target.value)
+            table.getColumn("id")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -133,12 +131,12 @@ export function TeamTable<TData, TValue>({
                       if (event.metaKey || event.ctrlKey) {
                         // Open in new tab
                         window.open(
-                          `/admin/teams/${row.getValue("username")}`,
+                          `/admin/teams/${row.getValue("id")}`,
                           "_blank",
                         );
                       } else {
                         // Move to team page
-                        router.push(`/admin/teams/${row.getValue("username")}`);
+                        router.push(`/admin/teams/${row.getValue("id")}`);
                         router.refresh();
                       }
                     }}

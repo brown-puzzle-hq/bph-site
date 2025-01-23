@@ -2,9 +2,9 @@
 import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 
-export async function login(username: string, password: string) {
+export async function login(id: string, password: string) {
   try {
-    await signIn("credentials", { username, password, redirect: false });
+    await signIn("credentials", { id, password, redirect: false });
     return { error: null };
   } catch (error) {
     if (error instanceof AuthError) {

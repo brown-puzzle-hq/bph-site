@@ -21,7 +21,7 @@ export async function insertFeedback(description: string) {
     where: eq(teams.id, session.user.id),
   });
 
-  const feedbackMessage = `📝 **Feedback** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}): ${description}`;
+  const feedbackMessage = `📝 **Feedback** by [${user?.id}](https://puzzlethon.brownpuzzle.club/teams/${user?.id}): ${description}`;
   await sendBotMessage(feedbackMessage);
 
   return { error: null };

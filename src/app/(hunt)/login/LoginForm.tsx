@@ -20,7 +20,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 export const loginFormSchema = z.object({
-  username: z.string(),
+  id: z.string(),
   password: z.string(),
 });
 
@@ -32,13 +32,13 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: "",
+      id: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const result = await login(data.username, data.password);
+    const result = await login(data.id, data.password);
     if (result.error !== null) {
       setError(result.error);
     } else {
@@ -59,7 +59,7 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-64 space-y-4">
         <FormField
           control={form.control}
-          name="username"
+          name="id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>

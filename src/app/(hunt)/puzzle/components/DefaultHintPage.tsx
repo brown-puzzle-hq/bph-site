@@ -88,7 +88,7 @@ export default async function DefaultHintPage({
         anonymize={true}
         previousHints={previousHints}
         hintRequestState={hintState}
-        teamDisplayName={session.user?.username}
+        teamDisplayName={session.user?.id}
       />
     </div>
   );

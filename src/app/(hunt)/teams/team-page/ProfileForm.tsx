@@ -84,7 +84,7 @@ export const profileFormSchema = z
   );
 
 type TeamInfoFormProps = {
-  username: string;
+  id: string;
   displayName: string;
   role: "admin" | "user";
   memberString: string;
@@ -133,7 +133,7 @@ function formatPhoneNumber(phoneNumber: string | null): string {
 }
 
 export function ProfileForm({
-  username,
+  id,
   displayName,
   role,
   memberString,
@@ -178,7 +178,7 @@ export function ProfileForm({
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
-    const result = await updateTeam(username, {
+    const result = await updateTeam(id, {
       displayName: data.displayName,
       role: data.role,
       members: serializeMembers(data.members),
