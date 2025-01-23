@@ -26,6 +26,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { updateTeam } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
+import { IN_PERSON } from "~/hunt.config";
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
@@ -396,12 +397,36 @@ export function ProfileForm({
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <RadioGroupItem value="in-person" />
-                    <FormLabel className="font-normal">In-person</FormLabel>
+                    <RadioGroupItem
+                      value="in-person"
+                      disabled={new Date() > IN_PERSON.END_TIME}
+                    />
+                    <FormLabel
+                      className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                    >
+                      In-person
+                    </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <RadioGroupItem value="remote" />
-                    <FormLabel className="font-normal">Remote</FormLabel>
+                    <RadioGroupItem
+                      value="remote"
+                      disabled={
+                        new Date() > IN_PERSON.END_TIME ||
+                        (new Date() > IN_PERSON.START_TIME &&
+                          field.value === "in-person")
+                      }
+                    />
+                    <FormLabel
+                      className={`font-normal text-black opacity-${
+                        new Date() > IN_PERSON.END_TIME ||
+                        (new Date() > IN_PERSON.START_TIME &&
+                          field.value === "in-person")
+                          ? 50
+                          : 100
+                      }`}
+                    >
+                      Remote
+                    </FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -422,7 +447,12 @@ export function ProfileForm({
                     <FormMessage />
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" min="0" value={form.watch("numCommunity")} />
+                    <Input
+                      {...field}
+                      type="number"
+                      min="0"
+                      value={form.watch("numCommunity")}
+                    />
                   </FormControl>
                   <FormDescription>
                     Number of undergraduates, graduates, faculty, or alumni.

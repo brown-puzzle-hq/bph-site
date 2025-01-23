@@ -6,7 +6,7 @@ import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 import axios from "axios";
-import { revalidatePath } from "next/cache";
+import { IN_PERSON } from "~/hunt.config";
 
 export type TeamProperties = {
   username: string;
@@ -23,6 +23,9 @@ export type TeamProperties = {
 
 export async function insertTeam(teamProperties: TeamProperties) {
   teamProperties.username = teamProperties.username.toLowerCase();
+  if (new Date() > IN_PERSON.END_TIME) {
+    teamProperties.interactionMode = "remote";
+  }
 
   const duplicateUsername = await db.query.teams.findFirst({
     columns: { id: true },

@@ -25,6 +25,7 @@ import { insertTeam } from "./actions";
 import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
+import { IN_PERSON } from "~/hunt.config";
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
@@ -412,8 +413,8 @@ export function RegisterForm({}: RegisterFormProps) {
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
-                    <RadioGroupItem value="in-person" />
-                    <FormLabel className="font-normal text-black">
+                    <RadioGroupItem value="in-person" disabled={new Date() > IN_PERSON.END_TIME} />
+                    <FormLabel className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}>
                       In-person
                     </FormLabel>
                   </FormItem>
