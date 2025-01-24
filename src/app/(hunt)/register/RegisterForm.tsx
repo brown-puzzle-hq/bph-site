@@ -82,7 +82,7 @@ export const registerFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    remoteBox: z.boolean().optional(),
+    wantsBox: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -90,10 +90,10 @@ export const registerFormSchema = z
   })
   .refine(
     (data) =>
-      !(data.interactionMode === "remote" && data.remoteBox === undefined),
+      !(data.interactionMode === "remote" && data.wantsBox === undefined),
     {
       message: "Required",
-      path: ["remoteBox"],
+      path: ["wantsBox"],
     },
   );
 
@@ -132,7 +132,7 @@ export function RegisterForm({}: RegisterFormProps) {
       phoneNumber: "",
       roomNeeded: false,
       solvingLocation: "",
-      remoteBox: undefined,
+      wantsBox: undefined,
     },
   });
 
@@ -165,7 +165,7 @@ export function RegisterForm({}: RegisterFormProps) {
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      remoteBox: data.remoteBox,
+      wantsBox: data.wantsBox,
     });
 
     if (result.error) {
@@ -533,7 +533,7 @@ export function RegisterForm({}: RegisterFormProps) {
           <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
-              name="remoteBox"
+              name="wantsBox"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">

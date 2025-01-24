@@ -51,7 +51,8 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-  remoteBox: boolean("remote_box").notNull().default(false),
+  wantsBox: boolean("wants_box").notNull().default(false),
+  hasBox: boolean("has_box").notNull().default(false),
 
   // Not included:
   // allow_time_unlocks, total_hints_awarded, total_free_answers_awarded

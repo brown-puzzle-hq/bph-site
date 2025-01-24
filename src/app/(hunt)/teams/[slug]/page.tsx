@@ -54,7 +54,7 @@ export default async function Page({
           phoneNumber={team.phoneNumber}
           roomNeeded={team.roomNeeded}
           solvingLocation={team.solvingLocation}
-          remoteBox={team.remoteBox}
+          wantsBox={team.wantsBox}
         />
       </div>
     </div>
