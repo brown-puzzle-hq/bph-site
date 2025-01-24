@@ -50,7 +50,7 @@ const zPhone = z.string().transform((arg, ctx) => {
 
 export const registerFormSchema = z
   .object({
-    username: z
+    id: z
       .string()
       .min(5, { message: "Min 5 characters" })
       .max(50, { message: "Max 50 characters" })
@@ -82,7 +82,7 @@ export const registerFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    remoteBox: z.boolean().optional(),
+    wantsBox: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -90,10 +90,10 @@ export const registerFormSchema = z
   })
   .refine(
     (data) =>
-      !(data.interactionMode === "remote" && data.remoteBox === undefined),
+      !(data.interactionMode === "remote" && data.wantsBox === undefined),
     {
       message: "Required",
-      path: ["remoteBox"],
+      path: ["wantsBox"],
     },
   );
 
@@ -122,7 +122,7 @@ export function RegisterForm({}: RegisterFormProps) {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      username: "",
+      id: "",
       displayName: "",
       password: "",
       confirmPassword: "",
@@ -132,7 +132,7 @@ export function RegisterForm({}: RegisterFormProps) {
       phoneNumber: "",
       roomNeeded: false,
       solvingLocation: "",
-      remoteBox: undefined,
+      wantsBox: undefined,
     },
   });
 
@@ -156,7 +156,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
   const onSubmit = async (data: RegisterFormValues) => {
     const result = await insertTeam({
-      username: data.username,
+      id: data.id,
       displayName: data.displayName,
       password: data.password,
       members: serializeMembers(data.members),
@@ -165,7 +165,7 @@ export function RegisterForm({}: RegisterFormProps) {
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      remoteBox: data.remoteBox,
+      wantsBox: data.wantsBox,
     });
 
     if (result.error) {
@@ -190,10 +190,10 @@ export function RegisterForm({}: RegisterFormProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full p-4 md:w-2/3 lg:w-1/3"
       >
-        {/* Username field */}
+        {/* Id/username field */}
         <FormField
           control={form.control}
-          name="username"
+          name="id"
           render={({ field }) => (
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
@@ -533,7 +533,7 @@ export function RegisterForm({}: RegisterFormProps) {
           <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
-              name="remoteBox"
+              name="wantsBox"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">

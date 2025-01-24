@@ -24,8 +24,8 @@ import { count, eq, isNull, not, sql } from "drizzle-orm";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 type hintLeaderboardItem = {
+  id: string;
   displayName: string;
-  username: string;
   hintsAnswered: number;
   ranking?: number | null;
 };
@@ -177,7 +177,7 @@ export async function Dashboard() {
   /* Hint Leaderboard Table (chunk 5) */
   const hintLeaderboard: hintLeaderboardItem[] = (
     await db.query.teams.findMany({
-      columns: { displayName: true, username: true },
+      columns: { displayName: true, id: true },
       where: eq(teams.role, "admin"),
       with: {
         claimedHints: {
@@ -189,7 +189,7 @@ export async function Dashboard() {
   )
     .map((a) => ({
       displayName: a.displayName,
-      username: a.username,
+      id: a.id,
       hintsAnswered: a.claimedHints.length,
       ranking: null,
     }))
@@ -293,10 +293,7 @@ export async function Dashboard() {
             <CardContent className="grid gap-2">
               <ScrollArea className="lg:max-h-[75vh]">
                 {hintLeaderboard.map((user, index) => (
-                  <div
-                    className="mb-2 flex items-center gap-4"
-                    key={user.username}
-                  >
+                  <div className="mb-2 flex items-center gap-4" key={user.id}>
                     <Avatar className="flex h-9 w-9">
                       {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
                       <AvatarFallback
@@ -318,7 +315,7 @@ export async function Dashboard() {
                         {user.displayName}
                       </p>
                       <p className="text-muted-foreground text-sm text-gray-500">
-                        {user.username}
+                        {user.id}
                       </p>
                     </div>
                     <div className="ml-auto font-medium">

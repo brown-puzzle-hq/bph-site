@@ -80,7 +80,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
     where: eq(teams.id, session.user.id),
   });
 
-  const guessMessage = `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`;
+  const guessMessage = `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.id}](https://puzzlethon.brownpuzzle.club/teams/${user?.id}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`;
   await sendBotMessage(guessMessage);
 
   revalidatePath(`/puzzle/${puzzleId}`);

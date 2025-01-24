@@ -9,7 +9,7 @@ import { IN_PERSON } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/utils";
 
 export type TeamProperties = {
-  username: string;
+  id: string;
   displayName: string;
   password: string;
   members: string;
@@ -18,21 +18,21 @@ export type TeamProperties = {
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
-  remoteBox?: boolean;
+  wantsBox?: boolean;
 };
 
 export async function insertTeam(teamProperties: TeamProperties) {
-  teamProperties.username = teamProperties.username.toLowerCase();
+  teamProperties.id = teamProperties.id.toLowerCase();
   if (new Date() > IN_PERSON.END_TIME) {
     teamProperties.interactionMode = "remote";
   }
 
-  const duplicateUsername = await db.query.teams.findFirst({
+  const duplicateId = await db.query.teams.findFirst({
     columns: { id: true },
-    where: eq(teams.username, teamProperties.username),
+    where: eq(teams.id, teamProperties.id),
   });
 
-  if (duplicateUsername) {
+  if (duplicateId) {
     return { error: "Username already taken" };
   }
 
@@ -51,9 +51,9 @@ export async function insertTeam(teamProperties: TeamProperties) {
       createTime: new Date(),
     });
 
-    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.username}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.username}))`;
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.id}))`;
     await sendBotMessage(teamMessage);
-    return login(teamProperties.username, teamProperties.password);
+    return login(teamProperties.id, teamProperties.password);
   } catch (error) {
     return { error: "An unexpected error occurred." };
   }

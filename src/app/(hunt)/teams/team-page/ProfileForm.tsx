@@ -71,20 +71,20 @@ export const profileFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean(),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    remoteBox: z.boolean().optional(),
+    wantsBox: z.boolean().optional(),
     role: z.enum(roleEnum.enumValues),
   })
   .refine(
     (data) =>
-      !(data.interactionMode === "remote" && data.remoteBox === undefined),
+      !(data.interactionMode === "remote" && data.wantsBox === undefined),
     {
       message: "Required",
-      path: ["remoteBox"],
+      path: ["wantsBox"],
     },
   );
 
 type TeamInfoFormProps = {
-  username: string;
+  id: string;
   displayName: string;
   role: "admin" | "user";
   memberString: string;
@@ -93,7 +93,7 @@ type TeamInfoFormProps = {
   phoneNumber: string;
   roomNeeded: boolean;
   solvingLocation: string;
-  remoteBox: boolean | null;
+  wantsBox: boolean | null;
 };
 
 type Member = {
@@ -133,7 +133,7 @@ function formatPhoneNumber(phoneNumber: string | null): string {
 }
 
 export function ProfileForm({
-  username,
+  id,
   displayName,
   role,
   memberString,
@@ -142,7 +142,7 @@ export function ProfileForm({
   phoneNumber,
   roomNeeded,
   solvingLocation,
-  remoteBox,
+  wantsBox,
 }: TeamInfoFormProps) {
   const router = useRouter();
   const { data: session, update } = useSession();
@@ -161,7 +161,7 @@ export function ProfileForm({
       phoneNumber,
       roomNeeded,
       solvingLocation,
-      remoteBox: remoteBox ?? undefined,
+      wantsBox: wantsBox ?? undefined,
     },
     mode: "onChange",
   });
@@ -184,7 +184,7 @@ export function ProfileForm({
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
-    const result = await updateTeam(username, {
+    const result = await updateTeam(id, {
       displayName: data.displayName,
       role: data.role,
       members: serializeMembers(data.members),
@@ -193,7 +193,7 @@ export function ProfileForm({
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      remoteBox: data.remoteBox,
+      wantsBox: data.wantsBox,
     });
 
     if (result.error) {
@@ -226,9 +226,9 @@ export function ProfileForm({
     return Object.keys(currentValues).some((key) =>
       key === "members"
         ? serializeMembers(currentValues[key]) !== memberString
-        : key === "remoteBox"
+        : key === "wantsBox"
           ? currentValues["interactionMode"] === "remote" &&
-            currentValues[key] != remoteBox
+            currentValues[key] != wantsBox
           : (currentValues as ProfileFormValues)[
               key as keyof ProfileFormValues
             ] !=
@@ -542,7 +542,7 @@ export function ProfileForm({
           <div className="mb-8 space-y-8">
             <FormField
               control={form.control}
-              name="remoteBox"
+              name="wantsBox"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
@@ -568,9 +568,9 @@ export function ProfileForm({
                           ) // Map string to boolean
                       }
                       value={
-                        form.watch("remoteBox") === true
+                        form.watch("wantsBox") === true
                           ? "true"
-                          : form.watch("remoteBox") === false
+                          : form.watch("wantsBox") === false
                             ? "false"
                             : undefined
                       } // Map boolean to string
@@ -648,8 +648,8 @@ export function ProfileForm({
                       .watch("members")
                       .some((member: Member) => member?.email) ||
                     (form.watch("interactionMode") === "remote" &&
-                      form.watch("remoteBox") !== true &&
-                      form.watch("remoteBox") !== false)
+                      form.watch("wantsBox") !== true &&
+                      form.watch("wantsBox") !== false)
                   }
                 >
                   Save

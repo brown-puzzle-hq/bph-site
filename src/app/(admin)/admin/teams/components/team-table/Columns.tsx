@@ -25,24 +25,6 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
     ),
   },
   {
-    accessorKey: "username",
-    header: ({ column }) => (
-      <div className="flex w-32 space-x-2">
-        <p>Username</p>
-        {column.getIsSorted() === "asc" ? (
-          <ArrowUp className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === "desc" ? (
-          <ArrowDown className="ml-2 h-4 w-4" />
-        ) : (
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        )}
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="w-32 truncate">{row.getValue("username")}</div>
-    ),
-  },
-  {
     accessorKey: "displayName",
     header: ({ column }) => (
       <div className="flex w-32 space-x-2">

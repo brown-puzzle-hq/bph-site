@@ -34,16 +34,14 @@ export const hintStatusEnum = pgEnum("status", [
 ]);
 
 export const teams = createTable("team", {
-  id: varchar("id", { length: 255 })
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  username: varchar("username", { length: 255 }).notNull(), // For login
+  id: varchar("id", { length: 255 }).primaryKey(), // Also acts as a login username
   displayName: varchar("display_name", { length: 255 }).notNull(), // For display
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
   members: text("members").notNull().default("[]"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
+  finishTime: timestamp("finish_time", { withTimezone: true }),
+  createTime: timestamp("create_time", { withTimezone: true }),
 
   // Only for in-person teams
   // NOTE: defaults seem to not be working, entries still get added with NULL by default
@@ -53,15 +51,8 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-
-  remoteBox: boolean("remote_box").notNull().default(false),
-
-  finishTime: timestamp("finish_time", { withTimezone: true }),
-  // Time of creation of team
-  createTime: timestamp("create_time", { withTimezone: true }),
-  // When this team should start the hunt for early-testing purposes
-  // If this is null, the team will start at the global start time
-  startTime: timestamp("start_offset", { withTimezone: true }),
+  wantsBox: boolean("wants_box").notNull().default(false),
+  hasBox: boolean("has_box").notNull().default(false),
 
   // Not included:
   // allow_time_unlocks, total_hints_awarded, total_free_answers_awarded

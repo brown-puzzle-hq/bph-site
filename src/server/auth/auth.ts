@@ -11,7 +11,7 @@ import { compare } from "bcryptjs";
 import { authConfig } from "./auth.config";
 
 export const signInSchema = object({
-  username: string({ required_error: "Team name is required" }).min(
+  id: string({ required_error: "Team name is required" }).min(
     1,
     "Team name is required",
   ),
@@ -39,7 +39,6 @@ declare module "next-auth" {
 
   interface User {
     id?: string | undefined;
-    username: string;
     displayName: string;
     role: string;
     interactionMode: string;
@@ -55,20 +54,19 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     Credentials({
       // These are the fields to be submitted
       credentials: {
-        username: {},
+        id: {},
         password: {},
       },
       authorize: async (credentials) => {
         try {
-          if (!credentials?.username || !credentials?.password) {
+          if (!credentials?.id || !credentials?.password) {
             return null;
           }
 
-          const { username, password } =
-            await signInSchema.parseAsync(credentials);
+          const { id, password } = await signInSchema.parseAsync(credentials);
 
           const user = await db.query.teams.findFirst({
-            where: eq(teams.username, username.toLowerCase()),
+            where: eq(teams.id, id.toLowerCase()),
           });
 
           if (user) {
@@ -76,7 +74,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             if (validCredentials) {
               return {
                 id: user.id,
-                username: user.username,
                 displayName: user.displayName,
                 role: user.role,
                 interactionMode: user.interactionMode,

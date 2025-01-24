@@ -91,13 +91,13 @@ export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
 export async function checkFinishHunt(teamId: string, puzzleId: string) {
   // let query = await db.select({ count: count() }).from(puzzles);
   // const numberOfPuzzles = query[0] ? query[0].count : 0;
-
+  //
   // query = await db
   //   .select({ count: count() })
   //   .from(guesses)
   //   .where(and(eq(guesses.teamId, teamId), guesses.isCorrect));
   // const numberOfSolves = query[0] ? query[0].count : 0;
-
+  //
   // if (numberOfPuzzles === numberOfSolves) {
   //   await db
   //     .update(teams)

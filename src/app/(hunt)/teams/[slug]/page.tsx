@@ -17,10 +17,10 @@ export default async function Page({
     redirect("/login");
   }
 
-  // Check if slug is a valid username
+  // Check if slug is a valid id
   const { slug } = await params;
   const team = await db.query.teams.findFirst({
-    where: eq(teams.username, slug),
+    where: eq(teams.id, slug),
   });
 
   if (
@@ -40,12 +40,12 @@ export default async function Page({
       <div className="flex flex-col items-center pb-6">
         <h1 className="">Welcome, {team.displayName}!</h1>
         <p>
-          {team.username} • {team.interactionMode}
+          {team.id} • {team.interactionMode}
         </p>
       </div>
       <div className="flex flex-col items-center">
         <ProfileForm
-          username={slug}
+          id={slug}
           displayName={team.displayName}
           role={team.role}
           memberString={team.members}
@@ -54,7 +54,7 @@ export default async function Page({
           phoneNumber={team.phoneNumber}
           roomNeeded={team.roomNeeded}
           solvingLocation={team.solvingLocation}
-          remoteBox={team.remoteBox}
+          wantsBox={team.wantsBox}
         />
       </div>
     </div>

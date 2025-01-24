@@ -17,16 +17,13 @@ export type TeamProperties = {
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
-  remoteBox?: boolean;
+  wantsBox?: boolean;
 };
 
-export async function updateTeam(
-  username: string,
-  teamProperties: TeamProperties,
-) {
+export async function updateTeam(id: string, teamProperties: TeamProperties) {
   // Check that the user is either an admin or the user being updated
   const session = await auth();
-  if (session?.user?.username !== username && session?.user?.role !== "admin") {
+  if (session?.user?.id !== id && session?.user?.role !== "admin") {
     return {
       error: "You are not authorized to update this team.",
     };
@@ -61,8 +58,8 @@ export async function updateTeam(
     const result = await db
       .update(teams)
       .set(teamProperties)
-      .where(eq(teams.username, username))
-      .returning({ username: teams.username });
+      .where(eq(teams.id, id))
+      .returning({ id: teams.id });
     if (result.length === 0) {
       return { error: "No team matching the given ID was found." };
     }

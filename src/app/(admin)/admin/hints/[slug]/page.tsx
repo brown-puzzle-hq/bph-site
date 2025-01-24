@@ -39,7 +39,7 @@ export default async function Page({
   const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
     with: {
-      team: { columns: { displayName: true, username: true } },
+      team: { columns: { displayName: true, id: true } },
       claimer: { columns: { id: true, displayName: true } },
       puzzle: { columns: { name: true } },
     },
@@ -114,7 +114,7 @@ export default async function Page({
               <p>
                 <span className="font-semibold">Team </span>
                 <Link
-                  href={`/admin/teams/${hint.team.username}`}
+                  href={`/admin/teams/${hint.team.id}`}
                   className="text-blue-600 hover:underline"
                 >
                   {hint.team.displayName}

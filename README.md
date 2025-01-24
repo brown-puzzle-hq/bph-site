@@ -125,7 +125,7 @@ For admins, there is an `admin` section and a `hunt` section with different navb
 This can be managed in the `admin` section under `admin/hints` and `admin/errata`.
 
 ### Team Management
-Team password resets can be made in `teams/username`. Please don't change them directly in the Drizzle database. It won't work correctly because passwords need to be hashed.
+Team password resets can be made in `teams/[id]`. Please don't change them directly in the Drizzle database. It won't work correctly because passwords need to be hashed.
 
 # Developers' Guide
 ## Quick start

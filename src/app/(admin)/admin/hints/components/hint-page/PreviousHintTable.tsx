@@ -423,7 +423,6 @@ export default function PreviousHintTable({
                   {/* Top section for claimer ID, the follow-up button, and the edit button */}
                   <div className="flex items-center justify-between">
                     <p className="pb-1 font-bold">
-                      {/* TODO: set to username */}
                       {anonymize ? "Admin" : hint.claimer}
                     </p>
                     <div className="flex space-x-2">
