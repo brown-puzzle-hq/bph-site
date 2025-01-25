@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Alert, AlertDescription } from "~/components/ui/alert";
 import { FormattedTime } from "~/lib/time";
 import { errata } from "~/server/db/schema";
 
@@ -13,7 +13,7 @@ export default function ErratumDialog({
         {errataList.map((e, index) => (
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             {index != 0 && <br />}
-            <p className="whitespace-normal text-slate-300">
+            <p className="whitespace-normal text-gray-300">
               <strong>
                 Erratum <FormattedTime time={e.timestamp} />
               </strong>

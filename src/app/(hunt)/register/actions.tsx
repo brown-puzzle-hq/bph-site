@@ -5,49 +5,56 @@ import { teams, type interactionModeEnum } from "@/db/schema";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
-import axios from "axios";
+import { IN_PERSON } from "~/hunt.config";
+import { sendBotMessage } from "~/lib/utils";
 
-/** Inserts a team into the team table */
-export async function insertTeam(
-  username: string,
-  displayName: string,
-  password: string,
-  interactionMode: (typeof interactionModeEnum.enumValues)[number],
-) {
-  username = username.toLowerCase();
+export type TeamProperties = {
+  id: string;
+  displayName: string;
+  password: string;
+  members: string;
+  interactionMode: (typeof interactionModeEnum.enumValues)[number];
+  numCommunity?: string;
+  phoneNumber?: string;
+  roomNeeded?: boolean;
+  solvingLocation?: string;
+  wantsBox?: boolean;
+};
 
-  const duplicateUsername = await db.query.teams.findFirst({
+export async function insertTeam(teamProperties: TeamProperties) {
+  teamProperties.id = teamProperties.id.toLowerCase();
+  if (new Date() > IN_PERSON.END_TIME) {
+    teamProperties.interactionMode = "remote";
+  }
+
+  const duplicateId = await db.query.teams.findFirst({
     columns: { id: true },
-    where: eq(teams.username, username),
+    where: eq(teams.id, teamProperties.id),
   });
 
-  if (duplicateUsername) {
+  if (duplicateId) {
     return { error: "Username already taken" };
   }
 
   try {
     const hashedPassword = await new Promise<string>((resolve, reject) => {
-      hash(password, 10, (err, hash) => {
+      hash(teamProperties.password, 10, (err, hash) => {
         if (err) reject(err);
         resolve(hash);
       });
     });
 
     await db.insert(teams).values({
-      username,
-      displayName,
+      ...teamProperties,
       password: hashedPassword,
       role: "user" as const,
-      interactionMode,
       createTime: new Date(),
     });
 
-    await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
-      content: `:busts_in_silhouette: **New Team**: ${displayName} ([${username}](https://puzzlethon.brownpuzzle.club/teams/${username}))`,
-    });
-
-    return login(username, password);
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.id}))`;
+    await sendBotMessage(teamMessage);
+    return login(teamProperties.id, teamProperties.password);
   } catch (error) {
-    return { error: "Unexpected error occurred" };
+    return { error: "An unexpected error occurred." };
   }
 }

@@ -34,21 +34,25 @@ export const hintStatusEnum = pgEnum("status", [
 ]);
 
 export const teams = createTable("team", {
-  id: varchar("id", { length: 255 })
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  username: varchar("username", { length: 255 }).notNull(), // For login
+  id: varchar("id", { length: 255 }).primaryKey(), // Also acts as a login username
   displayName: varchar("display_name", { length: 255 }).notNull(), // For display
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
+  members: text("members").notNull().default("[]"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
   finishTime: timestamp("finish_time", { withTimezone: true }),
-  // Time of creation of team
   createTime: timestamp("create_time", { withTimezone: true }),
-  // When this team should start the hunt for early-testing purposes
-  // If this is null, the team will start at the global start time
-  startTime: timestamp("start_offset", { withTimezone: true }),
+
+  // Only for in-person teams
+  // NOTE: defaults seem to not be working, entries still get added with NULL by default
+  numCommunity: varchar("num_community", { length: 31 }).notNull().default(""),
+  phoneNumber: varchar("phone_number", { length: 31 }).notNull().default(""),
+  roomNeeded: boolean("room_needed").notNull().default(false),
+  solvingLocation: varchar("solving_location", { length: 255 })
+    .notNull()
+    .default(""),
+  wantsBox: boolean("wants_box").notNull().default(false),
+  hasBox: boolean("has_box").notNull().default(false),
 
   // Not included:
   // allow_time_unlocks, total_hints_awarded, total_free_answers_awarded
@@ -76,11 +80,7 @@ export const unlocks = createTable(
     teamId: varchar("team_id")
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
-    unlockTime: timestamp("unlock_time", { withTimezone: true }),
-    // NOTE: Storing the solve time is probably more efficient for querying
-    // But it's also generally a bad idea to have the same information
-    // in two different places.
-    // solveTime: timestamp("solve_time", { withTimezone: true }).notNull(),
+    unlockTime: timestamp("unlock_time", { withTimezone: true }).notNull(),
   },
   (table) => {
     return {
@@ -129,7 +129,7 @@ export const hints = createTable(
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     request: text("request").notNull(),
-    requestTime: timestamp("request_time", { withTimezone: true }),
+    requestTime: timestamp("request_time", { withTimezone: true }).notNull(),
     claimer: varchar("claimer").references(() => teams.id),
     claimTime: timestamp("claim_time", { withTimezone: true }),
     response: text("response"),
@@ -141,10 +141,30 @@ export const hints = createTable(
   },
   (table) => {
     return {
-      team_and_puzzle_idx: index("hins_team_and_puzzle_idx").on(
+      team_and_puzzle_idx: index("hints_team_and_puzzle_idx").on(
         table.teamId,
         table.puzzleId,
       ),
+    };
+  },
+);
+
+export const followUps = createTable(
+  "follow_up",
+  {
+    id: serial("id").primaryKey(),
+    hintId: serial("hint_id")
+      .notNull()
+      .references(() => hints.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    message: text("message").notNull(),
+    time: timestamp("time", { withTimezone: true }).notNull(),
+  },
+  (table) => {
+    return {
+      hint_idx: index("hint_idx").on(table.hintId),
     };
   },
 );
@@ -217,7 +237,7 @@ export const guessRelations = relations(guesses, ({ one }) => ({
   }),
 }));
 
-export const hintRelations = relations(hints, ({ one }) => ({
+export const hintRelations = relations(hints, ({ one, many }) => ({
   team: one(teams, {
     fields: [hints.teamId],
     references: [teams.id],
@@ -231,6 +251,14 @@ export const hintRelations = relations(hints, ({ one }) => ({
     fields: [hints.claimer],
     references: [teams.id],
     relationName: "claimed_hints",
+  }),
+  followUps: many(followUps),
+}));
+
+export const followUpRelations = relations(followUps, ({ one }) => ({
+  hint: one(hints, {
+    fields: [followUps.hintId],
+    references: [hints.id],
   }),
 }));
 

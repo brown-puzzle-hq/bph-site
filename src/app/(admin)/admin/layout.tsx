@@ -1,51 +1,74 @@
 import "~/styles/globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { auth } from "~/server/auth/auth";
-import Link from "next/link";
 import { LogoutButton } from "~/app/nav/LogoutButton";
+import { HamburgerMenu, MenuItem } from "~/app/nav/HamburgerMenu";
 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
 
+  const leftMenuItems: MenuItem[] = [
+    {
+      title: "Home",
+      href: "/admin",
+      type: "link",
+    },
+    {
+      title: "Solutions",
+      href: "/admin/solutions",
+      type: "link",
+    },
+    {
+      title: "Teams",
+      href: "/admin/teams",
+      type: "link",
+    },
+    {
+      title: "Hinting",
+      href: "/admin/hints",
+      type: "link",
+    },
+    {
+      title: "Errata",
+      href: "/admin/errata",
+      type: "link",
+    },
+    {
+      title: "Feedback",
+      href: "/admin/feedback",
+      type: "link",
+    },
+  ];
+
+  const rightMenuItems: MenuItem[] = [
+    {
+      title: session!.user!.displayName,
+      href: `/teams/${session!.user!.id}`,
+      type: "link",
+    },
+    {
+      title: "Hunt",
+      href: "/",
+      type: "link",
+    },
+    {
+      title: "logout",
+      element: <LogoutButton />,
+      type: "element",
+    },
+  ];
+
   return (
-    <div className="h-full min-h-screen bg-white pb-5">
-      {/* Navbar */}
-      <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4">
-        <div className="flex space-x-4">
-          <Link href="/admin" className="hover:underline">
-            Home
-          </Link>
-          <Link href="/admin/solutions" className="hover:underline">
-            Solutions
-          </Link>
-          <Link href="/admin/teams" className="hover:underline">
-            Teams
-          </Link>
-          <Link href="/admin/hints" className="hover:underline">
-            Hinting
-          </Link>
-          <Link href="/admin/errata" className="hover:underline">
-            Errata
-          </Link>
-        </div>
-        <div className="flex space-x-4">
-          <Link
-            href={`/teams/${session?.user?.username}`}
-            className="hover:underline"
-          >
-            {session?.user?.displayName}
-          </Link>
-          <Link href="/" className="hover:underline">
-            Hunt
-          </Link>
-          <LogoutButton />
-        </div>
-      </nav>
+    <>
+      <HamburgerMenu
+        leftMenuItems={leftMenuItems}
+        rightMenuItems={rightMenuItems}
+      />
       {/* Navbar spacer */}
-      <div className="min-h-[80px]"></div>
-      <main className="mx-5 mb-5 flex min-h-[calc(100vh-80px-5rem)]">
+      <div className="min-h-[56px]"></div>
+      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
         {children}
       </main>
       <Toaster />

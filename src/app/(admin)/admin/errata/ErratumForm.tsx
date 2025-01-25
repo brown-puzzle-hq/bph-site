@@ -33,12 +33,11 @@ type FormProps = {
 };
 
 const formSchema = z.object({
-  puzzleId: z.string().min(1, { message: "Puzzle is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
+  puzzleId: z.string().min(1, { message: "Required" }),
+  description: z.string().min(1, { message: "Required" }),
 });
 
 export default function ErratumForm({ puzzleList, errataList }: FormProps) {
-  const [error, setError] = useState<string | null>(null);
   const [puzzleErrata, setPuzzleErrata] = useState<
     (typeof errata.$inferSelect)[]
   >([]);
@@ -54,9 +53,11 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const result = await insertErratum(data.puzzleId, data.description);
     if (result.error) {
-      setError(result.error);
+      toast({
+        title: "Submission failed",
+        description: result.error,
+      });
     } else {
-      setError(null);
       const newErrata = {
         puzzleId: data.puzzleId,
         id: errataList.length,
@@ -88,8 +89,11 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
           control={form.control}
           name="puzzleId"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Puzzle</FormLabel>
+            <FormItem className="mb-4">
+              <FormLabel className="flex w-[180px] flex-row justify-between">
+                <span className="text-black">Puzzle</span>
+                <FormMessage />
+              </FormLabel>
               <FormControl>
                 <Select
                   {...field}
@@ -113,7 +117,6 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -122,8 +125,11 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
+            <FormItem className="mb-4">
+              <FormLabel className="flex flex-row justify-between">
+                <span className="text-black">Description</span>
+                <FormMessage />
+              </FormLabel>
               <FormControl>
                 <AutosizeTextarea
                   maxHeight={500}
@@ -132,11 +138,9 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
-        {error && <p className="text-red-500">{error}</p>}
         <Button type="submit">Submit</Button>
       </form>
     </Form>

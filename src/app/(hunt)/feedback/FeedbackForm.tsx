@@ -2,32 +2,32 @@
 import { toast } from "~/hooks/use-toast";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRemarkSync } from "react-remark";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
-import FeedbackDialog from "~/app/(hunt)/feedback/FeedbackDialog";
+import { Card } from "~/components/ui/card";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
 import { insertFeedback } from "./actions";
-import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 
 export const feedbackFormSchema = z.object({
-  description: z.string().min(1, { message: "Feedback is required" }),
+  description: z.string().min(1, { message: "Required" }),
 });
 
 export default function FeedbackForm({
   teamId,
-  showTeam,
   feedbackList,
 }: {
   teamId: string;
-  showTeam: boolean;
   feedbackList: {
     id: number;
     teamId: string;
@@ -35,7 +35,7 @@ export default function FeedbackForm({
     timestamp: Date;
   }[];
 }) {
-  const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview] = useState(false);
 
   const form = useForm<z.infer<typeof feedbackFormSchema>>({
     resolver: zodResolver(feedbackFormSchema),
@@ -47,9 +47,11 @@ export default function FeedbackForm({
   const onSubmit = async (data: z.infer<typeof feedbackFormSchema>) => {
     const result = await insertFeedback(data.description);
     if (result.error) {
-      setError(result.error);
+      toast({
+        title: "Submission failed",
+        description: result.error,
+      });
     } else {
-      setError(null);
       const newFeedback = {
         id: feedbackList.length,
         teamId: teamId,
@@ -62,40 +64,62 @@ export default function FeedbackForm({
       });
       form.reset();
     }
+    setPreview(false);
   };
 
   return (
-    <>
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Please enter your thoughts on the hunt! Any puzzle errors,
-                  website bugs, and general comments will be enormously helpful
-                  for us.
-                </FormLabel>
-                <FormControl>
-                  <AutosizeTextarea
-                    className="bg-slate-50 text-black"
-                    placeholder="No response yet"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <>
+                <FormItem className="mb-4">
+                  <FormDescription>
+                    Any puzzle errors, website bugs, or general comments will be
+                    enormously helpful for us. This textbox supports Markdown.
+                  </FormDescription>
+                  <FormControl>
+                    {preview ? (
+                      <Card>
+                        <div className="p-4">
+                          <article className="prose">
+                            {useRemarkSync(field.value) || <></>}
+                          </article>
+                        </div>
+                      </Card>
+                    ) : (
+                      <AutosizeTextarea
+                        className="bg-gray-50 text-black"
+                        placeholder="No response yet"
+                        {...field}
+                      />
+                    )}
+                  </FormControl>
+                </FormItem>
+                <div className="mb-4 flex space-x-2">
+                  <Button type="submit" disabled={field.value === ""}>
+                    Submit
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setPreview((value) => !value)}
+                    disabled={field.value === ""}
+                  >
+                    {preview ? "Edit" : "Preview"}
+                  </Button>
+                </div>
+              </>
             )}
           />
-          {error && <p className="text-red-500">{error}</p>}
-          <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
-            Submit
-          </Button>
         </form>
       </Form>
-      <FeedbackDialog showTeam={showTeam} feedbackList={feedbackList} />
-    </>
+      <div>
+        <FeedbackDialog showTeam={false} feedbackList={feedbackList} />
+      </div>
+    </div>
   );
 }

@@ -20,9 +20,65 @@ import {
   House,
   PartyPopper,
   MessageCircleWarning,
-  UserRoundSearch,
   ClipboardPenLine,
+  UsersRound,
 } from "lucide-react";
+
+const huntItems = [
+  {
+    title: "Hunt",
+    href: "/",
+    icon: <PartyPopper className="text-red-500" />,
+  },
+  {
+    title: "Puzzles",
+    href: "/puzzle",
+    icon: <Puzzle className="text-red-500" />,
+  },
+  {
+    title: "Leaderboard",
+    href: "/teams",
+    icon: <Trophy className="text-red-500" />,
+  },
+  // {
+  //   title: "Feedback",
+  //   href: "/feedback",
+  //   icon: <ClipboardPenLine className="text-red-500" />,
+  // },
+];
+
+const adminItems = [
+  {
+    title: "Admin",
+    href: "/admin",
+    icon: <House className="text-blue-500" />,
+  },
+  {
+    title: "Solutions",
+    href: "/admin/solutions",
+    icon: <Puzzle className="text-blue-500" />,
+  },
+  {
+    title: "Teams",
+    href: "/admin/teams",
+    icon: <UsersRound className="text-blue-500" />,
+  },
+  {
+    title: "Hinting",
+    href: "/admin/hints",
+    icon: <MessageCircleQuestion className="text-blue-500" />,
+  },
+  {
+    title: "Errata",
+    href: "/admin/errata",
+    icon: <MessageCircleWarning className="text-blue-500" />,
+  },
+  {
+    title: "Feedback",
+    href: "/admin/feedback",
+    icon: <ClipboardPenLine className="text-blue-500" />,
+  },
+];
 
 export function CommandPalette() {
   const session = useSession();
@@ -51,89 +107,30 @@ export function CommandPalette() {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Hunt">
-          <CommandItem
-            onSelect={() => {
-              router.push("/");
-              setOpen(false);
-            }}
-          >
-            <PartyPopper className="text-red-500" />
-            <span>Hunt</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/puzzle");
-              setOpen(false);
-            }}
-          >
-            <Puzzle className="text-red-500" />
-            <span>Puzzles</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/teams");
-              setOpen(false);
-            }}
-          >
-            <Trophy className="text-red-500" />
-            <span>Leaderboard</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/feedback");
-              setOpen(false);
-            }}
-          >
-            <ClipboardPenLine className="text-red-500" />
-            <span>Feedback</span>
-          </CommandItem>
+          {huntItems.map((item) => (
+            <CommandItem
+              onSelect={() => {
+                router.push(item.href);
+                setOpen(false);
+              }}
+            >
+              {item.icon}
+              <span>{item.title}</span>
+            </CommandItem>
+          ))}
         </CommandGroup>
         <CommandGroup heading="Admin">
-          <CommandItem
-            onSelect={() => {
-              router.push("/admin");
-              setOpen(false);
-            }}
-          >
-            <House className="text-blue-500" />
-            <span>Admin</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/admin/solutions");
-              setOpen(false);
-            }}
-          >
-            <Puzzle className="text-blue-500" />
-            <span>Solutions</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/admin/teams");
-              setOpen(false);
-            }}
-          >
-            <UserRoundSearch className="text-blue-500" />
-            <span>Teams</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/admin/hints");
-              setOpen(false);
-            }}
-          >
-            <MessageCircleQuestion className="text-blue-500" />
-            <span>Hinting</span>
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
-              router.push("/admin/errata");
-              setOpen(false);
-            }}
-          >
-            <MessageCircleWarning className="text-blue-500" />
-            <span>Errata</span>
-          </CommandItem>
+          {adminItems.map((item) => (
+            <CommandItem
+              onSelect={() => {
+                router.push(item.href);
+                setOpen(false);
+              }}
+            >
+              {item.icon}
+              <span>{item.title}</span>
+            </CommandItem>
+          ))}
         </CommandGroup>
       </CommandList>
     </CommandDialog>

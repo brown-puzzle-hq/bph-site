@@ -21,22 +21,15 @@ export default async function Home() {
     );
   }
 
-  const feedbackList = (
-    session?.user?.role == "admin"
-      ? await db.query.feedback.findMany()
-      : await db.query.feedback.findMany({
-          where: eq(feedback.teamId, session?.user?.id),
-        })
-  ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  const feedbackList = await db.query.feedback.findMany({
+    where: eq(feedback.teamId, session.user.id),
+    orderBy: feedback.timestamp,
+  });
 
   return (
-    <div className="mx-auto mb-6 flex max-w-4xl grow flex-col">
+    <div className="mx-auto mb-8 flex max-w-4xl grow flex-col px-4">
       <h1 className="mb-2">Feedback</h1>
-      <FeedbackForm
-        teamId={session?.user?.id}
-        showTeam={session?.user?.role == "admin"}
-        feedbackList={feedbackList}
-      />
+      <FeedbackForm teamId={session.user.id} feedbackList={feedbackList} />
     </div>
   );
 }

@@ -20,7 +20,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 export const loginFormSchema = z.object({
-  username: z.string(),
+  id: z.string(),
   password: z.string(),
 });
 
@@ -32,13 +32,13 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: "",
+      id: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const result = await login(data.username, data.password);
+    const result = await login(data.id, data.password);
     if (result.error !== null) {
       setError(result.error);
     } else {
@@ -46,6 +46,8 @@ export function LoginForm() {
         router.push("/admin");
       } else {
         router.push("/");
+        // Not sure how to refresh nav without this,
+        // but this seems to not be a problem for admin
         router.refresh();
       }
       setError(null);
@@ -57,18 +59,17 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-64 space-y-4">
         <FormField
           control={form.control}
-          name="username"
+          name="id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
-                  className="placeholder:text-slate-300"
+                  className="placeholder:text-gray-300"
                   placeholder="jcarberr"
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -77,11 +78,20 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <div className="flex flex-row items-center justify-between">
+                <FormLabel>Password</FormLabel>
+                <Link
+                  href="mailto:brownpuzzlehq@gmail.com"
+                  className="text-sm text-blue-500 hover:underline"
+                  tabIndex={-1}
+                >
+                  Forgot?
+                </Link>
+              </div>
               <FormControl>
                 <Input
                   type="password"
-                  className="placeholder:text-slate-300"
+                  className="placeholder:text-gray-300"
                   placeholder="password"
                   {...field}
                 />
@@ -93,7 +103,7 @@ export function LoginForm() {
         <Button className="hover:bg-otherblue" type="submit">
           Log In
         </Button>
-        <div className="py-2 text-sm">
+        <div className="pt-4 text-sm">
           New to the hunt?{" "}
           <Link href="/register" className="text-secondary hover:underline">
             Register

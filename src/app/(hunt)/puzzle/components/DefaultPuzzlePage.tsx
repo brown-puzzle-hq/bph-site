@@ -13,20 +13,35 @@ import CopyButton from "./CopyButton";
 export default async function DefaultPuzzlePage({
   puzzleId,
   puzzleBody,
-  copyText,
+  copyText = null,
 }: {
   puzzleId: string;
   puzzleBody: React.ReactNode;
-  copyText: string | null;
+  copyText?: string | null;
 }) {
-  // Get user
-  const session = await auth()!;
-  if (!session?.user?.id || !(await canViewPuzzle(puzzleId))) {
+  const session = await auth();
+
+  if (!(await canViewPuzzle(puzzleId))) {
     redirect("/404");
   }
 
-  // Get errata
-  const errataList = (
+  // If user is not logged in, show puzzle without errata or guesses
+  if (!session?.user?.id) {
+    return (
+      <div className="flex w-2/3 min-w-36 justify-center space-x-2">
+        <div className="mt-4">{puzzleBody}</div>
+        {copyText && <CopyButton copyText={copyText}></CopyButton>}
+      </div>
+    );
+  }
+
+  // Get errata if user is logged in
+  const errataList: {
+    puzzleId: string;
+    id: number;
+    timestamp: Date;
+    description: string;
+  }[] = (
     await db.query.errata.findMany({
       where: eq(errata.puzzleId, puzzleId),
     })
@@ -65,13 +80,12 @@ export default async function DefaultPuzzlePage({
           </div>
         )}
         {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-          <div className="mb-4 text-center text-rose-600">
+          <div className="mb-4 text-center font-medium text-rose-600">
             You have no guesses left. Please contact HQ for help.
           </div>
         )}
       </div>
 
-      <h2>Previous Guesses</h2>
       <div className="mb-4">
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
