@@ -205,7 +205,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormControl>
                 <Input placeholder="jcarberr" autoComplete="on" {...field} />
               </FormControl>
-              <FormDescription className="text-slate-300">
+              <FormDescription>
                 This is the private username your team will use when logging in.
                 Please avoid special characters.
               </FormDescription>
@@ -226,13 +226,9 @@ export function RegisterForm({}: RegisterFormProps) {
                 <FormMessage />
               </FormLabel>
               <FormControl>
-                <Input
-                  className="placeholder:text-slate-300"
-                  placeholder="Josiah Carberry"
-                  {...field}
-                />
+                <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
-              <FormDescription className="text-slate-300">
+              <FormDescription>
                 This name will be displayed on the leaderboard.
               </FormDescription>
             </FormItem>

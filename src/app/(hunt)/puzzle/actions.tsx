@@ -21,8 +21,6 @@ import { sendBotMessage } from "~/lib/utils";
 
 export type MessageType = "request" | "response" | "follow-up";
 
-import axios from "axios";
-
 /** Inserts a guess into the guess table */
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
