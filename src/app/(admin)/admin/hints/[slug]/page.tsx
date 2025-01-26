@@ -114,7 +114,7 @@ export default async function Page({
               <p>
                 <span className="font-semibold">Team </span>
                 <Link
-                  href={`/admin/teams/${hint.team.id}`}
+                  href={`/teams/${hint.team.id}`}
                   className="text-blue-600 hover:underline"
                 >
                   {hint.team.displayName}
