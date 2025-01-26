@@ -143,7 +143,7 @@ const remoteTeams: LeaderboardItem[] = await db
 
 export default async function Home() {
   return (
-    <div className="mb-6 flex grow flex-col items-center p-4">
+    <div className="mb-6 flex grow flex-col items-center px-4">
       <h1 className="mb-2">Leaderboard!</h1>
       <Tabs
         defaultValue="in-person"
