@@ -25,7 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { hintStatusEnum } from "~/server/db/schema";
 import { HintClaimer } from "./Columns";
 
 interface HintTableProps<TData, TValue> {
@@ -131,8 +130,8 @@ export function HintTable<TData, TValue>({
   if (!userId) return null;
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between space-x-2 p-4">
+    <div className="px-4">
+      <div className="flex items-center justify-between space-x-2 pb-2">
         <Input
           placeholder="Filter hints..."
           value={(table.getColumn("request")?.getFilterValue() as string) ?? ""}
@@ -156,7 +155,6 @@ export function HintTable<TData, TValue>({
       </div>
       <div className="flex overflow-auto rounded-md border">
         <div className="w-full overflow-y-auto">
-          {" "}
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               {table.getHeaderGroups().map((headerGroup) => (

@@ -64,7 +64,7 @@ export default async function Home() {
   );
 
   return (
-    <div className="flex grow flex-col items-center">
+    <div className="flex grow flex-col items-center px-4">
       <h1 className="mb-2">Solutions!</h1>
       <div className="min-w-[60%]">
         <Table className="justify-center">

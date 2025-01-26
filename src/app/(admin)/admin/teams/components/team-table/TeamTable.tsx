@@ -66,8 +66,8 @@ export function TeamTable<TData, TValue>({
   });
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between space-x-2 p-4">
+    <div className="px-4">
+      <div className="flex items-center justify-between space-x-2 pb-2">
         <Input
           placeholder="Filter teams..."
           value={(table.getColumn("id")?.getFilterValue() as string) ?? ""}
@@ -91,7 +91,6 @@ export function TeamTable<TData, TValue>({
       </div>
       <div className="flex overflow-auto rounded-md border">
         <div className="w-full overflow-y-auto">
-          {" "}
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
