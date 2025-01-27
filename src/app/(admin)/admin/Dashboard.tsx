@@ -95,7 +95,11 @@ export async function Dashboard() {
         .select({ count: count() })
         .from(teams)
         .where(
-          and(eq(teams.interactionMode, "remote"), eq(teams.wantsBox, true)),
+          and(
+            eq(teams.role, "user"),
+            eq(teams.interactionMode, "remote"),
+            eq(teams.wantsBox, true),
+          ),
         )
     )[0]?.count ?? 0;
   const numBoxesHad =
@@ -103,7 +107,13 @@ export async function Dashboard() {
       await db
         .select({ count: count() })
         .from(teams)
-        .where(and(eq(teams.interactionMode, "remote"), eq(teams.hasBox, true)))
+        .where(
+          and(
+            eq(teams.role, "user"),
+            eq(teams.interactionMode, "remote"),
+            eq(teams.hasBox, true),
+          ),
+        )
     )[0]?.count ?? 0;
 
   /* Activity Table (chunk 4) */
