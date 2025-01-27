@@ -8,7 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "Brown Puzzle Hunt",
   description: "",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.png" }],
 };
 
 export default function RootLayout({
