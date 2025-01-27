@@ -24,7 +24,7 @@ export default function FeedbackDialog({
     <>
       {feedbackList.length > 0 &&
         feedbackList.map((feedback) => (
-          <Card className="mt-4" key={feedback.id}>
+          <Card className="mt-4 bg-secondary-bg" key={feedback.id}>
             <CardHeader className="p-4">
               <CardDescription>
                 <strong>

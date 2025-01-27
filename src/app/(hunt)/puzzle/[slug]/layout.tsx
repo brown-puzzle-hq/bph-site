@@ -18,7 +18,7 @@ export default async function RootLayout({
   }
 
   return (
-    <div className="flex w-2/3 min-w-36 grow flex-col items-center">
+    <div className="flex w-2/3 min-w-36 grow flex-col items-center pt-6">
       <DefaultHeader
         puzzleId={slug}
         puzzleName={puzzle.name}

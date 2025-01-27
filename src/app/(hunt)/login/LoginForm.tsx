@@ -63,12 +63,8 @@ export function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input
-                  className="placeholder:text-gray-300"
-                  placeholder="jcarberr"
-                  {...field}
-                />
+              <FormControl className="bg-secondary-bg text-secondary-text placeholder:text-secondary-accent">
+                <Input placeholder="jcarberr" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -82,21 +78,16 @@ export function LoginForm() {
                 <FormLabel>Password</FormLabel>
                 <Link
                   href="mailto:brownpuzzlehq@gmail.com"
-                  className="text-sm text-blue-500 hover:underline"
+                  className="text-sm text-link hover:underline"
                   tabIndex={-1}
                 >
                   Forgot?
                 </Link>
               </div>
-              <FormControl>
-                <Input
-                  type="password"
-                  className="placeholder:text-gray-300"
-                  placeholder="password"
-                  {...field}
-                />
+              <FormControl className="bg-secondary-bg text-secondary-text placeholder:text-secondary-accent">
+                <Input type="password" placeholder="password" {...field} />
               </FormControl>
-              <FormMessage>{error}</FormMessage>
+              <FormMessage className="text-error">{error}</FormMessage>
             </FormItem>
           )}
         />
@@ -105,7 +96,7 @@ export function LoginForm() {
         </Button>
         <div className="pt-4 text-sm">
           New to the hunt?{" "}
-          <Link href="/register" className="text-secondary hover:underline">
+          <Link href="/register" className="text-link hover:underline">
             Register
           </Link>
         </div>

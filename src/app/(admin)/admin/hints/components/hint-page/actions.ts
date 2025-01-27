@@ -45,7 +45,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     });
 
     // TODO: get specific hint ID
-    const hintMessage = `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.id}](https://puzzlethon.brownpuzzle.club/teams/${user?.id}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
+    const hintMessage = `🙏 **Hint** [request](https://www.brownpuzzlehunt.com/admin/hints) by [${user?.id}](https://www.brownpuzzlehunt.com/teams/${user?.id}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
     await sendBotMessage(hintMessage);
 
     return result[0]?.id;

@@ -51,7 +51,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
       createTime: new Date(),
     });
 
-    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://puzzlethon.brownpuzzle.club/teams/${teamProperties.id}))`;
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.brownpuzzlehunt.com/teams/${teamProperties.id}))`;
     await sendBotMessage(teamMessage);
     return login(teamProperties.id, teamProperties.password);
   } catch (error) {

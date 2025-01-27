@@ -4,7 +4,7 @@ import { puzzles } from "~/server/db/schema";
 import { canViewSolution, IN_PERSON, REMOTE } from "~/hunt.config";
 import Link from "next/link";
 import { FormattedTime } from "~/lib/time";
-import { useSession } from "next-auth/react";
+import { auth } from "~/middleware";
 
 export default async function DefaultSolutionPage({
   puzzleId,
@@ -13,7 +13,7 @@ export default async function DefaultSolutionPage({
   puzzleId: string;
   solutionBody: React.ReactNode;
 }) {
-  const { data: session } = useSession();
+  const session = await auth();
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
@@ -46,7 +46,7 @@ export default async function DefaultSolutionPage({
           Please return to the{" "}
           <Link
             href={`/puzzle/${puzzleId}`}
-            className="text-secondary hover:underline"
+            className="text-link hover:underline"
           >
             puzzle
           </Link>{" "}

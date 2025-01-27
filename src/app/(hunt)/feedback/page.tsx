@@ -1,18 +1,18 @@
+import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/db/index";
-import FeedbackForm from "./FeedbackForm";
-import { or, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { feedback } from "~/server/db/schema";
-import Link from "next/link";
+import FeedbackForm from "./FeedbackForm";
 
 export default async function Home() {
   const session = await auth();
   if (!session?.user?.id) {
     return (
-      <div className="flex grow flex-col items-center justify-center">
+      <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
         <h1 className="mb-2">Feedback</h1>
         <div>
-          <Link href="/login" className="text-secondary hover:underline">
+          <Link href="/login" className="text-link hover:underline">
             Login
           </Link>{" "}
           to submit feedback.
@@ -27,7 +27,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="mx-auto mb-8 flex max-w-4xl grow flex-col px-4">
+    <div className="mx-auto mb-6 flex max-w-4xl grow flex-col px-4 pt-6">
       <h1 className="mb-2">Feedback</h1>
       <FeedbackForm teamId={session.user.id} feedbackList={feedbackList} />
     </div>

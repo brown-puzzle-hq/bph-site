@@ -16,14 +16,14 @@ export default async function DefaultHeader({
       <div className="space-x-2 text-sm">
         <Link
           href={`/puzzle/${puzzleId}`}
-          className="text-blue-600 hover:underline"
+          className="text-link hover:underline"
         >
           Puzzle
         </Link>
         <span className="text-gray-500">|</span>
         <Link
           href={`/puzzle/${puzzleId}/hint`}
-          className="text-blue-600 hover:underline"
+          className="text-link hover:underline"
         >
           Hint
         </Link>
@@ -32,7 +32,7 @@ export default async function DefaultHeader({
             <span className="text-gray-500">|</span>
             <Link
               href={`/puzzle/${puzzleId}/solution`}
-              className="text-blue-600 hover:underline"
+              className="text-link hover:underline"
             >
               Solution
             </Link>

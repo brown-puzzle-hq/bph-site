@@ -95,6 +95,14 @@ export const registerFormSchema = z
       message: "Required",
       path: ["wantsBox"],
     },
+  )
+  .refine(
+    (data) =>
+      !(data.interactionMode === "in-person" && data.phoneNumber === ""),
+    {
+      message: "Required",
+      path: ["phoneNumber"],
+    },
   );
 
 type RegisterFormProps = {};
@@ -197,12 +205,12 @@ export function RegisterForm({}: RegisterFormProps) {
           render={({ field }) => (
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">
-                  Username <span className="text-red-500">*</span>
+                <span className="text-main-header">
+                  Username <span className="text-error">*</span>
                 </span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
-              <FormControl>
+              <FormControl className="text-main-text placeholder:text-main-accent">
                 <Input placeholder="jcarberr" autoComplete="on" {...field} />
               </FormControl>
               <FormDescription>
@@ -220,12 +228,12 @@ export function RegisterForm({}: RegisterFormProps) {
           render={({ field }) => (
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">
-                  Display name <span className="text-red-500">*</span>
+                <span className="text-main-header">
+                  Display name <span className="text-error">*</span>
                 </span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
-              <FormControl>
+              <FormControl className="text-main-text placeholder:text-main-accent">
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
@@ -242,12 +250,12 @@ export function RegisterForm({}: RegisterFormProps) {
           render={({ field }) => (
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">
-                  Password <span className="text-red-500">*</span>
+                <span className="text-main-header">
+                  Password <span className="text-error">*</span>
                 </span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
-              <FormControl>
+              <FormControl className="text-main-text">
                 <Input type="password" {...field} />
               </FormControl>
               <FormDescription>
@@ -264,12 +272,12 @@ export function RegisterForm({}: RegisterFormProps) {
           render={({ field }) => (
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">
-                  Confirm password <span className="text-red-500">*</span>
+                <span className="text-main-header">
+                  Confirm password <span className="text-error">*</span>
                 </span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
-              <FormControl>
+              <FormControl className="text-main-text">
                 <Input type="password" {...field} />
               </FormControl>
             </FormItem>
@@ -278,10 +286,10 @@ export function RegisterForm({}: RegisterFormProps) {
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>
-              Team members <span className="text-red-500">*</span>
+            <span className="mb-1.5 text-main-header">
+              Team members <span className="text-error">*</span>
             </span>
-            <span className="text-[0.8rem] font-medium text-red-500">
+            <span className="text-[0.8rem] font-medium text-error">
               {form.formState.errors.members?.root?.message}
             </span>
           </FormLabel>
@@ -293,7 +301,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 name={`members.${index}.name`}
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormControl>
+                    <FormControl className="text-main-text placeholder:text-main-accent">
                       <Input
                         className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
                         {...field}
@@ -336,9 +344,9 @@ export function RegisterForm({}: RegisterFormProps) {
                 name={`members.${index}.email`}
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormControl>
+                    <FormControl className="text-main-text placeholder:text-main-accent">
                       <Input
-                        className={`rounded-none border-0 border-b ${form.formState.errors.members?.[index] ? "border-red-300" : ""} p-0 text-black shadow-none focus-visible:ring-transparent`}
+                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "border-red-300" : ""} text-current shadow-none focus-visible:ring-transparent`}
                         {...field}
                         value={field.value ?? ""}
                         placeholder="Email"
@@ -376,7 +384,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-10 w-10 text-gray-400 focus-visible:bg-neutral-100 focus-visible:text-neutral-900 focus-visible:ring-0"
+                className="h-10 w-10 focus-visible:bg-neutral-100 focus-visible:text-neutral-900 focus-visible:ring-0"
                 disabled={
                   fields.length == 1 &&
                   form.watch("members")[0]?.name === "" &&
@@ -384,7 +392,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 }
                 onClick={() => remove(index)}
               >
-                <X />
+                <X className="text-white" />
               </Button>
             </div>
           ))}
@@ -400,11 +408,10 @@ export function RegisterForm({}: RegisterFormProps) {
           render={({ field }) => (
             <FormItem className="mb-8 space-y-3">
               <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">
-                  We will be competing...{" "}
-                  <span className="text-red-500">*</span>
+                <span className="text-main-header">
+                  We will be competing... <span className="text-error">*</span>
                 </span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
               <FormControl>
                 <RadioGroup
@@ -418,14 +425,14 @@ export function RegisterForm({}: RegisterFormProps) {
                       disabled={new Date() > IN_PERSON.END_TIME}
                     />
                     <FormLabel
-                      className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                      className={`font-normal text-main-header opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
                     >
                       In-person
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <RadioGroupItem value="remote" />
-                    <FormLabel className="font-normal text-black">
+                    <FormLabel className="font-normal text-main-header">
                       Remote
                     </FormLabel>
                   </FormItem>
@@ -444,10 +451,12 @@ export function RegisterForm({}: RegisterFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">Brown/RISD team members</span>
-                    <FormMessage />
+                    <span className="text-main-header">
+                      Brown/RISD team members
+                    </span>
+                    <FormMessage className="text-error" />
                   </FormLabel>
-                  <FormControl>
+                  <FormControl className="text-main-text">
                     <Input {...field} type="number" min="0" />
                   </FormControl>
                   <FormDescription>
@@ -464,10 +473,12 @@ export function RegisterForm({}: RegisterFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">Phone number</span>
-                    <FormMessage />
+                    <span className="text-main-header">
+                      Phone number <span className="text-error">*</span>
+                    </span>
+                    <FormMessage className="text-error" />
                   </FormLabel>
-                  <FormControl>
+                  <FormControl className="text-main-text">
                     <Input
                       {...field}
                       onChange={(e) => {
@@ -498,7 +509,7 @@ export function RegisterForm({}: RegisterFormProps) {
                       room.
                     </FormDescription>
                   </div>
-                  <FormControl>
+                  <FormControl className="text-main-text">
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
@@ -514,10 +525,10 @@ export function RegisterForm({}: RegisterFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">Solving location</span>
-                    <FormMessage />
+                    <span className="text-main-header">Solving location</span>
+                    <FormMessage className="text-error" />
                   </FormLabel>
-                  <FormControl>
+                  <FormControl className="text-main-text">
                     <Input {...field} />
                   </FormControl>
                   <FormDescription>
@@ -537,10 +548,10 @@ export function RegisterForm({}: RegisterFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">
-                      Remote box <span className="text-red-500">*</span>
+                    <span className="text-main-header">
+                      Remote box <span className="text-error">*</span>
                     </span>
-                    <FormMessage />
+                    <FormMessage className="text-error" />
                   </FormLabel>
                   <FormDescription>
                     Are you interested in purchasing a box of physical puzzles?
@@ -569,13 +580,13 @@ export function RegisterForm({}: RegisterFormProps) {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <RadioGroupItem value="true" />
-                        <FormLabel className="font-normal text-black">
+                        <FormLabel className="font-normal text-main-header">
                           Yes, I might be interested!
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <RadioGroupItem value="false" />
-                        <FormLabel className="font-normal text-black">
+                        <FormLabel className="font-normal text-main-header">
                           No thank you.
                         </FormLabel>
                       </FormItem>
@@ -591,7 +602,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
         <div className="my-8 text-sm">
           Already registered for the hunt?{" "}
-          <Link href="/login" className="text-blue-500 hover:underline">
+          <Link href="/login" className="text-link hover:underline">
             Login
           </Link>
         </div>

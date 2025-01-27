@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <Providers>
         <CommandPalette />
-        <body>{children}</body>
+        <body className="bg-main-bg">{children}</body>
         <Analytics />
       </Providers>
     </html>

@@ -82,14 +82,14 @@ export default function GuessForm({
                     );
                     setError(null);
                   }}
-                  className="bg-white text-black"
+                  className="bg-secondary-bg text-secondary-text"
                 />
               </FormControl>
               <FormDescription className="flex justify-between">
                 {numberOfGuessesLeft}{" "}
                 {numberOfGuessesLeft === 1 ? "guess" : "guesses"} left
-                <FormMessage>{error}</FormMessage>
               </FormDescription>
+              <FormMessage className="text-error">{error}</FormMessage>
             </FormItem>
           )}
         />

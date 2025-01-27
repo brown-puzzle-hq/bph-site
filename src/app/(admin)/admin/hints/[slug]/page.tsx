@@ -115,7 +115,7 @@ export default async function Page({
                 <span className="font-semibold">Team </span>
                 <Link
                   href={`/teams/${hint.team.id}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-link hover:underline"
                 >
                   {hint.team.displayName}
                 </Link>
@@ -124,7 +124,7 @@ export default async function Page({
                 <span className="font-semibold">Puzzle </span>
                 <Link
                   href={`/puzzle/${hint.puzzleId}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-link hover:underline"
                 >
                   {hint.puzzle.name}
                 </Link>

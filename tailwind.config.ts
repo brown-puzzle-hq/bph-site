@@ -16,10 +16,79 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        link: colors.gray[500],
-        secondary: "#808080",
-        "hunt-nav-color": colors.gray[50],
+        // Main is the primary color of the site
+        "main-bg": "#452c63",
+        "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
+        "main-header": "#e7e3fc",
+        "main-accent": "#ac8ced",
+
+        // Secondary is for text fields
+        // Ideally this should be a light background with dark text
+        "secondary-bg": "#e7e3fc",
+        "secondary-text": colors.black,
+        "secondary-accent": colors.zinc[400],
+
+        // Other backgrounds
+        "footer-bg": "#322046",
+        "nav-bg": "#452c63",
+
+        // Other text colors
+        link: colors.blue[300],
+        "correct-guess": colors.emerald[300],
+        "incorrect-guess": colors.rose[300],
+        error: colors.red[400],
+
+        // Colors
+        mahogany: {
+          "50": "#fff0f0",
+          "100": "#ffdddd",
+          "200": "#ffc1c1",
+          "300": "#ff9696",
+          "400": "#ff5a5a",
+          "500": "#ff2727",
+          "600": "#fb0707",
+          "700": "#d40101",
+          "800": "#ae0606",
+          "900": "#900c0c",
+          "950": "#4e0000",
+        },
+
+        crimson: {
+          "50": "#fff0f0",
+          "100": "#ffdddd",
+          "200": "#ffc0c0",
+          "300": "#ff9494",
+          "400": "#ff5758",
+          "500": "#ff2324",
+          "600": "#ec0001",
+          "700": "#d70001",
+          "800": "#b10304",
+          "900": "#920a0b",
+          "950": "#500000",
+        },
       },
+      typography: ({ theme }: { theme: any }) => ({
+        custom: {
+          css: {
+            "--tw-prose-body": theme("colors.main-text"),
+            "--tw-prose-headings": theme("colors.main-header"),
+            // "--tw-prose-lead": theme("colors.pink[700]"),
+            "--tw-prose-links": theme("colors.link"),
+            "--tw-prose-bold": theme("colors.main-header"),
+            // "--tw-prose-counters": theme("colors.pink[600]"),
+            // "--tw-prose-bullets": theme("colors.pink[400]"),
+            // "--tw-prose-hr": theme("colors.pink[300]"),
+            // "--tw-prose-quotes": theme("colors.pink[900]"),
+            // "--tw-prose-quote-borders": theme("colors.pink[300]"),
+            // "--tw-prose-captions": theme("colors.pink[700]"),
+            // "--tw-prose-code": theme("colors.pink[900]"),
+            // "--tw-prose-pre-code": theme("colors.pink[100]"),
+            // "--tw-prose-pre-bg": theme("colors.pink[900]"),
+            // "--tw-prose-th-borders": theme("colors.pink[300]"),
+            // "--tw-prose-td-borders": theme("colors.pink[200]"),
+          },
+        },
+      }),
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

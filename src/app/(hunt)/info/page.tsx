@@ -62,10 +62,10 @@ export default function Page() {
   const values = useTOCContextValues();
   return (
     <TOCContext.Provider value={values}>
-      <div className="flex h-full w-screen">
+      <div className="flex h-full w-screen py-6">
         <TableOfContents />
         <div className="flex w-full px-4 md:w-2/3 lg:w-1/2">
-          <article className="prose w-full max-w-none">
+          <article className="prose prose-custom w-full max-w-none">
             <h1>Hunt Information</h1>
             <TOCSection
               sectionId={0}
@@ -85,7 +85,7 @@ export default function Page() {
                 given. You can read a longer introduction to puzzlehunts{" "}
                 <Link
                   href="https://blog.vero.site/post/puzzlehunts"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   here
                 </Link>
@@ -98,7 +98,7 @@ export default function Page() {
                 year's{" "}
                 <Link
                   href="https://2024.brownpuzzlehunt.com/"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   hunt
                 </Link>
@@ -106,21 +106,21 @@ export default function Page() {
                 puzzles from other online hunts such as{" "}
                 <Link
                   href="https://galacticpuzzlehunt.com/"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   Galactic Puzzle Hunt
                 </Link>
                 ,{" "}
                 <Link
                   href="https://teammatehunt.com/"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   Teammate Hunt
                 </Link>
                 , or{" "}
                 <Link
                   href="https://puzzlepotluck.com/"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   Puzzle Potluck
                 </Link>
@@ -153,7 +153,7 @@ export default function Page() {
                 need to print and fill out{" "}
                 <Link
                   href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   this waiver
                 </Link>{" "}
@@ -313,14 +313,14 @@ export default function Page() {
                 the hunt, consider{" "}
                 <Link
                   href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   donating
                 </Link>{" "}
                 to{" "}
                 <Link
                   href="https://brownpuzzle.club/"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   Brown Puzzle Club
                 </Link>
@@ -383,7 +383,7 @@ export default function Page() {
                 need to print and fill out{" "}
                 <Link
                   href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf"
-                  className="text-blue-500 no-underline hover:underline"
+                  className="no-underline hover:underline"
                 >
                   this waiver
                 </Link>{" "}
@@ -491,21 +491,21 @@ export default function Page() {
                   Online wordplay solvers like{" "}
                   <Link
                     href="https://nutrimatic.org/"
-                    className="text-blue-500 no-underline hover:underline"
+                    className="no-underline hover:underline"
                   >
                     nutrimatic
                   </Link>
                   ,{" "}
                   <Link
                     href="https://www.quinapalus.com/qat.html"
-                    className="text-blue-500 no-underline hover:underline"
+                    className="no-underline hover:underline"
                   >
                     qat
                   </Link>
                   , or{" "}
                   <Link
                     href="https://onelook.com/"
-                    className="text-blue-500 no-underline hover:underline"
+                    className="no-underline hover:underline"
                   >
                     OneLook
                   </Link>
@@ -514,7 +514,7 @@ export default function Page() {
                   Logic puzzle solvers like{" "}
                   <Link
                     href="https://www.noq.solutions/"
-                    className="text-blue-500 no-underline hover:underline"
+                    className="no-underline hover:underline"
                   >
                     noq
                   </Link>
@@ -523,14 +523,14 @@ export default function Page() {
                   Reverse image searching tools like{" "}
                   <Link
                     href="https://lens.google/"
-                    className="text-blue-500 no-underline hover:underline"
+                    className="no-underline hover:underline"
                   >
                     Google Lens
                   </Link>{" "}
                   or{" "}
                   <Link
                     href="https://tineye.com/"
-                    className="text-blue-500 no-underline hover:underline"
+                    className="no-underline hover:underline"
                   >
                     Tineye
                   </Link>

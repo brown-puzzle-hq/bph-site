@@ -31,12 +31,8 @@ export default function PuzzleTable({
       <Table className="justify-center">
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className="text-secondary dark:text-neutral-400">
-              Puzzle
-            </TableHead>
-            <TableHead className="text-secondary dark:text-neutral-400">
-              Answer
-            </TableHead>
+            <TableHead className="dark:text-neutral-400">Puzzle</TableHead>
+            <TableHead className="dark:text-neutral-400">Answer</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -69,7 +65,7 @@ export default function PuzzleTable({
                 </TableCell>
                 <TableCell>
                   {solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id) && (
-                    <p className="text-emerald-600">{puzzle.answer}</p>
+                    <p className="text-correct-guess">{puzzle.answer}</p>
                   )}
                 </TableCell>
               </TableRow>

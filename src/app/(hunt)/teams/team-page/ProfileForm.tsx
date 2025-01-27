@@ -81,6 +81,14 @@ export const profileFormSchema = z
       message: "Required",
       path: ["wantsBox"],
     },
+  )
+  .refine(
+    (data) =>
+      !(data.interactionMode === "in-person" && data.phoneNumber === ""),
+    {
+      message: "Required",
+      path: ["phoneNumber"],
+    },
   );
 
 type TeamInfoFormProps = {
@@ -223,19 +231,31 @@ export function ProfileForm({
 
   const isDirty = () => {
     const currentValues = form.getValues();
-    return Object.keys(currentValues).some((key) =>
-      key === "members"
-        ? serializeMembers(currentValues[key]) !== memberString
-        : key === "wantsBox"
-          ? currentValues["interactionMode"] === "remote" &&
+    return Object.keys(currentValues).some((key) => {
+      switch (key) {
+        case "members":
+          return serializeMembers(currentValues[key]) !== memberString;
+        case "wantsBox":
+          return (
+            currentValues["interactionMode"] === "remote" &&
             currentValues[key] != wantsBox
-          : (currentValues as ProfileFormValues)[
+          );
+        case "phoneNumber":
+          return (
+            currentValues["interactionMode"] === "in-person" &&
+            currentValues[key] == ""
+          );
+        default:
+          return (
+            (currentValues as ProfileFormValues)[
               key as keyof ProfileFormValues
             ] !=
             (form.formState.defaultValues as ProfileFormValues)[
               key as keyof ProfileFormValues
-            ],
-    );
+            ]
+          );
+      }
+    });
   };
 
   return (
@@ -251,12 +271,12 @@ export function ProfileForm({
           render={({ field }) => (
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">
-                  Display name <span className="text-red-500">*</span>
+                <span className="text-main-header">
+                  Display name <span className="text-error">*</span>
                 </span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
-              <FormControl>
+              <FormControl className="">
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
@@ -268,13 +288,13 @@ export function ProfileForm({
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span>
-              Team members <span className="text-red-500">*</span>
+            <span className="mb-1.5 text-main-header">
+              Team members <span className="text-error">*</span>
             </span>
             {!form
               .getValues("members")
               .some((member: Member) => member?.email) && (
-              <span className="text-[0.8rem] font-medium text-red-500">
+              <span className="text-[0.8rem] font-medium text-error">
                 At least one email required
               </span>
             )}
@@ -287,7 +307,7 @@ export function ProfileForm({
                 name={`members.${index}.name`}
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormControl>
+                    <FormControl className="text-main-text placeholder:text-main-accent">
                       <Input
                         className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
                         {...field}
@@ -330,9 +350,9 @@ export function ProfileForm({
                 name={`members.${index}.email`}
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormControl>
+                    <FormControl className="text-main-text placeholder:text-main-accent">
                       <Input
-                        className={`rounded-none border-0 border-b ${form.formState.errors.members?.[index] ? "border-red-300" : ""} p-0 text-black shadow-none focus-visible:ring-transparent`}
+                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "border-red-300" : ""} text-current shadow-none focus-visible:ring-transparent`}
                         {...field}
                         value={field.value ?? ""}
                         placeholder="Email"
@@ -393,8 +413,8 @@ export function ProfileForm({
           name="interactionMode"
           render={({ field }) => (
             <FormItem className="mb-8 space-y-3">
-              <FormLabel>
-                We will be competing... <span className="text-red-500">*</span>
+              <FormLabel className="text-main-header">
+                We will be competing... <span className="text-error">*</span>
               </FormLabel>
               <FormControl>
                 <RadioGroup
@@ -408,7 +428,7 @@ export function ProfileForm({
                       disabled={new Date() > IN_PERSON.END_TIME}
                     />
                     <FormLabel
-                      className={`font-normal text-black opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                      className={`font-normal text-main-header opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
                     >
                       In-person
                     </FormLabel>
@@ -423,7 +443,7 @@ export function ProfileForm({
                       }
                     />
                     <FormLabel
-                      className={`font-normal text-black opacity-${
+                      className={`font-normal text-main-header opacity-${
                         new Date() > IN_PERSON.END_TIME ||
                         (new Date() > IN_PERSON.START_TIME &&
                           field.value === "in-person")
@@ -449,8 +469,10 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">Brown/RISD team members</span>
-                    <FormMessage />
+                    <span className="text-main-header">
+                      Brown/RISD team members
+                    </span>
+                    <FormMessage className="text-error" />
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -474,8 +496,10 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">Phone number</span>
-                    <FormMessage />
+                    <span className="text-main-header">
+                      Phone number <span className="text-error">*</span>
+                    </span>
+                    <FormMessage className="text-error" />
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -502,7 +526,9 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between">
                   <div>
-                    <FormLabel>Room needed</FormLabel>
+                    <FormLabel className="text-main-header">
+                      Room needed
+                    </FormLabel>
                     <FormDescription>
                       Hunt weekend will be busy. Select this if you'll need a
                       room.
@@ -524,8 +550,8 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">Solving location</span>
-                    <FormMessage />
+                    <span className="text-main-header">Solving location</span>
+                    <FormMessage className="text-error" />
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -546,8 +572,8 @@ export function ProfileForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
-                    <span className="text-black">
-                      Remote box <span className="text-red-500">*</span>
+                    <span className="text-main-header">
+                      Remote box <span className="text-error">*</span>
                     </span>
                     <FormMessage />
                   </FormLabel>
@@ -578,13 +604,13 @@ export function ProfileForm({
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <RadioGroupItem value="true" />
-                        <FormLabel className="font-normal text-black">
+                        <FormLabel className="font-normal text-main-header">
                           Yes, I might be interested!
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <RadioGroupItem value="false" />
-                        <FormLabel className="font-normal text-black">
+                        <FormLabel className="font-normal text-main-header">
                           No thank you.
                         </FormLabel>
                       </FormItem>

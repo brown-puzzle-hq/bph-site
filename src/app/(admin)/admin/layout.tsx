@@ -61,17 +61,15 @@ export default async function RootLayout({
   ];
 
   return (
-    <>
+    <div className="bg-white">
       <HamburgerMenu
         leftMenuItems={leftMenuItems}
         rightMenuItems={rightMenuItems}
       />
       {/* Navbar spacer */}
       <div className="min-h-[56px]"></div>
-      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
-        {children}
-      </main>
+      <main className="flex min-h-[calc(100vh-56px)] pt-6">{children}</main>
       <Toaster />
-    </>
+    </div>
   );
 }

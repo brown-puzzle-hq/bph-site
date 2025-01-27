@@ -9,7 +9,6 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
-
   const leftMenuItems: MenuItem[] = [
     {
       title: "Home",
@@ -70,37 +69,40 @@ export default async function RootLayout({
   }
 
   return (
-    <>
-      <HamburgerMenu
-        leftMenuItems={leftMenuItems}
-        rightMenuItems={rightMenuItems}
-      />
+    <div className="text-main-text">
+      {/* Navbar */}
+      <div className="bg-nav-bg">
+        <HamburgerMenu
+          leftMenuItems={leftMenuItems}
+          rightMenuItems={rightMenuItems}
+        />
+      </div>
       {/* Navbar spacer */}
-      <div className="min-h-[56px]"></div>
-      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
-        {children}
-      </main>
+      <div className="min-h-[56px]" />
+
+      <main className="flex min-h-[calc(100vh-56px-32px)]">{children}</main>
       <Toaster />
-      <footer className="py-2 text-center text-xs">
+
+      <footer className="bg-footer-bg py-2 text-center text-xs">
         <p>
           Having a good time? Want support more puzzlehunts like this in the
           future? Consider{" "}
           <Link
             href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
-            className="text-blue-500 hover:underline"
+            className="text-link hover:underline"
           >
             donating
           </Link>{" "}
           to your friendly neighborhood{" "}
           <Link
             href="http://brownpuzzle.club/"
-            className="text-blue-500 hover:underline"
+            className="text-link hover:underline"
           >
             puzzle club
           </Link>
           .
         </p>
       </footer>
-    </>
+    </div>
   );
 }

@@ -252,7 +252,7 @@ export default function PreviousHintTable({
             You have an outstanding hint on the puzzle{" "}
             <Link
               href={`/puzzle/${unansweredHint.puzzleId}`}
-              className="text-blue-500 hover:text-link hover:underline"
+              className="text-link hover:text-link hover:underline"
             >
               {unansweredHint.puzzleName}
             </Link>
@@ -280,7 +280,7 @@ export default function PreviousHintTable({
             <TableCell className="w-4"></TableCell>
             <TableCell className="break-words rounded-lg pb-4 pr-5">
               <p className="font-bold">Request</p>
-              <p className="pb-3 pt-2 text-gray-800">
+              <p className="pb-3 pt-2 text-secondary-text">
                 Please provide as much detail as possible to help us understand
                 where you're at and where you're stuck! Specific clues, steps,
                 and hypotheses are all helpful. If you're working with any
@@ -302,7 +302,7 @@ export default function PreviousHintTable({
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}
               />
-              <div className="py-3 text-sm text-gray-800">
+              <div className="py-3 text-sm text-secondary-text">
                 {getFormDescription(hintRequestState)}
               </div>
               <Button

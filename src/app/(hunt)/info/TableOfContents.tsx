@@ -106,7 +106,7 @@ export function TableOfContents() {
         {sections.map(({ id, title }) => (
           <span
             key={id}
-            className={`cursor-pointer transition-colors duration-200 hover:text-gray-800 ${activeSection === id ? "text-neutral-800" : "text-neutral-400"}`}
+            className={`cursor-pointer transition-colors duration-200 hover:text-main-header ${activeSection === id ? "text-main-text" : "text-main-accent"}`}
             onClick={() =>
               document
                 .getElementById(`section-${id}`)

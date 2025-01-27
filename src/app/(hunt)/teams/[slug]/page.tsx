@@ -36,7 +36,7 @@ export default async function Page({
   }
 
   return (
-    <div className="mb-6 flex w-2/3 min-w-36 grow flex-col">
+    <div className="mb-6 flex w-2/3 min-w-36 grow flex-col pt-6">
       <div className="flex flex-col items-center pb-6">
         <h1 className="">Welcome, {team.displayName}!</h1>
         <p>

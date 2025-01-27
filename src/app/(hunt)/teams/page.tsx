@@ -28,15 +28,17 @@ function Leaderboard({ data }: { data: LeaderboardItem[] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>#</TableHead>
-          <TableHead className="w-[20em]">Team Name</TableHead>
-          <TableHead className="w-[10em] text-center">Total Solved</TableHead>
-          <TableHead className="">Finish Time</TableHead>
+          <TableHead className="text-main-header">#</TableHead>
+          <TableHead className="w-[20em] text-main-header">Team Name</TableHead>
+          <TableHead className="w-[10em] text-center text-main-header">
+            Total Solved
+          </TableHead>
+          <TableHead className="text-main-header">Finish Time</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((row, index) => (
-          <TableRow className="hover:" key={`${row.id}`}>
+          <TableRow key={`${row.id}`}>
             <TableCell>{index + 1}</TableCell>
             <TableCell className="w-[20em] break-all">
               {row.displayName}
@@ -143,13 +145,13 @@ const remoteTeams: LeaderboardItem[] = await db
 
 export default async function Home() {
   return (
-    <div className="mb-6 flex grow flex-col items-center px-4">
+    <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
       <h1 className="mb-2">Leaderboard!</h1>
       <Tabs
         defaultValue="in-person"
         className="flex max-w-3xl flex-col items-center"
       >
-        <TabsList className="grid grid-cols-2">
+        <TabsList className="grid grid-cols-2 space-x-1 bg-secondary-bg">
           <TabsTrigger value="in-person">In-Person</TabsTrigger>
           <TabsTrigger value="remote">Remote</TabsTrigger>
         </TabsList>

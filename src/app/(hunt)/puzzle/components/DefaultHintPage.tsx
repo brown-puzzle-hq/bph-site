@@ -22,7 +22,7 @@ export default async function DefaultHintPage({
   if (!teamId) {
     return (
       <div>
-        <Link href="/login" className="text-perwinkle hover:underline">
+        <Link href="/login" className="text-link hover:underline">
           Login
         </Link>{" "}
         to see previous hints.

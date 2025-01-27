@@ -14,7 +14,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormMessage,
 } from "@/components/ui/form";
 import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
 import { insertFeedback } from "./actions";
@@ -77,7 +76,7 @@ export default function FeedbackForm({
             render={({ field }) => (
               <>
                 <FormItem className="mb-4">
-                  <FormDescription>
+                  <FormDescription className="text-main-text">
                     Any puzzle errors, website bugs, or general comments will be
                     enormously helpful for us. This textbox supports Markdown.
                   </FormDescription>
@@ -92,7 +91,7 @@ export default function FeedbackForm({
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-gray-50 text-black"
+                        className="bg-secondary-bg text-secondary-text placeholder:text-secondary-accent"
                         placeholder="No response yet"
                         {...field}
                       />
