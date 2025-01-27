@@ -207,7 +207,7 @@ export function RegisterForm({}: RegisterFormProps) {
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
-                Please avoid special characters.
+                Please <u>avoid</u> spaces or special characters.
               </FormDescription>
             </FormItem>
           )}

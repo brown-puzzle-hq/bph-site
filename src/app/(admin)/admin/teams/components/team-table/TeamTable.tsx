@@ -129,10 +129,7 @@ export function TeamTable<TData, TValue>({
                         return;
                       if (event.metaKey || event.ctrlKey) {
                         // Open in new tab
-                        window.open(
-                          `/teams/${row.getValue("id")}`,
-                          "_blank",
-                        );
+                        window.open(`/teams/${row.getValue("id")}`, "_blank");
                       } else {
                         // Move to team page
                         router.push(`/teams/${row.getValue("id")}`);
