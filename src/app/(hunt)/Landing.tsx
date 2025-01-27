@@ -79,14 +79,14 @@ export default function Landing() {
             <p>
               In-Person:{" "}
               <span className="whitespace-nowrap">
-                {formatter.format(IN_PERSON.START_TIME)} –
+                {formatter.format(IN_PERSON.START_TIME)} –{" "}
                 {formatter.format(IN_PERSON.END_TIME)}
               </span>
             </p>
             <p>
               Remote:{" "}
               <span className="whitespace-nowrap">
-                {formatter.format(REMOTE.START_TIME)} –
+                {formatter.format(REMOTE.START_TIME)} –{" "}
                 {formatter.format(REMOTE.END_TIME)}
               </span>
             </p>
