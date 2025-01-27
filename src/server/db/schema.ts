@@ -51,7 +51,7 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-  wantsBox: boolean("wants_box").notNull().default(false),
+  wantsBox: boolean("wants_box"),
   hasBox: boolean("has_box").notNull().default(false),
 
   // Not included:
