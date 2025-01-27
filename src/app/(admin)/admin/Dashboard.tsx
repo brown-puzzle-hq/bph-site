@@ -10,17 +10,17 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Activity,
   ArrowUpRight,
   MessageCircleQuestion,
+  PackageOpen,
   Puzzle,
   UsersRound,
 } from "lucide-react";
 
 import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
-import { errata, guesses, hints, teams } from "~/server/db/schema";
-import { count, eq, isNull, not, sql } from "drizzle-orm";
+import { guesses, hints, teams } from "~/server/db/schema";
+import { count, and, eq, isNull, not, sql } from "drizzle-orm";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 type hintLeaderboardItem = {
@@ -88,20 +88,23 @@ export async function Dashboard() {
   const totalHints = answeredHints + unansweredHints;
   const percentAnsweredHints = ((answeredHints / totalHints) * 100).toFixed(2);
 
-  // Get the number of errata
-  const numErrata = await db
-    .select({
-      puzzleId: errata.puzzleId,
-      count: count(),
-    })
-    .from(errata)
-    .groupBy(errata.puzzleId);
-
-  const totalErrata = numErrata.reduce((acc, item) => {
-    return acc + item.count;
-  }, 0);
-
-  const numIncorrectPuzzles = numErrata.length;
+  // Get remote box interest count
+  const numBoxesWanted =
+    (
+      await db
+        .select({ count: count() })
+        .from(teams)
+        .where(
+          and(eq(teams.interactionMode, "remote"), eq(teams.wantsBox, true)),
+        )
+    )[0]?.count ?? 0;
+  const numBoxesHad =
+    (
+      await db
+        .select({ count: count() })
+        .from(teams)
+        .where(and(eq(teams.interactionMode, "remote"), eq(teams.hasBox, true)))
+    )[0]?.count ?? 0;
 
   /* Activity Table (chunk 4) */
   const data: Record<number, ActivityItem> = {};
@@ -254,13 +257,15 @@ export async function Dashboard() {
           </Card>
           <Card x-chunk="dashboard-01-chunk-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Errata</CardTitle>
-              <Activity className="text-muted-foreground h-4 w-4" />
+              <CardTitle className="text-sm font-medium">
+                Remote Boxes
+              </CardTitle>
+              <PackageOpen className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalErrata}</div>
+              <div className="text-2xl font-bold">{numBoxesHad}</div>
               <p className="text-muted-foreground text-xs">
-                Across {numIncorrectPuzzles} puzzles
+                {numBoxesWanted} teams interested
               </p>
             </CardContent>
           </Card>
