@@ -160,7 +160,13 @@ export default function Page() {
                 ahead of time in order to come to campus. We will collect these
                 at kickoff.
               </p>
-
+              <p>
+                You don't need every person on your team to come to campus to be an 
+                In-Person team. One is fine (although they might have their hands full 
+                going to every event and doing every physical puzzle!) If you are part of an 
+                In-Person team but aren't on-campus, you'll still be able to access the 
+                non-physical puzzles through the website. 
+              </p>
               <h3>Remote Event</h3>
               <Timeline timeline={OnlineTimeline} />
               <p>
@@ -305,7 +311,7 @@ export default function Page() {
               <p>
                 If you know you might want a Box, but you don't think you can
                 afford it, we can arrange something for you. Please contact us
-                at <u>brownpuzzleHQ [at] gmail [dot] com</u>
+                at <u>brownpuzzleHQ [at] gmail [dot] com</u>{" "}
                 and we'll find a solution.
               </p>
               <p>

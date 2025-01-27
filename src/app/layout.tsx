@@ -6,7 +6,7 @@ import { CommandPalette } from "./CommandPalette";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Brown Puzzle Hunt",
+  title: "Brown Puzzlehunt",
   description: "",
   icons: [{ rel: "icon", url: "/favicon.png" }],
 };

@@ -185,7 +185,7 @@ export function RegisterForm({}: RegisterFormProps) {
     }
 
     toast({
-      title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
+      title: "Welcome to Brown Puzzlehunt, " + data.displayName + "!",
       description: "Your team has been registered.",
     });
     router.push("/");
