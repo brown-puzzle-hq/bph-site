@@ -66,24 +66,25 @@ export default function Landing() {
       </div>
 
       {/* Invisible clickable overlay */}
-      <div 
-        className="absolute w-2/3 h-[10vh] cursor-pointer top-[47%] left-1/2 md:top-[53%] lg:top-[50%] transform -translate-x-1/2 -translate-y-1/2"
+      <div
+        className="absolute left-1/2 top-[47%] h-[10vh] w-2/3 -translate-x-1/2 -translate-y-1/2 transform cursor-pointer md:top-[53%] lg:top-[50%]"
         style={{
           transform: `translate(-50%, -50%) translateY(${scrollY * -1}px)`, // Apply dynamic Y shift
-        }}>
-          <Link
-            href="/register"
-            className="absolute top-0 left-0 w-full h-full"
-          />
-        </div>
+        }}
+      >
+        <Link
+          href="/register"
+          className="absolute left-0 top-0 h-full w-full"
+        />
+      </div>
 
       {/* Div right below the image */}
       <div className="flex justify-center pt-[calc((100vw-850px)/8)]">
         <div className="relative flex w-[calc(60vw+200px)] p-4 text-center">
-          <div className="absolute top-[-50px] left-1/2 transform -translate-x-1/2">
+          <div className="absolute left-1/2 top-[-50px] -translate-x-1/2 transform">
             <Link
               href="/register"
-              className="px-8 py-3 text-lg font-semibold text-secondary-text bg-main-text rounded-md hover:bg-secondary-accent transition duration-200"
+              className="rounded-md bg-main-text px-8 py-3 text-lg font-semibold text-secondary-text transition duration-200 hover:bg-secondary-accent"
             >
               Register!
             </Link>
@@ -91,8 +92,7 @@ export default function Landing() {
           <div className="w-1/3 p-2 md:p-4">
             <h1>What?</h1>
             <p>
-              The third annual puzzlehunt by current Brown and RISD
-              students.
+              The third annual puzzlehunt by current Brown and RISD students.
             </p>
           </div>
           <div className="w-1/3 p-2 md:p-4">
@@ -112,28 +112,21 @@ export default function Landing() {
               </span>
             </p>
             <p className="mt-2">
-              <Link
-                  href="/info"
-                  className="no-underline hover:underline"
-                >
-                  <i>What do you mean, there are two weekends?</i>
+              <Link href="/info" className="no-underline hover:underline">
+                <i>What do you mean, there are two weekends?</i>
               </Link>
             </p>
           </div>
           <div className="w-1/3 p-2 md:p-4">
             <h1>Who?</h1>
             <p>
-              Anyone can come to campus. (Just tell us so we know you're coming!)
+              Anyone can come to campus. (Just tell us so we know you're
+              coming!)
             </p>
+            <p className="mt-2">Anyone can get a Box.</p>
             <p className="mt-2">
-              Anyone can get a Box.
-            </p>
-            <p className="mt-2">
-              <Link
-                  href="/info"
-                  className="no-underline hover:underline"
-                >
-                  <i>Box? What box?</i>
+              <Link href="/info" className="no-underline hover:underline">
+                <i>Box? What box?</i>
               </Link>
             </p>
           </div>
