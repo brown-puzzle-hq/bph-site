@@ -61,7 +61,7 @@ export default async function RootLayout({
   ];
 
   return (
-    <div className="bg-white">
+    <body className="bg-white">
       <HamburgerMenu
         leftMenuItems={leftMenuItems}
         rightMenuItems={rightMenuItems}
@@ -70,6 +70,6 @@ export default async function RootLayout({
       <div className="min-h-[56px]"></div>
       <main className="flex min-h-[calc(100vh-56px)] pt-6">{children}</main>
       <Toaster />
-    </div>
+    </body>
   );
 }

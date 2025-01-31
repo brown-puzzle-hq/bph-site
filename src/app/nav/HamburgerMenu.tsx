@@ -73,7 +73,7 @@ export function HamburgerMenu({ leftMenuItems, rightMenuItems }: Props) {
           </Button>
         </SheetTrigger>
         <SheetContent side="top" className="w-full bg-inherit">
-          <nav className="flex flex-col items-center space-y-2 text-main-text">
+          <nav className="flex flex-col items-center space-y-2">
             {[...leftMenuItems, ...rightMenuItems].map((item) => (
               <React.Fragment key={item.title}>
                 <SheetTrigger asChild>

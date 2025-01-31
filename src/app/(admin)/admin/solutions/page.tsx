@@ -11,7 +11,7 @@ import {
 import { getNextUnlocks } from "~/hunt.config";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
-import { ChartPie, KeyRound, Puzzle } from "lucide-react";
+import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
 
 export const fetchCache = "force-no-store";
@@ -136,7 +136,7 @@ export default async function Home() {
                   <TableCell className="justify-center hover:opacity-75">
                     <div className="flex justify-center">
                       <Link href={`/admin/statistics/${puzzle.id}`}>
-                        <ChartPie className="text-black-500" />
+                        <ChartColumn className="text-black-500" />
                       </Link>
                     </div>
                   </TableCell>
