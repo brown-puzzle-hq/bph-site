@@ -17,7 +17,7 @@ export default function PreviousGuessTable({
           {previousGuesses
             .sort((a, b) => b.submitTime.getTime() - a.submitTime.getTime())
             .map((guess) => (
-              <TableRow key={guess.id} className="hover:">
+              <TableRow key={guess.id} className="hover:bg-inherit">
                 <TableCell className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap sm:max-w-lg">
                   {guess.guess}
                 </TableCell>

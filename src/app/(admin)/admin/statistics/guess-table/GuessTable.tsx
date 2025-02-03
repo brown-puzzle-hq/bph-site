@@ -92,12 +92,12 @@ export function GuessTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="flex overflow-auto rounded-md border">
+      <div className="flex overflow-auto rounded-md">
         <div className="w-full overflow-y-auto">
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={`header-${headerGroup.id}`}>
+                <TableRow key={`header-${headerGroup.id}`} className="hover:bg-inherit">
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
@@ -106,8 +106,7 @@ export function GuessTable<TData, TValue>({
                           header.column.getIsSorted() === "asc",
                         )
                       }
-                      className="w-1/2 hover:underline"
-                      role="button"
+                      className="w-1/2"
                     >
                       {header.isPlaceholder
                         ? null
@@ -126,7 +125,7 @@ export function GuessTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="cursor-pointer"
+                    className="border-0 hover:bg-inherit"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

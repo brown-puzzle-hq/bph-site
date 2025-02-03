@@ -27,7 +27,7 @@ function Leaderboard({ data }: { data: LeaderboardItem[] }) {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="hover:bg-inherit">
           <TableHead className="text-main-header">#</TableHead>
           <TableHead className="w-[20em] text-main-header">Team Name</TableHead>
           <TableHead className="w-[10em] text-center text-main-header">
@@ -38,7 +38,7 @@ function Leaderboard({ data }: { data: LeaderboardItem[] }) {
       </TableHeader>
       <TableBody>
         {data.map((row, index) => (
-          <TableRow key={`${row.id}`}>
+          <TableRow key={`${row.id}`} className="hover:bg-inherit">
             <TableCell>{index + 1}</TableCell>
             <TableCell className="w-[20em] break-all">
               {row.displayName}

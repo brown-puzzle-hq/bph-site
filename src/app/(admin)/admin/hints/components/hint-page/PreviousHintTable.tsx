@@ -1,5 +1,4 @@
 "use client";
-import { toast } from "~/hooks/use-toast";
 import { useState, startTransition, Fragment } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -26,11 +25,21 @@ type TableProps = {
 // Intitial state
 type PreviousHints = {
   id: number;
-  teamId: string;
-  claimer: string | null;
   request: string;
   response: string | null;
-  followUps: { id: number; message: string; userId: string }[];
+  team: {
+    id: string;
+    displayName: string;
+  };
+  claimer: {
+    id: string;
+    displayName: string;
+  } | null;
+  followUps: {
+    id: number;
+    message: string;
+    user: { id: string; displayName: string };
+  }[];
 }[];
 
 // Requesting hint state
@@ -74,7 +83,10 @@ export default function PreviousHintTable({
         ...prev,
         {
           id: 0,
-          teamId: session?.user?.id!,
+          team: {
+            displayName: session?.user?.displayName!,
+            id: session?.user?.id!,
+          },
           claimer: null,
           request,
           response: null,
@@ -163,7 +175,10 @@ export default function PreviousHintTable({
                 followUps: hint.followUps.concat({
                   id: 0,
                   message,
-                  userId: session!.user!.id!,
+                  user: {
+                    displayName: session!.user!.displayName,
+                    id: session!.user!.id!,
+                  },
                 }),
               }
             : hint,
@@ -289,7 +304,7 @@ export default function PreviousHintTable({
               </p>
               <AutosizeTextarea
                 maxHeight={500}
-                className="resize-none border-black bg-white"
+                className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
                 disabled={
                   hintRequestState.isSolved ||
                   !!hintRequestState.unansweredHint ||
@@ -324,7 +339,7 @@ export default function PreviousHintTable({
             </TableCell>
           </TableRow>
         )}
-
+        
         {optimisticHints.map((hint) => (
           <Fragment key={`${hint.id}`}>
             {/* Hint request row */}
@@ -336,11 +351,11 @@ export default function PreviousHintTable({
               <TableCell className="break-words pr-5">
                 {/* Top section with the team ID and the edit button */}
                 <div className="flex justify-between">
-                  <p className="pb-1 font-bold">
+                  <p className="pt-1 pb-0.5 font-bold">
                     {anonymize ? "Team" : teamDisplayName}
                   </p>
                   {/* If the hint request was made by the current user, allow edits */}
-                  {hint.teamId === session?.user?.id && (
+                  {hint.team.id === session?.user?.id && (
                     <div>
                       {edit?.id === hint.id && edit.type === "request" ? (
                         <div className="space-x-2">
@@ -383,7 +398,7 @@ export default function PreviousHintTable({
                   <div className="pt-2">
                     <AutosizeTextarea
                       maxHeight={500}
-                      className="resize-none"
+                      className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
                       value={edit.value}
                       onChange={(e) => {
                         if (!edit) return;
@@ -423,7 +438,7 @@ export default function PreviousHintTable({
                   {/* Top section for claimer ID, the follow-up button, and the edit button */}
                   <div className="flex items-center justify-between">
                     <p className="pb-1 font-bold">
-                      {anonymize ? "Admin" : hint.claimer}
+                      {anonymize ? "Admin" : hint.claimer?.displayName}
                     </p>
                     <div className="flex space-x-2">
                       {/* Follow-up button */}
@@ -450,7 +465,7 @@ export default function PreviousHintTable({
                         </button>
                       )}
                       {/* If the response was made by the current user, allow edits */}
-                      {hint.claimer === session?.user?.id && (
+                      {hint.claimer?.id === session?.user?.id && (
                         <div>
                           {edit?.id === hint.id && edit.type === "response" ? (
                             <div className="space-x-2">
@@ -498,7 +513,7 @@ export default function PreviousHintTable({
                       <div className="pt-2">
                         <AutosizeTextarea
                           maxHeight={500}
-                          className="resize-none"
+                          className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
                           value={edit.value}
                           onChange={(e) => {
                             if (!edit) return;
@@ -527,17 +542,17 @@ export default function PreviousHintTable({
                   <TableCell className="break-words pr-5">
                     {/* Top section with userId and edit button */}
                     <div className="flex justify-between">
-                      {followUp.userId === hint.teamId ? (
+                      {followUp.user.id === hint.team.id ? (
                         <p className="pb-1 font-bold">
                           {anonymize ? "Team" : teamDisplayName}
                         </p>
                       ) : (
                         <p className="pb-1 font-bold">
-                          {anonymize ? "Admin" : followUp.userId}
+                          {anonymize ? "Admin" : followUp.user.displayName}
                         </p>
                       )}
                       {/* If the previous hint follow-up was made by user, allow edits */}
-                      {followUp.userId === session?.user?.id && (
+                      {followUp.user.id === session?.user?.id && (
                         <div>
                           {edit?.type === "follow-up" &&
                           edit.id === followUp.id ? (
@@ -577,7 +592,7 @@ export default function PreviousHintTable({
                         <div className="pt-2">
                           <AutosizeTextarea
                             maxHeight={500}
-                            className="resize-none"
+                            className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
                             value={edit.value}
                             onChange={(e) => {
                               if (!edit) return;
@@ -603,40 +618,35 @@ export default function PreviousHintTable({
                   <div className="absolute inset-y-0 w-1 bg-gray-200"></div>
                 </TableCell>
                 <TableCell className="break-words pr-5">
-                  <div className="rounded-lg bg-gray-200 p-3">
-                    <p className="font-bold">Follow-Up</p>
-                    <p className="pb-3 pt-2 text-gray-800">
-                      Ask for clarification in this follow-up thread. Follow-ups
-                      don't count toward your hint limit!
-                    </p>
+                  <p className="font-bold">Follow-Up</p>
+                  <p className="pb-3 pt-2 text-secondary-text">
+                    Ask for clarification in this follow-up thread. Follow-ups
+                    don't count toward your hint limit!
+                  </p>
 
-                    <AutosizeTextarea
-                      maxHeight={500}
-                      className="resize-none"
-                      value={followUp.message}
-                      onChange={(e) => {
-                        if (followUp === null) return;
-                        setFollowUp({
-                          hintId: hint.id,
-                          message: e.target.value,
-                        });
-                      }}
-                    />
-                    <div className="flex space-x-2 pt-3">
-                      <Button
-                        onClick={() =>
-                          handleSubmitFollowUp(hint.id, followUp.message)
-                        }
-                      >
-                        Submit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => setFollowUp(null)}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
+                  <AutosizeTextarea
+                    maxHeight={500}
+                    className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
+                    value={followUp.message}
+                    onChange={(e) => {
+                      if (followUp === null) return;
+                      setFollowUp({
+                        hintId: hint.id,
+                        message: e.target.value,
+                      });
+                    }}
+                  />
+                  <div className="flex space-x-2 pt-3">
+                    <Button
+                      onClick={() =>
+                        handleSubmitFollowUp(hint.id, followUp.message)
+                      }
+                    >
+                      Submit
+                    </Button>
+                    <Button variant="outline" className="text-secondary-accent" onClick={() => setFollowUp(null)}>
+                      Cancel
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

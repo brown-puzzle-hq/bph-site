@@ -23,17 +23,17 @@ export const columns: ColumnDef<
 >[] = [
   {
     accessorKey: "teamDisplayName",
-    header: () => <div>Team</div>,
+    header: () => "Team",
     accessorFn: (row) => row.team!.displayName,
   },
   {
     accessorKey: "guess",
-    header: () => <div>Guess</div>,
+    header: () => "Guess",
     cell: ({ row }) => <div className="truncate">{row.getValue("guess")}</div>,
   },
   {
     accessorKey: "submitTime",
-    header: () => <div>Guess Time</div>,
+    header: () => "Guess Time",
     cell: ({ row }) => {
       const time = row.getValue("submitTime");
       return <div className="w-24 font-medium">{formatTime(time)}</div>;

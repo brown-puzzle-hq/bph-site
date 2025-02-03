@@ -36,6 +36,7 @@ export default async function Page({
     );
   }
 
+  // Get hint data
   const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
     with: {
@@ -85,12 +86,13 @@ export default async function Page({
       id: true,
       request: true,
       response: true,
-      teamId: true,
-      claimer: true,
     },
     with: {
+      team: { columns: { id: true, displayName: true } },
+      claimer: { columns: { id: true, displayName: true } },
       followUps: {
-        columns: { id: true, message: true, userId: true },
+        columns: { id: true, message: true },
+        with: { user: { columns: { id: true, displayName: true } } },
       },
     },
   });
@@ -116,16 +118,16 @@ export default async function Page({
                 <span className="font-semibold">Team: </span>
                 <Link
                   href={`/teams/${hint.team.id}`}
-                  className="text-link hover:underline"
+                  className="text-blue-500 hover:underline"
                 >
-                  {hint.team.displayName}
+                  {hint.team.displayName} ({hint.team.id})
                 </Link>
               </div>
               <div>
                 <span className="font-semibold">Puzzle: </span>
                 <Link
                   href={`/puzzle/${hint.puzzleId}`}
-                  className="text-link hover:underline"
+                  className="text-blue-500 hover:underline"
                 >
                   {hint.puzzle.name}
                 </Link>

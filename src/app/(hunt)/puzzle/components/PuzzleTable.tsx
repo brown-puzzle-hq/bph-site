@@ -30,9 +30,9 @@ export default function PuzzleTable({
     <div className="min-w-[40%]">
       <Table className="justify-center">
         <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead className="dark:text-neutral-400">Puzzle</TableHead>
-            <TableHead className="dark:text-neutral-400">Answer</TableHead>
+          <TableRow className="hover:bg-inherit">
+            <TableHead className="text-secondary-text">Puzzle</TableHead>
+            <TableHead className="text-secondary-text">Answer</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

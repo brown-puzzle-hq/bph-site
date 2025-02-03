@@ -260,6 +260,10 @@ export const followUpRelations = relations(followUps, ({ one }) => ({
     fields: [followUps.hintId],
     references: [hints.id],
   }),
+  user: one(teams, {
+    fields: [followUps.userId],
+    references: [teams.id],
+  }),
 }));
 
 export const erratumRelations = relations(errata, ({ one }) => ({

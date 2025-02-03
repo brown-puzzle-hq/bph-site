@@ -47,8 +47,8 @@ export default async function GuessStatisticsInfo({
         hasSolution={true}
       />
       <div className="grid w-full max-w-[1200px] grid-cols-1 gap-4 p-4 md:grid-cols-2">
-        <Card>
-          <CardHeader className="pb-0">
+        <Card className="border-0 shadow-none">
+          <CardHeader className="pb-0 text-center">
             <CardTitle>Guess Distribution</CardTitle>
           </CardHeader>
           <CardContent className="flex h-[calc(100%-40px)] p-4">
@@ -60,8 +60,8 @@ export default async function GuessStatisticsInfo({
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-0">
+        <Card className="border-0 shadow-none">
+          <CardHeader className="pb-0 text-center">
             <CardTitle>Recent Guesses</CardTitle>
           </CardHeader>
           <CardContent>

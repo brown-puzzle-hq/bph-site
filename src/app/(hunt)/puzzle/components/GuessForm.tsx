@@ -82,7 +82,7 @@ export default function GuessForm({
                     );
                     setError(null);
                   }}
-                  className="bg-secondary-bg text-secondary-text"
+                  className="bg-secondary-bg text-secondary-accent"
                 />
               </FormControl>
               <FormDescription className="flex justify-between">

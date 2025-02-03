@@ -23,10 +23,9 @@ export default {
         "main-accent": "#ac8ced",
 
         // Secondary is for text fields
-        // Ideally this should be a light background with dark text
         "secondary-bg": "#e7e3fc",
-        "secondary-text": colors.black,
-        "secondary-accent": colors.zinc[400],
+        "secondary-text": colors.gray[300], // This text goes with a dark background
+        "secondary-accent": colors.black, // This text goes with a light background
 
         // Other backgrounds
         "footer-bg": "#322046",

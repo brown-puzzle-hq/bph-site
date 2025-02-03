@@ -84,7 +84,7 @@ export default function Landing() {
           <div className="absolute left-1/2 top-[-50px] -translate-x-1/2 transform">
             <Link
               href="/register"
-              className="rounded-md bg-main-text px-8 py-3 text-lg font-semibold text-secondary-text transition duration-200 hover:bg-secondary-accent"
+              className="rounded-md bg-main-text px-8 py-3 text-lg font-semibold text-secondary-accent transition duration-200 hover:bg-secondary-text"
             >
               Register!
             </Link>

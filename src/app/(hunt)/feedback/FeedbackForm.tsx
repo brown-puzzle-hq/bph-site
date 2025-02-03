@@ -91,7 +91,7 @@ export default function FeedbackForm({
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-secondary-bg text-secondary-text placeholder:text-secondary-accent"
+                        className="bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
                         placeholder="No response yet"
                         {...field}
                       />
