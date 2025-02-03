@@ -3,7 +3,6 @@ import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
 import { guesses, hints, unlocks } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Toast from "../components/hint-page/Toast";
 import HintStatusBox from "../components/hint-page/HintStatusBox";
 import PreviousHintTable from "../components/hint-page/PreviousHintTable";
@@ -12,6 +11,7 @@ import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
 import { FormattedTime, ElapsedTime } from "~/lib/time";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { Label } from "~/components/ui/label";
 
 export default async function Page({
   params,
@@ -96,7 +96,7 @@ export default async function Page({
   });
 
   return (
-    <div>
+    <div className="mb-12">
       <div className="flex min-w-36 grow flex-col">
         <div className="flex flex-col items-center">
           <h1>Answer a Hint</h1>
@@ -108,31 +108,28 @@ export default async function Page({
           />
         </div>
 
-        <div className="flex flex-col items-center overflow-auto rounded-md">
+        <div className="flex flex-col items-center overflow-auto">
           <div className="flex w-full flex-col justify-between p-6 text-sm text-zinc-700 md:w-2/3 lg:flex-row">
             <div>
-              <p>
-                <span className="font-semibold">Team </span>
+              <div>
+                <p className="font-semibold">Hint #{hint.id}</p>
+                <span className="font-semibold">Team: </span>
                 <Link
                   href={`/teams/${hint.team.id}`}
                   className="text-link hover:underline"
                 >
                   {hint.team.displayName}
                 </Link>
-              </p>
-              <p>
-                <span className="font-semibold">Puzzle </span>
+              </div>
+              <div>
+                <span className="font-semibold">Puzzle: </span>
                 <Link
                   href={`/puzzle/${hint.puzzleId}`}
                   className="text-link hover:underline"
                 >
                   {hint.puzzle.name}
                 </Link>
-              </p>
-              <p>
-                <span className="font-semibold">Hint #</span>
-                {hint.id}
-              </p>
+              </div>
             </div>
             <div>
               <p>
@@ -182,25 +179,13 @@ export default async function Page({
               />
             </div>
           )}
-        </div>
 
-        {/* Previous guesses and hints hidden in tabs */}
-        <div className="flex flex-col items-center">
-          <Tabs
-            defaultValue="guesses"
-            className="w-2/3 overflow-auto rounded-md p-4"
-          >
-            <TabsList>
-              <TabsTrigger value="guesses">
-                Guesses ({previousGuesses.length})
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="guesses">
-              <div className="py-4">
-                <PreviousGuessTable previousGuesses={previousGuesses} />
-              </div>
-            </TabsContent>
-          </Tabs>
+          {previousGuesses.length > 0 && (
+            <div className="flex flex-col items-center space-y-2 p-4">
+              <Label>Previous Guesses</Label>
+              <PreviousGuessTable previousGuesses={previousGuesses} />
+            </div>
+          )}
         </div>
       </div>
     </div>

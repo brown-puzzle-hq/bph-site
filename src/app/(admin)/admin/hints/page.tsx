@@ -10,6 +10,7 @@ export default async function Home() {
       with: {
         team: { columns: { displayName: true } },
         claimer: { columns: { id: true, displayName: true } },
+        followUps: { columns: { id: true, userId: true } },
         puzzle: { columns: { name: true } },
       },
     })

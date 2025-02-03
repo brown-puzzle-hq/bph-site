@@ -4,22 +4,32 @@ import { ColumnDef } from "@tanstack/react-table";
 import { hints } from "~/server/db/schema";
 import HintStatusBox from "./HintStatusBox";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-import { FormattedTime } from "~/lib/time";
 
 export type HintClaimer = { id: string; displayName: string } | null;
+export type FollowUpHint = { id: number; userId: string } | null;
 
 export type HintWithRelations = typeof hints.$inferSelect & {
   team: { displayName: string };
   claimer: HintClaimer;
+  followUps: FollowUpHint[];
   puzzle: { name: string };
 };
+
+function formatTime(time: Date) {
+  return time.toLocaleString("en-US", {
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 // Define the columns for the table using TanStack
 export const columns: ColumnDef<HintWithRelations>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <div className="flex w-16 space-x-2">
+      <div className="flex space-x-2">
         <p>ID</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="ml-2 h-4 w-4" />
@@ -30,9 +40,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
         )}
       </div>
     ),
-    cell: ({ row }) => (
-      <div className="w-16 truncate">{row.getValue("id")}</div>
-    ),
+    accessorFn: (row) => row.id,
   },
   {
     accessorKey: "puzzleName",
@@ -82,14 +90,14 @@ export const columns: ColumnDef<HintWithRelations>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="w-[42em] truncate">{row.getValue("request")}</div>
+      <div className="w-[48em] truncate">{row.getValue("request")}</div>
     ),
   },
   {
     accessorKey: "requestTime",
     header: ({ column }) => (
-      <div className="flex w-32 space-x-2">
-        <p>Request Time</p>
+      <div className="flex w-24 space-x-2">
+        <p>Time</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="ml-2 h-4 w-4" />
         ) : column.getIsSorted() === "desc" ? (
@@ -99,19 +107,12 @@ export const columns: ColumnDef<HintWithRelations>[] = [
         )}
       </div>
     ),
-    cell: ({ row }) => {
-      const time: Date = row.getValue("requestTime");
-      return (
-        <div className="w-32 truncate font-medium">
-          <FormattedTime time={time} />
-        </div>
-      );
-    },
+    accessorFn: (row) => formatTime(row.requestTime),
   },
   {
     accessorKey: "claimer",
     header: ({ column }) => (
-      <div className="flex w-32 space-x-2">
+      <div className="flex w-20 space-x-2">
         <p>Status</p>
 
         {column.getIsSorted() === "asc" ? (
@@ -124,11 +125,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
       </div>
     ),
     sortingFn: "sortHintByStatus",
-    cell: ({ row }) => (
-      <div className="w-24 truncate">
-        <HintStatusBox row={row} />
-      </div>
-    ),
+    cell: ({ row }) => <HintStatusBox row={row} />,
   },
   {
     accessorKey: "responseTime",
@@ -136,6 +133,14 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   },
   {
     accessorKey: "status",
+    header: () => null,
+  },
+  {
+    accessorKey: "followUps",
+    header: () => null,
+  },
+  {
+    accessorKey: "teamId",
     header: () => null,
   },
 ];
