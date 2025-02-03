@@ -29,18 +29,14 @@ export const columns: ColumnDef<
   {
     accessorKey: "guess",
     header: () => <div>Guess</div>,
-    cell: ({ row }) => (
-      <div className="truncate">{row.getValue("guess")}</div>
-    ),
+    cell: ({ row }) => <div className="truncate">{row.getValue("guess")}</div>,
   },
   {
     accessorKey: "submitTime",
     header: () => <div>Guess Time</div>,
     cell: ({ row }) => {
       const time = row.getValue("submitTime");
-      return (
-        <div className="w-24 font-medium">{formatTime(time)}</div>
-      );
+      return <div className="w-24 font-medium">{formatTime(time)}</div>;
     },
   },
 ];

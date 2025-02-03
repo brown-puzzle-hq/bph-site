@@ -106,7 +106,7 @@ export function GuessTable<TData, TValue>({
                           header.column.getIsSorted() === "asc",
                         )
                       }
-                      className="hover:underline w-1/2"
+                      className="w-1/2 hover:underline"
                       role="button"
                     >
                       {header.isPlaceholder
