@@ -14,7 +14,7 @@ export default function Timeline({ timeline }: { timeline: TimelineItem[] }) {
     <div className="relative rounded-2xl border border-gray-400 px-6">
       <div className="relative border-s border-gray-200 dark:border-gray-700">
         {timeline.map(({ title, description }) => (
-          <div className="ms-4">
+          <div className="ms-4" key={title}>
             <Dot />
             <p>
               <strong>{title}</strong>

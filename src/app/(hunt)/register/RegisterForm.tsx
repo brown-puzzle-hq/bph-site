@@ -384,7 +384,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-10 w-10 focus-visible:bg-neutral-100 focus-visible:text-neutral-900 focus-visible:ring-0"
+                className="h-7 w-7 p-1 hover:bg-footer-bg hover:text-main-text focus-visible:bg-footer-bg focus-visible:ring-0"
                 disabled={
                   fields.length == 1 &&
                   form.watch("members")[0]?.name === "" &&

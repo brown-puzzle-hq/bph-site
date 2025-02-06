@@ -369,7 +369,7 @@ export function ProfileForm({
                             } else {
                               const nextField = document.querySelector(
                                 `[name="members.${index + 1}.name"]`,
-                              ) as HTMLInputElement;
+                              )!;
                               nextField?.focus();
                             }
                           } else if (e.key === "Backspace" && !field.value) {
@@ -390,7 +390,7 @@ export function ProfileForm({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-10 w-10 text-gray-400 focus-visible:bg-neutral-100 focus-visible:text-neutral-900 focus-visible:ring-0"
+                className="h-7 w-7 p-1 hover:bg-footer-bg hover:text-main-text focus-visible:bg-footer-bg focus-visible:ring-0"
                 disabled={
                   fields.length == 1 &&
                   form.watch("members")[0]?.name === "" &&

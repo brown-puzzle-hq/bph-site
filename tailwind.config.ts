@@ -20,7 +20,7 @@ export default {
         "main-bg": "#452c63",
         "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
         "main-header": "#e7e3fc",
-        "main-accent": "#ac8ced",
+        "main-accent": "#d4a7fc",
 
         // Secondary is for text fields
         "secondary-bg": "#e7e3fc",
