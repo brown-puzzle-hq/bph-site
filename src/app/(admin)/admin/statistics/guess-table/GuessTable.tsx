@@ -97,7 +97,10 @@ export function GuessTable<TData, TValue>({
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={`header-${headerGroup.id}`} className="hover:bg-inherit">
+                <TableRow
+                  key={`header-${headerGroup.id}`}
+                  className="hover:bg-inherit"
+                >
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}

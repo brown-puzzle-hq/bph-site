@@ -85,11 +85,14 @@ export function HintTable<TData, TValue>({
         const hasFollowUpB =
           followUpsB &&
           followUpsB[followUpsB.length - 1]?.userId === rowB.getValue("teamId");
+        const dateA: Date = new Date(rowA.getValue("requestTime"));
+        const dateB: Date = new Date(rowB.getValue("requestTime"));
+        const FIFO = dateA <= dateB ? 1 : -1;
 
         // Unclaimed hints are only below the user's claimed and unanswered hints
         // Follow up hints are treated the same as unanswered hints
         if (claimerA === null) {
-          if (claimerB === null) return 0;
+          if (claimerB === null) return FIFO;
           if (
             claimerB.id === userId &&
             (statusB === "no_response" || hasFollowUpB)
@@ -107,20 +110,21 @@ export function HintTable<TData, TValue>({
         }
 
         // The user's claimed follow up hints are only below completely unanswered hints
-        if (hasFollowUpA && claimerA.id === userId) {
-          if (hasFollowUpB && claimerB.id === userId) return 0;
+        if (hasFollowUpA && claimerA.id === userId && statusA !== "refunded") {
+          if (hasFollowUpB && claimerB.id === userId && statusB !== "refunded")
+            return FIFO;
           return claimerB.id === userId && statusB === "no_response" ? -1 : 1;
         }
-        if (hasFollowUpB && claimerB.id === userId) {
+        if (hasFollowUpB && claimerB.id === userId && statusB !== "refunded") {
           return claimerA.id === userId && statusA === "no_response" ? 1 : -1;
         }
 
         // Refundable hints are at the very bottom
         if (statusA === "answered") {
           if (claimerA.id === userId)
-            return statusB === "answered" && claimerB.id === userId ? 0 : -1;
+            return statusB === "answered" && claimerB.id === userId ? FIFO : -1;
           else if (statusB === "answered")
-            return claimerB.id === userId ? 1 : 0;
+            return claimerB.id === userId ? 1 : FIFO;
         }
         if (statusB === "answered") {
           if (claimerB.id === userId) return 1;
@@ -128,15 +132,16 @@ export function HintTable<TData, TValue>({
 
         // Refunded hints are right above them
         if (statusA === "refunded") {
-          return statusB === "refunded" ? 0 : -1;
+          return statusB === "refunded" ? FIFO : -1;
         }
         if (statusB === "refunded") return 1;
 
         // Answered hints are sorted by who answered them
         if (statusA === "answered") {
           if (statusB === "answered") {
-            if (claimerA.id === userId) return claimerB.id === userId ? 0 : 1;
-            return claimerB.id === userId ? -1 : 0;
+            if (claimerA.id === userId)
+              return claimerB.id === userId ? FIFO : 1;
+            return claimerB.id === userId ? -1 : FIFO;
           }
           return -1;
         }
@@ -146,9 +151,9 @@ export function HintTable<TData, TValue>({
 
         // Remaining hints have no response, show user's claimed hints first
         if (claimerA.id === userId) {
-          return claimerB.id === userId ? 0 : 1;
+          return claimerB.id === userId ? FIFO : 1;
         } else {
-          return claimerB.id === userId ? -1 : 0;
+          return claimerB.id === userId ? -1 : FIFO;
         }
       },
     },

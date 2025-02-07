@@ -339,7 +339,7 @@ export default function PreviousHintTable({
             </TableCell>
           </TableRow>
         )}
-        
+
         {optimisticHints.map((hint) => (
           <Fragment key={`${hint.id}`}>
             {/* Hint request row */}
@@ -351,7 +351,7 @@ export default function PreviousHintTable({
               <TableCell className="break-words pr-5">
                 {/* Top section with the team ID and the edit button */}
                 <div className="flex justify-between">
-                  <p className="pt-1 pb-0.5 font-bold">
+                  <p className="pb-0.5 pt-1 font-bold">
                     {anonymize ? "Team" : teamDisplayName}
                   </p>
                   {/* If the hint request was made by the current user, allow edits */}
@@ -644,7 +644,11 @@ export default function PreviousHintTable({
                     >
                       Submit
                     </Button>
-                    <Button variant="outline" className="text-secondary-accent" onClick={() => setFollowUp(null)}>
+                    <Button
+                      variant="outline"
+                      className="text-secondary-accent"
+                      onClick={() => setFollowUp(null)}
+                    >
                       Cancel
                     </Button>
                   </div>
