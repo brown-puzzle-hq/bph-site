@@ -55,7 +55,7 @@ export default function Landing() {
         />
 
         {/* /* Red overlay to cover background */}
-        <div className="absolute bottom-0 z-[3] h-[100vh] w-screen translate-y-[50vh] bg-[#4e0000] md:h-[70vh] lg:z-[0]"></div>
+        <div className="absolute bottom-0 z-[3] h-[105vh] w-screen translate-y-[55vh] bg-[#4e0000] md:h-[70vh] lg:z-[0]"></div>
 
         {/* /* Front theater building (stays above the red div) */}
         <div

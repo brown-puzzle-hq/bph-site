@@ -369,7 +369,7 @@ export function ProfileForm({
                             } else {
                               const nextField = document.querySelector(
                                 `[name="members.${index + 1}.name"]`,
-                              )!;
+                              ) as HTMLInputElement;
                               nextField?.focus();
                             }
                           } else if (e.key === "Backspace" && !field.value) {
