@@ -94,7 +94,7 @@ export const profileFormSchema = z
 type TeamInfoFormProps = {
   id: string;
   displayName: string;
-  role: "admin" | "user";
+  role: "admin" | "user" | "testsolver";
   memberString: string;
   interactionMode: "in-person" | "remote";
   numCommunity: string;
@@ -643,6 +643,10 @@ export function ProfileForm({
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <RadioGroupItem value="admin" />
                       <FormLabel className="font-normal">Admin</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <RadioGroupItem value="testsolver" />
+                      <FormLabel className="font-normal">Testsolver</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>

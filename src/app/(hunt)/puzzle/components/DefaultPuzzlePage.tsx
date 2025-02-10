@@ -1,9 +1,8 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
 import { guesses, errata } from "~/server/db/schema";
-
+import { redirect } from "next/navigation";
 import PreviousGuessTable from "./PreviousGuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
@@ -19,10 +18,15 @@ export default async function DefaultPuzzlePage({
   puzzleBody: React.ReactNode;
   copyText?: string | null;
 }) {
+  // Authentication
   const session = await auth();
-
-  if (!(await canViewPuzzle(puzzleId))) {
-    redirect("/404");
+  switch (await canViewPuzzle(puzzleId, session)) {
+    case "SUCCESS":
+      break;
+    case "NOT AUTHENTICATED":
+      redirect("/login");
+    case "NOT AUTHORIZED":
+      redirect("/puzzle");
   }
 
   // If user is not logged in, show puzzle without errata or guesses

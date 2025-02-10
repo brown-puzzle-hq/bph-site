@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { canViewSolution } from "~/hunt.config";
+import { auth } from "~/server/auth/auth";
 
 export default async function DefaultHeader({
   puzzleName,
@@ -10,6 +11,7 @@ export default async function DefaultHeader({
   puzzleId: string;
   hasSolution: boolean;
 }) {
+  const session = await auth();
   return (
     <div className="mb-4 w-2/3 min-w-36 flex-col items-center text-center">
       <h1>{puzzleName}</h1>
@@ -27,17 +29,18 @@ export default async function DefaultHeader({
         >
           Hint
         </Link>
-        {hasSolution && (await canViewSolution(puzzleId)) && (
-          <>
-            <span className="text-gray-500">|</span>
-            <Link
-              href={`/puzzle/${puzzleId}/solution`}
-              className="text-link hover:underline"
-            >
-              Solution
-            </Link>
-          </>
-        )}
+        {hasSolution &&
+          (await canViewSolution(puzzleId, session)) === "SUCCESS" && (
+            <>
+              <span className="text-gray-500">|</span>
+              <Link
+                href={`/puzzle/${puzzleId}/solution`}
+                className="text-link hover:underline"
+              >
+                Solution
+              </Link>
+            </>
+          )}
       </div>
     </div>
   );

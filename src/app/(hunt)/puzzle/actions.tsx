@@ -80,6 +80,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
     where: eq(teams.id, session.user.id),
   });
 
+  // TODO: replace gate-lock with final puzzle
   const guessMessage = `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.id}](https://www.brownpuzzlehunt.com/teams/${user?.id}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`;
   await sendBotMessage(guessMessage);
 

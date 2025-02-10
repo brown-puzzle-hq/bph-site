@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
 import { hints } from "~/server/db/schema";
 import HintStatusBox from "./HintStatusBox";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
@@ -124,7 +124,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
         )}
       </div>
     ),
-    sortingFn: "sortHintByStatus",
+    sortingFn: "sortHintByStatus" as SortingFnOption<HintWithRelations>,
     cell: ({ row }) => <HintStatusBox row={row} />,
   },
   {

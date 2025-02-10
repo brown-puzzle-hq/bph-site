@@ -7,60 +7,63 @@ import { guesses, puzzles, unlocks } from "~/server/db/schema";
 import PuzzleTable from "./components/PuzzleTable";
 
 export default async function Home() {
-  // Get user id
   const session = await auth();
-
-  // If the hunt has not yet started, display a message
-  if (
-    new Date() <
-    (session?.user?.interactionMode === "in-person"
-      ? IN_PERSON.START_TIME
-      : REMOTE.START_TIME)
-  ) {
-    return (
-      <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
-        <h1 className="mb-2">Puzzles!</h1>
-        <p>The hunt has not started yet.</p>
-      </div>
-    );
-  }
-
-  // If the user is not logged in and the hunt has not ended, display a message
-  if (
-    !session?.user?.id &&
-    new Date() <
-      (session?.user?.interactionMode === "in-person"
-        ? IN_PERSON.END_TIME
-        : REMOTE.END_TIME)
-  ) {
-    return (
-      <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
-        <h1 className="mb-2">Puzzles!</h1>
-        <p>
-          <Link href="/login" className="text-link hover:underline">
-            Login
-          </Link>{" "}
-          to access puzzles
-        </p>
-      </div>
-    );
-  }
 
   var availablePuzzles: {
     unlockTime: Date | null;
     id: string;
     name: string;
     answer: string;
-  }[];
+  }[] = [];
 
-  // If the user is logged in and the hunt has not ended
-  if (
-    session?.user?.id &&
-    new Date() <
-      (session.user.interactionMode === "in-person"
-        ? IN_PERSON.END_TIME
-        : REMOTE.END_TIME)
-  ) {
+  var solvedPuzzles: { puzzleId: string }[] = [];
+
+  // Not logged in
+  if (!session?.user?.id) {
+    // If the hunt has not ended, tell them to log in
+    if (new Date() < REMOTE.END_TIME) {
+      return (
+        <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
+          <h1 className="mb-2">Puzzles!</h1>
+          <p>
+            <Link href="/login" className="text-link hover:underline">
+              Login
+            </Link>{" "}
+            to access puzzles
+          </p>
+        </div>
+      );
+    } // Otherwise, let them see all of the puzzles
+    else {
+      availablePuzzles = (
+        await db.query.puzzles.findMany({
+          columns: { id: true, name: true, answer: true },
+        })
+      ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
+
+      solvedPuzzles = [];
+    }
+  }
+
+  // Logged in
+  if (session?.user?.id) {
+    // If the hunt has not yet started for users or admin, display a message
+    if (
+      (session.user.role === "user" || session.user.role === "admin") &&
+      new Date() <
+        (session.user.interactionMode === "in-person"
+          ? IN_PERSON.START_TIME
+          : REMOTE.START_TIME)
+    ) {
+      return (
+        <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
+          <h1 className="mb-2">Puzzles!</h1>
+          <p>The hunt has not started yet.</p>
+        </div>
+      );
+    }
+
+    // Otherwise, always display the puzzles unlocked
     let initialPuzzles = await db.query.puzzles.findMany({
       columns: { id: true, name: true, answer: true },
       where: inArray(puzzles.id, INITIAL_PUZZLES),
@@ -79,18 +82,7 @@ export default async function Home() {
         unlockTime: unlock.unlockTime,
       })),
     ];
-  } else {
-    availablePuzzles = (
-      await db.query.puzzles.findMany({
-        columns: { id: true, name: true, answer: true },
-      })
-    ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
-  }
 
-  var solvedPuzzles: { puzzleId: string }[];
-
-  // Check which puzzles are solved
-  if (session?.user?.id) {
     solvedPuzzles = await db.query.guesses.findMany({
       columns: { puzzleId: true },
       where: and(
@@ -98,8 +90,6 @@ export default async function Home() {
         eq(guesses.isCorrect, true),
       ),
     });
-  } else {
-    solvedPuzzles = [];
   }
 
   return (

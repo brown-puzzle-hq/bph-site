@@ -20,7 +20,8 @@ import {
 
 export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 
-export const roleEnum = pgEnum("role", ["admin", "user"]);
+// TODO: change "user" to "participant"
+export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
 
 export const interactionModeEnum = pgEnum("interaction_type", [
   "in-person",
