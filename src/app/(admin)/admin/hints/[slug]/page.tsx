@@ -15,8 +15,10 @@ import { Label } from "~/components/ui/label";
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: number }>;
+  searchParams?: { reply?: boolean };
 }) {
   // Authentication
   const session = await auth();
@@ -26,6 +28,7 @@ export default async function Page({
 
   // Check if slug is a valid number
   const { slug } = await params;
+  const reply = searchParams?.reply;
   const hintId = Number(slug);
   if (isNaN(hintId)) {
     return (
@@ -178,6 +181,7 @@ export default async function Page({
               <PreviousHintTable
                 previousHints={previousHints}
                 teamDisplayName={hint.team.displayName}
+                reply={reply ? hintId : undefined}
               />
             </div>
           )}

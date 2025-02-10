@@ -1,5 +1,11 @@
 "use client";
-import { useState, startTransition, Fragment } from "react";
+import {
+  useState,
+  useEffect,
+  useTransition,
+  startTransition,
+  Fragment,
+} from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -20,6 +26,7 @@ type TableProps = {
   previousHints: PreviousHints;
   hintRequestState?: HintRequestState;
   teamDisplayName?: string;
+  reply?: number;
 };
 
 // Intitial state
@@ -68,17 +75,21 @@ export default function PreviousHintTable({
   previousHints,
   hintRequestState,
   teamDisplayName,
+  reply,
 }: TableProps) {
   const { data: session } = useSession();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
   const [request, setRequest] = useState<string>("");
-  const [followUp, setFollowUp] = useState<FollowUp | null>(null);
+  const [followUp, setFollowUp] = useState<FollowUp | null>(
+    reply ? { hintId: reply, message: "" } : null,
+  );
   const [edit, setEdit] = useState<EditedMessage | null>(null);
   const [hiddenFollowUps, setHiddenFollowUps] = useState<number[]>([]);
+  const [isPendingSubmit, startTransitionSubmit] = useTransition();
 
   const handleSubmitRequest = async (puzzleId: string, message: string) => {
     // Optimistic update
-    startTransition(() => {
+    startTransitionSubmit(() => {
       setOptimisticHints((prev) => [
         ...prev,
         {
@@ -277,6 +288,10 @@ export default function PreviousHintTable({
       }
     }
 
+    if (optimisticHints.some((hint) => !hint.response)) {
+      return <>You have an outstanding hint on this puzzle.</>;
+    }
+
     if (hintsRemaining === 0) {
       return <>No hints remaining.</>;
     } else if (hintsRemaining === 1) {
@@ -285,6 +300,18 @@ export default function PreviousHintTable({
       return <>{hintsRemaining} hints remaining.</>;
     }
   };
+
+  useEffect(() => {
+    if (reply) {
+      const element = document.getElementById(`${reply}-follow-up-request`);
+      if (element) {
+        const offset =
+          5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+        const y = element.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+  }, []);
 
   return (
     <Table className="table-fixed">
@@ -309,6 +336,8 @@ export default function PreviousHintTable({
                   hintRequestState.isSolved ||
                   !!hintRequestState.unansweredHint ||
                   hintRequestState.hintsRemaining < 1 ||
+                  isPendingSubmit ||
+                  optimisticHints.some((hint) => !hint.response) ||
                   new Date() >
                     (session?.user?.interactionMode === "in-person"
                       ? IN_PERSON.END_TIME
@@ -328,6 +357,8 @@ export default function PreviousHintTable({
                   hintRequestState.isSolved ||
                   !!hintRequestState.unansweredHint ||
                   hintRequestState.hintsRemaining < 1 ||
+                  isPendingSubmit ||
+                  optimisticHints.some((hint) => !hint.response) ||
                   new Date() >
                     (session?.user?.interactionMode === "in-person"
                       ? IN_PERSON.END_TIME
@@ -611,6 +642,7 @@ export default function PreviousHintTable({
             {/* New follow-up request row */}
             {followUp !== null && followUp.hintId === hint.id && (
               <TableRow
+                id={`${hint.id}-follow-up-request`}
                 key={`${hint.id}-follow-up-request`}
                 className="border-0 hover:bg-inherit"
               >
