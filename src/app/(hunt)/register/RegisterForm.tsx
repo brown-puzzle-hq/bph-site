@@ -460,8 +460,8 @@ export function RegisterForm({}: RegisterFormProps) {
                     <Input {...field} type="number" min="0" />
                   </FormControl>
                   <FormDescription>
-                    Number of undergraduates, graduates, faculty, or alumni.
-                    Must have at least one to win.
+                    Number of current undergraduate or graduate students on
+                    campus. Must have at least one to win.
                   </FormDescription>
                 </FormItem>
               )}
