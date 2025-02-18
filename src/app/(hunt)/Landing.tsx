@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import Link from "next/link";
 
@@ -11,6 +11,33 @@ const formatter = new Intl.DateTimeFormat("en-US", {
 
 export default function Landing() {
   const [scrollY, setScrollY] = useState(0);
+  const [angle, setAngle] = useState(0); // Angle for sine wave
+  const spotlight1Ref = useRef<HTMLDivElement>(null); // First spotlight
+  const spotlight2Ref = useRef<HTMLDivElement>(null); // Second spotlight
+
+  useEffect(() => {
+    let animationFrameId: number;
+
+    const moveSpotlights = () => {
+      if (spotlight1Ref.current && spotlight2Ref.current) {
+        // Spotlight 1
+        const rotation1 = Math.sin(angle) * 25;
+        spotlight1Ref.current.style.transformOrigin = "bottom"; // Set pivot point
+        spotlight1Ref.current.style.transform = `translateY(${scrollY * -0.5}px) rotate(${rotation1}deg)`; // Rotate
+
+        // Spotlight 2 (opposite movement)
+        const rotation2 = Math.sin(-angle) * 25;
+        spotlight2Ref.current.style.transformOrigin = "bottom"; // Set pivot point
+        spotlight2Ref.current.style.transform = `translateY(${scrollY * -0.5}px) rotate(${rotation2}deg)`;
+
+        setAngle((prevAngle) => prevAngle + 0.005);
+        animationFrameId = requestAnimationFrame(moveSpotlights);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(moveSpotlights);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [angle]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +51,7 @@ export default function Landing() {
   return (
     <div className="relative w-screen overflow-hidden">
       <div className="relative h-[100vh] w-screen">
-        {/* absolute background with stars */}
+        {/* Absolute background with stars */}
         <div
           className="absolute inset-0 z-0 w-full bg-cover bg-top sm:h-[100vh] md:h-[150vh]"
           style={{
@@ -44,7 +71,7 @@ export default function Landing() {
           }}
         />
 
-        {/*  Middle cityscape with lamps */}
+        {/* Middle cityscape with lamps */}
         <div
           className="absolute inset-0 z-[2] w-full bg-cover bg-top bg-no-repeat sm:h-[100vh] md:h-[150vh] lg:z-[3]"
           style={{
@@ -53,11 +80,27 @@ export default function Landing() {
             clipPath: `inset-0`,
           }}
         />
+        {/* Spotlight */}
+        <div
+          ref={spotlight1Ref}
+          className="absolute bottom-[50vh] left-[12vw] aspect-[1/15] w-[10vh] bg-cover bg-top opacity-80 md:bottom-[30vh] md:left-[28vw] md:w-[20vh]"
+          style={{
+            backgroundImage: `url(/home/Spotlight.PNG)`,
+          }}
+        />
+        {/* Spotlight */}
+        <div
+          ref={spotlight2Ref}
+          className="absolute bottom-[50vh] right-[12vw] aspect-[1/15] w-[10vh] bg-cover bg-top opacity-80 md:bottom-[30vh] md:right-[28vw] md:w-[20vh]"
+          style={{
+            backgroundImage: `url(/home/Spotlight.PNG)`,
+          }}
+        />
 
-        {/* /* Red overlay to cover background */}
+        {/* Red overlay to cover background */}
         <div className="absolute bottom-0 z-[3] h-[105vh] w-screen translate-y-[55vh] bg-[#4e0000] md:h-[70vh] lg:z-[0]"></div>
 
-        {/* /* Front theater building (stays above the red div) */}
+        {/* Front theater building (stays above the red div) */}
         <div
           className="absolute inset-0 z-[4] w-full bg-cover bg-top bg-no-repeat sm:h-[100vh] md:h-[150vh] lg:h-[200vh]"
           style={{
@@ -135,7 +178,6 @@ export default function Landing() {
           </div>
         </div>
       </div>
-      {/* Red overlay covering the bottom 50vh and partially overlaying images */}
     </div>
   );
 }
