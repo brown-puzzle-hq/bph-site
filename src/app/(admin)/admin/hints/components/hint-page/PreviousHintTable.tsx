@@ -565,7 +565,7 @@ export default function PreviousHintTable({
                   className="border-0 hover:bg-inherit"
                 >
                   <TableCell className="relative">
-                    <div className="absolute inset-y-0 w-1 bg-gray-200"></div>
+                    <div className="absolute inset-y-0 w-1 bg-blue-200"></div>
                   </TableCell>
                   <TableCell className="break-words pr-5">
                     {/* Top section with userId and edit button */}

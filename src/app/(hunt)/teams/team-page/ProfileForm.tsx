@@ -313,6 +313,7 @@ export function ProfileForm({
                         {...field}
                         value={field.value ?? ""}
                         placeholder="Name"
+                        autoComplete="off"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
@@ -356,6 +357,7 @@ export function ProfileForm({
                         {...field}
                         value={field.value ?? ""}
                         placeholder="Email"
+                        autoComplete="off"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();

@@ -199,17 +199,17 @@ export async function canViewSolution(
  */
 
 /** Calculates the total number of hints given to a team */
-export function getTotalHints(teamId: string) {
-  const initialNumberOfHints = 1;
+export function getTotalHints(teamId: string, role: string) {
+  const initialNumberOfHints = role == "admin" || role == "testsolver" ? 1000000 : 1;
   const currentTime = new Date();
   const timeDifference = currentTime.getTime() - IN_PERSON.START_TIME.getTime(); // In milliseconds
   const rate = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  return initialNumberOfHints + Math.floor(timeDifference / rate);
+  return initialNumberOfHints + Math.max(Math.floor(timeDifference / rate), 0);
 }
 
 /** Calculates the total number of hints available to a team */
-export async function getNumberOfHintsRemaining(teamId: string) {
-  const totalHints = getTotalHints(teamId);
+export async function getNumberOfHintsRemaining(teamId: string, role: string) {
+  const totalHints = getTotalHints(teamId, role);
   const query = await db
     .select({ count: count() })
     .from(hints)
