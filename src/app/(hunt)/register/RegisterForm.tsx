@@ -26,6 +26,7 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { IN_PERSON } from "~/hunt.config";
+import { serializeMembers, Member } from "~/lib/utils";
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
@@ -106,22 +107,7 @@ export const registerFormSchema = z
   );
 
 type RegisterFormProps = {};
-
-type Member = {
-  id?: number;
-  name: string | undefined;
-  email: string | undefined;
-};
-
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
-
-function serializeMembers(members: Member[]): string {
-  return JSON.stringify(
-    members
-      .filter((person) => person.name || person.email)
-      .map((person) => [person.name, person.email]),
-  );
-}
 
 export function RegisterForm({}: RegisterFormProps) {
   const router = useRouter();

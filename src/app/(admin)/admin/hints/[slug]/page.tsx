@@ -43,9 +43,9 @@ export default async function Page({
   const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
     with: {
-      team: { columns: { displayName: true, id: true } },
+      team: { columns: { displayName: true, id: true, members: true } },
       claimer: { columns: { id: true, displayName: true } },
-      puzzle: { columns: { name: true } },
+      puzzle: { columns: { id: true, name: true } },
     },
   });
 
@@ -91,7 +91,7 @@ export default async function Page({
       response: true,
     },
     with: {
-      team: { columns: { id: true, displayName: true } },
+      team: { columns: { id: true, displayName: true, members: true } },
       claimer: { columns: { id: true, displayName: true } },
       followUps: {
         columns: { id: true, message: true },
@@ -172,7 +172,10 @@ export default async function Page({
             <RequestBox hint={hint} />
             {(hint.response ||
               (hint.claimer && hint.claimer.id === session.user.id)) && (
-              <ResponseBox hint={{ ...hint, followUps: [] }} />
+              <ResponseBox
+                hint={{ ...hint, followUps: [] }}
+                members={hint.team.members}
+              />
             )}
           </div>
 
@@ -182,6 +185,8 @@ export default async function Page({
                 previousHints={previousHints}
                 teamDisplayName={hint.team.displayName}
                 reply={reply ? hintId : undefined}
+                puzzleId={hint.puzzle.id}
+                puzzleName={hint.puzzle.name}
               />
             </div>
           )}

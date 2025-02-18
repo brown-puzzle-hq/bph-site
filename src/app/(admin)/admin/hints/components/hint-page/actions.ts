@@ -1,11 +1,14 @@
 "use server";
-
-import { and, eq } from "drizzle-orm";
-import { getNumberOfHintsRemaining } from "~/hunt.config";
-import { sendBotMessage } from "~/lib/utils";
 import { auth } from "~/server/auth/auth";
 import { db } from "~/server/db/index";
+import { and, eq } from "drizzle-orm";
 import { followUps, hints, teams } from "~/server/db/schema";
+import { getNumberOfHintsRemaining } from "~/hunt.config";
+import { sendBotMessage, sendEmail } from "~/lib/utils";
+import {
+  FollowUpEmailTemplate,
+  FollowUpEmailTemplateProps,
+} from "~/lib/email-template";
 
 export type MessageType = "request" | "response" | "follow-up";
 
@@ -17,7 +20,8 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
   }
 
   // Checks
-  const hasHint = (await getNumberOfHintsRemaining(session.user.id, session.user.role)) > 0;
+  const hasHint =
+    (await getNumberOfHintsRemaining(session.user.id, session.user.role)) > 0;
   const hasUnansweredHint = (await db.query.hints.findFirst({
     columns: { id: true },
     where: and(
@@ -89,7 +93,19 @@ export async function editMessage(
 }
 
 /** Inserts a follow-up hint into the hint table */
-export async function insertFollowUp(hintId: number, message: string) {
+export async function insertFollowUp({
+  hintId,
+  members,
+  teamId,
+  teamDisplayName,
+  puzzleId,
+  puzzleName,
+  message,
+}: FollowUpEmailTemplateProps & {
+  hintId: number;
+  teamId?: string;
+  members: string;
+}) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Not logged in");
@@ -104,7 +120,30 @@ export async function insertFollowUp(hintId: number, message: string) {
         time: new Date(),
       })
       .returning({ id: followUps.id });
-    return result[0]?.id ?? null;
+
+    if (result[0]?.id) {
+      // If there are members, then this is a follow-up by a team
+      // So send an email
+      if (members) {
+        await sendEmail(
+          members,
+          `Follow-Up Hint [${puzzleName}]`,
+          FollowUpEmailTemplate({
+            teamDisplayName,
+            puzzleId,
+            puzzleName,
+            message,
+          }),
+        );
+      }
+      // Otherwise, notify admin on Discord that there is a follow-up
+      else {
+        const hintMessage = `🙏 **Hint** [follow-up](https://www.brownpuzzlehunt.com/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleName}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${message} <@&1310029428864057504>`;
+        await sendBotMessage(hintMessage);
+      }
+      return result[0].id;
+    }
+    return null;
   } catch (_) {
     return null;
   }

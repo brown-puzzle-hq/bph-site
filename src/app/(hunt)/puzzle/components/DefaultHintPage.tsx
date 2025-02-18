@@ -55,7 +55,7 @@ export default async function DefaultHintPage({
       response: true,
     },
     with: {
-      team: { columns: { id: true, displayName: true } },
+      team: { columns: { id: true, displayName: true, members: true } },
       claimer: { columns: { id: true, displayName: true } },
       followUps: {
         columns: { id: true, message: true, userId: true },
@@ -64,7 +64,10 @@ export default async function DefaultHintPage({
     },
   });
 
-  const hintsRemaining = await getNumberOfHintsRemaining(teamId, session!.user!.role);
+  const hintsRemaining = await getNumberOfHintsRemaining(
+    teamId,
+    session!.user!.role,
+  );
 
   const query = await db.query.hints.findFirst({
     columns: {},
@@ -93,10 +96,12 @@ export default async function DefaultHintPage({
   return (
     <div className="mb-12 w-full md:w-2/3">
       <PreviousHintTable
-        anonymize={true}
+        teamSide={true}
         previousHints={previousHints}
         hintRequestState={hintState}
-        teamDisplayName={session.user?.id}
+        teamDisplayName={session.user?.displayName}
+        puzzleId={puzzleId}
+        puzzleName={puzzle.name}
       />
     </div>
   );

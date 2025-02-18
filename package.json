@@ -68,6 +68,7 @@
     "react-remark": "^2.1.0",
     "recharts": "^2.14.1",
     "remark-gfm": "^4.0.0",
+    "resend": "^4.1.2",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.5.4",

@@ -5,8 +5,15 @@ import { hints } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { sendEmail } from "~/lib/utils";
+import { HintEmailTemplate } from "~/lib/email-template";
+import { HintWithRelations } from "./components/hint-table/Columns";
 
-export async function respondToHint(hintId: number, response: string) {
+export async function respondToHint(
+  hint: HintWithRelations,
+  response: string,
+  members: string,
+) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");
@@ -24,7 +31,7 @@ export async function respondToHint(hintId: number, response: string) {
     })
     .where(
       and(
-        eq(hints.id, hintId),
+        eq(hints.id, hint.id),
         eq(hints.claimer, user),
         eq(hints.status, "no_response"),
       ),
@@ -35,23 +42,25 @@ export async function respondToHint(hintId: number, response: string) {
 
   // Error-handling
   if (result.length != 1) {
-    let hint = await db.query.hints.findFirst({ where: eq(hints.id, hintId) });
-    if (!hint) {
+    let hintSearch = await db.query.hints.findFirst({
+      where: eq(hints.id, hint.id),
+    });
+    if (!hintSearch) {
       return {
         title: "Error responding to hint",
         error: "Hint entry not found",
         response: response,
       };
-    } else if (hint.claimer !== user) {
+    } else if (hintSearch.claimer !== user) {
       return {
         title: "Error responding to hint",
-        error: `Hint not claimed by user. Its current value is ${hint.claimer}.`,
+        error: `Hint not claimed by user. Its current value is ${hintSearch.claimer}.`,
         response: response,
       };
-    } else if (hint.status != "no_response") {
+    } else if (hintSearch.status != "no_response") {
       return {
         title: "Error responding to hint",
-        error: `Hint status is not no_response. It is ${hint.status}.`,
+        error: `Hint status is not no_response. It is ${hintSearch.status}.`,
         response: response,
       };
     } else {
@@ -63,6 +72,12 @@ export async function respondToHint(hintId: number, response: string) {
     }
   }
 
+  // Send email
+  await sendEmail(
+    members,
+    `Hint Answered [${hint.puzzle.name}]`,
+    HintEmailTemplate({ hint, response }),
+  );
   return { error: null };
 }
 

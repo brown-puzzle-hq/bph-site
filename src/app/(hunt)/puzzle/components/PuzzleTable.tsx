@@ -28,7 +28,7 @@ export default function PuzzleTable({
   const router = useRouter();
   return (
     <div className="min-w-[40%]">
-      <Table className="justify-center rounded-md overflow-hidden">
+      <Table className="justify-center overflow-hidden rounded-md">
         <TableHeader>
           <TableRow className="hover:bg-inherit">
             <TableHead className="text-secondary-text">Puzzle</TableHead>
