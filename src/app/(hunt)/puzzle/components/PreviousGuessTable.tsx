@@ -12,7 +12,7 @@ export default function PreviousGuessTable({
   );
   return (
     <div>
-      <Table className="table-auto">
+      <Table className="table-fixed md:table-auto">
         <TableBody>
           {previousGuesses
             .sort((a, b) => b.submitTime.getTime() - a.submitTime.getTime())
@@ -21,7 +21,7 @@ export default function PreviousGuessTable({
                 <TableCell className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap sm:max-w-lg">
                   {guess.guess}
                 </TableCell>
-                <TableCell>
+                <TableCell className="w-24 text-center">
                   {guess.isCorrect ? (
                     <p className="font-medium text-correct-guess">CORRECT</p>
                   ) : (
@@ -30,14 +30,7 @@ export default function PreviousGuessTable({
                     </p>
                   )}
                 </TableCell>
-                {/* TODO: actually learn Tailwind */}
-                <TableCell
-                  className={
-                    maxLength < 30
-                      ? "whitespace-nowrap"
-                      : "hidden whitespace-nowrap md:table-cell"
-                  }
-                >
+                <TableCell className="hidden w-40 whitespace-nowrap text-right md:table-cell">
                   <FormattedTime time={guess.submitTime} />
                 </TableCell>
               </TableRow>

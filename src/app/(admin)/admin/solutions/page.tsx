@@ -41,6 +41,7 @@ export default async function Home() {
       var copyText;
 
       try {
+        // Try to import the puzzle data from the hunt folder
         const module = await import(
           `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
         );
@@ -48,9 +49,19 @@ export default async function Home() {
         solutionBody = !!module.SolutionBody();
         copyText = module.copyText;
       } catch (e) {
-        puzzleBody = false;
-        solutionBody = false;
-        copyText = null;
+        try {
+          // Try to import from the dev folder
+          const module = await import(
+            `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
+          );
+          puzzleBody = !!module.PuzzleBody();
+          solutionBody = !!module.SolutionBody();
+          copyText = module.copyText;
+        } catch (e) {
+          puzzleBody = false;
+          solutionBody = false;
+          copyText = null;
+        }
       }
 
       return {

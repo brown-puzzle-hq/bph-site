@@ -239,7 +239,7 @@ export function ProfileForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full p-4 md:w-2/3 lg:w-1/3"
+        className="w-full p-4 sm:w-2/3 lg:w-1/2 xl:w-1/3"
       >
         {/* Display name field */}
         <FormField
@@ -462,8 +462,8 @@ export function ProfileForm({
                     />
                   </FormControl>
                   <FormDescription>
-                    Number of undergraduates, graduates, faculty, or alumni.
-                    Must have at least one to win.
+                    Number of current undergraduate or graduate students on
+                    campus. Must have at least one to win.
                   </FormDescription>
                 </FormItem>
               )}
@@ -503,7 +503,7 @@ export function ProfileForm({
               control={form.control}
               name="roomNeeded"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between">
+                <FormItem className="flex flex-row items-center justify-between space-x-1">
                   <div>
                     <FormLabel className="text-main-header">
                       Room needed
@@ -515,6 +515,7 @@ export function ProfileForm({
                   </div>
                   <FormControl>
                     <Switch
+                      className="focus-visible:ring-offset-0 data-[state=checked]:bg-violet-400 data-[state=unchecked]:bg-violet-950"
                       checked={form.watch("roomNeeded")}
                       onCheckedChange={field.onChange}
                     />

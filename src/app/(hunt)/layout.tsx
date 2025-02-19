@@ -80,7 +80,7 @@ export default async function RootLayout({
       {/* Navbar spacer */}
       <div className="min-h-[56px]" />
 
-      <main className="flex min-h-[calc(100vh-56px-32px)]">{children}</main>
+      <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
       <Toaster />
 
       <footer className="bg-footer-bg py-2 text-center text-xs">

@@ -94,7 +94,7 @@ export default async function DefaultHintPage({
   };
 
   return (
-    <div className="mb-12 w-full md:w-2/3">
+    <div className="mb-12 w-full sm:w-4/5 lg:w-2/3">
       <PreviousHintTable
         teamSide={true}
         previousHints={previousHints}

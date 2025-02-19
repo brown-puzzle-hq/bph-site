@@ -12,7 +12,7 @@ export default async function Home() {
 
   if (new Date() < REGISTRATION_START_TIME) {
     return (
-      <div className="flex grow flex-col items-center justify-center">
+      <div className="flex min-h-[calc(100vh-56px-32px)] grow flex-col items-center justify-center">
         <p>Registration has not started yet.</p>
       </div>
     );
@@ -20,7 +20,7 @@ export default async function Home() {
 
   if (new Date() > REGISTRATION_END_TIME) {
     return (
-      <div className="flex grow flex-col items-center justify-center">
+      <div className="flex min-h-[calc(100vh-56px-32px)] grow flex-col items-center justify-center">
         <p>Registration has ended.</p>
       </div>
     );

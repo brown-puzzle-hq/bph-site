@@ -31,7 +31,8 @@
       "@/auth.config": ["./src/server/auth/auth.config.ts"],
       "@/components/*": ["./src/components/*"],
       "@/hunt.config": ["./src/hunt.config.ts"],
-      "@/db/*": ["./src/server/db/*"]
+      "@/db/*": ["./src/server/db/*"],
+      "@/puzzle/*": ["./src/app/(hunt)/puzzle/*"]
     }
   },
   "include": [

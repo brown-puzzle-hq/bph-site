@@ -1,13 +1,11 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
+import { Clipboard } from "lucide-react";
 import { toast } from "~/hooks/use-toast";
 
 export default function CopyButton({ copyText }: { copyText: string }) {
   return (
-    <Button
-      className="hover: mt-3 px-1 text-3xl"
-      variant={"ghost"}
+    <button
+      className="flex"
       onClick={() => {
         navigator.clipboard.writeText(copyText);
         toast({
@@ -15,7 +13,7 @@ export default function CopyButton({ copyText }: { copyText: string }) {
         });
       }}
     >
-      📋
-    </Button>
+      <Clipboard className="hover:opacity-75" />
+    </button>
   );
 }

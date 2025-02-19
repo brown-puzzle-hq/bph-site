@@ -345,7 +345,7 @@ export default function PreviousHintTable({
                 where you're at and where you're stuck! Specific clues, steps,
                 and hypotheses are all helpful. If you're working with any
                 spreadsheets, diagrams, or external resources, you can include
-                links.{teamDisplayName}
+                links.
               </p>
               <AutosizeTextarea
                 maxHeight={500}

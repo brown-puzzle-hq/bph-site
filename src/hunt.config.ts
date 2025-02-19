@@ -4,6 +4,7 @@ import { teams, guesses, hints, unlocks } from "./server/db/schema";
 import { and, count, eq, ne } from "drizzle-orm";
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
 import { Session } from "next-auth";
+import { LucideIcon, ScrollText, ShieldCheck } from "lucide-react";
 
 /** REGISTRATION AND HUNT START */
 export const REGISTRATION_START_TIME = new Date("2024-11-17T17:00:00.000Z");
@@ -24,6 +25,26 @@ export const REMOTE = {
   WRAPUP_TIME: new Date("2025-04-26T17:00:00Z"),
 };
 
+/** HUNT CONFIGURATION */
+
+/** SEQUENCES */
+
+/** The sequence list is ordered. Sequences that occur earlier in the list
+ * will be displayed earlier. Puzzles that occur earlier in the list will
+ * be displayed earlier. */
+
+type Sequence = {
+  name?: string;
+  icon: LucideIcon;
+  puzzles: string[];
+};
+
+export const SEQUENCES: Sequence[] = [
+  { name: "A", icon: ScrollText, puzzles: ["seq1", "seq2"] },
+  { name: "B", icon: ShieldCheck, puzzles: ["seq1", "seq3"] },
+];
+
+/** GUESSES */
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
 /** PUZZLE UNLOCK SYSTEM
