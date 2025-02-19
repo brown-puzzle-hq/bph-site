@@ -109,6 +109,7 @@ export function CommandPalette() {
         <CommandGroup heading="Hunt">
           {huntItems.map((item) => (
             <CommandItem
+              key={item.title}
               onSelect={() => {
                 router.push(item.href);
                 setOpen(false);
@@ -122,6 +123,7 @@ export function CommandPalette() {
         <CommandGroup heading="Admin">
           {adminItems.map((item) => (
             <CommandItem
+              key={item.title}
               onSelect={() => {
                 router.push(item.href);
                 setOpen(false);

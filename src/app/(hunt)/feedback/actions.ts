@@ -1,5 +1,4 @@
 "use server";
-
 import { auth } from "@/auth";
 import { feedback, teams } from "@/db/schema";
 import { db } from "@/db/index";
