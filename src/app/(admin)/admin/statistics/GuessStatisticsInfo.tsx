@@ -6,6 +6,7 @@ import DefaultHeader from "~/app/(hunt)/puzzle/components/DefaultHeader";
 import GuessPieChart from "./GuessPieChart";
 import { GuessTable } from "./guess-table/GuessTable";
 import { columns } from "./guess-table/Columns";
+import { redirect } from "next/navigation";
 
 export type GuessWithTeam = typeof guesses.$inferSelect & {
   team: { displayName: string };
@@ -21,7 +22,7 @@ export default async function GuessStatisticsInfo({
   })!;
 
   if (!puzzle) {
-    throw new Error("Puzzle does not exist in database");
+    redirect("/admin/solutions");
   }
 
   // Get previous guesses

@@ -83,7 +83,7 @@ export default async function DefaultHintPage({
     where: eq(puzzles.id, puzzleId),
   })!;
   if (!puzzle) {
-    throw new Error("Puzzle does not exist in database");
+    redirect("/puzzle");
   }
 
   const hintState = {

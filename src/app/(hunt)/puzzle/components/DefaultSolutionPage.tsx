@@ -17,7 +17,7 @@ export default async function DefaultSolutionPage({
     where: eq(puzzles.id, puzzleId),
   })!;
   if (!puzzle) {
-    throw new Error("Puzzle does not exist in database");
+    redirect("/puzzle");
   }
 
   // Check if user can view solution
