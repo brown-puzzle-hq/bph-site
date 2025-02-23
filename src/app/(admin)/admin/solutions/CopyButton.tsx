@@ -8,7 +8,12 @@ export default function CopyButton({ copyText }: { copyText: string }) {
       onClick={() => {
         navigator.clipboard.writeText(copyText);
         toast({
-          title: "Puzzle copied to clipboard!",
+          title: "Copied to clipboard!",
+          description: (
+            <span className="block max-w-[calc(100vw-64px)] truncate md:max-w-[356px]">
+              {copyText}
+            </span>
+          ),
         });
       }}
     >

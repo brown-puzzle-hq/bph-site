@@ -1,0 +1,130 @@
+enum status {
+  no_response
+  answered
+  refunded
+}
+
+enum interaction_type {
+  "in-person"
+  remote
+}
+
+enum role {
+  admin
+  user
+  testsolver
+}
+
+table bph_site_erratum {
+  id serial [pk, not null, increment]
+  puzzle_id varchar [not null]
+  timestamp "timestamp with time zone" [not null]
+  description text [not null]
+
+  indexes {
+    puzzle_id [name: 'errata_puzzle_idx']
+  }
+}
+
+table bph_site_feedback {
+  id serial [pk, not null, increment]
+  team_id varchar [not null]
+  timestamp "timestamp with time zone" [not null]
+  feedback text [not null]
+}
+
+table bph_site_follow_up {
+  id serial [pk, not null, increment]
+  hint_id serial [not null, increment]
+  user_id varchar [not null]
+  message text [not null]
+  time "timestamp with time zone" [not null]
+
+  indexes {
+    hint_id [name: 'hint_idx']
+  }
+}
+
+table bph_site_guess {
+  id serial [pk, not null, increment]
+  puzzle_id varchar [not null]
+  team_id varchar [not null]
+  guess varchar(255) [not null]
+  is_correct boolean [not null]
+  submit_time "timestamp with time zone" [not null]
+
+  indexes {
+    (team_id, puzzle_id) [name: 'guesses_team_and_puzzle_idx']
+  }
+}
+
+table bph_site_hint {
+  id serial [pk, not null, increment]
+  puzzle_id varchar [not null]
+  team_id varchar [not null]
+  request text [not null]
+  request_time "timestamp with time zone" [not null]
+  claimer varchar
+  claim_time "timestamp with time zone"
+  response text
+  response_time "timestamp with time zone"
+  status status [not null, default: 'no_response']
+
+  indexes {
+    (team_id, puzzle_id) [name: 'hints_team_and_puzzle_idx']
+  }
+}
+
+table bph_site_puzzle {
+  id varchar(255) [pk, not null]
+  name varchar(255) [not null]
+  answer varchar(255) [not null]
+}
+
+table bph_site_team {
+  id varchar(255) [pk, not null]
+  display_name varchar(255) [not null]
+  password varchar(255) [not null]
+  role role [not null, default: 'user']
+  members text [not null, default: '[]']
+  interaction_type interaction_type [not null]
+  finish_time "timestamp with time zone"
+  create_time "timestamp with time zone"
+  num_community varchar(31) [not null, default: '']
+  phone_number varchar(31) [not null, default: '']
+  room_needed boolean [not null, default: false]
+  solving_location varchar(255) [not null, default: '']
+  wants_box boolean
+  has_box boolean [not null, default: false]
+}
+
+table bph_site_unlock {
+  id serial [pk, not null, increment]
+  puzzle_id varchar [not null]
+  team_id varchar [not null]
+  unlock_time "timestamp with time zone" [not null]
+
+  indexes {
+    (team_id, puzzle_id) [name: 'unlocks_team_puzzle_idx']
+  }
+}
+
+ref: bph_site_erratum.puzzle_id > bph_site_puzzle.id
+
+ref: bph_site_follow_up.hint_id > bph_site_hint.id
+
+ref: bph_site_follow_up.user_id - bph_site_team.id
+
+ref: bph_site_guess.team_id > bph_site_team.id
+
+ref: bph_site_guess.puzzle_id > bph_site_puzzle.id
+
+ref: bph_site_hint.team_id > bph_site_team.id
+
+ref: bph_site_hint.puzzle_id > bph_site_puzzle.id
+
+ref: bph_site_hint.claimer > bph_site_team.id
+
+ref: bph_site_unlock.team_id > bph_site_team.id
+
+ref: bph_site_unlock.puzzle_id > bph_site_puzzle.id

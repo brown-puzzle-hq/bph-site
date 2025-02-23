@@ -35,6 +35,11 @@ export default async function AdminHamburgerMenu() {
       href: "/admin/feedback",
       type: "link",
     },
+    {
+      title: "SQL",
+      href: "/admin/sql",
+      type: "link",
+    },
   ];
 
   const rightMenuItems: MenuItem[] = [

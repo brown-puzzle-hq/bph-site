@@ -22,6 +22,7 @@ import {
   MessageCircleWarning,
   ClipboardPenLine,
   UsersRound,
+  Database,
 } from "lucide-react";
 
 const huntItems = [
@@ -77,6 +78,11 @@ const adminItems = [
     title: "Feedback",
     href: "/admin/feedback",
     icon: <ClipboardPenLine className="text-blue-500" />,
+  },
+  {
+    title: "SQL",
+    href: "/admin/sql",
+    icon: <Database className="text-blue-500" />,
   },
 ];
 
