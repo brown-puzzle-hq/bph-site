@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import Link from "next/link";
+import { motion, useAnimation, useScroll, useTransform } from "framer-motion";
 
 const formatter = new Intl.DateTimeFormat("en-US", {
   year: "2-digit",
@@ -9,173 +9,134 @@ const formatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
+const shortFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "numeric",
+  day: "numeric",
+});
+
 export default function Landing() {
-  const [scrollY, setScrollY] = useState(0);
-  const [angle, setAngle] = useState(0); // Angle for sine wave
-  const spotlight1Ref = useRef<HTMLDivElement>(null); // First spotlight
-  const spotlight2Ref = useRef<HTMLDivElement>(null); // Second spotlight
-
-  useEffect(() => {
-    let animationFrameId: number;
-
-    const moveSpotlights = () => {
-      if (spotlight1Ref.current && spotlight2Ref.current) {
-        // Spotlight 1
-        const rotation1 = Math.sin(angle) * 25;
-        spotlight1Ref.current.style.transformOrigin = "bottom"; // Set pivot point
-        spotlight1Ref.current.style.transform = `translateY(${scrollY * -0.5}px) rotate(${rotation1}deg)`; // Rotate
-
-        // Spotlight 2 (opposite movement)
-        const rotation2 = Math.sin(-angle) * 25;
-        spotlight2Ref.current.style.transformOrigin = "bottom"; // Set pivot point
-        spotlight2Ref.current.style.transform = `translateY(${scrollY * -0.5}px) rotate(${rotation2}deg)`;
-
-        setAngle((prevAngle) => prevAngle + 0.005);
-        animationFrameId = requestAnimationFrame(moveSpotlights);
-      }
-    };
-
-    animationFrameId = requestAnimationFrame(moveSpotlights);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [angle]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { scrollYProgress } = useScroll();
+  const controls = useAnimation();
 
   return (
-    <div className="relative w-screen overflow-hidden">
-      <div className="relative h-[100vh] w-screen">
-        {/* Absolute background with stars */}
-        <div
-          className="absolute inset-0 z-0 w-full bg-cover bg-top sm:h-[100vh] md:h-[150vh]"
-          style={{
-            backgroundImage: `url(/home/4.png)`,
-            transform: `translateY(${scrollY * -0.1}px)`,
-            clipPath: `inset-0`,
-          }}
-        />
-
-        {/* Back cityscape */}
-        <div
-          className="z-1 absolute inset-0 w-full bg-cover bg-top bg-no-repeat sm:h-[100vh] md:h-[150vh]"
-          style={{
-            backgroundImage: `url(/home/3.png)`,
-            transform: `translateY(${scrollY * -0.3}px)`,
-            clipPath: `inset-0`,
-          }}
-        />
-
-        {/* Middle cityscape with lamps */}
-        <div
-          className="absolute inset-0 z-[2] w-full bg-cover bg-top bg-no-repeat sm:h-[100vh] md:h-[150vh] lg:z-[3]"
-          style={{
-            backgroundImage: `url(/home/2.png)`,
-            transform: `translateY(${scrollY * -0.5}px)`,
-            clipPath: `inset-0`,
-          }}
-        />
-        {/* Spotlight */}
-        <div
-          ref={spotlight1Ref}
-          className="absolute bottom-[50vh] left-[12vw] aspect-[1/15] w-[10vh] bg-cover bg-top opacity-80 md:bottom-[30vh] md:left-[28vw] md:w-[20vh]"
-          style={{
-            backgroundImage: `url(/home/Spotlight.PNG)`,
-          }}
-        />
-        {/* Spotlight */}
-        <div
-          ref={spotlight2Ref}
-          className="absolute bottom-[50vh] right-[12vw] aspect-[1/15] w-[10vh] bg-cover bg-top opacity-80 md:bottom-[30vh] md:right-[28vw] md:w-[20vh]"
-          style={{
-            backgroundImage: `url(/home/Spotlight.PNG)`,
-          }}
-        />
-
-        {/* Red overlay to cover background */}
-        <div className="absolute bottom-0 z-[3] h-[105vh] w-screen translate-y-[55vh] bg-[#4e0000] md:h-[70vh] lg:z-[0]"></div>
-
-        {/* Front theater building (stays above the red div) */}
-        <div
-          className="absolute inset-0 z-[4] w-full bg-cover bg-top bg-no-repeat sm:h-[100vh] md:h-[150vh] lg:h-[200vh]"
-          style={{
-            backgroundImage: `url(/home/1.png)`,
-            transform: `translateY(${scrollY * -1}px)`,
-            clipPath: `inset-0`,
-          }}
-        />
-      </div>
-
-      {/* Invisible clickable overlay */}
-      <div
-        className="absolute left-1/2 top-[47%] z-[6] h-[10vh] w-2/3 -translate-x-1/2 -translate-y-1/2 transform cursor-pointer"
-        style={{
-          transform: `translate(-50%, -50%) translateY(${scrollY * -1}px)`, // Apply dynamic Y shift
+    <div className="relative grid overflow-hidden">
+      <motion.img
+        className="col-start-1 row-start-1 min-h-[125vh] object-cover"
+        src="/home/4.png"
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "30%"]) }}
+      />
+      <motion.img
+        className="col-start-1 row-start-1 min-h-[125vh] object-cover"
+        src="/home/3.png"
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]) }}
+      />
+      <motion.img
+        className="absolute bottom-[calc(max(57vw,64.125vh))] left-[calc(min(29vw,50vw-23.33vh))] z-[1] col-start-1 row-start-1 w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
+        src="/home/Spotlight.png"
+        animate={{
+          rotate: [20, -20],
         }}
-      >
-        <Link
-          href="/register"
-          className="absolute left-0 top-0 h-full w-full"
-        />
-      </div>
-
-      {/* Div right below the image */}
-      <div className="relative z-[6] flex justify-center pt-[calc((100vw-850px)/8)]">
-        <div className="relative flex w-[calc(60vw+200px)] p-4 text-center">
-          <div className="absolute left-1/2 top-[-50px] -translate-x-1/2 transform">
-            <Link
-              href="/register"
-              className="rounded-md bg-main-text px-8 py-3 text-lg font-semibold text-secondary-accent transition duration-200 hover:bg-secondary-text"
-            >
-              Register!
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut",
+        }}
+      />
+      <motion.img
+        className="absolute bottom-[calc(max(57vw,64.125vh))] right-[calc(min(29vw,50vw-23.33vh))] z-[1] col-start-1 row-start-1 w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
+        src="/home/Spotlight.png"
+        animate={{
+          rotate: [-20, 20],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut",
+        }}
+      />
+      <motion.img
+        className="z-[1] col-start-1 row-start-1 min-h-[125vh] object-cover"
+        src="/home/2.png"
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "10%"]) }}
+      />
+      <motion.img
+        className="z-[2] col-start-1 row-start-1 min-h-[125vh] object-cover"
+        src="/home/1.png"
+      />
+      <motion.img
+        className="z-[2] col-start-1 row-start-1 min-h-[125vh] object-cover"
+        src="/home/Register.png"
+        initial={{ opacity: 0 }}
+        animate={controls}
+        transition={{ duration: 0.1, ease: "easeInOut" }}
+      />
+      <Link
+        className="absolute bottom-[calc(max(73vw,81.11vh))] left-[calc(min(35vw,50vw-16.67vh))] right-[calc(min(35vw,50vw-16.67vh))] z-[2] col-start-1 row-start-1 h-[calc(max(4.5vw,5vh))]"
+        href="/register"
+        onMouseEnter={() => controls.start({ opacity: 1 })}
+        onMouseLeave={() => controls.start({ opacity: 0 })}
+      />
+      <div className="absolute bottom-12 left-1/2 z-[2] grid w-full -translate-x-1/2 transform grid-cols-3 gap-4 p-4 text-center lg:bottom-16 lg:w-3/4 lg:grid-cols-1">
+        <div className="space-y-2">
+          <h1>What?</h1>
+          <p className="hidden md:block">
+            The third annual puzzlehunt by current Brown and RISD students.
+          </p>
+          <p className="md:hidden">Our third annual puzzlehunt.</p>
+          <p>
+            <Link href="/register" className="hover:underline">
+              <i>Click here to register!</i>
             </Link>
-          </div>
-          <div className="w-1/3 p-2 md:p-4">
-            <h1>What?</h1>
-            <p>
-              The third annual puzzlehunt by current Brown and RISD students.
-            </p>
-          </div>
-          <div className="w-1/3 p-2 md:p-4">
-            <h1>When?</h1>
-            <p>
-              In-Person:{" "}
-              <span>
-                {formatter.format(IN_PERSON.START_TIME)} –{" "}
-                {formatter.format(IN_PERSON.END_TIME)}
-              </span>
-            </p>
-            <p className="mt-2">
-              Remote:{" "}
-              <span>
-                {formatter.format(REMOTE.START_TIME)} –{" "}
-                {formatter.format(REMOTE.END_TIME)}
-              </span>
-            </p>
-            <p className="mt-2">
-              <Link href="/info" className="no-underline hover:underline">
-                <i>What do you mean, there are two weekends?</i>
-              </Link>
-            </p>
-          </div>
-          <div className="z-5 w-1/3 p-2 md:p-4">
-            <h1>Who?</h1>
-            <p>
-              Anyone can come to campus. (Just tell us so we know you're
-              coming!)
-            </p>
-            <p className="z-5 mt-2">Anyone can get a Box.</p>
-            <p className="z-5 mt-2">
-              <Link href="/info" className="no-underline hover:underline">
-                <i>Box? What box?</i>
-              </Link>
-            </p>
-          </div>
+          </p>
+        </div>
+        <div className="space-y-2">
+          <h1>When?</h1>
+          <p className="hidden md:block">
+            In-Person: {formatter.format(IN_PERSON.START_TIME)} –{" "}
+            {formatter.format(IN_PERSON.END_TIME)}
+          </p>
+          <p className="md:hidden">
+            In-Person:
+            <br />
+            {shortFormatter.format(IN_PERSON.START_TIME)} –{" "}
+            {shortFormatter.format(IN_PERSON.END_TIME)}
+          </p>
+          <p className="hidden md:block">
+            Remote: {formatter.format(REMOTE.START_TIME)} –{" "}
+            {formatter.format(REMOTE.END_TIME)}
+          </p>
+          <p className="md:hidden">
+            Remote:
+            <br />
+            {shortFormatter.format(REMOTE.START_TIME)} –{" "}
+            {shortFormatter.format(REMOTE.END_TIME)}
+          </p>
+          <p>
+            <Link href="/info" className="hover:underline">
+              <i className="hidden md:inline">
+                What do you mean, there are two weekends?
+              </i>
+              <i className="md:hidden">What, two weekends?</i>
+            </Link>
+          </p>
+        </div>
+        <div className="space-y-2">
+          <h1>Who?</h1>
+          <p>
+            Anyone can come to campus.
+            <span className="hidden md:inline">
+              {" "}
+              (Just tell us so we know you're coming!)
+            </span>
+          </p>
+          <p>Anyone can get a Box.</p>
+          <p className="hidden md:block">
+            <Link href="/info" className="hover:underline">
+              <i>Box? What box?</i>
+            </Link>
+          </p>
         </div>
       </div>
     </div>
