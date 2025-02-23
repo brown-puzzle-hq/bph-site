@@ -44,7 +44,11 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
   }
 
   // Update the password
-  if (teamProperties.password) {
+  if (
+    session?.user?.role === "admin" &&
+    teamProperties.password &&
+    teamProperties.password.length >= 8
+  ) {
     const hashedPassword = await new Promise<string>((resolve, reject) => {
       hash(teamProperties.password!, 10, (err, hash) => {
         if (err) reject(err);
@@ -52,6 +56,8 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
       });
     });
     teamProperties.password = hashedPassword;
+  } else {
+    delete teamProperties.password;
   }
 
   try {

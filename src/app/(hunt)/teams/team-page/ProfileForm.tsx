@@ -74,6 +74,12 @@ export const profileFormSchema = z
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
     wantsBox: z.boolean().optional(),
     role: z.enum(roleEnum.enumValues),
+    password: z
+      .string()
+      .min(8, { message: "Min 8 characters" })
+      .max(50, { message: "Max 50 characters" })
+      .or(z.literal("")),
+    confirmPassword: z.string().or(z.literal("")),
   })
   .refine(
     (data) =>
@@ -90,7 +96,11 @@ export const profileFormSchema = z
       message: "Required",
       path: ["phoneNumber"],
     },
-  );
+  )
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
 
 type TeamInfoFormProps = {
   id: string;
@@ -146,6 +156,8 @@ export function ProfileForm({
       phoneNumber,
       roomNeeded,
       solvingLocation,
+      password: "",
+      confirmPassword: "",
       wantsBox: wantsBox ?? undefined,
     },
     mode: "onChange",
@@ -179,6 +191,7 @@ export function ProfileForm({
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
       wantsBox: data.wantsBox,
+      password: data.password,
     });
 
     if (result.error) {
@@ -202,7 +215,11 @@ export function ProfileForm({
     form.reset({
       ...data,
       phoneNumber: formatPhoneNumber(data.phoneNumber),
+      password: "",
+      confirmPassword: "",
     });
+    document.activeElement instanceof HTMLElement &&
+      document.activeElement.blur();
     router.refresh(); // Ideally we remove this but seems like still necessary in some cases
   };
 
@@ -220,7 +237,8 @@ export function ProfileForm({
         case "phoneNumber":
           return (
             currentValues["interactionMode"] === "in-person" &&
-            currentValues[key] == ""
+            currentValues[key] !=
+              (form.formState.defaultValues as ProfileFormValues)[key]
           );
         default:
           return (
@@ -239,6 +257,12 @@ export function ProfileForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            form.handleSubmit(onSubmit)();
+          }
+        }}
         className="w-full p-4 sm:w-2/3 lg:w-1/2 xl:w-1/3"
       >
         {/* Display name field */}
@@ -602,37 +626,79 @@ export function ProfileForm({
           </div>
         )}
 
-        {/* Role field  */}
         {session?.user?.role === "admin" && (
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem className="mb-8 space-y-2">
-                <FormLabel>Team permissions</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="flex flex-col space-y-1"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <RadioGroupItem value="user" />
-                      <FormLabel className="font-normal">User</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <RadioGroupItem value="admin" />
-                      <FormLabel className="font-normal">Admin</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <RadioGroupItem value="testsolver" />
-                      <FormLabel className="font-normal">Testsolver</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div className="mb-8 space-y-8">
+            {/* Role field  */}
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="mb-8 space-y-2">
+                  <FormLabel className="text-main-header">
+                    Team permissions
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="user" />
+                        <FormLabel className="font-normal">User</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="admin" />
+                        <FormLabel className="font-normal">Admin</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="testsolver" />
+                        <FormLabel className="font-normal">
+                          Testsolver
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            {/* Password fields */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-main-header">New password</span>
+                    <FormMessage className="text-error" />
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" />
+                  </FormControl>
+                  <FormDescription>
+                    Leave blank to keep the current password.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex flex-row justify-between">
+                    <span className="text-main-header">Confirm password</span>
+                    <FormMessage className="text-error" />
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
         )}
 
         <div
@@ -640,7 +706,7 @@ export function ProfileForm({
             isDirty() ? "translate-y-0" : "translate-y-[5rem]"
           }`}
         >
-          <Alert className="w-full bg-slate-100 p-2 shadow-lg">
+          <Alert className="w-full border-footer-bg bg-slate-300 p-2 shadow-lg">
             <div className="flex items-center justify-between">
               <AlertDescription className="flex items-center space-x-2">
                 <AlertCircle className="h-4 w-4" />
@@ -659,7 +725,8 @@ export function ProfileForm({
                       .some((member: Member) => member?.email) ||
                     (form.watch("interactionMode") === "remote" &&
                       form.watch("wantsBox") !== true &&
-                      form.watch("wantsBox") !== false)
+                      form.watch("wantsBox") !== false) ||
+                    form.watch("password") !== form.watch("confirmPassword")
                   }
                 >
                   Save
