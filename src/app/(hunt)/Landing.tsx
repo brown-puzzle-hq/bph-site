@@ -26,12 +26,12 @@ export default function Landing() {
         style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "30%"]) }}
       />
       <motion.img
-        className="col-start-1 row-start-1 min-h-[125vh] object-cover"
+        className="absolute min-h-[125vh] object-cover"
         src="/home/3.png"
         style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]) }}
       />
       <motion.img
-        className="absolute bottom-[calc(max(57vw,64.125vh))] left-[calc(min(29vw,50vw-23.33vh))] z-[1] col-start-1 row-start-1 w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
+        className="absolute bottom-[calc(max(57vw,64.125vh))] left-[calc(min(29vw,50vw-23.33vh))] w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
         src="/home/Spotlight.png"
         animate={{
           rotate: [20, -20],
@@ -44,7 +44,7 @@ export default function Landing() {
         }}
       />
       <motion.img
-        className="absolute bottom-[calc(max(57vw,64.125vh))] right-[calc(min(29vw,50vw-23.33vh))] z-[1] col-start-1 row-start-1 w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
+        className="absolute bottom-[calc(max(57vw,64.125vh))] right-[calc(min(29vw,50vw-23.33vh))] w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
         src="/home/Spotlight.png"
         animate={{
           rotate: [-20, 20],
@@ -57,30 +57,30 @@ export default function Landing() {
         }}
       />
       <motion.img
-        className="z-[1] col-start-1 row-start-1 min-h-[125vh] object-cover"
+        className="absolute min-h-[125vh] object-cover"
         src="/home/2.png"
         style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "10%"]) }}
       />
       <motion.img
-        className="z-[2] col-start-1 row-start-1 min-h-[125vh] object-cover"
+        className="absolute min-h-[125vh] object-cover"
         src="/home/1.png"
       />
       <motion.img
-        className="z-[2] col-start-1 row-start-1 min-h-[125vh] object-cover"
+        className="absolute min-h-[125vh] object-cover"
         src="/home/Register.png"
         initial={{ opacity: 0 }}
         animate={controls}
         transition={{ duration: 0.1, ease: "easeInOut" }}
       />
       <Link
-        className="absolute bottom-[calc(max(73vw,81.11vh))] left-[calc(min(35vw,50vw-16.67vh))] right-[calc(min(35vw,50vw-16.67vh))] z-[2] col-start-1 row-start-1 h-[calc(max(4.5vw,5vh))]"
+        className="absolute bottom-[calc(max(73vw,81.11vh))] left-[calc(min(35vw,50vw-16.67vh))] right-[calc(min(35vw,50vw-16.67vh))] h-[calc(max(4.5vw,5vh))]"
         href="/register"
         onMouseEnter={() => controls.start({ opacity: 1 })}
         onMouseLeave={() => controls.start({ opacity: 0 })}
       />
-      <div className="absolute bottom-12 left-1/2 z-[2] grid w-full -translate-x-1/2 transform grid-cols-3 gap-4 p-4 text-center lg:bottom-16 lg:w-3/4 lg:grid-cols-1">
+      <div className="absolute bottom-8 left-1/2 grid w-full -translate-x-1/2 transform grid-cols-3 gap-x-4 gap-y-8 p-4 text-center lg:bottom-16 lg:w-3/4 lg:grid-cols-1">
         <div className="space-y-2">
-          <h1>What?</h1>
+          <h1 className="text-main-header">What?</h1>
           <p className="hidden md:block">
             The third annual puzzlehunt by current Brown and RISD students.
           </p>
@@ -92,7 +92,7 @@ export default function Landing() {
           </p>
         </div>
         <div className="space-y-2">
-          <h1>When?</h1>
+          <h1 className="text-main-header">When?</h1>
           <p className="hidden md:block">
             In-Person: {formatter.format(IN_PERSON.START_TIME)} –{" "}
             {formatter.format(IN_PERSON.END_TIME)}
@@ -123,7 +123,7 @@ export default function Landing() {
           </p>
         </div>
         <div className="space-y-2">
-          <h1>Who?</h1>
+          <h1 className="text-main-header">Who?</h1>
           <p>
             Anyone can come to campus.
             <span className="hidden md:inline">
