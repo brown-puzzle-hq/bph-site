@@ -60,7 +60,7 @@ export default async function DefaultHeader({
                   {puzzId === puzzleId ? (
                     <Triangle className="pointer-events-none absolute -bottom-5 left-1/2 z-0 w-2 -translate-x-1/2 fill-current" />
                   ) : (
-                    <span className="pointer-events-none absolute -bottom-7 left-1/2 z-10 w-max -translate-x-1/2 rounded bg-black px-2 py-1 text-xs text-main-text opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="pointer-events-none absolute -bottom-7 left-1/2 z-10 w-max -translate-x-1/2 rounded bg-tooltip-bg px-2 py-1 text-xs font-medium text-main-text opacity-0 group-hover:opacity-100">
                       {puzzId}
                     </span>
                   )}

@@ -23,4 +23,21 @@ export function SolutionBody(): JSX.Element | null {
   // return <div className="text-center">This is an example solution.</div>;
 }
 
-export const copyText = "Hello, world!";
+/**
+ * The `copyText` should provide a convenient text representation of the puzzle
+ * that can be copied to the clipboard. Set this to `null` to remove the copy button.
+ */
+export const copyText = null;
+
+/**
+ * The `partialSolutions` object is used to prompt solutions with significant progress.
+ * Each key is a partial solution, and the value is the prompt to be displayed. Keys must
+ * be in all caps, no spaces.
+ */
+export const partialSolutions: Record<string, string> = {};
+
+/**
+ * The `tasks` object is used for multi-step puzzles. When a certain answer is submitted,
+ * more content will be added to the puzzle body. Keys must be in all caps, no spaces.
+ */
+export const tasks: Record<string, JSX.Element> = {};
