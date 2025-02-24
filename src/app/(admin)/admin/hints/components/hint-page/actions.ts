@@ -4,7 +4,7 @@ import { db } from "~/server/db/index";
 import { and, eq } from "drizzle-orm";
 import { followUps, hints, teams } from "~/server/db/schema";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
-import { sendBotMessage, sendEmail } from "~/lib/utils";
+import { sendBotMessage, sendEmail, extractEmails } from "~/lib/utils";
 import {
   FollowUpEmailTemplate,
   FollowUpEmailTemplateProps,
@@ -126,7 +126,7 @@ export async function insertFollowUp({
       // So send an email
       if (members) {
         await sendEmail(
-          members,
+          extractEmails(members),
           `Follow-Up Hint [${puzzleName}]`,
           FollowUpEmailTemplate({
             teamDisplayName,

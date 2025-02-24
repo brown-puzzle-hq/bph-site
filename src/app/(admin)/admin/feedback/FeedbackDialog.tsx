@@ -30,7 +30,7 @@ export default function FeedbackDialog({
                 <strong>
                   <FormattedTime time={feedback.timestamp} />
                 </strong>
-                {showTeam && <p> ({feedback.teamId})</p>}
+                {showTeam && <p>({feedback.teamId})</p>}
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 pb-4">

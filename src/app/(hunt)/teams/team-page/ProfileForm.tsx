@@ -27,7 +27,29 @@ import { updateTeam } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import { IN_PERSON } from "~/hunt.config";
-import { serializeMembers, deserializeMembers, Member } from "~/lib/utils";
+
+export type Member = {
+  id?: number;
+  name: string | undefined;
+  email: string | undefined;
+};
+
+export function serializeMembers(members: Member[]): string {
+  return JSON.stringify(
+    members
+      .filter((person) => person.name || person.email)
+      .map((person) => [person.name, person.email]),
+  );
+}
+
+export function deserializeMembers(memberString: string): Member[] {
+  if (!memberString) return [];
+  return JSON.parse(memberString).map(([name, email]: [string, string]) => ({
+    id: undefined,
+    name,
+    email,
+  }));
+}
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
@@ -260,7 +282,6 @@ export function ProfileForm({
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            form.handleSubmit(onSubmit)();
           }
         }}
         className="w-full p-4 sm:w-2/3 lg:w-1/2 xl:w-1/3"

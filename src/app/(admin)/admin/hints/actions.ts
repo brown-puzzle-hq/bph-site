@@ -5,7 +5,7 @@ import { hints } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { sendEmail } from "~/lib/utils";
+import { sendEmail, extractEmails } from "~/lib/utils";
 import { HintEmailTemplate } from "~/lib/email-template";
 import { HintWithRelations } from "./components/hint-table/Columns";
 
@@ -74,7 +74,7 @@ export async function respondToHint(
 
   // Send email
   await sendEmail(
-    members,
+    extractEmails(members),
     `Hint Answered [${hint.puzzle.name}]`,
     HintEmailTemplate({ hint, response }),
   );

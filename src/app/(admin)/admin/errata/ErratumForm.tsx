@@ -78,7 +78,7 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
           </Button>
         ),
       });
-      form.reset();
+      form.setValue("description", "");
     }
   };
 

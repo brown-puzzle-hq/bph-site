@@ -7,11 +7,12 @@ import { EnlargedImage } from "~/components/ui/enlarged-component";
 
 import { queryDatabase } from "./actions";
 import CopyButton from "../solutions/CopyButton";
+import { extractEmails } from "~/lib/utils";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("emails");
   const [query, setQuery] = useState(
-    "SELECT * FROM bph_site_team\nWHERE wants_box = true;",
+    "SELECT * FROM bph_site_team\nWHERE interaction_type = 'remote'\nAND wants_box = true;",
   );
   const [result, setResult] = useState<any>(null);
 
@@ -35,12 +36,7 @@ export default function Page() {
         const parsedResult = JSON.parse(result);
         if (parsedResult?.rows?.[0]?.members) {
           return parsedResult.rows
-            .map((row: any) =>
-              JSON.parse(row.members)
-                .map(([_, email]: [string, string]) => email)
-                .filter(Boolean),
-            )
-            .flat()
+            .flatMap((row: any) => extractEmails(row.members))
             .join("\n");
         }
         return "No emails found.";

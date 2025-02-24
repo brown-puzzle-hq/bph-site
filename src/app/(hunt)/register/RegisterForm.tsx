@@ -26,7 +26,20 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { IN_PERSON } from "~/hunt.config";
-import { serializeMembers, Member } from "~/lib/utils";
+
+export type Member = {
+  id?: number;
+  name: string | undefined;
+  email: string | undefined;
+};
+
+export function serializeMembers(members: Member[]): string {
+  return JSON.stringify(
+    members
+      .filter((person) => person.name || person.email)
+      .map((person) => [person.name, person.email]),
+  );
+}
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
