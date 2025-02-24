@@ -24,7 +24,7 @@ type Props = {
 
 export function HamburgerMenu({ leftMenuItems, rightMenuItems }: Props) {
   return (
-    <nav className="fixed z-50 flex w-full items-center justify-between bg-inherit p-[10px] md:p-4">
+    <nav className="fixed z-50 flex w-full items-center justify-between bg-nav-bg bg-opacity-30 p-[10px] backdrop-blur-md backdrop-filter md:p-4">
       {/* Left menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
