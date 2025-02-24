@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
 import { HuntHamburgerMenu } from "./HuntHamburgerMenu";
+import { HuntTopNavSpacer } from "../nav/HuntTopNavSpacer";
 
 export default async function RootLayout({
   children,
@@ -14,7 +15,7 @@ export default async function RootLayout({
       </div>
 
       {/* Navbar spacer */}
-      <div className="min-h-[56px]" />
+      <HuntTopNavSpacer />
 
       <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
       <Toaster />
