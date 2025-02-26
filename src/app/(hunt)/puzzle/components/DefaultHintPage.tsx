@@ -2,8 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "~/server/db";
-import { eq, and } from "drizzle-orm";
-import { guesses, hints, puzzles } from "~/server/db/schema";
+import { eq, and, asc } from "drizzle-orm";
+import { followUps, guesses, hints, puzzles } from "~/server/db/schema";
 import { canViewPuzzle, getNumberOfHintsRemaining } from "~/hunt.config";
 import PreviousHintTable from "~/app/(admin)/admin/hints/components/hint-page/PreviousHintTable";
 
@@ -53,15 +53,18 @@ export default async function DefaultHintPage({
       id: true,
       request: true,
       response: true,
+      requestTime: true,
     },
     with: {
       team: { columns: { id: true, displayName: true, members: true } },
       claimer: { columns: { id: true, displayName: true } },
       followUps: {
-        columns: { id: true, message: true, userId: true },
+        columns: { id: true, message: true, userId: true, time: true },
         with: { user: { columns: { id: true, displayName: true } } },
+        orderBy: [asc(followUps.time)],
       },
     },
+    orderBy: [asc(hints.requestTime)],
   });
 
   const hintsRemaining = await getNumberOfHintsRemaining(

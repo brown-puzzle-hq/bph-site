@@ -38,7 +38,7 @@ export function TeamTable<TData, TValue>({
   const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const pageSize = 10;
+  const pageSize = 100;
 
   const table = useReactTable({
     data,
@@ -66,7 +66,7 @@ export function TeamTable<TData, TValue>({
   });
 
   return (
-    <div className="px-4">
+    <div className="mb-6 px-4">
       <div className="flex items-center justify-between space-x-2 pb-2">
         <Input
           placeholder="Filter teams..."

@@ -102,29 +102,6 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
     },
   },
   {
-    accessorKey: "startTime",
-    header: ({ column }) => (
-      <div className="flex w-32 space-x-2">
-        <p>Start Time</p>
-        {column.getIsSorted() === "asc" ? (
-          <ArrowUp className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === "desc" ? (
-          <ArrowDown className="ml-2 h-4 w-4" />
-        ) : (
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        )}
-      </div>
-    ),
-    cell: ({ row }) => {
-      const time: Date = row.getValue("startTime");
-      return (
-        <div className="w-32 truncate font-medium">
-          <FormattedTime time={time} />
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "finishTime",
     header: ({ column }) => (
       <div className="flex w-32 space-x-2">

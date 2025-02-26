@@ -137,7 +137,7 @@ export async function insertFollowUp({
         );
       }
       // Otherwise, notify admin on Discord that there is a follow-up
-      else {
+      else if (message !== "[Claimed]") {
         const hintMessage = `🙏 **Hint** [follow-up](https://www.brownpuzzlehunt.com/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleName}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${message} <@&1310029428864057504>`;
         await sendBotMessage(hintMessage);
       }

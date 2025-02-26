@@ -34,6 +34,8 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
         padding: "10px",
         borderLeft: "4px solid #ccc",
         background: "#f9f9f9",
+        whiteSpace: "pre-wrap",
+        wordWrap: "break-word",
       }}
     >
       {hint.request}
@@ -48,6 +50,8 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
         padding: "10px",
         borderLeft: "4px solid #4caf50",
         background: "#f1f8e9",
+        whiteSpace: "pre-wrap",
+        wordWrap: "break-word",
       }}
     >
       {response}
@@ -107,6 +111,8 @@ export const FollowUpEmailTemplate: React.FC<
         padding: "10px",
         borderLeft: "4px solid #ccc",
         background: "#f9f9f9",
+        whiteSpace: "pre-wrap",
+        wordWrap: "break-word",
       }}
     >
       {message}

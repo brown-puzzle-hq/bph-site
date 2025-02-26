@@ -44,7 +44,7 @@ export function HintTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([
     { id: "claimer", desc: true },
   ]);
-  const pageSize = 10;
+  const pageSize = 100;
 
   const table = useReactTable({
     data,
@@ -79,82 +79,38 @@ export function HintTable<TData, TValue>({
         const statusB: string = rowB.getValue("status");
         const followUpsA: FollowUpHint[] | null = rowA.getValue("followUps");
         const followUpsB: FollowUpHint[] | null = rowB.getValue("followUps");
-        const hasFollowUpA =
-          followUpsA &&
-          followUpsA[followUpsA.length - 1]?.userId === rowA.getValue("teamId");
-        const hasFollowUpB =
-          followUpsB &&
-          followUpsB[followUpsB.length - 1]?.userId === rowB.getValue("teamId");
         const dateA: Date = new Date(rowA.getValue("requestTime"));
         const dateB: Date = new Date(rowB.getValue("requestTime"));
-        const FIFO = dateA <= dateB ? 1 : -1;
 
-        // Unclaimed hints are only below the user's claimed and unanswered hints
-        // Follow up hints are treated the same as unanswered hints
-        if (claimerA === null) {
-          if (claimerB === null) return FIFO;
-          if (
-            claimerB.id === userId &&
-            (statusB === "no_response" || hasFollowUpB)
-          )
-            return -1;
-          return 1;
-        }
-        if (claimerB === null) {
-          if (
-            claimerA.id === userId &&
-            (statusA === "no_response" || hasFollowUpA)
-          )
-            return 1;
-          return -1;
-        }
+        const hasFollowUpA = !!(
+          followUpsA &&
+          followUpsA[followUpsA.length - 1]?.userId === rowA.getValue("teamId")
+        );
+        const hasFollowUpB = !!(
+          followUpsB &&
+          followUpsB[followUpsB.length - 1]?.userId === rowB.getValue("teamId")
+        );
 
-        // The user's claimed follow up hints are only below completely unanswered hints
-        if (hasFollowUpA && claimerA.id === userId && statusA !== "refunded") {
-          if (hasFollowUpB && claimerB.id === userId && statusB !== "refunded")
-            return FIFO;
-          return claimerB.id === userId && statusB === "no_response" ? -1 : 1;
-        }
-        if (hasFollowUpB && claimerB.id === userId && statusB !== "refunded") {
-          return claimerA.id === userId && statusA === "no_response" ? 1 : -1;
-        }
+        const getPriority = (
+          claimerId: string | undefined,
+          status: string,
+          hasFollowUp: boolean,
+        ): number => {
+          if (claimerId === userId && status === "no_response") return 0; // Unanswered for current user
+          if (claimerId === userId && hasFollowUp) return 1; // Follow-up for current user
+          if (!claimerId) return 2; // Unclaimed
+          if (hasFollowUp) return 3; // Follow-up for another user
+          if (status === "no_response") return 4; // Unanswered for another user
+          if (claimerId !== userId && status === "answered") return 5; // Answered by another user
+          if (claimerId !== userId) return 6; // Refunded by another user
+          if (status === "refunded") return 7; // Refunded by current user
+          return 8; // Answered by current user
+        };
 
-        // Refundable hints are at the very bottom
-        if (statusA === "answered") {
-          if (claimerA.id === userId)
-            return statusB === "answered" && claimerB.id === userId ? FIFO : -1;
-          else if (statusB === "answered")
-            return claimerB.id === userId ? 1 : FIFO;
-        }
-        if (statusB === "answered") {
-          if (claimerB.id === userId) return 1;
-        }
+        const priorityA = getPriority(claimerA?.id, statusA, hasFollowUpA);
+        const priorityB = getPriority(claimerB?.id, statusB, hasFollowUpB);
 
-        // Refunded hints are right above them
-        if (statusA === "refunded") {
-          return statusB === "refunded" ? FIFO : -1;
-        }
-        if (statusB === "refunded") return 1;
-
-        // Answered hints are sorted by who answered them
-        if (statusA === "answered") {
-          if (statusB === "answered") {
-            if (claimerA.id === userId)
-              return claimerB.id === userId ? FIFO : 1;
-            return claimerB.id === userId ? -1 : FIFO;
-          }
-          return -1;
-        }
-        if (statusB === "answered") {
-          return 1;
-        }
-
-        // Remaining hints have no response, show user's claimed hints first
-        if (claimerA.id === userId) {
-          return claimerB.id === userId ? FIFO : 1;
-        } else {
-          return claimerB.id === userId ? -1 : FIFO;
-        }
+        return priorityB - priorityA || dateA.getTime() - dateB.getTime();
       },
     },
     pageCount: Math.ceil(data.length / pageSize),
@@ -163,7 +119,7 @@ export function HintTable<TData, TValue>({
   if (!userId) return null;
 
   return (
-    <div className="px-4">
+    <div className="mb-6 px-4">
       <div className="flex items-center justify-between space-x-2 pb-2">
         <Input
           placeholder="Filter hints..."

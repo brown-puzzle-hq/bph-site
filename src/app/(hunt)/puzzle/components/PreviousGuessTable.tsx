@@ -11,9 +11,6 @@ export default function PreviousGuessTable({
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
 }) {
-  const maxLength = Math.max(
-    ...previousGuesses.map((guess) => guess.guess.length),
-  );
   return (
     <div>
       <Table className="table-fixed md:table-auto">

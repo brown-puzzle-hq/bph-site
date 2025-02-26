@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, EyeOff } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
@@ -45,10 +45,12 @@ type PreviousHints = {
     id: string;
     displayName: string;
   } | null;
+  requestTime: Date;
   followUps: {
     id: number;
     message: string;
     user: { id: string; displayName: string };
+    time: Date;
   }[];
 }[];
 
@@ -107,6 +109,7 @@ export default function PreviousHintTable({
           claimer: null,
           request,
           response: null,
+          requestTime: new Date(),
           followUps: [],
         },
       ]);
@@ -200,13 +203,14 @@ export default function PreviousHintTable({
                     displayName: session!.user!.displayName,
                     id: session!.user!.id!,
                   },
+                  time: new Date(),
                 }),
               }
             : hint,
         ),
       );
     });
-    setFollowUp(null);
+    if (teamSide || message !== "[Claimed]") setFollowUp(null);
     // TODO: is there a better option than passing a ton of arguments?
     // wondering if we should have centralized hint types, same goes for inserting/emailing normal hint responses
     // Also might be more efficient to only pass team members once instead of storing in each hint
@@ -456,7 +460,7 @@ export default function PreviousHintTable({
                     />
                   </div>
                 ) : (
-                  hint.request
+                  <div className="whitespace-pre-wrap">{hint.request}</div>
                 )}
               </TableCell>
             </TableRow>
@@ -490,28 +494,33 @@ export default function PreviousHintTable({
                       {teamSide ? "Admin" : hint.claimer?.displayName}
                     </p>
                     <div className="flex space-x-2">
-                      {/* Follow-up button */}
-                      {followUp?.hintId !== hint.id ? (
-                        <button
-                          onClick={() => {
-                            setEdit(null);
-                            // Hide other follow-ups under the same hint
-                            setHiddenFollowUps((prev) =>
-                              prev.filter((prevId) => prevId !== hint.id),
-                            );
-                            setFollowUp({ hintId: hint.id, message: "" });
-                          }}
-                          className="text-link hover:underline"
-                        >
-                          Reply
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setFollowUp(null)}
-                          className="text-link hover:underline"
-                        >
-                          Cancel
-                        </button>
+                      {/* Follow-up button, only show if collapsed */}
+                      {(!hint.followUps.length ||
+                        hiddenFollowUps.includes(hint.id)) && (
+                        <div>
+                          {followUp?.hintId !== hint.id ? (
+                            <button
+                              onClick={() => {
+                                setEdit(null);
+                                // Hide other follow-ups under the same hint
+                                setHiddenFollowUps((prev) =>
+                                  prev.filter((prevId) => prevId !== hint.id),
+                                );
+                                setFollowUp({ hintId: hint.id, message: "" });
+                              }}
+                              className="text-link hover:underline"
+                            >
+                              Reply
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => setFollowUp(null)}
+                              className="text-link hover:underline"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
                       )}
                       {/* If the response was made by the current user, allow edits */}
                       {hint.claimer?.id === session?.user?.id && (
@@ -571,7 +580,7 @@ export default function PreviousHintTable({
                         />
                       </div>
                     ) : (
-                      hint.response
+                      <div className="whitespace-pre-wrap">{hint.response}</div>
                     )}
                   </div>
                 </TableCell>
@@ -580,82 +589,144 @@ export default function PreviousHintTable({
 
             {/* Follow-ups row */}
             {!hiddenFollowUps.includes(hint.id) &&
-              hint.followUps.map((followUp) => (
-                <TableRow
-                  key={`${followUp.id}`}
-                  className="border-0 hover:bg-inherit"
-                >
-                  <TableCell className="relative">
-                    <div className="absolute inset-y-0 w-1 bg-blue-200"></div>
-                  </TableCell>
-                  <TableCell className="break-words pr-5">
-                    {/* Top section with userId and edit button */}
-                    <div className="flex justify-between">
-                      {followUp.user.id === hint.team.id ? (
-                        <p className="pb-1 font-bold">
-                          {teamSide ? "Team" : teamDisplayName}
-                        </p>
-                      ) : (
-                        <p className="pb-1 font-bold">
-                          {teamSide ? "Admin" : followUp.user.displayName}
-                        </p>
-                      )}
-                      {/* If the previous hint follow-up was made by user, allow edits */}
-                      {followUp.user.id === session?.user?.id && (
-                        <div>
-                          {edit?.type === "follow-up" &&
-                          edit.id === followUp.id ? (
-                            <button
-                              onClick={() =>
-                                handleSubmitEdit(
-                                  followUp.id,
-                                  edit.value,
-                                  "follow-up",
-                                )
-                              }
-                              className="text-link hover:underline"
-                            >
-                              Save
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                setFollowUp(null);
-                                setEdit({
-                                  id: followUp.id,
-                                  value: followUp.message,
-                                  type: "follow-up",
-                                });
+              hint.followUps
+                .filter(
+                  (hiddenFollowUp) =>
+                    !teamSide || hiddenFollowUp.message !== "[Claimed]",
+                )
+                .map((hiddenFollowUp, i, row) => (
+                  <TableRow
+                    key={`${hiddenFollowUp.id}`}
+                    className="border-0 hover:bg-inherit"
+                  >
+                    <TableCell className="relative">
+                      <div className="absolute inset-y-0 w-1 bg-blue-200"></div>
+                    </TableCell>
+                    <TableCell className="break-words pr-5">
+                      {/* Top section with userId and edit button */}
+                      <div className="flex items-center justify-between">
+                        {hiddenFollowUp.user.id === hint.team.id ? (
+                          <p className="pb-1 font-bold">
+                            {teamSide ? "Team" : teamDisplayName}
+                          </p>
+                        ) : (
+                          <p className="flex items-center pb-1 font-bold">
+                            {teamSide
+                              ? "Admin"
+                              : hiddenFollowUp.user.displayName}
+                            {!teamSide &&
+                              hiddenFollowUp.message === "[Claimed]" && (
+                                <div className="group relative ml-1.5 font-medium">
+                                  <EyeOff className="h-4 cursor-help" />
+                                  <span className="pointer-events-none absolute -bottom-7 left-1/2 z-10 w-max -translate-x-1/2 rounded bg-black px-2 py-1 text-xs text-white opacity-0 group-hover:opacity-100">
+                                    <div className="absolute -top-1 left-1/2 h-0 w-0 -translate-x-1/2 border-b-4 border-l-4 border-r-4 border-transparent border-b-black" />
+                                    Visible to admins only
+                                  </span>
+                                </div>
+                              )}
+                          </p>
+                        )}
+                        <div className="flex space-x-2">
+                          {i + 1 === row.length &&
+                            !teamSide &&
+                            hiddenFollowUp.user.id === hint.team.id && (
+                              <button
+                                onClick={() =>
+                                  // TODO: kinda jank to use empty team members as signal to not send email
+                                  handleSubmitFollowUp(hint.id, "[Claimed]", "")
+                                }
+                                className="text-link hover:underline"
+                              >
+                                Claim
+                              </button>
+                            )}
+                          {i + 1 === row.length &&
+                            (followUp?.hintId !== hint.id ? (
+                              <button
+                                onClick={() => {
+                                  setEdit(null);
+                                  // Hide other follow-ups under the same hint
+                                  setHiddenFollowUps((prev) =>
+                                    prev.filter((prevId) => prevId !== hint.id),
+                                  );
+                                  setFollowUp({
+                                    hintId: hint.id,
+                                    message: "",
+                                  });
+                                }}
+                                className="text-link hover:underline"
+                              >
+                                Reply
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => setFollowUp(null)}
+                                className="text-link hover:underline"
+                              >
+                                Cancel
+                              </button>
+                            ))}
+                          {/* If the previous hint follow-up was made by user, allow edits */}
+                          {hiddenFollowUp.user.id === session?.user?.id &&
+                            hiddenFollowUp.message !== "[Claimed]" && (
+                              <div>
+                                {edit?.type === "follow-up" &&
+                                edit.id === hiddenFollowUp.id ? (
+                                  <button
+                                    onClick={() =>
+                                      handleSubmitEdit(
+                                        hiddenFollowUp.id,
+                                        edit.value,
+                                        "follow-up",
+                                      )
+                                    }
+                                    className="text-link hover:underline"
+                                  >
+                                    Save
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => {
+                                      setFollowUp(null);
+                                      setEdit({
+                                        id: hiddenFollowUp.id,
+                                        value: hiddenFollowUp.message,
+                                        type: "follow-up",
+                                      });
+                                    }}
+                                    className="text-link hover:underline"
+                                  >
+                                    Edit
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      {/* Botton section with follow-up message */}
+                      <div>
+                        {edit?.type === "follow-up" &&
+                        edit.id === hiddenFollowUp.id ? (
+                          <div className="pt-2">
+                            <AutosizeTextarea
+                              maxHeight={500}
+                              className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
+                              value={edit.value}
+                              onChange={(e) => {
+                                if (!edit) return;
+                                setEdit({ ...edit, value: e.target.value });
                               }}
-                              className="text-link hover:underline"
-                            >
-                              Edit
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    {/* Botton section with follow-up message */}
-                    <div>
-                      {edit?.type === "follow-up" && edit.id === followUp.id ? (
-                        <div className="pt-2">
-                          <AutosizeTextarea
-                            maxHeight={500}
-                            className="resize-none bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
-                            value={edit.value}
-                            onChange={(e) => {
-                              if (!edit) return;
-                              setEdit({ ...edit, value: e.target.value });
-                            }}
-                          />
-                        </div>
-                      ) : (
-                        followUp.message
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                            />
+                          </div>
+                        ) : (
+                          <div className="whitespace-pre-wrap">
+                            {hiddenFollowUp.message}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
 
             {/* New follow-up request row */}
             {followUp !== null && followUp.hintId === hint.id && (
@@ -665,7 +736,7 @@ export default function PreviousHintTable({
                 className="border-0 hover:bg-inherit"
               >
                 <TableCell className="relative">
-                  <div className="absolute inset-y-0 w-1 bg-gray-200"></div>
+                  <div className="absolute inset-y-0 w-1 bg-blue-200"></div>
                 </TableCell>
                 <TableCell className="break-words pr-5">
                   <p className="font-bold">Follow-Up</p>

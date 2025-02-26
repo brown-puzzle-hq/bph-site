@@ -82,7 +82,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     else if (status == "answered") {
       return followUps[followUps.length - 1]?.userId === teamId ? (
         <button
-          className="rounded-md border border-gray-600 text-gray-600"
+          className="rounded-md border border-yellow-600 text-yellow-600"
           onClick={() =>
             (window.location.href = `/admin/hints/${hintId}?reply=true`)
           }
@@ -103,7 +103,18 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     if (status == "no_response") {
       return <p>Claimed</p>;
     } else if (status == "answered") {
-      return <p>Answered</p>;
+      return followUps[followUps.length - 1]?.userId === teamId ? (
+        <button
+          className="rounded-md border border-gray-600 text-gray-600"
+          onClick={() =>
+            (window.location.href = `/admin/hints/${hintId}?reply=true`)
+          }
+        >
+          <p className="px-1">REPLY</p>
+        </button>
+      ) : (
+        <p>Answered</p>
+      );
     }
   }
 }
