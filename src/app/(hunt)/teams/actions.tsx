@@ -45,7 +45,7 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
 
   // Update the password
   if (
-    session?.user?.role === "admin" &&
+    (session?.user?.role === "admin" || session?.user?.id === id) &&
     teamProperties.password &&
     teamProperties.password.length >= 8
   ) {
