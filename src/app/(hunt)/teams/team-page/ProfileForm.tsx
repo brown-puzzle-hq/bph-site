@@ -647,45 +647,46 @@ export function ProfileForm({
           </div>
         )}
 
-        {session?.user?.role === "admin" ||
-          (session?.user?.id === id && (
-            <div className="mb-8 space-y-8">
-              {/* Role field  */}
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem className="mb-8 space-y-2">
-                    <FormLabel className="text-main-header">
-                      Team permissions
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="flex flex-col space-y-1"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="user" />
-                          <FormLabel className="font-normal">User</FormLabel>
+        {/* Team permissions */}
+        <div className="mb-8 space-y-8">
+          {session?.user?.role === "admin" && (
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="mb-8 space-y-2">
+                  <FormLabel className="text-main-header">
+                    Team permissions
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      {[
+                        { value: "user", label: "User" },
+                        { value: "admin", label: "Admin" },
+                        { value: "testsolver", label: "Testsolver" },
+                      ].map(({ value, label }) => (
+                        <FormItem
+                          key={value}
+                          className="flex items-center space-x-3"
+                        >
+                          <RadioGroupItem value={value} />
+                          <FormLabel className="font-normal">{label}</FormLabel>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="admin" />
-                          <FormLabel className="font-normal">Admin</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="testsolver" />
-                          <FormLabel className="font-normal">
-                            Testsolver
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )}
 
-              {/* Password fields */}
+          {/* Password fields */}
+          {(session?.user?.role === "admin" || session?.user?.id === id) && (
+            <div className="space-y-6">
               <FormField
                 control={form.control}
                 name="password"
@@ -704,7 +705,6 @@ export function ProfileForm({
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -721,8 +721,8 @@ export function ProfileForm({
                 )}
               />
             </div>
-          ))}
-
+          )}
+        </div>
         <div
           className={`fixed bottom-3 left-1/2 z-10 flex w-full min-w-[450px] -translate-x-1/2 transform transition-transform duration-300 md:w-2/3 lg:w-1/3 ${
             isDirty() ? "translate-y-0" : "translate-y-[5rem]"
