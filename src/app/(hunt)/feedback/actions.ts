@@ -1,8 +1,7 @@
 "use server";
 import { auth } from "@/auth";
-import { feedback, teams } from "@/db/schema";
+import { feedback } from "@/db/schema";
 import { db } from "@/db/index";
-import { eq } from "drizzle-orm";
 import { sendBotMessage } from "~/lib/utils";
 
 export async function insertFeedback(description: string) {
@@ -10,18 +9,14 @@ export async function insertFeedback(description: string) {
   if (!session?.user?.id) {
     return { error: "Not authenticated, please ensure you're logged in." };
   }
+  const teamId = session.user.id;
 
   await db.insert(feedback).values({
-    teamId: session.user.id,
+    teamId,
     description,
   });
 
-  const user = await db.query.teams.findFirst({
-    where: eq(teams.id, session.user.id),
-  });
-
-  const feedbackMessage = `📝 **Feedback** by [${user?.id}](https://www.brownpuzzlehunt.com/teams/${user?.id}): ${description}`;
+  const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}): ${description}`;
   await sendBotMessage(feedbackMessage);
-
   return { error: null };
 }

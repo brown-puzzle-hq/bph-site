@@ -1,8 +1,8 @@
 import DefaultSolutionPage from "@/puzzle/components/DefaultSolutionPage";
-import { puzzleId, SolutionBody } from "../data";
+import { puzzleId, solutionBody } from "../data";
 
 export default async function Page() {
   return (
-    <DefaultSolutionPage puzzleId={puzzleId} solutionBody={SolutionBody()} />
+    <DefaultSolutionPage puzzleId={puzzleId} solutionBody={solutionBody} />
   );
 }

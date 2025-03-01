@@ -7,26 +7,28 @@
 export const puzzleId = "example";
 
 /**
- * The `PuzzleBody` renders above the guess submission form. Put flavor text, images,
+ * The `puzzleBody` renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export function PuzzleBody(): JSX.Element {
-  return <div className="text-center">This is the body of the puzzle.</div>;
-}
+export const puzzleBody = (
+  <div className="text-center">This is the body of the puzzle.</div>
+);
 
 /**
- * The `SolutionBody` renders in the solution page.
- * If there are no solutions available, return null.
+ * The `solutionBody` renders in the solution page.
+ * If there are no solutions available, set it null.
  */
-export function SolutionBody(): JSX.Element | null {
-  return <div className="text-center">This is an example solution.</div>;
-}
+export const solutionBody = (
+  <div className="text-center">This is an example solution.</div>
+);
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = "Hello, world!";
+export const copyText = `1\t2\t3
+4\t5\t6
+7\t8\t9`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

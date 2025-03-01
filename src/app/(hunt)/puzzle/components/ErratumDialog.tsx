@@ -13,11 +13,11 @@ export default function ErratumDialog({
         {errataList.map((e, index) => (
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             {index != 0 && <br />}
-            <p className="whitespace-normal">
+            <p className="whitespace-pre-wrap">
               <strong>
                 Erratum <FormattedTime time={e.timestamp} />
               </strong>
-              : <div className="whitespace-pre-wrap">{e.description}</div>
+              : {e.description}
             </p>
           </AlertDescription>
         ))}

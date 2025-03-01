@@ -8,9 +8,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { db } from "~/server/db";
-import { sql } from "drizzle-orm";
+import { count, max, sql } from "drizzle-orm";
 import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
-import { teams, guesses } from "~/server/db/schema";
+import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import { FormattedTime } from "~/lib/time";
 export const fetchCache = "force-no-store";
@@ -19,8 +19,8 @@ type LeaderboardItem = {
   id: string;
   displayName: string;
   finishTime: Date | null;
-  correctGuesses: number;
-  lastCorrectGuessTime: Date;
+  solves: number;
+  lastSolveTime: Date | null;
 };
 
 function Leaderboard({ data }: { data: LeaderboardItem[] }) {
@@ -43,9 +43,7 @@ function Leaderboard({ data }: { data: LeaderboardItem[] }) {
             <TableCell className="w-[20em] break-all">
               {row.displayName}
             </TableCell>
-            <TableCell className="text-center">
-              {row.correctGuesses ?? 0}
-            </TableCell>
+            <TableCell className="text-center">{row.solves ?? 0}</TableCell>
             <TableCell>
               <FormattedTime time={row.finishTime} />
             </TableCell>
@@ -66,13 +64,8 @@ const inPersonTeams: LeaderboardItem[] = await db
           WHEN ${teams.finishTime} > ${IN_PERSON.END_TIME} THEN NULL
           ELSE ${teams.finishTime}
         END`.as("finish_time"),
-    correctGuesses:
-      sql<number>`COUNT(CASE WHEN ${guesses.isCorrect} = true THEN 1 END)`.as(
-        "correct_guesses",
-      ),
-    lastCorrectGuessTime: sql<Date>`MAX(${guesses.submitTime})`.as(
-      "last_correct_guess_time",
-    ),
+    solves: count(solves).as("solves"),
+    lastSolveTime: max(solves.solveTime).as("last_solve_time"),
   })
   .from(teams)
   // Filter out admin teams and teams who registered after the hunt end
@@ -83,21 +76,14 @@ const inPersonTeams: LeaderboardItem[] = await db
       lt(teams.createTime, IN_PERSON.END_TIME),
     ),
   )
-  // Get guesses that were submitted before the hunt end
-  // This is used for `correctGuesses` and `lastCorrectGuessTime`
+  // Get solves that were submitted before the hunt end
+  // This is used for `solves` and `lastSolveTime`
   .leftJoin(
-    guesses,
-    and(
-      eq(guesses.teamId, teams.id),
-      lt(guesses.submitTime, IN_PERSON.END_TIME),
-    ),
+    solves,
+    and(eq(solves.teamId, teams.id), lt(solves.solveTime, IN_PERSON.END_TIME)),
   )
   .groupBy(teams.id, teams.displayName, teams.finishTime)
-  .orderBy(
-    asc(teams.finishTime),
-    desc(sql`"correct_guesses"`),
-    asc(sql`"last_correct_guess_time"`),
-  );
+  .orderBy(asc(sql`finish_time`), desc(sql`solves`), asc(sql`last_solve_time`));
 
 const remoteTeams: LeaderboardItem[] = await db
   .select({
@@ -109,13 +95,8 @@ const remoteTeams: LeaderboardItem[] = await db
           WHEN ${teams.finishTime} > ${REMOTE.END_TIME} THEN NULL
           ELSE ${teams.finishTime}
         END`.as("finish_time"),
-    correctGuesses:
-      sql<number>`COUNT(CASE WHEN ${guesses.isCorrect} = true THEN 1 END)`.as(
-        "correct_guesses",
-      ),
-    lastCorrectGuessTime: sql<Date>`MAX(${guesses.submitTime})`.as(
-      "last_correct_guess_time",
-    ),
+    solves: count(solves).as("solves"),
+    lastSolveTime: max(solves.solveTime).as("last_solve_time"),
   })
   .from(teams)
   // Filter out admin teams and teams who registered after the hunt end
@@ -126,22 +107,14 @@ const remoteTeams: LeaderboardItem[] = await db
       lt(teams.createTime, REMOTE.END_TIME),
     ),
   )
-  // Get guesses that were submitted before the hunt end
-  // This is used for `correctGuesses` and `lastCorrectGuessTime`
+  // Get solves that were submitted before the hunt end
+  // This is used for `solves` and `lastSolveTime`
   .leftJoin(
-    guesses,
-    and(
-      eq(guesses.teamId, teams.id),
-      lt(guesses.submitTime, REMOTE.END_TIME),
-      eq(teams.interactionMode, "remote"),
-    ),
+    solves,
+    and(eq(solves.teamId, teams.id), lt(solves.solveTime, REMOTE.END_TIME)),
   )
-  .groupBy(teams.id, teams.displayName, teams.finishTime)
-  .orderBy(
-    asc(teams.finishTime),
-    desc(sql`"correct_guesses"`),
-    asc(sql`"last_correct_guess_time"`),
-  );
+  .groupBy(teams.id, teams.displayName, teams.finishTime, teams.createTime)
+  .orderBy(asc(sql`finish_time`), desc(sql`solves`), asc(sql`last_solve_time`));
 
 export default async function Home() {
   return (

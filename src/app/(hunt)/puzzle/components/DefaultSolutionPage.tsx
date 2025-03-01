@@ -3,7 +3,7 @@ import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { puzzles } from "~/server/db/schema";
-import { canViewSolution } from "~/hunt.config";
+import { canViewSolution } from "../actions";
 
 export default async function DefaultSolutionPage({
   puzzleId,
@@ -23,11 +23,11 @@ export default async function DefaultSolutionPage({
   // Check if user can view solution
   const session = await auth();
   switch (await canViewSolution(puzzleId, session)) {
-    case "SUCCESS":
+    case "success":
       break;
-    case "NOT AUTHENTICATED":
+    case "not_authenticated":
       redirect("/login");
-    case "NOT AUTHORIZED":
+    case "not_authorized":
       redirect("/puzzle");
   }
 

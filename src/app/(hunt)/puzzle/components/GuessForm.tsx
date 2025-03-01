@@ -14,8 +14,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-
-import { insertGuess } from "../actions";
+import { handleGuess } from "../actions";
+import { useTransition } from "react";
 
 function sanitizeAnswer(answer: any) {
   return typeof answer === "string"
@@ -36,11 +36,13 @@ const formSchema = z.object({
 type FormProps = {
   puzzleId: string;
   numberOfGuessesLeft: number;
+  isSolved: boolean;
 };
 
 export default function GuessForm({
   puzzleId,
   numberOfGuessesLeft,
+  isSolved,
 }: FormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,15 +52,18 @@ export default function GuessForm({
     },
   });
 
+  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setError(null);
-    const result = await insertGuess(puzzleId, data.guess);
-    if (result && result.error) {
-      setError(result.error);
-    }
-    form.reset();
+    startTransition(async () => {
+      setError(null);
+      const result = await handleGuess(puzzleId, data.guess);
+      if (result && result.error) {
+        setError(result.error);
+      }
+      form.reset();
+    });
   };
 
   return (
@@ -83,20 +88,40 @@ export default function GuessForm({
                     setError(null);
                   }}
                   className="bg-secondary-bg text-secondary-accent"
+                  disabled={isSolved || !numberOfGuessesLeft || isPending}
+                  autoComplete="off"
                 />
               </FormControl>
-              <FormDescription className="flex justify-between">
-                {numberOfGuessesLeft}{" "}
-                {numberOfGuessesLeft === 1 ? "guess" : "guesses"} left
-              </FormDescription>
-              <FormMessage className="text-error">{error}</FormMessage>
+              <div className="flex justify-between">
+                <FormDescription
+                  className={
+                    isSolved
+                      ? "text-opacity-50"
+                      : !numberOfGuessesLeft
+                        ? "font-medium text-error"
+                        : ""
+                  }
+                >
+                  {isSolved
+                    ? "This puzzle has been solved."
+                    : numberOfGuessesLeft
+                      ? `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
+                      : "You have no guesses left. Please contact HQ for help."}
+                </FormDescription>
+                <FormMessage className="text-error">{error}</FormMessage>
+              </div>
             </FormItem>
           )}
         />
         <Button
           className="hover:bg-otherblue"
           type="submit"
-          disabled={!form.watch("guess")}
+          disabled={
+            !form.watch("guess") ||
+            isSolved ||
+            !numberOfGuessesLeft ||
+            isPending
+          }
         >
           Submit
         </Button>

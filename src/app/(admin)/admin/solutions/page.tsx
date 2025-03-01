@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { getNextUnlocks } from "~/hunt.config";
+import { PUZZLE_UNLOCK_MAP } from "~/hunt.config";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
@@ -24,7 +24,7 @@ export default async function Home() {
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
       const nextUnlocks = await Promise.all(
-        getNextUnlocks(puzzle.id).map(async (nextUnlock) => ({
+        (PUZZLE_UNLOCK_MAP[puzzle.id] || []).map(async (nextUnlock) => ({
           id: nextUnlock,
           name:
             (
@@ -45,8 +45,8 @@ export default async function Home() {
         const module = await import(
           `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
         );
-        puzzleBody = !!module.PuzzleBody();
-        solutionBody = !!module.SolutionBody();
+        puzzleBody = !!module.puzzleBody;
+        solutionBody = !!module.solutionBody;
         copyText = module.copyText;
       } catch (e) {
         try {
@@ -54,12 +54,12 @@ export default async function Home() {
           const module = await import(
             `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
           );
-          puzzleBody = !!module.PuzzleBody();
-          solutionBody = !!module.SolutionBody();
+          puzzleBody = !!module.puzzleBody;
+          solutionBody = !!module.solutionBody;
           copyText = module.copyText;
         } catch (e) {
-          puzzleBody = false;
-          solutionBody = false;
+          puzzleBody = null;
+          solutionBody = null;
           copyText = null;
         }
       }

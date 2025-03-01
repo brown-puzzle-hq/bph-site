@@ -1,12 +1,13 @@
 import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
-import { guesses, errata } from "~/server/db/schema";
+import { puzzles, solves, guesses, errata } from "~/server/db/schema";
 import { redirect } from "next/navigation";
 import PreviousGuessTable from "./PreviousGuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
-import { canViewPuzzle, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import { canViewPuzzle } from "../actions";
+import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 import CopyButton from "./CopyButton";
 
 export default async function DefaultPuzzlePage({
@@ -25,11 +26,11 @@ export default async function DefaultPuzzlePage({
   // Authentication
   const session = await auth();
   switch (await canViewPuzzle(puzzleId, session)) {
-    case "SUCCESS":
+    case "success":
       break;
-    case "NOT AUTHENTICATED":
+    case "not_authenticated":
       redirect("/login");
-    case "NOT AUTHORIZED":
+    case "not_authorized":
       redirect("/puzzle");
   }
 
@@ -37,11 +38,19 @@ export default async function DefaultPuzzlePage({
   if (!session?.user?.id) {
     return (
       <div className="flex w-full justify-center space-x-2 sm:w-4/5 lg:w-2/3">
-        <div className="mt-4">{puzzleBody}</div>
-        {copyText && <CopyButton copyText={copyText}></CopyButton>}
+        <div className="mt-4 flex justify-center space-x-2">
+          {puzzleBody}
+          {copyText && <CopyButton copyText={copyText}></CopyButton>}
+        </div>
       </div>
     );
   }
+
+  // Puzzle answer
+  const puzzleAnswer = (await db.query.puzzles.findFirst({
+    where: eq(puzzles.id, puzzleId),
+    columns: { answer: true },
+  }))!.answer;
 
   // Get errata if user is logged in
   const errataList: {
@@ -63,7 +72,13 @@ export default async function DefaultPuzzlePage({
     ),
   });
 
-  const hasCorrectGuess = previousGuesses.some((guess) => guess.isCorrect);
+  const isSolved = !!(await db.query.solves.findFirst({
+    where: and(
+      eq(solves.teamId, session.user.id),
+      eq(solves.puzzleId, puzzleId),
+    ),
+  }));
+
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
@@ -75,6 +90,7 @@ export default async function DefaultPuzzlePage({
         {puzzleBody}
         {copyText && <CopyButton copyText={copyText}></CopyButton>}
       </div>
+
       {Object.keys(tasks).map((task) => {
         if (previousGuesses.some((guess) => guess.guess === task)) {
           return (
@@ -86,24 +102,17 @@ export default async function DefaultPuzzlePage({
         }
       })}
 
-      <div className="mt-4">
-        {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
-          <div className="mt-2">
-            <GuessForm
-              puzzleId={puzzleId}
-              numberOfGuessesLeft={numberOfGuessesLeft}
-            />
-          </div>
-        )}
-        {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-          <div className="mb-4 text-center font-medium text-rose-600">
-            You have no guesses left. Please contact HQ for help.
-          </div>
-        )}
+      <div className="my-4">
+        <GuessForm
+          puzzleId={puzzleId}
+          numberOfGuessesLeft={numberOfGuessesLeft}
+          isSolved={isSolved}
+        />
       </div>
 
       <div className="mb-4 flex w-full justify-center">
         <PreviousGuessTable
+          puzzleAnswer={puzzleAnswer}
           previousGuesses={previousGuesses}
           partialSolutions={partialSolutions}
           tasks={tasks}
