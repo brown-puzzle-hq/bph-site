@@ -269,18 +269,54 @@ export default function Page() {
             <TOCSection sectionId={2} tocTitle="What are the Boxes?">
               <h2>What are the Boxes?</h2>
               <p>
-                In <strong>early March</strong>, we will be selling Boxes to 50
-                remote teams (first come, first served).
+                Starting from <strong>12:00PM EST on March 8th</strong>, we will
+                be selling Boxes to 50 remote teams (first come, first served).
               </p>
               <p>The Boxes will each contain:</p>
               <ul>
                 <li>A pin</li>
                 <li>Stickers</li>
-                <li>As many physical puzzles as we can fit inside it</li>
+                <li>Some number of physical puzzles</li>
               </ul>
               <p>
-                If you get a Box, you will be able to do most or all of the
-                physical puzzles (because you'll have them with you!)
+                There are (<i>vague hand-waving motions</i>) at least seven
+                unique physical puzzles in the Box. This is most or all of the
+                physical puzzles in the hunt.
+              </p>
+              <p>Here's a photo of one, packed full of Stuff:</p>
+              <img
+                src="/box.jpg"
+                alt="A Box, approximately 9 by 6 by 2 inches in volume. It's also full of Stuff."
+                width="500"
+                className="mx-auto my-4 border border-gray-300"
+              />
+              <h3>How can I get a Box?</h3>
+              <ol>
+                <li>
+                  Register a team. When you register, indicate that you're a
+                  remote team, and that you are interested in a box.
+                </li>
+                <li>
+                  At <strong>12:00pm EST on March 8th</strong>, we will email
+                  the link to buy Boxes to all registered teams who said they'd
+                  be interested in a Box.
+                </li>
+                <li>
+                  Click on the link and buy it. Boxes are first-come,
+                  first-served.
+                </li>
+              </ol>
+              <p>
+                <strong>
+                  We will not be publicly sharing the link to buy a Box until
+                  all registered interested teams have had an opportunity to buy
+                  one.
+                </strong>{" "}
+                If you're interested in getting a Box, please register a team as
+                soon as you can.
+              </p>
+              <p>
+                <strong>Please only buy one box per team.</strong>
               </p>
               <h3>Who can get a Box?</h3>
               <p>
@@ -300,14 +336,8 @@ export default function Page() {
               </p>
               <h3>How much will a Box cost?</h3>
               <p>
-                Brown University policy prohibits us from selling the Boxes at a
-                loss. The Boxes will therefore be priced to cover materials,
-                tax, surcharge, and shipping, with no profit margin.
-              </p>
-              <p>
-                As such, we don't know exactly how much they'll cost yet, but we
-                imagine that it will be in the $20 - $25 range. We're working on
-                getting the price as low as possible!
+                Boxes cost $19. This is priced to cover materials, tax,
+                surcharge, and shipping.
               </p>
               <p>
                 If you know you might want a Box, but you don't think you can
@@ -316,8 +346,8 @@ export default function Page() {
                 solution.
               </p>
               <p>
-                We don't make any money off of the Boxes. If you want to support
-                the hunt, consider{" "}
+                We don't make any money off of the Boxes; its total cost goes
+                into production! If you want to support the hunt, consider{" "}
                 <Link
                   href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
                   className="no-underline hover:underline"
@@ -332,21 +362,6 @@ export default function Page() {
                   Brown Puzzle Club
                 </Link>
                 !
-              </p>
-              <h3>How many puzzles will be inside a Box?</h3>
-              <p>
-                It's hard to say (because everything is up in the air at the
-                moment) but we're planning to have at least 6 puzzles be in the
-                Box. Maybe more, but no promises.
-              </p>
-              <p>You'll also get cool merch!</p>
-              <h3>I'm interested in getting a Box. What should I do?</h3>
-              <p>
-                Register a team (with an email you actually check), and indicate
-                that you're interested in purchasing a Box. When more news about
-                Boxes is available, we'll email everyone who said they might
-                want a Box. (We'll also put out general community announcements,
-                but giving us your email is the best way to stay informed.)
               </p>
             </TOCSection>
             <TOCSection
