@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/auth.config";
+import { IN_PERSON } from "./hunt.config";
 
 export const { auth } = NextAuth(authConfig);
 
@@ -16,6 +17,16 @@ export default auth(async (req) => {
   ) {
     const newUrl = new URL("./", req.nextUrl.origin);
     return Response.redirect(newUrl);
+  }
+
+  // Protect puzzle pages.
+  // This matches on /puzzle/puzzleId and /puzzle/puzzleId/solution
+  // but not on /puzzle
+  if (req.nextUrl.pathname.match(/^\/puzzle\/.+/)) {
+    if (new Date() < IN_PERSON.START_TIME) {
+      const newUrl = new URL("./puzzle", req.nextUrl.origin);
+      return Response.redirect(newUrl);
+    }
   }
 });
 
