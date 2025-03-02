@@ -36,24 +36,24 @@ This is for the postprodding team. It assumes that there is already a hunt set u
 1. Get the puzzle name, the slug, and the answer. This is up to the puzzle-writer. The slug must be unique.
 
     ```
-    Puzzle name: "Sudoku #51"
-    Slug: "sudoku-51"
-    Answer: "IMMEDIATE"
+    Puzzle name: "Example"
+    Slug: "example"
+    Answer: "ANSWER"
     ```
 
 2. Update the puzzle table on Drizzle. The puzzle will not show up on the frontend unless it is in the database.
     
     To get to Drizzle, run `pnpm run db:push` and go to `https://local.drizzle.studio/`. The `name` column is the name, the `id` column is the slug, and the `answer` column is the answer in **all caps, no spaces.**
 
-    ```
+    ```ts
     {
-        id: "sudoku-51",
-        name: "Sudoku #51",
-        answer: "IMMEDIATE"
+        id: "example",
+        name: "Example",
+        answer: "ANSWER"
     }
     ```
 
-3. Create a folder in `src/app/(hunt)/puzzle/`. The folder name must be the puzzle slug. Copy the contents of the `src/app/(hunt)/puzzle/(dev)/example` folder there. The file structure will look something like this:
+3. Create a folder in `src/app/(hunt)/puzzle/`. The folder name must be the puzzle slug. Copy the contents of the `src/app/(hunt)/puzzle/(dev)/example` folder there. The file structure will look something like this. (Yes, we would be making another example puzzle here.)
 
     ```
     .
@@ -68,7 +68,7 @@ This is for the postprodding team. It assumes that there is already a hunt set u
     ├── components/
     ├── page.tsx
     ├── sequences.ts
-    └── sudoku-51/
+    └── example/
         ├── data.tsx
         ├── hint
         ├── layout.tsx
@@ -76,20 +76,20 @@ This is for the postprodding team. It assumes that there is already a hunt set u
         └── solution
     ```
 
-4. **Hard-code the puzzle id, the puzzle body, and the solution body inside of data.tsx.** You can also add copy text, partial solutions, and extra tasks.
+4. **Hard-code the puzzle id, the puzzle body, and the solution body inside of data.tsx.** You can also add copy text, partial solutions, and extra tasks. Set values to null or empty if they don't exist.
 
-    ```
-    export const puzzleId = "sudoku-51";
+    ```ts
+    export const puzzleId = "example";
 
     export const puzzleBody = (
         <div>
-            <p>Here is a sudoku puzzle.</p>
+            <p>Here is an example puzzle.</p>
         </div>
     );
 
     export const solutionBody = (
         <div>
-            <p>Here is the solution to the sudoku puzzle.</p>
+            <p>Here is the solution to the example puzzle.</p>
         </div>
     );
 
@@ -98,18 +98,72 @@ This is for the postprodding team. It assumes that there is already a hunt set u
     7\t8\t9`;
 
     export const partialSolutions: Record<string, string> = {
-        IMMEDIATELY: "Almost there!"
+        ALMOSTANSWER: "Almost there!"
     };
-
     ```
 
 5. **For sequences**, update the `SEQUENCES` in `hunt.config.ts`. Puzzles can be in multiple sequences. Each sequence includes an optional name, an icon, and an ordered list of puzzles. See https://lucide.dev/icons/ for icons.
 
-    ```
+    ```ts
     export const SEQUENCES = [
-        { name: "sudoku", icon: Grid3X3, puzzles: ["sudoku-51", "sudoku-52"] },
-        { name: "variety", icon: Swords, puzzles: ["sudoku-51", "go-3", "chess-67"] }
+        { name: "examples", icon: Grid3X3, puzzles: ["example", "example-2", "example-3"] },
+        { name: "variety", icon: Swords, puzzles: ["example", "display", "test"] }
     ];
+    ```
+
+#### Creating puzzle and solution bodies
+
+1. To see all of the changes you make live, go to http://localhost:3000/puzzle/[puzzle id]. Our example puzzle is in https://localhost:3000/puzzle/example.
+
+1. If the original puzzle is on a **Google Doc**, try exporting it as a Markdown file. Then put that in a Markdown-to-HTML converter like this [one](https://markdowntohtml.com/).
+
+4. If you want some vertical spacing between elements, use `mb-4`.
+
+   ```html
+    <div>
+        <p className="mb-4">Solve this puzzle.</p>
+        <Image src="/puzzle/sudoku-51.png" width={500} height={500} alt="" className="mb-4"/>
+    </div>
+   ```
+
+5. If you need a space between a `p` and a `span`, use `{" "}`.
+  
+      ```html
+      <p>This puzzle is{" "}<span className="underline">difficult</span>.
+      ```
+
+
+3. If there is an **image**, use the Next.js `Image` component instead of the `img` tag. Put it somewhere in the puzzle folder and call it like this:
+
+    ```html
+    import SUDOKU_51_ANSWER from "./solution/sudoku-51-answer.png";
+    <Image src={SUDOKU_51_ANSWER} width={500} height={500} alt="" />
+    ```
+
+    <!--If it is a public image, put it in the `public` folder at the root of this project. For example, we will put `sudoku-51.png` in `/public/puzzle/sudoku-51.png` and call it like this:-->
+    <!---->
+    <!--```html-->
+    <!--import Image from "next/image";-->
+    <!--<Image src="/puzzle/sudoku-51.png" width={500} height={500} alt="" />-->
+    <!--```-->
+
+    Next.js documentation will tell you to put images in the `public` folder. It is important that you **don't** put puzzle images there, because anyone can access it.
+
+4. If there is a **list**, use a [Tailwind utility](https://tailwindcss.com/docs/list-style-type). Otherwise, it won't show up. Here, we're using the `list-decimal` utility.
+
+    ```html
+    <ul className="list-decimal">
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+    </ul>
+    ```
+
+
+5. If you want to **hide** some text, change the background using a `span`.
+
+    ```html
+    <p>The answer is{" "}<span className="bg-main-text">ANSWER</span>.
     ```
 
 ## Developer guide
