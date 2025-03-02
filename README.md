@@ -1,6 +1,5 @@
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [Postprodder guide](#postprodder-guide)
     - [First steps](#first-steps)
     - [Adding puzzles](#adding-puzzles)
@@ -24,27 +23,28 @@
 This is for the postprodding team. It assumes that there is already a hunt set up.
 
 #### First steps
-1. Clone this repository and create a new branch.
-2. Get the `.env` and put it in the root directory.
-1. Install [pnpm](https://pnpm.io/).
-3. Run `pnpm install` to install the dependencies.
-4. Run `pnpm run dev` to start the development server.
-6. Run `pnpm run db:push` to push the schema in `src/server/db/schema.ts` to the database.
-5. Run `pnpm run db:studio` in a separate shell to open Drizzle Studio in your browser.
+1. Clone this repository
+2. Get the `.env` and put it in the root directory
+1. Install [pnpm](https://pnpm.io/)
+3. Run `pnpm install` to install the dependencies
+6. Create a new branch called `your-name-postprodding`
+
+Now you're all ready to start postprodding! 
+
+To run the development server and see your changes live:
+1. Run `pnpm run dev`
+2. Login with `admin123` as the username and password
+3. Go to `http://localhost:3000/admin/solutions`
 
 #### Adding puzzles
 
-1. Get the puzzle name, the slug, and the answer. This is up to the puzzle-writer. The slug must be unique.
-
-    ```
-    Puzzle name: "Example"
-    Slug: "example"
-    Answer: "ANSWER"
-    ```
-
-2. Update the puzzle table on Drizzle. The puzzle will not show up on the frontend unless it is in the database.
+1. Add the puzzle to the database
     
-    To get to Drizzle, run `pnpm run db:push` and go to `https://local.drizzle.studio/`. The `name` column is the name, the `id` column is the slug, and the `answer` column is the answer in **all caps, no spaces.**
+    First, run `pnpm run db:studio` and go to `https://local.drizzle.studio/`. You will see a lot of different tables, but the only one you need to edit is `bph_site_puzzle`. 
+
+    ![./docs/drizzle-studio.png](./docs/drizzle-studio.png)
+
+    The `name` column is the title of the puzzle, the `id` column is the slug (URL) for the puzzle, and the `answer` column is the answer to the puzzle in **all caps, no spaces.**
 
     ```ts
     {
@@ -54,7 +54,11 @@ This is for the postprodding team. It assumes that there is already a hunt set u
     }
     ```
 
-3. Create a folder in `src/app/(hunt)/puzzle/`. The folder name must be the puzzle slug. Copy the contents of the `src/app/(hunt)/puzzle/(dev)/example` folder there. The file structure will look something like this. (Yes, we would be making another example puzzle here.)
+3. Next, we will create a web page for the puzzle. 
+
+   Copy the contents of the `src/app/(hunt)/puzzle/(dev)/example` folder to a new folder inside of `src/app/(hunt)/puzzle/`. The new folder name should be the puzzle id. 
+
+   Notice that the dev puzzles are in `src/app/(hunt)/puzzle/(dev)`, but the real hunt puzzles are in  `src/app/(hunt)/puzzle`. (Yes, we would be making another example puzzle here.)
 
     ```
     .
@@ -77,7 +81,10 @@ This is for the postprodding team. It assumes that there is already a hunt set u
         └── solution
     ```
 
-4. **Hard-code the puzzle id, the puzzle body, and the solution body inside of data.tsx.** You can also add copy text, partial solutions, and extra tasks. Set values to null or empty if they don't exist.
+4. **Hard-code the puzzle id, the puzzle body, and the solution body inside of data.tsx.** 
+
+    You can also add copy text, partial solutions, and extra tasks. Set values to null or empty if they don't exist. 
+    More information about creating puzzle bodies [below](#creating-puzzle-and-solution-bodies). 
 
     ```ts
     export const puzzleId = "example";
@@ -114,8 +121,6 @@ This is for the postprodding team. It assumes that there is already a hunt set u
 
 #### Creating puzzle and solution bodies
 
-1. To see all of the changes you make live, go to http://localhost:3000/puzzle/[puzzle id]. Our example puzzle is in https://localhost:3000/puzzle/example.
-
 1. If the original puzzle is on a **Google Doc**, try exporting it as a Markdown file. Then put that in a Markdown-to-HTML converter like this [one](https://markdowntohtml.com/).
 
 4. If you want some vertical spacing between elements, use `mb-4`.
@@ -140,13 +145,6 @@ This is for the postprodding team. It assumes that there is already a hunt set u
     import SUDOKU_51_ANSWER from "./solution/sudoku-51-answer.png";
     <Image src={SUDOKU_51_ANSWER} width={500} height={500} alt="" />
     ```
-
-    <!--If it is a public image, put it in the `public` folder at the root of this project. For example, we will put `sudoku-51.png` in `/public/puzzle/sudoku-51.png` and call it like this:-->
-    <!---->
-    <!--```html-->
-    <!--import Image from "next/image";-->
-    <!--<Image src="/puzzle/sudoku-51.png" width={500} height={500} alt="" />-->
-    <!--```-->
 
     Next.js documentation will tell you to put images in the `public` folder. It is important that you **don't** put puzzle images there, because anyone can access it.
 
