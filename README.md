@@ -2,8 +2,9 @@
 
 - [Table of Contents](#table-of-contents)
 - [Postprodder guide](#postprodder-guide)
-      - [First steps](#first-steps)
-      - [Adding puzzles](#adding-puzzles)
+    - [First steps](#first-steps)
+    - [Adding puzzles](#adding-puzzles)
+    - [Creating puzzle and solution bodies](#creating-puzzle-and-solution-bodies)
 - [Developer guide](#developer-guide)
     - [Overview](#overview)
     - [Quick Links](#quick-links)
@@ -22,7 +23,7 @@
 
 This is for the postprodding team. It assumes that there is already a hunt set up.
 
-##### First steps
+#### First steps
 1. Clone this repository and create a new branch.
 2. Get the `.env` and put it in the root directory.
 1. Install [pnpm](https://pnpm.io/).
@@ -31,7 +32,7 @@ This is for the postprodding team. It assumes that there is already a hunt set u
 6. Run `pnpm run db:push` to push the schema in `src/server/db/schema.ts` to the database.
 5. Run `pnpm run db:studio` in a separate shell to open Drizzle Studio in your browser.
 
-##### Adding puzzles
+#### Adding puzzles
 
 1. Get the puzzle name, the slug, and the answer. This is up to the puzzle-writer. The slug must be unique.
 
