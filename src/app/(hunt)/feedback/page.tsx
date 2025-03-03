@@ -9,7 +9,7 @@ export default async function Home() {
   const session = await auth();
   if (!session?.user?.id) {
     return (
-      <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
+      <div className="mb-12 px-4 pt-6 text-center">
         <h1 className="mb-2">Feedback</h1>
         <div>
           <Link href="/login" className="text-link hover:underline">
@@ -27,7 +27,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="mx-auto mb-6 flex max-w-4xl grow flex-col px-4 pt-6">
+    <div className="mx-auto mb-12 flex max-w-4xl grow flex-col px-4 pt-6">
       <h1 className="mb-2">Feedback</h1>
       <FeedbackForm teamId={session.user.id} feedbackList={feedbackList} />
     </div>

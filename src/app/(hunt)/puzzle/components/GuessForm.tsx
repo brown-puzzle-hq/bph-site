@@ -76,7 +76,7 @@ export default function GuessForm({
           control={form.control}
           name="guess"
           render={({ field }) => (
-            <FormItem className="w-2/3">
+            <FormItem className="w-full">
               <FormControl>
                 <Input
                   {...field}

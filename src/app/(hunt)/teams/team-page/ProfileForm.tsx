@@ -284,7 +284,6 @@ export function ProfileForm({
             e.preventDefault();
           }
         }}
-        className="w-full p-4 sm:w-2/3 lg:w-1/2 xl:w-1/3"
       >
         {/* Display name field */}
         <FormField
@@ -654,7 +653,7 @@ export function ProfileForm({
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem className="mb-8 space-y-2">
+                <FormItem className="mb-8 space-y-3">
                   <FormLabel className="text-main-header">
                     Team permissions
                   </FormLabel>
@@ -671,7 +670,7 @@ export function ProfileForm({
                       ].map(({ value, label }) => (
                         <FormItem
                           key={value}
-                          className="flex items-center space-x-3"
+                          className="flex items-center space-x-3 space-y-0"
                         >
                           <RadioGroupItem value={value} />
                           <FormLabel className="font-normal">{label}</FormLabel>
@@ -724,7 +723,7 @@ export function ProfileForm({
           )}
         </div>
         <div
-          className={`fixed bottom-3 left-1/2 z-10 flex w-full min-w-[450px] -translate-x-1/2 transform transition-transform duration-300 md:w-2/3 lg:w-1/3 ${
+          className={`fixed bottom-3 left-1/2 z-10 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300 ${
             isDirty() ? "translate-y-0" : "translate-y-[5rem]"
           }`}
         >
@@ -732,7 +731,10 @@ export function ProfileForm({
             <div className="flex items-center justify-between">
               <AlertDescription className="flex items-center space-x-2">
                 <AlertCircle className="h-4 w-4" />
-                <span>Careful — you have unsaved changes!</span>
+                <span className="hidden sm:block">
+                  Careful — you have unsaved changes!
+                </span>
+                <span className="sm:hidden">Unsaved changes!</span>
               </AlertDescription>
               <div className="flex space-x-2">
                 <Button variant="outline" onClick={() => form.reset()}>

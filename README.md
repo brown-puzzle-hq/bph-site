@@ -81,7 +81,7 @@ To run the development server and see your changes live:
         └── solution
     ```
 
-4. **Hard-code the puzzle id, the puzzle body, and the solution body inside of data.tsx.** 
+4. **Hard-code the puzzle id, the puzzle bodies, and the solution body inside of data.tsx.** 
 
     You can also add copy text, partial solutions, and extra tasks. Set values to null or empty if they don't exist. 
     More information about creating puzzle bodies [below](#creating-puzzle-and-solution-bodies). 
@@ -89,16 +89,18 @@ To run the development server and see your changes live:
     ```ts
     export const puzzleId = "example";
 
-    export const puzzleBody = (
-        <div>
-            <p>Here is an example puzzle.</p>
-        </div>
+    export const inPersonBody = (
+        <div className="max-w-3xl text-center">This is the body of the puzzle.</div>
+    );
+
+    export const remoteBoxBody = inPersonBody;
+
+    export const remoteBody = (
+        <div className="max-w-3xl text-center">This is the body of the remote puzzle.</div>
     );
 
     export const solutionBody = (
-        <div>
-            <p>Here is the solution to the example puzzle.</p>
-        </div>
+        <div className="max-w-3xl text-center">This is an example solution.</div>
     );
 
     export const copyText = `1\t2\t3
@@ -106,7 +108,21 @@ To run the development server and see your changes live:
     7\t8\t9`;
 
     export const partialSolutions: Record<string, string> = {
-        ALMOSTANSWER: "Almost there!"
+        EXAMP: "Almost there!",
+        EXAMPL: "Learn to spell!",
+    };
+    
+    export const tasks: Record<string, JSX.Element> = {
+        EX: (
+            <div className="max-w-3xl text-center">
+            This is a task unlocked by submitting EX.
+            </div>
+        ),
+        EXAM: (
+            <div className="max-w-3xl text-center">
+            This is a task unlocked by submitting EXAM.
+            </div>
+        ),
     };
     ```
 

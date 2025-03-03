@@ -13,8 +13,8 @@ export default async function Home() {
   );
 
   return (
-    <div className="mx-auto mb-6 flex max-w-4xl grow flex-col px-4">
-      <h1 className="mb-2">Errata</h1>
+    <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
+      <h1 className="mb-4 text-center">Errata</h1>
       <ErratumForm puzzleList={puzzleList} errataList={errataList} />
     </div>
   );

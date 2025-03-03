@@ -7,11 +7,19 @@
 export const puzzleId = "example";
 
 /**
- * The `puzzleBody` renders above the guess submission form. Put flavor text, images,
+ * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const puzzleBody = (
-  <div className="text-center">This is the body of the puzzle.</div>
+export const inPersonBody = (
+  <div className="max-w-3xl text-center">This is the body of the puzzle.</div>
+);
+
+export const remoteBoxBody = inPersonBody;
+
+export const remoteBody = (
+  <div className="max-w-3xl text-center">
+    This is the body of the remote puzzle.
+  </div>
 );
 
 /**
@@ -19,7 +27,7 @@ export const puzzleBody = (
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="text-center">This is an example solution.</div>
+  <div className="max-w-3xl text-center">This is an example solution.</div>
 );
 
 /**
@@ -46,10 +54,12 @@ export const partialSolutions: Record<string, string> = {
  */
 export const tasks: Record<string, JSX.Element> = {
   EX: (
-    <div className="text-center">This is a task unlocked by submitting EX.</div>
+    <div className="max-w-3xl text-center">
+      This is a task unlocked by submitting EX.
+    </div>
   ),
   EXAM: (
-    <div className="text-center">
+    <div className="max-w-3xl text-center">
       This is a task unlocked by submitting EXAM.
     </div>
   ),

@@ -2,9 +2,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
+import {
+  Filter,
+  Rows2,
+  Rows4,
+  SquareChevronLeft,
+  SquareChevronRight,
+} from "lucide-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -45,6 +49,8 @@ export function HintTable<TData, TValue>({
     { id: "claimer", desc: true },
   ]);
   const pageSize = 100;
+
+  const [isCompact, setIsCompact] = useState(true);
 
   const table = useReactTable({
     data,
@@ -119,103 +125,123 @@ export function HintTable<TData, TValue>({
   if (!userId) return null;
 
   return (
-    <div className="mb-6 px-4">
-      <div className="flex items-center justify-between space-x-2 pb-2">
-        <Input
-          placeholder="Filter hints..."
-          onChange={(event) => table.setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
+    <div className="px-4">
+      {/* Controls */}
+      <div className="flex items-center justify-between space-x-2 pb-2 text-neutral-500">
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
+          <Filter className="size-7" />
+          <input
+            name="filterHints"
+            placeholder="Filter hints..."
+            onChange={(event) => table.setGlobalFilter(event.target.value)}
+            className="border-b placeholder:text-neutral-300 focus:outline-none"
+          />
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            className="hover:opacity-70"
+            onClick={() => setIsCompact(!isCompact)}
+          >
+            {isCompact ? (
+              <Rows2 className="size-7" />
+            ) : (
+              <Rows4 className="size-7" />
+            )}
+          </button>
+          <button
+            className="hover:opacity-70"
             onClick={() => table.previousPage()}
           >
-            Previous
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()}>
-            Next
-          </Button>
+            <SquareChevronLeft className="size-7" />
+          </button>
+          <button className="hover:opacity-70" onClick={() => table.nextPage()}>
+            <SquareChevronRight className="size-7" />
+          </button>
         </div>
       </div>
-      <div className="flex overflow-auto rounded-md border">
-        <div className="w-full overflow-y-auto">
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-white">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={`header-${headerGroup.id}`}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      onClick={() =>
-                        header.column.toggleSorting(
-                          header.column.getIsSorted() === "asc",
-                        )
-                      }
-                      className="hover:underline"
-                      role="button"
+
+      {/* Table */}
+      <div className="overflow-y-auto rounded-md">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow
+                key={`header-${headerGroup.id}`}
+                className="hover:bg-inherit"
+              >
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    onClick={() =>
+                      header.column.toggleSorting(
+                        header.column.getIsSorted() === "asc",
+                      )
+                    }
+                    className={`hover:text-opacity-70 ${isCompact && "py-0"}`}
+                    role="button"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  onClick={(event) => {
+                    if (
+                      event.target instanceof HTMLElement &&
+                      event.target.classList.contains("hint-button")
+                    )
+                      return;
+                    if (event.metaKey || event.ctrlKey) {
+                      // Open in new tab
+                      window.open(
+                        `/admin/hints/${row.getValue("id")}`,
+                        "_blank",
+                      );
+                    } else {
+                      // Move to hint page
+                      router.push(`/admin/hints/${row.getValue("id")}`);
+                      router.refresh();
+                    }
+                  }}
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className={`cursor-pointer ${isCompact && "py-0"}`}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={isCompact ? "py-0" : undefined}
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    onClick={(event) => {
-                      if (
-                        event.target instanceof HTMLElement &&
-                        event.target.classList.contains("hint-button")
-                      )
-                        return;
-                      if (event.metaKey || event.ctrlKey) {
-                        // Open in new tab
-                        window.open(
-                          `/admin/hints/${row.getValue("id")}`,
-                          "_blank",
-                        );
-                      } else {
-                        // Move to hint page
-                        router.push(`/admin/hints/${row.getValue("id")}`);
-                        router.refresh();
-                      }
-                    }}
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className="cursor-pointer"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="pointer-events-none h-16 text-center font-medium text-neutral-500"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

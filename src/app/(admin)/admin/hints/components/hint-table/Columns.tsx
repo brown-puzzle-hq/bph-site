@@ -29,7 +29,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <div className="flex items-center space-x-2">
+      <div className="flex w-fit items-center space-x-2">
         <p>ID</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="ml-2 h-4 w-4" />
@@ -57,6 +57,9 @@ export const columns: ColumnDef<HintWithRelations>[] = [
       </div>
     ),
     accessorFn: (row) => row.puzzle.name,
+    cell: ({ row }) => (
+      <div className="w-32 truncate">{row.getValue("puzzleName")}</div>
+    ),
   },
   {
     accessorKey: "teamDisplayName",
@@ -73,12 +76,15 @@ export const columns: ColumnDef<HintWithRelations>[] = [
         )}
       </div>
     ),
-    accessorFn: (row) => row.team!.displayName,
+    accessorFn: (row) => row.team.displayName,
+    cell: ({ row }) => (
+      <div className="w-32 truncate">{row.getValue("teamDisplayName")}</div>
+    ),
   },
   {
     accessorKey: "request",
     header: ({ column }) => (
-      <div className="flex w-[42em] items-center space-x-2">
+      <div className="flex w-[46em] items-center space-x-2">
         <p> Request</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="ml-2 h-4 w-4" />
@@ -90,13 +96,13 @@ export const columns: ColumnDef<HintWithRelations>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="w-[48em] truncate">{row.getValue("request")}</div>
+      <div className="w-[46em] truncate">{row.getValue("request")}</div>
     ),
   },
   {
     accessorKey: "requestTime",
     header: ({ column }) => (
-      <div className="flex w-24 items-center space-x-2">
+      <div className="flex w-28 items-center space-x-2">
         <p>Time</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="ml-2 h-4 w-4" />

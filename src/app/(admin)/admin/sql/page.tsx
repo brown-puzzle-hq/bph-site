@@ -47,7 +47,7 @@ export default function Page() {
   };
 
   return (
-    <div className="mx-auto w-full px-4 pb-6 md:w-2/3 lg:w-1/2">
+    <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
       <h1 className="text-2xl font-bold">SQL Query Executor</h1>
       <p className="mb-4 text-gray-600">
         Enter an SQL query below to execute it against the database.
@@ -67,6 +67,7 @@ export default function Page() {
       {/* SQL Query Input Box */}
       <pre>
         <AutosizeTextarea
+          name="query"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full rounded border bg-gray-50 p-2 text-gray-800"

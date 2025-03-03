@@ -27,8 +27,8 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex grow flex-col items-center">
-      <h1 className="mb-2">Register!</h1>
+    <div className="mx-auto mb-12 w-full max-w-xl px-4 pt-6">
+      <h1 className="mb-6 text-center">Register!</h1>
       <RegisterForm />
     </div>
   );

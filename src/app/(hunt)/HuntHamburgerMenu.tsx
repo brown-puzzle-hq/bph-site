@@ -38,7 +38,7 @@ export async function HuntHamburgerMenu() {
     });
 
     rightMenuItems.push({
-      title: session.user.displayName,
+      title: "Profile",
       href: `/teams/${session.user.id}`,
       type: "link",
     });
@@ -64,10 +64,13 @@ export async function HuntHamburgerMenu() {
     });
   }
 
+  const hambergerMenuItems = [...leftMenuItems, ...rightMenuItems];
+
   return (
     <HamburgerMenu
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
+      hambergerMenuItems={hambergerMenuItems}
       side="hunt"
     />
   );

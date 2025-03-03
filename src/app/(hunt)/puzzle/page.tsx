@@ -25,8 +25,8 @@ export default async function Home() {
     // If the hunt has not ended, tell them to log in
     if (currDate < REMOTE.END_TIME) {
       return (
-        <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
-          <h1 className="mb-2">Puzzles!</h1>
+        <div className="mb-12 px-4 pt-6 text-center">
+          <h1 className="mb-2">Puzzles</h1>
           <p>
             <Link href="/login" className="text-link hover:underline">
               Login
@@ -58,8 +58,8 @@ export default async function Home() {
           : REMOTE.START_TIME)
     ) {
       return (
-        <div className="mb-6 flex grow flex-col items-center px-4 pt-6">
-          <h1 className="mb-2">Puzzles!</h1>
+        <div className="mb-12 px-4 pt-6 text-center">
+          <h1 className="mb-2">Puzzles</h1>
           <p>The hunt has not started yet.</p>
         </div>
       );
@@ -92,8 +92,8 @@ export default async function Home() {
   }
 
   return (
-    <div className="mx-auto mb-6 flex w-full grow flex-col items-center p-4 pt-6 sm:w-4/5 lg:w-2/3 xl:w-1/2">
-      <h1 className="mb-2">Puzzles!</h1>
+    <div className="mx-auto mb-6 flex w-full max-w-3xl grow flex-col items-center p-4 pt-6">
+      <h1 className="mb-2">Puzzles</h1>
       <PuzzleTable
         availablePuzzles={availablePuzzles}
         solvedPuzzles={solvedPuzzles}
@@ -127,7 +127,7 @@ export default async function Home() {
 
         return (
           <>
-            <h1 className="mb-2 mt-4">Events!</h1>
+            <h1 className="mb-2 mt-4">Events</h1>
             <EventTable
               availableEvents={availableEvents}
               finishedEvents={finishedEvents}

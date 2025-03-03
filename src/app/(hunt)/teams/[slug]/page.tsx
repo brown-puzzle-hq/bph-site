@@ -36,29 +36,25 @@ export default async function Page({
   }
 
   return (
-    <div className="mb-6 flex w-full flex-col pt-6">
-      <div className="flex flex-col items-center pb-6">
-        <h1 className="w-full truncate text-ellipsis px-4 text-center">
-          Welcome, {team.displayName}!
-        </h1>
-        <p>
-          {team.id} • {team.interactionMode}
-        </p>
-      </div>
-      <div className="flex flex-col items-center">
-        <ProfileForm
-          id={slug}
-          displayName={team.displayName}
-          role={team.role}
-          memberString={team.members}
-          interactionMode={team.interactionMode}
-          numCommunity={team.numCommunity}
-          phoneNumber={team.phoneNumber}
-          roomNeeded={team.roomNeeded}
-          solvingLocation={team.solvingLocation}
-          wantsBox={team.wantsBox}
-        />
-      </div>
+    <div className="mx-auto mb-12 w-full max-w-xl px-4 pt-6">
+      <h1 className="w-full truncate text-ellipsis px-4 text-center">
+        Welcome, {team.displayName}!
+      </h1>
+      <p className="mb-6 text-center">
+        {team.id} • {team.interactionMode}
+      </p>
+      <ProfileForm
+        id={slug}
+        displayName={team.displayName}
+        role={team.role}
+        memberString={team.members}
+        interactionMode={team.interactionMode}
+        numCommunity={team.numCommunity}
+        phoneNumber={team.phoneNumber}
+        roomNeeded={team.roomNeeded}
+        solvingLocation={team.solvingLocation}
+        wantsBox={team.wantsBox}
+      />
     </div>
   );
 }

@@ -12,13 +12,17 @@ import CopyButton from "./CopyButton";
 
 export default async function DefaultPuzzlePage({
   puzzleId,
-  puzzleBody,
+  inPersonBody,
+  remoteBoxBody,
+  remoteBody,
   copyText,
   partialSolutions,
   tasks,
 }: {
   puzzleId: string;
-  puzzleBody: React.ReactNode;
+  inPersonBody: React.ReactNode;
+  remoteBoxBody: React.ReactNode;
+  remoteBody: React.ReactNode;
   copyText: string | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
@@ -35,13 +39,23 @@ export default async function DefaultPuzzlePage({
   }
 
   // If user is not logged in, show puzzle without errata or guesses
+  // TODO: which version should we show?
   if (!session?.user?.id) {
     return (
-      <div className="flex w-full justify-center space-x-2 sm:w-4/5 lg:w-2/3">
-        <div className="mt-4 flex justify-center space-x-2">
-          {puzzleBody}
-          {copyText && <CopyButton copyText={copyText}></CopyButton>}
+      <div className="mb-12 w-full px-4">
+        <div className="flex items-start justify-center space-x-2">
+          <div className="w-fit">{inPersonBody}</div>
+          {copyText && <CopyButton copyText={copyText} />}
         </div>
+
+        {Object.keys(tasks).map((task) => {
+          return (
+            <div key={task}>
+              <hr className="mx-auto my-6 max-w-3xl" />
+              <div className="mx-auto w-fit">{tasks[task]}</div>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -82,27 +96,33 @@ export default async function DefaultPuzzlePage({
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
-  return (
-    <div className="w-full p-2 sm:w-4/5 lg:w-2/3">
-      <ErratumDialog errataList={errataList} />
+  // TODO: show remote box body
+  const puzzleBody =
+    session.user.interactionMode === "in-person" ? inPersonBody : remoteBody;
 
-      <div className="flex justify-center space-x-2">
-        {puzzleBody}
-        {copyText && <CopyButton copyText={copyText}></CopyButton>}
+  return (
+    <div className="mb-12 w-full px-4">
+      <div className="mx-auto max-w-3xl">
+        <ErratumDialog errataList={errataList} />
+      </div>
+
+      <div className="flex items-start justify-center space-x-2">
+        <div className="w-fit">{puzzleBody}</div>
+        {copyText && <CopyButton copyText={copyText} />}
       </div>
 
       {Object.keys(tasks).map((task) => {
         if (previousGuesses.some((guess) => guess.guess === task)) {
           return (
             <div key={task}>
-              <hr className="my-4" />
-              {tasks[task]}
+              <hr className="mx-auto my-6 max-w-3xl" />
+              <div className="mx-auto w-fit">{tasks[task]}</div>
             </div>
           );
         }
       })}
 
-      <div className="my-4">
+      <div className="mx-auto mb-4 mt-6 max-w-3xl">
         <GuessForm
           puzzleId={puzzleId}
           numberOfGuessesLeft={numberOfGuessesLeft}
@@ -110,7 +130,7 @@ export default async function DefaultPuzzlePage({
         />
       </div>
 
-      <div className="mb-4 flex w-full justify-center">
+      <div className="mx-auto max-w-3xl">
         <PreviousGuessTable
           puzzleAnswer={puzzleAnswer}
           previousGuesses={previousGuesses}

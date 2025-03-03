@@ -63,7 +63,9 @@ export default function Page() {
   return (
     <TOCContext.Provider value={values}>
       <div className="flex h-full w-screen py-6">
-        <TableOfContents />
+        <div className="hidden h-screen p-8 md:block md:w-1/3 lg:w-1/4">
+          <TableOfContents />
+        </div>
         <div className="flex w-full px-4 md:w-2/3 lg:w-1/2">
           <article className="prose prose-custom w-full max-w-none">
             <h1>Hunt Information</h1>
@@ -692,7 +694,6 @@ export default function Page() {
             </TOCSection>
           </article>
         </div>
-        <div className="hidden w-1/4 text-center lg:block"></div>
       </div>
     </TOCContext.Provider>
   );

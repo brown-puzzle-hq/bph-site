@@ -36,7 +36,7 @@ export default async function Home() {
         })),
       );
 
-      var puzzleBody;
+      var inPersonBody;
       var solutionBody;
       var copyText;
 
@@ -45,7 +45,7 @@ export default async function Home() {
         const module = await import(
           `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
         );
-        puzzleBody = !!module.puzzleBody;
+        inPersonBody = !!module.inPersonBody;
         solutionBody = !!module.solutionBody;
         copyText = module.copyText;
       } catch (e) {
@@ -54,11 +54,11 @@ export default async function Home() {
           const module = await import(
             `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
           );
-          puzzleBody = !!module.puzzleBody;
+          inPersonBody = !!module.inPersonBody;
           solutionBody = !!module.solutionBody;
           copyText = module.copyText;
         } catch (e) {
-          puzzleBody = null;
+          inPersonBody = null;
           solutionBody = null;
           copyText = null;
         }
@@ -67,7 +67,7 @@ export default async function Home() {
       return {
         ...puzzle,
         nextUnlocks: nextUnlocks,
-        puzzleBody: puzzleBody,
+        inPersonBody: inPersonBody,
         solutionBody: solutionBody,
         copyText: copyText,
       };
@@ -76,7 +76,7 @@ export default async function Home() {
 
   return (
     <div className="flex grow flex-col items-center px-4">
-      <h1 className="mb-2">Solutions!</h1>
+      <h1 className="mb-2">Puzzles</h1>
       <div className="min-w-[60%]">
         <Table className="justify-center">
           <TableHeader>
@@ -127,7 +127,7 @@ export default async function Home() {
                     ))}
                   </TableCell>
                   <TableCell className="justify-center">
-                    {puzzle.puzzleBody && (
+                    {puzzle.inPersonBody && (
                       <div className="flex justify-center">
                         <Link href={`/puzzle/${puzzle.id}`}>
                           <Puzzle className="text-red-500 hover:opacity-75" />

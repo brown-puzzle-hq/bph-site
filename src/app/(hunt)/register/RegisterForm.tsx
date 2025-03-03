@@ -193,10 +193,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full p-4 sm:w-2/3 lg:w-1/2 xl:w-1/3"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         {/* Id/username field */}
         <FormField
           control={form.control}

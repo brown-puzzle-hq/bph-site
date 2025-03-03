@@ -11,7 +11,7 @@ type Time = {
 export function formatTime(time: string | Date | null) {
   const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "short",
-    timeStyle: "medium",
+    timeStyle: "short",
   });
 
   if (!time) {

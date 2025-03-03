@@ -57,7 +57,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   };
 
   if (status == "refunded") {
-    return <p>Refunded</p>;
+    return <p className="border-y border-white">Refunded</p>;
   } else if (!claimer) {
     return (
       <button
@@ -101,7 +101,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     }
   } else {
     if (status == "no_response") {
-      return <p>Claimed</p>;
+      return <p className="border-y border-white">Claimed</p>;
     } else if (status == "answered") {
       return followUps[followUps.length - 1]?.userId === teamId ? (
         <button
@@ -113,7 +113,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
           <p className="px-1">REPLY</p>
         </button>
       ) : (
-        <p>Answered</p>
+        <p className="border-y border-white">Answered</p>
       );
     }
   }

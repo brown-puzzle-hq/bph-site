@@ -7,12 +7,16 @@
 export const puzzleId = "seq2";
 
 /**
- * The `puzzleBody` renders above the guess submission form. Put flavor text, images,
+ * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const puzzleBody = (
-  <div className="text-center">This is the body of the puzzle.</div>
+export const inPersonBody = (
+  <div className="max-w-3xl text-center">This is the body of the puzzle.</div>
 );
+
+export const remoteBoxBody = inPersonBody;
+
+export const remoteBody = inPersonBody;
 
 /**
  * The `solutionBody` renders in the solution page.

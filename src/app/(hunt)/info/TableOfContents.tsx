@@ -101,22 +101,20 @@ export function TableOfContents() {
   const { sections, activeSection } = useContext(TOCContext);
 
   return (
-    <div className="hidden h-screen p-8 md:block md:w-1/3 lg:w-1/4">
-      <motion.div className="fixed top-[5rem] flex flex-col gap-2 md:w-[calc(33.333%-2rem)] lg:w-[calc(25%-2rem)]">
-        {sections.map(({ id, title }) => (
-          <span
-            key={id}
-            className={`cursor-pointer transition-colors duration-200 hover:text-main-header ${activeSection === id ? "text-main-text" : "text-main-accent"}`}
-            onClick={() =>
-              document
-                .getElementById(`section-${id}`)
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-          >
-            {title}
-          </span>
-        ))}
-      </motion.div>
-    </div>
+    <motion.div className="fixed top-[5rem] flex flex-col gap-2 md:w-[calc(33.333%-2rem)] lg:w-[calc(25%-2rem)]">
+      {sections.map(({ id, title }) => (
+        <span
+          key={id}
+          className={`mr-8 cursor-pointer transition-colors duration-200 hover:text-main-header ${activeSection === id ? "text-main-text" : "text-main-accent"}`}
+          onClick={() =>
+            document
+              .getElementById(`section-${id}`)
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+        >
+          {title}
+        </span>
+      ))}
+    </motion.div>
   );
 }

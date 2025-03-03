@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  ArrowUpRight,
   MessageCircleQuestion,
   PackageOpen,
   Puzzle,
@@ -226,7 +225,7 @@ export async function Dashboard() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex w-full flex-col">
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 md:pt-4">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <Card x-chunk="dashboard-01-chunk-0">
@@ -290,12 +289,12 @@ export async function Dashboard() {
                   since the start of the hunt.
                 </CardDescription>
               </div>
-              <Button asChild size="sm" className="ml-auto gap-1">
-                <Link href="#">
-                  View All
-                  <ArrowUpRight className="h-4 w-4" />
-                </Link>
-              </Button>
+              {/* <Button asChild size="sm" className="ml-auto gap-1"> */}
+              {/*   <Link href="#"> */}
+              {/*     View All */}
+              {/*     <ArrowUpRight className="h-4 w-4" /> */}
+              {/*   </Link> */}
+              {/* </Button> */}
             </CardHeader>
             <CardContent>
               <ActivityChart activityData={activityData} />

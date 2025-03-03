@@ -21,7 +21,7 @@ export default async function RootLayout({
       <Toaster />
 
       <footer className="bg-footer-bg py-2 text-center text-xs">
-        <p>
+        <p className="hidden sm:block">
           Having a good time? Want support more puzzlehunts like this in the
           future? Consider{" "}
           <Link
@@ -38,6 +38,23 @@ export default async function RootLayout({
             puzzle club
           </Link>{" "}
           or checking out our{" "}
+          <Link
+            href="https://brownpuzzle.club/archive/"
+            className="text-link hover:underline"
+          >
+            archive
+          </Link>
+          !
+        </p>
+        <p className="sm:hidden">
+          Having fun? Consider{" "}
+          <Link
+            href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
+            className="text-link hover:underline"
+          >
+            donating
+          </Link>{" "}
+          or viewing our{" "}
           <Link
             href="https://brownpuzzle.club/archive/"
             className="text-link hover:underline"

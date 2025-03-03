@@ -89,10 +89,10 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
           control={form.control}
           name="puzzleId"
           render={({ field }) => (
-            <FormItem className="mb-4">
-              <FormLabel className="flex w-[180px] flex-row justify-between">
+            <FormItem className="mb-4 w-full max-w-96">
+              <FormLabel className="flex justify-between">
                 <span className="text-black">Puzzle</span>
-                <FormMessage />
+                <FormMessage className="text-error" />
               </FormLabel>
               <FormControl>
                 <Select
@@ -105,13 +105,16 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                   }}
                   value={field.value}
                 >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select" />
+                  <SelectTrigger>
+                    <div className="truncate text-ellipsis text-left">
+                      <SelectValue placeholder="Select" />
+                    </div>
                   </SelectTrigger>
+                  {/* TODO: figure out how to limit size of select entries */}
                   <SelectContent>
                     {puzzleList?.map((puzzle) => (
                       <SelectItem key={puzzle.id} value={puzzle.id}>
-                        {puzzle.name.trim() ? puzzle.name : `[puzzle.id]`}
+                        {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -120,12 +123,14 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
             </FormItem>
           )}
         />
-        <ErratumDialog errataList={puzzleErrata} />
+        <div className="w-full">
+          <ErratumDialog errataList={puzzleErrata} />
+        </div>
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem className="mb-4">
+            <FormItem className="py-4">
               <FormLabel className="flex flex-row justify-between">
                 <span className="text-black">Description</span>
                 <FormMessage />

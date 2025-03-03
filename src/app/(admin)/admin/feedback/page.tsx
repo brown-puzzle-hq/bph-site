@@ -8,8 +8,8 @@ export default async function Home() {
   });
 
   return (
-    <div className="mx-auto mb-6 flex max-w-4xl grow flex-col px-4">
-      <h1>Feedback</h1>
+    <div className="mx-auto mb-4 flex max-w-4xl grow flex-col px-4 md:mb-12">
+      <h1 className="text-center">Feedback</h1>
       <FeedbackDialog showTeam={true} feedbackList={feedbackList} />
     </div>
   );

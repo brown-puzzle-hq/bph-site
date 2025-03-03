@@ -36,5 +36,5 @@ export default async function DefaultSolutionPage({
     return <div>There are currently no solutions for this puzzle.</div>;
   }
 
-  return <div className="mt-4 w-2/3 min-w-36">{solutionBody}</div>;
+  return <div className="w-fit">{solutionBody}</div>;
 }
