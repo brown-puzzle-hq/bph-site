@@ -33,8 +33,12 @@ export default async function DefaultSolutionPage({
 
   // Check if there is solution
   if (!solutionBody) {
-    return <div>There are currently no solutions for this puzzle.</div>;
+    return (
+      <div className="mb-12 w-fit px-4">
+        There are currently no solutions for this puzzle.
+      </div>
+    );
   }
 
-  return <div className="w-fit">{solutionBody}</div>;
+  return <div className="mb-12 w-fit px-4">{solutionBody}</div>;
 }
