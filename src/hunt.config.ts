@@ -66,18 +66,6 @@ export const SEQUENCES: Sequence[] = [
     ],
   },
   {
-    name: "guards",
-    icon: "💂",
-    puzzles: [
-      "the-guard-and-the-door",
-      "two-guards-river",
-      "m-guards-n-doors-and-k-choices",
-      "two-guards-two-doors",
-      "ten-guards-ten-doors",
-      "one-guard-screen",
-    ],
-  },
-  {
     name: "Chain",
     icon: "⛓️",
     puzzles: [
