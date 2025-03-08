@@ -19,7 +19,7 @@ import { useTransition } from "react";
 
 function sanitizeAnswer(answer: any) {
   return typeof answer === "string"
-    ? answer.toUpperCase().replace(/[^A-Z]/g, "")
+    ? answer.toUpperCase().replace(/[^A-ZÜ]/g, "")
     : "";
 }
 
@@ -83,7 +83,7 @@ export default function GuessForm({
                   onChange={(e) => {
                     form.setValue(
                       "guess",
-                      e.target.value.toUpperCase().replace(/[^A-Z ]/g, ""),
+                      e.target.value.toUpperCase().replace(/[^A-Z Ü]/g, ""),
                     );
                     setError(null);
                   }}

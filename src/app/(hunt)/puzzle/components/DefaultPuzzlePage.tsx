@@ -101,7 +101,7 @@ export default async function DefaultPuzzlePage({
     session.user.interactionMode === "in-person" ? inPersonBody : remoteBody;
 
   return (
-    <div className="mb-12 w-full px-4">
+    <div className="w-full px-4">
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>
