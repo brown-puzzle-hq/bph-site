@@ -1,7 +1,6 @@
 import { db } from "./server/db";
 import { hints } from "./server/db/schema";
 import { and, count, eq, ne } from "drizzle-orm";
-import { LucideIcon, ScrollText, ShieldCheck } from "lucide-react";
 
 /** REGISTRATION AND HUNT START */
 export const REGISTRATION_START_TIME = new Date("2024-11-17T17:00:00.000Z");
@@ -24,7 +23,7 @@ export const REMOTE = {
 
 type Sequence = {
   name?: string;
-  icon: LucideIcon;
+  icon: string;
   puzzles: string[];
 };
 
@@ -32,8 +31,8 @@ type Sequence = {
  * will be displayed earlier. Puzzles that occur earlier in the list will
  * be displayed earlier. */
 export const SEQUENCES: Sequence[] = [
-  { name: "A", icon: ScrollText, puzzles: ["seq1", "seq2"] },
-  { name: "B", icon: ShieldCheck, puzzles: ["seq1", "seq3"] },
+  { name: "A", icon: "📜", puzzles: ["seq1", "seq2"] },
+  { name: "B", icon: "🛡️", puzzles: ["seq1", "seq3"] },
 ];
 
 /** GUESSES */

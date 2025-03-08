@@ -158,6 +158,7 @@ To run the development server and see your changes live:
 3. If there is an **image**, use the Next.js `Image` component instead of the `img` tag. Put it somewhere in the puzzle folder and call it like this:
 
     ```html
+    import Image from "next/image";
     import SUDOKU_51_ANSWER from "./solution/sudoku-51-answer.png";
     <Image src={SUDOKU_51_ANSWER} width={500} height={500} alt="" />
     ```
