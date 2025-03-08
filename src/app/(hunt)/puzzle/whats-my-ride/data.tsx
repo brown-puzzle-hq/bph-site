@@ -1,6 +1,6 @@
 import Image from "next/image";
-import WMR from "./WMR_Puzzle_Body.jpg"
-import SOLUTION from "./WMR_Solution.jpg"
+import WMR from "./WMR_Puzzle_Body.jpg";
+import SOLUTION from "./WMR_Solution.jpg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -16,23 +16,19 @@ export const puzzleId = "whats-my-ride";
  */
 export const inPersonBody = (
   <div className="max-w-3xl text-center">
-    <Image src={WMR} width={500} height={500} alt="family tree (puzzle body) image"/>
-    <p className="text-lg">
-      3️⃣
-    </p>
+    <Image
+      src={WMR}
+      width={500}
+      height={500}
+      alt="family tree (puzzle body) image"
+    />
+    <p className="text-lg">3️⃣</p>
   </div>
 );
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = (
-  <div className="max-w-3xl text-center">
-    <Image src={WMR} width={500} height={500} alt="family tree (puzzle body) image"/>
-    <p className="text-lg">
-      3️⃣
-    </p>
-  </div>
-);
+export const remoteBody = inPersonBody;
 
 /**
  * The `solutionBody` renders in the solution page.
@@ -40,10 +36,24 @@ export const remoteBody = (
  */
 export const solutionBody = (
   <div className="max-w-3xl text-center">
-    <p className="space-y-3">
-    This puzzle is a family tree based on Greek myth. Specifically, Apollo’s family tree. The solvers need to ID that this is 1) a family tree, 2) about Greek myth, 3) that Apollo is the ? in the middle, and 4) the 3 emoji at the bottom and the title should direct them to answer <span className="text-blue-300">SUN</span>. If they are guessing SUNCHARIOT or CHARIOT instead, just clue them to check the emoji at the bottom of the page. Attached is a rough version of the family tree with all the names written in instead of the emojis to help if they seem to be hung up on one or another.
+    <p className="mb-4">
+      This puzzle is a family tree based on Greek myth. Specifically, Apollo’s
+      family tree. The solvers need to ID that this is 1) a family tree, 2)
+      about Greek myth, 3) that Apollo is the ? in the middle, and 4) the 3
+      emoji at the bottom and the title should direct them to answer{" "}
+      <span className="text-main-accent">SUN</span>. If they are guessing
+      SUNCHARIOT or CHARIOT instead, just clue them to check the emoji at the
+      bottom of the page. Attached is a rough version of the family tree with
+      all the names written in instead of the emojis to help if they seem to be
+      hung up on one or another.
     </p>
-    <Image src={SOLUTION} width={500} height={500} alt="solution image" className="mx-auto"/>
+    <Image
+      src={SOLUTION}
+      width={500}
+      height={500}
+      alt="solution image"
+      className="mx-auto"
+    />
   </div>
 );
 
@@ -60,22 +70,11 @@ export const copyText = null;
  */
 export const partialSolutions: Record<string, string> = {
   CHARIOT: "Check the bottom!",
-  SUNCHARIOT: "Check the bottom",
+  SUNCHARIOT: "Check the bottom!",
 };
 
 /**
  * The `tasks` object is used for multi-part puzzles. When a certain answer is submitted,
  * more content will be added to the puzzle body. Keys must be in all caps, no spaces.
  */
-export const tasks: Record<string, JSX.Element> = {
-  EX: (
-    <div className="max-w-3xl text-center">
-      This is a task unlocked by submitting EX.
-    </div>
-  ),
-  EXAM: (
-    <div className="max-w-3xl text-center">
-      This is a task unlocked by submitting EXAM.
-    </div>
-  ),
-};
+export const tasks: Record<string, JSX.Element> = {};
