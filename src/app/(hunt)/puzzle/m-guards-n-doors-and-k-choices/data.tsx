@@ -4,7 +4,7 @@
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "example";
+export const puzzleId = "m-guards-n-doors-and-k-choices";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,

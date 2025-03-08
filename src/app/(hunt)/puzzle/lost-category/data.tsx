@@ -18,8 +18,8 @@ export const inPersonBody = (
       please visit HQ in Friedman 208.
     </div>
     <Link href="https://drive.google.com/file/d/1RNsmetSNW0eVz7BIHFpvX-hz0PiW2a7n/view?usp=sharing">
-        <span className="underline">[audio]</span>
-      </Link>
+      <span className="underline">[audio]</span>
+    </Link>
     <hr className="my-6 mb-6 border-t border-white" />
   </div>
 );
