@@ -10,15 +10,39 @@ export const puzzleId = "financial-crimes-3";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = <div />;
-
-export const remoteBoxBody = inPersonBody;
-
-export const remoteBody = (
-  <div className="max-w-3xl text-center">
-    This is the body of the remote puzzle.
+export const inPersonBody = (
+  <div className="max-w-3xl">
+    <div className="mb-6">
+      This is a physical puzzle! Please send someone from your team to Friedman
+      208 to pick it up.
+    </div>
+    <p className="pb-4">
+      <i>
+        Hollywood accounting gone wrong! A gang of crooks has been stealing from
+        your movie company under your nose. Fortunately, your old friend
+        Detective Bluenoir tipped you off with a list of suspects and the
+        possibly fraudulent purchases they made. Maybe if you line up the
+        thieves and their shady dealings, then confiscate the contraband, you’ll
+        uncover who’s been putting them up to the task.
+      </i>
+    </p>
+    <p className="pb-4">
+      Bluenoir: “Hi there. It’s me, your old pal Bluenoir. Listen, I did some
+      digging on your behalf, and I’ve identified some suspects. All 8 of them
+      worked on your company’s recent biopic, North Dakota Williams and the
+      Inscrutable MacGuffin. I also nabbed some shopping lists that were flagged
+      for suspicious transactions. It’s your job to figure out who bought what
+      and which purchases were, say, less than legitimate. I made some routine
+      inquiries and gathered some personal information, but I’ve been forced
+      into hiding due to some legal trouble, if you catch my drift. The rest is
+      up to you. Go get ‘em, kid.”
+    </p>
   </div>
 );
+
+export const remoteBoxBody = null;
+
+export const remoteBody = null;
 
 /**
  * The `solutionBody` renders in the solution page.

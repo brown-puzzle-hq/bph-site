@@ -1,33 +1,20 @@
-//TODO: make less jank
-
-import Image from "next/image";
-import CONS from "./constellations.png";
-const SCALE = 0.5;
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "constellation";
+export const puzzleId = "eye-spy";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = (
-  <Image
-    src={CONS}
-    alt=""
-    width={1638 * SCALE}
-    height={1752 * SCALE}
-    className="mb-5"
-  />
-);
+export const inPersonBody = <i>This is a placeholder.</i>;
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = inPersonBody;
+export const remoteBody = null;
 
 /**
  * The `solutionBody` renders in the solution page.
@@ -39,7 +26,7 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = null; // Should be composed of the const variables up top
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
