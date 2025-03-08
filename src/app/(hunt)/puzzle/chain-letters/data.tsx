@@ -42,13 +42,6 @@ export const puzzleId = "chain-letters";
  */
 export const inPersonBody = (
   <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <div className="flex">
-      {CHAIN.split("").map((cell) => (
-        <div
-          className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-        />
-      ))}
-    </div>
     <div className="grid grid-cols-[auto,auto,auto] gap-x-2 text-left">
       <div
         className={`size-[1.5em] rounded-md border border-main-bg ${COLORS["B"]}`}
@@ -74,7 +67,37 @@ export const inPersonBody = (
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+  <div className="flex">
+    {CHAIN.split("").map((cell) => (
+      <div
+        className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
+      />
+    ))}
+  </div>
+  <div className="grid grid-cols-[auto,auto,auto] gap-x-2 text-left">
+    <div
+      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS["B"]}`}
+    />
+    <p>=</p>
+    COIA
+    <div
+      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS["R"]}`}
+    />
+    <p>=</p>
+    ISNVWAN
+    <div
+      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS["G"]}`}
+    />
+    <p>=</p>
+    XEPVITSO
+  </div>
+  <div className="grid grid-cols-[repeat(19,1.5em)] grid-rows-[repeat(19,1.5em)]">
+    {GRID.flatMap((row) => row.split("").map((cell) => <p>{cell}</p>))}
+  </div>
+</div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.
