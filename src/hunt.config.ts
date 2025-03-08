@@ -68,11 +68,7 @@ export const SEQUENCES: Sequence[] = [
   {
     name: "Chain",
     icon: "⛓️",
-    puzzles: [
-      // INCOMPLETE
-      "red-blue",
-      "chain-letters",
-    ],
+    puzzles: ["beads", "chain-letters", "red-blue"],
   },
   {
     name: "CD",
@@ -130,11 +126,105 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
  */
 
 /** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team. */
-export const INITIAL_PUZZLES: string[] = [];
+export const INITIAL_PUZZLES: string[] = [
+  "walk-of-fame",
+  "two-guards-two-doors",
+];
+
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */
 export const META_PUZZLES: string[] = [];
+
 /** Adjacency list for puzzles */
-export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {};
+export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
+  // ACTION
+  "walk-of-fame": ["find-ben", "a-fistful-of-cards"],
+  "two-guards-two-doors": ["find-ben", "heist"],
+  "find-ben": ["filming-schedule"], // walk-of-fame, two-guards-two-doors
+  "fistful-of-cards": ["ten-guards-ten-doors", "drop-the", "filming-schedule"], // walk-of-fame
+  "filming-schedule": [
+    "find-ben",
+    "a-fistful-of-cards",
+    "heist",
+    "ten-guards-ten-doors",
+    "drop-the",
+    "two-guards-river",
+  ],
+  heist: ["filming-schedule", "drop-the", "two-guards-river"], // two-guards-two-doors
+
+  // ACTION -> DRAMA
+  "ten-guards-ten-doors": [
+    "a-fistful-of-cards",
+    "filming-schedule",
+    "a-fistful-of-cards-ii",
+    "beads",
+    "lost-category",
+  ],
+  "a-fistful-of-cards-ii": ["heist-ii"], // ten-guards-ten-doors
+  beads: ["heist-ii", "youve-got-this-covered"], // ten-guards-ten-doors
+  "lost-category": ["youve-got-this-covered"], // ten-guards-ten-doors
+  "heist-ii": [
+    "a-fistful-of-cards-ii",
+    "beads",
+    "aha-erlebnis",
+    "m-guards-n-doors-and-k-choices",
+    "youve-got-this-covered",
+  ],
+  "youve-got-this-covered": [
+    "heist-ii",
+    "beads",
+    "lost-category",
+    "aha-erlebnis",
+    "m-guards-n-doors-and-k-choices",
+  ],
+  "aha-erlebnis": ["heist-ii", "youve-got-this-covered"],
+
+  // ACTION -> COMEDY
+  "two-guards-river": [
+    "filming-schedule",
+    "heist",
+    "peanuts",
+    "plagiarism",
+    "watching-between-the-lines",
+  ],
+  peanuts: ["galileo-was-wrong"], // two-guards-river
+  plagiarism: ["galileo-was-wrong", "fractal-shanty"], // two-guards-river
+  "watching-between-the-lines": ["fractal-shanty"], // two-guards-river
+  "galileo-was-wrong": [
+    "peanuts",
+    "plagiarism",
+    "fracal-shanty",
+    "one-guard-screen",
+    "balloon-animals",
+  ],
+  "fractal-shanty": [
+    "watching-between-the-lines",
+    "plagiarism",
+    "galileo-was-wrong",
+    "one-guard-screen",
+    "balloon-animals",
+  ],
+  "one-guard-screen": ["galileo-was-wrong", "fractal-shanty"],
+  "balloon-animals": ["galileo-was-wrong", "fractal-shanty"],
+
+  // DRAMA -> DIGGING
+  "m-guards-n-doors-and-k-choices": [
+    "heist-ii",
+    "youve-got-this-covered",
+    "bluenos-puzzle-box",
+    "narcissism",
+    "financial-crimes-3",
+  ],
+  "bluenos-puzzle-box": ["eye-spy", "whats-my-ride", "boring-plot"], // m-guards-n-doors-and-k-choices
+  narcissism: ["whats-my-ride", "boring-plot", "piecemeal"], // m-guards-n-doors-and-k-choices
+  "financial-crimes-3": ["boring-plot", "piecemeal", "genetic-counseling"], // m-guards-n-doors-and-k-choices
+  "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
+  "whats-my-ride": [
+    "bluenos-puzzle-box",
+    "narcissism",
+    "eye-spy",
+    "identify-the-piece",
+  ],
+};
 
 // For developers
 // export const INITIAL_PUZZLES: string[] = ["example", "seq1"];
