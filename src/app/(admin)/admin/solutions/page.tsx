@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { PUZZLE_UNLOCK_MAP } from "~/hunt.config";
+import { PUZZLE_UNLOCK_MAP, ROUNDS } from "~/hunt.config";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
@@ -78,92 +78,93 @@ export default async function Home() {
     <div className="container mx-auto mb-12">
       <h1 className="mb-2 text-center">Puzzles</h1>
       <div className="overflow-y-auto rounded-md px-4">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-inherit">
-              <TableHead className="w-1/3 min-w-56">Name</TableHead>
-              <TableHead className="w-1/3">Answer</TableHead>
-              <TableHead className="w-1/3 whitespace-nowrap">
-                Next Unlock
-              </TableHead>
-              <TableHead className="w-fit">Puzzle</TableHead>
-              <TableHead className="w-fit">Solution</TableHead>
-              <TableHead className="w-fit">Statistics</TableHead>
-              <TableHead className="w-fit">Copy</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {allPuzzlesWithEverything
-              // If both puzzles have null times, sort alphabetically
-              // Otherwise, prioritize the puzzle with null time
-              // If neither puzzles have null times, sort by earliest unlock
-              .sort((a, b) => {
-                return a.name.localeCompare(b.name);
-              })
-              .map((puzzle) => (
-                <TableRow key={puzzle.id} className="hover:bg-inherit">
-                  <TableCell>
-                    <Link
-                      className="text-blue-500 hover:underline"
-                      href={`/puzzle/${puzzle.id}`}
-                    >
-                      {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <p className="text-emerald-600">{puzzle.answer}</p>
-                  </TableCell>
-                  <TableCell>
-                    {puzzle.nextUnlocks.map((nextUnlock) => (
-                      <>
-                        <>[</>
-                        <Link
-                          key={nextUnlock.id}
-                          href={`/puzzle/${nextUnlock.id}`}
-                          className="hover:underline"
-                        >
-                          {nextUnlock.name}
-                        </Link>
-                        <>] </>
-                      </>
-                    ))}
-                  </TableCell>
-                  <TableCell className="justify-center">
-                    {puzzle.inPersonBody && (
-                      <div className="flex justify-center">
-                        <Link href={`/puzzle/${puzzle.id}`}>
-                          <Puzzle className="text-red-500 hover:opacity-75" />
-                        </Link>
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="justify-center">
-                    {puzzle.solutionBody && (
-                      <div className="flex justify-center">
-                        <Link href={`/puzzle/${puzzle.id}/solution`}>
-                          <KeyRound className="text-yellow-500 hover:opacity-75" />
-                        </Link>
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="justify-center">
-                    <div className="flex justify-center">
-                      <Link href={`/admin/statistics/${puzzle.id}`}>
-                        <ChartColumn className="text-black-500 hover:opacity-60" />
-                      </Link>
-                    </div>
-                  </TableCell>
-                  <TableCell className="justify-center">
-                    {puzzle.copyText && (
-                      <div className="flex justify-center hover:opacity-60">
-                        <CopyButton copyText={puzzle.copyText} />
-                      </div>
-                    )}
-                  </TableCell>
+        {ROUNDS.map((round) => (
+          <>
+            <h1 className="pt-8 text-center text-2xl">{round.name}</h1>
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-inherit">
+                  <TableHead className="w-1/6 min-w-56">Name</TableHead>
+                  <TableHead className="w-1/6">Answer</TableHead>
+                  <TableHead className="w-2/3 whitespace-nowrap">
+                    Next Unlock
+                  </TableHead>
+                  <TableHead className="w-fit">Puzzle</TableHead>
+                  <TableHead className="w-fit">Solution</TableHead>
+                  <TableHead className="w-fit">Statistics</TableHead>
+                  <TableHead className="w-fit">Copy</TableHead>
                 </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+              </TableHeader>
+              <TableBody>
+                {allPuzzlesWithEverything
+                  .filter((puzzle) => round.puzzles.includes(puzzle.id))
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((puzzle) => (
+                    <TableRow key={puzzle.id} className="hover:bg-inherit">
+                      <TableCell>
+                        <Link
+                          className="text-blue-500 hover:underline"
+                          href={`/puzzle/${puzzle.id}`}
+                        >
+                          {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-emerald-600">{puzzle.answer}</p>
+                      </TableCell>
+                      <TableCell>
+                        {puzzle.nextUnlocks.map((nextUnlock) => (
+                          <>
+                            <>[</>
+                            <Link
+                              key={nextUnlock.id}
+                              href={`/puzzle/${nextUnlock.id}`}
+                              className="hover:underline"
+                            >
+                              {nextUnlock.name}
+                            </Link>
+                            <>] </>
+                          </>
+                        ))}
+                      </TableCell>
+                      <TableCell className="justify-center">
+                        {puzzle.inPersonBody && (
+                          <div className="flex justify-center">
+                            <Link href={`/puzzle/${puzzle.id}`}>
+                              <Puzzle className="text-red-500 hover:opacity-75" />
+                            </Link>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="justify-center">
+                        {puzzle.solutionBody && (
+                          <div className="flex justify-center">
+                            <Link href={`/puzzle/${puzzle.id}/solution`}>
+                              <KeyRound className="text-yellow-500 hover:opacity-75" />
+                            </Link>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="justify-center">
+                        <div className="flex justify-center">
+                          <Link href={`/admin/statistics/${puzzle.id}`}>
+                            <ChartColumn className="text-black-500 hover:opacity-60" />
+                          </Link>
+                        </div>
+                      </TableCell>
+                      <TableCell className="justify-center">
+                        {puzzle.copyText && (
+                          <div className="flex justify-center hover:opacity-60">
+                            <CopyButton copyText={puzzle.copyText} />
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </>
+        ))}
       </div>
     </div>
   );

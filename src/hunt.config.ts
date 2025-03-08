@@ -354,6 +354,101 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "placeholder-ii": ["eye-to-eye", "fridge-magnets", "cutting-room-floor"],
 };
 
+export type Round = {
+  name: string;
+  puzzles: string[];
+};
+
+export const ROUNDS: Round[] = [
+  {
+    name: "Action",
+    puzzles: [
+      "drop-the",
+      "filming-schedule",
+      "heist",
+      "find-ben",
+      "walk-of-fame",
+      "fistful-of-cards",
+      "two-guards-two-doors",
+    ],
+  },
+  {
+    name: "Drama",
+    puzzles: [
+      "aha-erlebnis",
+      "beads",
+      "ten-guards-ten-doors",
+      "a-fistful-of-cards-ii",
+      "lost-category",
+      "youve-got-this-covered",
+      "heist-ii",
+    ],
+  },
+  {
+    name: "Comedy",
+    puzzles: [
+      "ballon-animals",
+      "two-guards-river",
+      "galileo-was-wrong",
+      "fractal-shanty",
+      "watching-between-the-lines",
+      "peanuts",
+      "plagiarism",
+    ],
+  },
+  {
+    name: "Digging",
+    puzzles: [
+      "boring-plot",
+      "identify-the-piece",
+      "once-upon-a-quote",
+      "imagine",
+      "narcissism",
+      "genetic-counseling",
+      "financial-crimes-3",
+      "m-guards-n-doors-and-k-choices",
+      "the-snack-zone",
+      "whats-my-ride",
+      "eye-spy",
+      "piecemeal",
+      "eye-of-the-storm",
+      "bluenos-puzzle-box",
+    ],
+  },
+  {
+    name: "Reality",
+    puzzles: [
+      "six-degrees",
+      "opening-sequences",
+      "are-you-sure",
+      "chain-letters",
+      "hand-letters",
+      "one-guard-screen",
+      "study-abroad",
+      "a-fistful-of-cards-iii",
+      "heist-iii",
+    ],
+  },
+  {
+    name: "Cerebral",
+    puzzles: [
+      "cutting-room-floor",
+      "color-transfer",
+      "the-guard-and-the-door",
+      "a-fistful-of-cards-iv",
+      "placeholder-i",
+      "eye-to-eye",
+      "fridge-magnets",
+      "red-blue",
+      "secret-ingredient",
+      "placeholder-ii",
+      "constellation",
+      "the-compact-disc",
+      "the-final-heist",
+    ],
+  },
+];
+
 /* HINTING SYSTEM
  * Teams currently get a hint request every three hours since the start of the hunt.
  * Teams cannot have more than one outstanding request at a time.
