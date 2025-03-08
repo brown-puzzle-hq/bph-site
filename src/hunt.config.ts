@@ -157,7 +157,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "walk-of-fame": ["find-ben", "a-fistful-of-cards"],
   "two-guards-two-doors": ["find-ben", "heist"],
   "find-ben": ["filming-schedule"], // walk-of-fame, two-guards-two-doors
-  "fistful-of-cards": ["ten-guards-ten-doors", "drop-the", "filming-schedule"], // walk-of-fame
+  "a-fistful-of-cards": ["ten-guards-ten-doors", "drop-the", "filming-schedule"], // walk-of-fame
   "filming-schedule": [
     "find-ben",
     "a-fistful-of-cards",
@@ -368,7 +368,7 @@ export const ROUNDS: Round[] = [
       "heist",
       "find-ben",
       "walk-of-fame",
-      "fistful-of-cards",
+      "a-fistful-of-cards",
       "two-guards-two-doors",
     ],
   },
@@ -387,7 +387,7 @@ export const ROUNDS: Round[] = [
   {
     name: "Comedy",
     puzzles: [
-      "ballon-animals",
+      "balloon-animals",
       "two-guards-river",
       "galileo-was-wrong",
       "fractal-shanty",
