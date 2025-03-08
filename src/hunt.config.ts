@@ -209,7 +209,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "galileo-was-wrong": [
     "peanuts",
     "plagiarism",
-    "fracal-shanty",
+    "fractal-shanty",
     "one-guard-screen",
     "balloon-animals",
   ],
