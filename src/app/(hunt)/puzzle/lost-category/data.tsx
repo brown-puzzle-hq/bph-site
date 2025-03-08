@@ -1,3 +1,4 @@
+import Link from "next/link";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -11,85 +12,46 @@ export const puzzleId = "lost-category";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl py-4">
-    <p className="p-4 italic">We forgot the third category :(</p>
-    <div className="flex space-x-4 p-4">
-      <table>
-        <thead>
-          <tr className="outline">
-            <th className="w-80">1</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="outline">
-            <td>Steady Hand</td>
-          </tr>
-          <tr className="outline">
-            <td>Dragonhearted</td>
-          </tr>
-          <tr className="outline">
-            <td>Back to Ninjago</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table>
-        <thead>
-          <tr className="outline">
-            <th className="w-80">2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="outline">
-            <td>The Seeress’ Tower</td>
-          </tr>
-          <tr className="outline">
-            <td>Without Me</td>
-          </tr>
-          <tr className="outline">
-            <td>Too Late</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table>
-        <thead>
-          <tr className="outline">
-            <th className="w-80">3</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="outline"></tr>
-          <tr className="outline"></tr>
-          <tr className="outline"></tr>
-        </tbody>
-      </table>
-
-      <table>
-        <thead>
-          <tr className="outline">
-            <th className="w-96">4</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="outline">
-            <td>Oak and Ash and Thorn</td>
-          </tr>
-          <tr className="outline">
-            <td>Northern Attitude</td>
-          </tr>
-          <tr className="outline">
-            <td>S’Fall</td>
-          </tr>
-        </tbody>
-      </table>
+  <div>
+    <div className="mb-6 max-w-3xl text-center">
+      This is a physical puzzle! If your team has not already picked up a CD,
+      please visit HQ in Friedman 208.
     </div>
+    <Link href="https://drive.google.com/file/d/1RNsmetSNW0eVz7BIHFpvX-hz0PiW2a7n/view?usp=sharing">
+        <span className="underline">[audio]</span>
+      </Link>
+    <hr className="my-6 mb-6 border-t border-white" />
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div>
+    <div className="max-w-3xl text-center">
+      <i>
+        This is a physical puzzle! You should have received it in your Box.
+        Contact brownpuzzlehq@gmail.com with any questions about your Box or its
+        materials.
+      </i>
+    </div>
+    <hr className="my-6 mb-6 border-t border-white" />
+  </div>
+);
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div>
+    <div className="mt-8 max-w-3xl text-center">
+      <Link href="https://drive.google.com/file/d/1RNsmetSNW0eVz7BIHFpvX-hz0PiW2a7n/view?usp=sharing">
+        <span className="underline">[audio]</span>
+      </Link>
+    </div>
+    <div className="flex justify-center pb-4">
+      <audio controls>
+        <source src="/api/puzzle/lost-category" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.
