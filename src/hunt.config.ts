@@ -57,12 +57,12 @@ export const SEQUENCES: Sequence[] = [
     name: "Guards",
     icon: "💂",
     puzzles: [
-      "the-guard-and-the-door",
-      "two-guards-river",
-      "m-guards-n-doors-and-k-choices",
       "two-guards-two-doors",
+      "two-guards-river",
       "ten-guards-ten-doors",
+      "m-guards-n-doors-and-k-choices",
       "one-guard-screen",
+      "the-guard-and-the-door",
     ],
   },
   {
@@ -74,20 +74,20 @@ export const SEQUENCES: Sequence[] = [
     name: "CD",
     icon: "💿",
     puzzles: [
-      "the-compact-disc",
-      "imagine",
-      "youve-got-this-covered",
       "lost-category",
+      "youve-got-this-covered",
+      "imagine",
+      "the-compact-disc",
     ],
   },
   {
     name: "Ben Doyle Squad",
     icon: "✈️",
     puzzles: [
-      "color-transfer",
       "find-ben",
       "bluenos-puzzle-box",
       "the-snack-zone",
+      "color-transfer",
     ],
   },
   {
@@ -98,12 +98,17 @@ export const SEQUENCES: Sequence[] = [
   {
     name: "Tree",
     icon: "🌲",
-    puzzles: ["secret-ingredient", "opening-sequences", "whats-my-ride"],
+    puzzles: ["opening-sequences", "whats-my-ride", "secret-ingredient"],
   },
   {
     name: "Star",
     icon: "⭐",
-    puzzles: ["walk-of-fame", "whats-my-ride"],
+    puzzles: [
+      "walk-of-fame",
+      "whats-my-ride",
+      "galileo-was-wrong",
+      "constellation",
+    ],
   },
   {
     name: "Cards",
@@ -114,6 +119,11 @@ export const SEQUENCES: Sequence[] = [
       "a-fistful-of-cards-iii",
       "a-fistful-of-cards-iv",
     ],
+  },
+  {
+    name: "Time",
+    icon: "⏰",
+    puzzles: ["filming-schedule", "youve-got-this-covered", "hand-letters"], // Need placeholder
   },
 ];
 

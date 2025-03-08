@@ -22,12 +22,12 @@ export default auth(async (req) => {
   // Protect puzzle pages.
   // This matches on /puzzle/puzzleId and /puzzle/puzzleId/solution
   // but not on /puzzle
-  if (req.nextUrl.pathname.match(/^\/puzzle\/.+/)) {
-    if (new Date() < IN_PERSON.START_TIME) {
-      const newUrl = new URL("./puzzle", req.nextUrl.origin);
-      return Response.redirect(newUrl);
-    }
-  }
+  // if (req.nextUrl.pathname.match(/^\/puzzle\/.+/)) {
+  //   if (new Date() < IN_PERSON.START_TIME) {
+  //     const newUrl = new URL("./puzzle", req.nextUrl.origin);
+  //     return Response.redirect(newUrl);
+  //   }
+  // }
 });
 
 export const config = {
