@@ -1,10 +1,16 @@
+import Image from "next/image";
+import IMG1 from "./1.png";
+import IMG2 from "./2.png";
+import IMG3 from "./3.png";
+import IMG4 from "./4.png";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "example";
+export const puzzleId = "narcissism";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
@@ -12,7 +18,13 @@ export const puzzleId = "example";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    This is the body of the puzzle.
+    <i>Your therapist asks if you feel that something’s missing.</i>
+    <div className="grid grid-cols-1 gap-8 p-4 sm:grid-cols-2">
+      <Image src={IMG1} className="rounded-lg" alt="" />
+      <Image src={IMG2} className="rounded-lg" alt="" />
+      <Image src={IMG3} className="rounded-lg" alt="" />
+      <Image src={IMG4} className="rounded-lg" alt="" />
+    </div>
   </div>
 );
 

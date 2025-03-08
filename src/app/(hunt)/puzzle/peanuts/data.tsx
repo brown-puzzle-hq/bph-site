@@ -4,21 +4,21 @@
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "example";
+export const puzzleId = "peanuts";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = (
-  <div className="max-w-3xl space-y-4 text-center">
-    This is the body of the puzzle.
-  </div>
-);
+export const inPersonBody = <div />;
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div className="max-w-3xl text-center">
+    This is the body of the remote puzzle.
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.

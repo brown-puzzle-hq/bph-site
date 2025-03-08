@@ -1,10 +1,36 @@
+const TEXT =
+  "R A L E R N T O O J W L E N A A B I C E M O, O E I A M I L D R A S O O Y N E L N D A A L, D E E T C L F A L A R T R N A, E S E L I R N A T H C I O, G E A E H A S R N, S O L N N N W M R T S I A N B Y H B R E I R K O S E E M E I L E K E O C T R R T O S N Y B H, A S A F Y G O R D N S O E C A A Y T R T A P O, I M E D S R L I E G L, A R V O J C D I";
+const NAMES = [
+  "Alberto",
+  "Beryl",
+  "Chris",
+  "Debby",
+  "Ernesto",
+  "Francine",
+  "Gordon",
+  "Helene",
+  "Isaac",
+  "Joyce",
+  "Kirk",
+  "Leslie",
+  "Milton",
+  "Nadine",
+  "Oscar",
+  "Patty",
+  "Rafael",
+  "Sara",
+  "Tony",
+  "Valerie",
+  "William",
+];
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "example";
+export const puzzleId = "eye-of-the-storm";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
@@ -12,7 +38,17 @@ export const puzzleId = "example";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    This is the body of the puzzle.
+    <p>You spin it right round, I, right round like a... hurricane?</p>
+    <div className="mx-auto grid w-fit grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(13,1.5em)] border">
+      {TEXT.split(" ").map((box) => (
+        <p className="flex items-center justify-center border">{box}</p>
+      ))}
+    </div>
+    <div>
+      {NAMES.map((name) => (
+        <p>{name}</p>
+      ))}
+    </div>
   </div>
 );
 

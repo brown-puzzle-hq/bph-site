@@ -1,10 +1,27 @@
+import Image from "next/image";
+import MONKEY from "./monkey.png";
+import BAT from "./bat.png";
+import CAT from "./cat.png";
+import FISH from "./fish.png";
+import FLOWER from "./flower.png";
+import PLUTO from "./pluto.png";
+
+const ITEMS = [
+  { name: "Bat", src: BAT, desc: "big wings (start beginning)" },
+  { name: "Cat", src: CAT, desc: "snout, left leg (start end)" },
+  { name: "Fish", src: FISH, desc: "bottom tail, head (start beginning)" },
+  { name: "Flower", src: FLOWER, desc: "bottom stem, bottom leaf (start end)" },
+  { name: "Monkey", src: MONKEY, desc: "ears (start beginning)" },
+  { name: "Pluto", src: PLUTO, desc: "back legs (start end)" },
+];
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "example";
+export const puzzleId = "balloon-animals";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
@@ -12,7 +29,19 @@ export const puzzleId = "example";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    This is the body of the puzzle.
+    <p>
+      Your circus movie is pretty good, but it requires more mainstream appeal.
+    </p>
+    <p>What do you need?</p>
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+      {ITEMS.map(({ name, src, desc }) => (
+        <div className="space-y-4">
+          <p className="font-bold text-main-header">{name}</p>
+          <Image src={src} alt="" className="rounded-lg" />
+          <p>{desc}</p>
+        </div>
+      ))}
+    </div>
   </div>
 );
 

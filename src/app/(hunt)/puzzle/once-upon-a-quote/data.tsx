@@ -1,10 +1,13 @@
+import Image from "next/image";
+import CONTENT from "./Once Upon A Quote.svg";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "example";
+export const puzzleId = "once-upon-a-quote";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
@@ -12,7 +15,7 @@ export const puzzleId = "example";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    This is the body of the puzzle.
+    <Image src={CONTENT} alt="" />
   </div>
 );
 
