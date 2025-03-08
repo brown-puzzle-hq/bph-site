@@ -55,7 +55,11 @@ export default async function DefaultHeader({
             {seq.puzzles.map((puzzId) =>
               unlocked[puzzId] ? (
                 <div className="group relative">
-                  <Link className="text-2xl" href={`/puzzle/${puzzId}`}>
+                  <Link
+                    className="text-2xl"
+                    href={`/puzzle/${puzzId}`}
+                    prefetch={false}
+                  >
                     {seq.icon}
                   </Link>
                   {puzzId === puzzleId ? (
