@@ -67,6 +67,14 @@ export const inPersonBody = (
       <li>Recycling Waste</li>
       <li>Resell</li>
     </ul>
+
+    <div className="mt-8 flex justify-center gap-4">
+      <Image src={booklet1} alt="Booklet #1" width={200} height={400} />
+      <Image src={booklet2} alt="Booklet #2" width={200} height={400} />
+      <Image src={booklet3} alt="Booklet #3" width={200} height={400} />
+      <Image src={booklet4} alt="Booklet #4" width={200} height={400} />
+    </div>
+    
   </div>
 );
 
