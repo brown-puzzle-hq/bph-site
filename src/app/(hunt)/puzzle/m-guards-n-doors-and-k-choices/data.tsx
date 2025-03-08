@@ -4,40 +4,21 @@
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "red-blue";
+export const puzzleId = "example";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-  <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
-    </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="p-4">
-      Hey, isn't blue kinda negative? I think red better fits my positive
-      personality!
-    </i>
-
-    <div className="grid w-60 grid-cols-5 gap-0 pb-4">
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={i}
-          className={`flex h-12 w-12 items-center justify-center border ${
-            i === 4 ? "border-none" : ""
-          }`}
-        ></div>
-      ))}
-    </div>
-  </div>
+  <div className="max-w-3xl space-y-4 text-center">
+    This puzzle has no online component. See HQ for an interaction.
   </div>
 );
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = null;
+export const remoteBody = inPersonBody;
 
 /**
  * The `solutionBody` renders in the solution page.
@@ -49,7 +30,7 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null; // Should be composed of the const variables up top
+export const copyText = null;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

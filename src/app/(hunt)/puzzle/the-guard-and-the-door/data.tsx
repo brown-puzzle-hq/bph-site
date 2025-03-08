@@ -11,6 +11,10 @@ export const puzzleId = "the-guard-and-the-door";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+  <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the 💂 sequence.
+    </div>
   <div className="max-w-3xl">
     <p className="mb-8 italic">
       As you approach the end of Brown Puzzlehunt, you find in front of you The
@@ -37,6 +41,7 @@ export const inPersonBody = (
       “When they both point, they will point right or wrong,
       <br></br>find how many are right, and you'll move right along.”
     </p>
+  </div>
   </div>
 );
 

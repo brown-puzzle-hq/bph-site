@@ -78,6 +78,13 @@ export const puzzleId = "boring-plot";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+  <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a metapuzzle. It uses feeders from the{" "}
+        <span className="underline">ADVENTURE</span> round.
+      </b>
+    </div>
   <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
     <i>
       You've spent ages digging through your backyard with only 6 fossils to
@@ -130,6 +137,7 @@ export const inPersonBody = (
         ),
       )}
     </div>
+  </div>
   </div>
 );
 

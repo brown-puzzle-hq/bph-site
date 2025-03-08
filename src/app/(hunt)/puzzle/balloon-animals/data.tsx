@@ -28,6 +28,13 @@ export const puzzleId = "balloon-animals";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+  <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a metapuzzle. It uses feeders from the{" "}
+        <span className="underline">COMEDY</span> round.
+      </b>
+    </div>
   <div className="max-w-3xl space-y-4 text-center">
     <p>
       Your circus movie is pretty good, but it requires more mainstream appeal.
@@ -42,6 +49,7 @@ export const inPersonBody = (
         </div>
       ))}
     </div>
+  </div>
   </div>
 );
 

@@ -15,6 +15,10 @@ export const puzzleId = "color-transfer";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+  <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the ✈️ sequence.
+    </div>
   <div className="max-w-2xl">
     <p className="pb-4">
       Your three tickets each entitle you to ride to stops on four trains, on
@@ -33,6 +37,7 @@ export const inPersonBody = (
     <div className="flex justify-center pb-4">
       <Image src={Image2} alt="" width={700} height={700} />
     </div>
+  </div>
   </div>
 );
 

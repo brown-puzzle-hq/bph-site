@@ -28,6 +28,10 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
+  <div>
+  <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the 🌲 sequence.
+    </div>
   <div className="max-w-3xl space-y-4 text-center">
     <div>
       This puzzle is about the mobile game Little Alchemy (the first one, NOT
@@ -47,6 +51,7 @@ export const solutionBody = (
       bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
       puzzle&apos;s answer.
     </div>
+  </div>
   </div>
 );
 
