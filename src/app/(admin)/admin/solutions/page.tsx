@@ -102,7 +102,7 @@ export default async function Home() {
                     <TableRow key={puzzle.id} className="hover:bg-inherit">
                       <TableCell>
                         <a
-                          className="text-link hover:underline"
+                          className="text-blue-500 hover:underline"
                           href={`/puzzle/${puzzle.id}`}
                         >
                           {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
