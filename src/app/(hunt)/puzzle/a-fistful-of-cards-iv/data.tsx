@@ -107,7 +107,6 @@ export const inPersonBody = (
       <Image src={booklet3} alt="Booklet #3" width={200} height={400} />
       <Image src={booklet4} alt="Booklet #4" width={200} height={400} />
     </div>
-
   </div>
 );
 

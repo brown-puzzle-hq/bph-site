@@ -142,7 +142,14 @@ export const INITIAL_PUZZLES: string[] = [
 ];
 
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */
-export const META_PUZZLES: string[] = [];
+export const META_PUZZLES: string[] = [
+  "drop-the",
+  "aha-erlebnis",
+  "balloon-animals",
+  "boring-plot",
+  "six-degrees",
+  "cutting-room-floor",
+];
 
 /** Adjacency list for puzzles */
 export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
@@ -213,7 +220,6 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "one-guard-screen",
     "balloon-animals",
   ],
-  "one-guard-screen": ["galileo-was-wrong", "fractal-shanty"],
   "balloon-animals": ["galileo-was-wrong", "fractal-shanty"],
 
   // DRAMA -> DIGGING
@@ -234,16 +240,119 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "eye-spy",
     "identify-the-piece",
   ],
-};
+  piecemeal: [
+    "narcissism",
+    "financial-crimes-3",
+    "genetic-counseling",
+    "identify-the-piece",
+  ],
+  "eye-spy": ["bluenos-puzzle-box", "whats-my-ride", "imagine"],
+  "identify-the-piece": [
+    "whats-my-ride",
+    "piecemeal",
+    "imagine",
+    "once-upon-a-quote",
+  ],
+  "genetic-counseling": [
+    "piecemeal",
+    "financial-crimes-3",
+    "once-upon-a-quote",
+    "the-snack-zone",
+  ],
+  imagine: [
+    "eye-spy",
+    "identify-the-piece",
+    "once-upon-a-quote",
+    "the-guard-and-the-door",
+  ],
+  "once-upon-a-quote": [
+    "identify-the-piece",
+    "imagine",
+    "genetic-counseling",
+    "the-snack-zone",
+    "the-guard-and-the-door",
+  ],
+  "the-snack-zone": [
+    "genetic-counseling",
+    "once-upon-a-quote",
+    "the-guard-and-the-door",
+  ],
 
-// For developers
-// export const INITIAL_PUZZLES: string[] = ["example", "seq1"];
-// export const META_PUZZLES = ["meta"];
-// export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
-//   example: ["puzzle1", "puzzle2"],
-//   puzzle1: ["puzzle2", "hello"],
-//   seq1: ["seq2"],
-// };
+  // REALITY -> COMEDY
+  "one-guard-screen": [
+    "galileo-was-wrong",
+    "fractal-shanty",
+    "opening-sequences",
+    "chain-letters",
+  ],
+  "opening-sequences": ["a-fistful-of-cards-iii", "hand-letters"],
+  "chain-letters": ["hand-letters", "heist-iii"],
+  "a-fistful-of-cards-iii": ["the-guard-and-the-door", "study-abroad"], // opening-sequences
+  "hand-letters": ["study-abroad", "are-you-sure"], // opening-sequences, chain-letters,
+  "heist-iii": ["are-you-sure", "six-degrees"], // chain-letters
+  "study-abroad": [
+    "a-fistful-of-cards-iii",
+    "hand-letters",
+    "are-you-sure",
+    "the-guard-and-the-door",
+  ],
+  "are-you-sure": ["study-abroad", "hand-letters", "heist-iii", "six-degrees"],
+
+  "the-guard-and-the-door": [
+    // digging
+    "imagine",
+    "once-upon-a-quote",
+    "the-snack-zone",
+    // reality
+    "study-abroad",
+    "a-fistful-of-cards-iii",
+    // cerebral
+    "red-blue",
+    "a-fistful-of-cards-iv",
+    "the-final-heist",
+    "the-compact-disc",
+  ],
+
+  // CEREBRAL
+  "red-blue": ["constellation", "secret-ingredient"], // the-guard-and-the-door
+  "a-fistful-of-cards-iv": ["constellation", "color-transfer"], // the-guard-and-the-door
+  "the-final-heist": ["color-transfer", "eye-to-eye"], // the-guard-and-the-door
+  "the-compact-disc": ["fridge-magnets", "eye-to-eye"], // the-guard-and-the-door
+  constellation: [
+    "red-blue",
+    "a-fistful-of-cards-iv",
+    "secret-ingredient",
+    "placeholder-i",
+  ], // PLACEHOLDER I is blueberry
+  "color-transfer": [
+    "a-fistful-of-cards-iv",
+    "the-final-heist",
+    "secret-ingredient",
+    "fridge-magnets",
+  ],
+  "eye-to-eye": [
+    "the-final-heist",
+    "the-compact-disc",
+    "fridge-magnets",
+    "placeholder-ii",
+  ], // PLACEHOLDER II is blueberry
+  "secret-ingredient": [
+    "red-blue",
+    "constellation",
+    "color-transfer",
+    "placeholder-i",
+    "cutting-room-floor",
+  ],
+  "fridge-magnets": [
+    "color-transfer",
+    "the-compact-disc",
+    "eye-to-eye",
+    "placeholder-ii",
+    "cutting-room-floor",
+  ],
+  "placeholder-i": ["constellation", "secret-ingredient", "cutting-room-floor"],
+  "placeholder-ii": ["eye-to-eye", "fridge-magnets", "cutting-room-floor"],
+};
 
 /* HINTING SYSTEM
  * Teams currently get a hint request every three hours since the start of the hunt.

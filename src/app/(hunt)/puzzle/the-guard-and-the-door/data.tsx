@@ -12,36 +12,37 @@ export const puzzleId = "the-guard-and-the-door";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl">
       This is a sequence metapuzzle. It uses feeders from the 💂 sequence.
     </div>
-  <div className="max-w-3xl">
-    <p className="mb-8 italic">
-      As you approach the end of Brown Puzzlehunt, you find in front of you The
-      Guard and The Door.
-      <br></br>The Guard tells you the following:
-    </p>
-    <p className="mb-4">
-      “Upon observation, when viewing it all,
-      <br></br>how many are spotted right there on the wall?
-    </p>
-    <p className="mb-4">
-      “Once the second one comes near, and if the truth is all you hear,
-      <br></br>you must make it very clear the chance your letters are top tier.
-    </p>
-    <p className="mb-4">
-      “In the past few moves, I need not see a thing,
-      <br></br>but I now must observe to decide what to bring.
-    </p>
-    <p className="mb-4">
-      “Not the moment you march straight through a door,
-      <br></br>but the time that you get four chances before.
-    </p>
-    <p className="mb-4">
-      “When they both point, they will point right or wrong,
-      <br></br>find how many are right, and you'll move right along.”
-    </p>
-  </div>
+    <div className="max-w-3xl">
+      <p className="mb-8 italic">
+        As you approach the end of Brown Puzzlehunt, you find in front of you
+        The Guard and The Door.
+        <br></br>The Guard tells you the following:
+      </p>
+      <p className="mb-4">
+        “Upon observation, when viewing it all,
+        <br></br>how many are spotted right there on the wall?
+      </p>
+      <p className="mb-4">
+        “Once the second one comes near, and if the truth is all you hear,
+        <br></br>you must make it very clear the chance your letters are top
+        tier.
+      </p>
+      <p className="mb-4">
+        “In the past few moves, I need not see a thing,
+        <br></br>but I now must observe to decide what to bring.
+      </p>
+      <p className="mb-4">
+        “Not the moment you march straight through a door,
+        <br></br>but the time that you get four chances before.
+      </p>
+      <p className="mb-4">
+        “When they both point, they will point right or wrong,
+        <br></br>find how many are right, and you'll move right along.”
+      </p>
+    </div>
   </div>
 );
 

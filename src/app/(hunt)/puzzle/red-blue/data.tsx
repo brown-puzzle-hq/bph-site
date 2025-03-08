@@ -12,26 +12,26 @@ export const puzzleId = "red-blue";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl">
       This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
     </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="p-4">
-      Hey, isn't blue kinda negative? I think red better fits my positive
-      personality!
-    </i>
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i className="p-4">
+        Hey, isn't blue kinda negative? I think red better fits my positive
+        personality!
+      </i>
 
-    <div className="grid w-60 grid-cols-5 gap-0 pb-4">
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={i}
-          className={`flex h-12 w-12 items-center justify-center border ${
-            i === 4 ? "border-none" : ""
-          }`}
-        ></div>
-      ))}
+      <div className="grid w-60 grid-cols-5 gap-0 pb-4">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div
+            key={i}
+            className={`flex h-12 w-12 items-center justify-center border ${
+              i === 4 ? "border-none" : ""
+            }`}
+          ></div>
+        ))}
+      </div>
     </div>
-  </div>
   </div>
 );
 

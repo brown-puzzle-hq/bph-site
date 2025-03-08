@@ -15,14 +15,14 @@ export const puzzleId = "the-compact-disc";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl">
       This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
     </div>
-  <div className="max-w-2xl p-4">
-    <div className="flex justify-center pb-4">
-      <Image src={Disc} alt="" width={500} height={500} />
+    <div className="max-w-2xl p-4">
+      <div className="flex justify-center pb-4">
+        <Image src={Disc} alt="" width={500} height={500} />
+      </div>
     </div>
-  </div>
   </div>
 );
 

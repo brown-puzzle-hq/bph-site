@@ -16,28 +16,28 @@ export const puzzleId = "color-transfer";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl">
       This is a sequence metapuzzle. It uses feeders from the ✈️ sequence.
     </div>
-  <div className="max-w-2xl">
-    <p className="pb-4">
-      Your three tickets each entitle you to ride to stops on four trains, on
-      the following lines, in the following order:
-    </p>
-    <div className="flex justify-center pb-4">
-      <Image src={Image1} alt="" width={500} height={500} />
-    </div>
-    <p className="pb-4">
-      You can choose to get on trains travelling in either direction along the
-      line. When a train reaches the end of the line, it turns around and
-      travels in the other direction.
-    </p>
-    <p className="pb-4">Each stop that you travel costs a coin.</p>
+    <div className="max-w-2xl">
+      <p className="pb-4">
+        Your three tickets each entitle you to ride to stops on four trains, on
+        the following lines, in the following order:
+      </p>
+      <div className="flex justify-center pb-4">
+        <Image src={Image1} alt="" width={500} height={500} />
+      </div>
+      <p className="pb-4">
+        You can choose to get on trains travelling in either direction along the
+        line. When a train reaches the end of the line, it turns around and
+        travels in the other direction.
+      </p>
+      <p className="pb-4">Each stop that you travel costs a coin.</p>
 
-    <div className="flex justify-center pb-4">
-      <Image src={Image2} alt="" width={700} height={700} />
+      <div className="flex justify-center pb-4">
+        <Image src={Image2} alt="" width={700} height={700} />
+      </div>
     </div>
-  </div>
   </div>
 );
 

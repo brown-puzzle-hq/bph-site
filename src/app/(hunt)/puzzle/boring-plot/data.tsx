@@ -79,40 +79,54 @@ export const puzzleId = "boring-plot";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-4 max-w-3xl text-center">
+    <div className="mb-4 max-w-3xl text-center">
       <b>
         This is a metapuzzle. It uses feeders from the{" "}
         <span className="underline">ADVENTURE</span> round.
       </b>
     </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i>
-      You've spent ages digging through your backyard with only 6 fossils to
-      show for it. If you dig through the fossil stack instead, going right and
-      down, maybe you'll find what you need. What is the plot missing?
-    </i>
-    <p className="font-bold text-main-header">Your Backyard</p>
-    <div className="grid">
-      <div className="col-start-1 row-start-1 grid grid-cols-[0em,repeat(29,1.5em)] grid-rows-[repeat(10,1.5em)]">
-        {FULLGRID.flatMap((row) =>
-          row.map((cell) => <div className={COLORS[cell]} />),
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i>
+        You've spent ages digging through your backyard with only 6 fossils to
+        show for it. If you dig through the fossil stack instead, going right
+        and down, maybe you'll find what you need. What is the plot missing?
+      </i>
+      <p className="font-bold text-main-header">Your Backyard</p>
+      <div className="grid">
+        <div className="col-start-1 row-start-1 grid grid-cols-[0em,repeat(29,1.5em)] grid-rows-[repeat(10,1.5em)]">
+          {FULLGRID.flatMap((row) =>
+            row.map((cell) => <div className={COLORS[cell]} />),
+          )}
+        </div>
+        <div className="col-start-1 row-start-1 pl-1 text-left font-mono font-bold text-main-header">
+          <br />
+          <br />
+          <br />
+          {ARRANGEMENT.map((line) => (
+            <div>{line}</div>
+          ))}
+        </div>
+      </div>
+      <p className="font-bold text-main-header">Digging Guide</p>
+      <div className="grid grid-cols-[repeat(26,1.5em)] grid-rows-[repeat(14,1.5em)] font-mono text-secondary-accent">
+        {DIGGING.flatMap((row) =>
+          row
+            .split("")
+            .map((cell) =>
+              cell == "." ? (
+                <p />
+              ) : (
+                <p className="flex items-center justify-center rounded-md border border-main-bg bg-main-accent">
+                  {cell}
+                </p>
+              ),
+            ),
         )}
       </div>
-      <div className="col-start-1 row-start-1 pl-1 text-left font-mono font-bold text-main-header">
-        <br />
-        <br />
-        <br />
-        {ARRANGEMENT.map((line) => (
-          <div>{line}</div>
-        ))}
-      </div>
-    </div>
-    <p className="font-bold text-main-header">Digging Guide</p>
-    <div className="grid grid-cols-[repeat(26,1.5em)] grid-rows-[repeat(14,1.5em)] font-mono text-secondary-accent">
-      {DIGGING.flatMap((row) =>
-        row
-          .split("")
-          .map((cell) =>
+      <p className="font-bold text-main-header">Fossil Stack</p>
+      <div className="grid grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(6,1.5em)]">
+        {FULLSTACK.flatMap((row) =>
+          row.map((cell) =>
             cell == "." ? (
               <p />
             ) : (
@@ -121,23 +135,9 @@ export const inPersonBody = (
               </p>
             ),
           ),
-      )}
+        )}
+      </div>
     </div>
-    <p className="font-bold text-main-header">Fossil Stack</p>
-    <div className="grid grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(6,1.5em)]">
-      {FULLSTACK.flatMap((row) =>
-        row.map((cell) =>
-          cell == "." ? (
-            <p />
-          ) : (
-            <p className="flex items-center justify-center rounded-md border border-main-bg bg-main-accent">
-              {cell}
-            </p>
-          ),
-        ),
-      )}
-    </div>
-  </div>
   </div>
 );
 

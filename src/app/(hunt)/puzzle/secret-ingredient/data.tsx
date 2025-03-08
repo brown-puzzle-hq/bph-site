@@ -29,29 +29,29 @@ export const remoteBody = inPersonBody;
  */
 export const solutionBody = (
   <div>
-  <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl">
       This is a sequence metapuzzle. It uses feeders from the 🌲 sequence.
     </div>
-  <div className="max-w-3xl space-y-4 text-center">
-    <div>
-      This puzzle is about the mobile game Little Alchemy (the first one, NOT
-      Little Alchemy 2). That game is about combining elements to create new
-      elements. You start with Earth, Air, Water, and Fire, and create from
-      there by combining two elements at a time.{" "}
+    <div className="max-w-3xl space-y-4 text-center">
+      <div>
+        This puzzle is about the mobile game Little Alchemy (the first one, NOT
+        Little Alchemy 2). That game is about combining elements to create new
+        elements. You start with Earth, Air, Water, and Fire, and create from
+        there by combining two elements at a time.{" "}
+      </div>
+      <div>
+        For this puzzle, you follow along with the combinations laid out in the
+        tree. Each junction is an element created by combining the two above it,
+        leading back to the four basic elements. The blue boxes are labelled
+        with the names of other puzzles, and for those you “plug in” the answer
+        to those puzzles (bird for opening sequences and sun for whats my ride).
+      </div>
+      <div>
+        Once you complete the trees, you should get at the blue boxes at the
+        bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
+        puzzle&apos;s answer.
+      </div>
     </div>
-    <div>
-      For this puzzle, you follow along with the combinations laid out in the
-      tree. Each junction is an element created by combining the two above it,
-      leading back to the four basic elements. The blue boxes are labelled with
-      the names of other puzzles, and for those you “plug in” the answer to
-      those puzzles (bird for opening sequences and sun for whats my ride).
-    </div>
-    <div>
-      Once you complete the trees, you should get at the blue boxes at the
-      bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
-      puzzle&apos;s answer.
-    </div>
-  </div>
   </div>
 );
 
