@@ -48,9 +48,7 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = (
-  <div className="max-w-3xl text-center">This is an example solution.</div>
-);
+export const solutionBody = null;
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
