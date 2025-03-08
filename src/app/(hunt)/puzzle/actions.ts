@@ -74,7 +74,7 @@ export async function canViewPuzzle(
   }
 
   // The hunt has not started yet and the user is not an admin or testsolver
-  redirect("/puzzle");
+  return "not_authorized";
 }
 
 /** Checks whether the user can view the solution.

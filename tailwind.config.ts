@@ -1,10 +1,14 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-import colors from "tailwindcss/colors"; // Change this line
+import colors from "tailwindcss/colors";
 
 export default {
   darkMode: ["class"],
-  content: ["./src/**/*.tsx"],
+  content: [
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -73,9 +77,9 @@ export default {
           css: {
             "--tw-prose-body": theme("colors.main-text"),
             "--tw-prose-headings": theme("colors.main-header"),
-            // "--tw-prose-lead": theme("colors.pink[700]"),
             "--tw-prose-links": theme("colors.link"),
             "--tw-prose-bold": theme("colors.main-header"),
+            // "--tw-prose-lead": theme("colors.pink[700]"),
             // "--tw-prose-counters": theme("colors.pink[600]"),
             // "--tw-prose-bullets": theme("colors.pink[400]"),
             // "--tw-prose-hr": theme("colors.pink[300]"),

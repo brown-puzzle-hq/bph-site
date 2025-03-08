@@ -1,6 +1,6 @@
 import Image from "next/image";
-import BEN from "./ben.jpeg";
-import ORIGINAL_BEN from "./original-ben.jpeg";
+import BEN from "./media/ben.jpeg";
+import ORIGINAL_BEN from "./media/original-ben.jpeg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -17,6 +17,10 @@ export const puzzleId = "find-ben";
 export const inPersonBody = (
   <div className="max-w-3xl text-center">
     <p className="mb-4 italic">What kind of place is behind Ben?</p>
+    <video width="1280" height="721" controls className="mb-4">
+      <source src="/api/puzzle/find-ben" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
     <Image src={BEN} alt="" width={1280} height={721} className="mb-4" />
   </div>
 );
