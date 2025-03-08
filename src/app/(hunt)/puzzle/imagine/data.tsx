@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 
 /**
@@ -20,7 +19,7 @@ export const inPersonBody = (
       please visit HQ in Friedman 208.
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
-    <div className="max-w-3xl text-center">
+    <div className="max-w-3xl pb-4 text-center">
       <i>
         The only inspiring thing here is how the internet came together to say
         "no."
@@ -39,7 +38,7 @@ export const remoteBoxBody = (
       </i>
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
-    <div className="max-w-3xl text-center">
+    <div className="max-w-3xl pb-4 text-center">
       <i>
         The only inspiring thing here is how the internet came together to say
         "no."
@@ -61,9 +60,15 @@ export const remoteBody = (
         <span className="underline">[audio]</span>
       </Link>
     </div>
-    {/* i do not know how to embed audio and cannot figure it out so this can be fixed later */}
+    <div className="flex justify-center pb-4">
+      <audio controls>
+        <source src="/api/puzzle/imagine" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
   </div>
 );
+
 /**
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.

@@ -70,6 +70,7 @@ export const SEQUENCES: Sequence[] = [
     icon: "⛓️",
     puzzles: [
       // INCOMPLETE
+      "red-blue",
       "chain-letters",
     ],
   },

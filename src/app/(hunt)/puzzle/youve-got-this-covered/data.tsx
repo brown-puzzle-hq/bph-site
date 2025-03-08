@@ -41,7 +41,12 @@ export const remoteBody = (
         <span className="underline">[audio]</span>
       </Link>
     </div>
-    {/* i do not know how to embed audio and cannot figure it out so this can be fixed later */}
+    <div className="flex justify-center pb-4">
+      <audio controls>
+        <source src="/api/puzzle/youve-got-this-covered" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
   </div>
 );
 

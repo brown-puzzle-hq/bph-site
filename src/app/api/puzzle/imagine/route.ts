@@ -1,11 +1,11 @@
-import path from "path";
 import fs from "fs";
-import { NextResponse } from "next/server";
+import path from "path";
 import { auth } from "~/server/auth/auth";
+import { NextResponse } from "next/server";
 import { canViewPuzzle } from "~/app/(hunt)/puzzle/actions";
 
 export async function GET() {
-  const puzzleId = "genetic-counseling";
+  const puzzleId = "imagine";
 
   // Authentication
   const session = await auth();
@@ -14,7 +14,6 @@ export async function GET() {
     return new NextResponse(null, { status: 404 });
   }
 
-  // Get the file path from the public directory
   const filePath = path.join(
     process.cwd(),
     "src",
@@ -22,23 +21,23 @@ export async function GET() {
     "(hunt)",
     "puzzle",
     puzzleId,
-    `${puzzleId}.csv`,
+    `${puzzleId}.mp3`,
   );
 
   try {
     if (!fs.existsSync(filePath)) {
-      return new NextResponse("File not found", { status: 404 });
+      return new NextResponse("Audio file not found", { status: 404 });
     }
-    const csvContent = fs.readFileSync(filePath, "utf-8");
 
-    return new Response(csvContent, {
+    const audioBuffer = fs.readFileSync(filePath);
+
+    return new NextResponse(audioBuffer, {
       headers: {
-        "Content-Type": "text/csv",
-        "Content-Disposition": `attachment; filename=${puzzleId}.csv`,
+        "Content-Type": "audio/mpeg",
+        "Content-Disposition": `inline; filename=${puzzleId}.mp3`,
       },
-      status: 200,
     });
   } catch (error) {
-    return new NextResponse("Error loading file.");
+    return new NextResponse("Error loading audio file.");
   }
 }
