@@ -10,7 +10,10 @@ export const puzzleId = "peanuts";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = <div />;
+export const inPersonBody = (<div className="max-w-3xl text-center">
+  This is a physical puzzle! You should have received it at kickoff. Please
+  visit HQ in Friedman 208 if you believe you are missing these supplies.
+</div>);
 
 export const remoteBoxBody = inPersonBody;
 
