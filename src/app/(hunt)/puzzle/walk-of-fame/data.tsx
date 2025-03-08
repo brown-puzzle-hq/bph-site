@@ -1,5 +1,4 @@
 import Image from "next/image";
-import SECRET_INGREDIENT from "./puzzle.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -7,7 +6,7 @@ import SECRET_INGREDIENT from "./puzzle.png";
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "secret-ingredient";
+export const puzzleId = "walk-of-fame";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
@@ -15,38 +14,55 @@ export const puzzleId = "secret-ingredient";
  */
 export const inPersonBody = (
   <div className="max-w-3xl text-center">
-    <Image alt="" src={SECRET_INGREDIENT}></Image>
+    This is a physical puzzle! You should have received it at kickoff. Please
+    visit HQ in Friedman 208 if you believe you are missing these supplies.
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div className="max-w-3xl text-center">
+    This is a physical puzzle! You should have received it in your Box. Contact
+    brownpuzzlehq@gmail.com with any questions about your Box or its materials.
+  </div>
+);
 
-export const remoteBody = inPersonBody;
+import WOF1 from "./Walk of Fame (1).png";
+import WOF2 from "./Walk of Fame (2).png";
+import WOF3 from "./Walk of Fame (3).png";
+import WOF4 from "./Walk of Fame (4).png";
+import WOF5 from "./Walk of Fame (5).png";
+
+export const remoteBody = (
+  <div>
+    <div className="mb-4">
+      <Image src={WOF1} width={500} height={500} alt="" />
+    </div>
+
+    <div className="mb-4">
+      <Image src={WOF2} width={500} height={500} alt="" />
+    </div>
+
+    <div className="mb-4">
+      <Image src={WOF3} width={500} height={500} alt="" />
+    </div>
+
+    <div className="mb-4">
+      <Image src={WOF4} width={500} height={500} alt="" />
+    </div>
+
+    <div className="mb-4">
+      <Image src={WOF5} width={500} height={500} alt="" />
+    </div>
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl space-y-4 text-center">
-    <div>
-      This puzzle is about the mobile game Little Alchemy (the first one, NOT
-      Little Alchemy 2). That game is about combining elements to create new
-      elements. You start with Earth, Air, Water, and Fire, and create from
-      there by combining two elements at a time.{" "}
-    </div>
-    <div>
-      For this puzzle, you follow along with the combinations laid out in the
-      tree. Each junction is an element created by combining the two above it,
-      leading back to the four basic elements. The blue boxes are labelled with
-      the names of other puzzles, and for those you “plug in” the answer to
-      those puzzles (bird for opening sequences and sun for whats my ride).
-    </div>
-    <div>
-      Once you complete the trees, you should get at the blue boxes at the
-      bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
-      puzzle&apos;s answer.
-    </div>
+  <div className="max-w-3xl text-center">
+    This solution does not exist yet. Go nag Thomas.
   </div>
 );
 

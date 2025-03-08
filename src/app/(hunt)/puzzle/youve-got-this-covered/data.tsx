@@ -1,52 +1,57 @@
-import Image from "next/image";
-import SECRET_INGREDIENT from "./puzzle.png";
-
+import Link from "next/link";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "secret-ingredient";
+export const puzzleId = "youve-got-this-covered";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
-    <Image alt="" src={SECRET_INGREDIENT}></Image>
+  <div>
+    <div className="mb-6 max-w-3xl text-center">
+      This is a physical puzzle! If your team has not already picked up a CD,
+      please visit HQ in Friedman 208.
+    </div>
+    <hr className="my-6 mb-6 border-t border-white" />
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div>
+    <div className="max-w-3xl text-center">
+      <i>
+        This is a physical puzzle! You should have received it in your Box.
+        Contact brownpuzzlehq@gmail.com with any questions about your Box or its
+        materials.
+      </i>
+    </div>
+    <hr className="my-6 mb-6 border-t border-white" />
+  </div>
+);
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div>
+    <div className="mt-8 max-w-3xl text-center">
+      <Link href="https://drive.google.com/file/d/149vQ1n_JK39qX7UsFA0SsRLI5vzFO0iH/view?usp=sharing">
+        <span className="underline">[audio]</span>
+      </Link>
+    </div>
+    {/* i do not know how to embed audio and cannot figure it out so this can be fixed later */}
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl space-y-4 text-center">
-    <div>
-      This puzzle is about the mobile game Little Alchemy (the first one, NOT
-      Little Alchemy 2). That game is about combining elements to create new
-      elements. You start with Earth, Air, Water, and Fire, and create from
-      there by combining two elements at a time.{" "}
-    </div>
-    <div>
-      For this puzzle, you follow along with the combinations laid out in the
-      tree. Each junction is an element created by combining the two above it,
-      leading back to the four basic elements. The blue boxes are labelled with
-      the names of other puzzles, and for those you “plug in” the answer to
-      those puzzles (bird for opening sequences and sun for whats my ride).
-    </div>
-    <div>
-      Once you complete the trees, you should get at the blue boxes at the
-      bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
-      puzzle&apos;s answer.
-    </div>
+  <div className="max-w-3xl text-center">
+    This solution is sorta written but like...fill this in later :)
   </div>
 );
 

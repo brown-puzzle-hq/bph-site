@@ -1,21 +1,30 @@
-import Image from "next/image";
-import SECRET_INGREDIENT from "./puzzle.png";
-
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "secret-ingredient";
+export const puzzleId = "six-degrees";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
-    <Image alt="" src={SECRET_INGREDIENT}></Image>
+  <div>
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a metapuzzle. It uses feeders from the{" "}
+        <span className="underline">REALITY</span> round.
+      </b>
+    </div>
+    <div className="mb-4 max-w-3xl">
+      <i>
+        Your documentary is in trouble... your subjects are all paid actors! The
+        release date is approaching. How can you fix your movie and save your
+        leads' bacon?
+      </i>
+    </div>
   </div>
 );
 
@@ -28,25 +37,8 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl space-y-4 text-center">
-    <div>
-      This puzzle is about the mobile game Little Alchemy (the first one, NOT
-      Little Alchemy 2). That game is about combining elements to create new
-      elements. You start with Earth, Air, Water, and Fire, and create from
-      there by combining two elements at a time.{" "}
-    </div>
-    <div>
-      For this puzzle, you follow along with the combinations laid out in the
-      tree. Each junction is an element created by combining the two above it,
-      leading back to the four basic elements. The blue boxes are labelled with
-      the names of other puzzles, and for those you “plug in” the answer to
-      those puzzles (bird for opening sequences and sun for whats my ride).
-    </div>
-    <div>
-      Once you complete the trees, you should get at the blue boxes at the
-      bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
-      puzzle&apos;s answer.
-    </div>
+  <div className="max-w-3xl text-center">
+    This solution does not exist yet hehe oops.
   </div>
 );
 
@@ -54,7 +46,7 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Your documentary is in trouble... your subjects are all paid actors! The release date is approaching. How can you fix your movie and save your leads' bacon?`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

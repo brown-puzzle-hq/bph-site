@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SECRET_INGREDIENT from "./puzzle.png";
+import fridge from "./fridge.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -7,15 +7,21 @@ import SECRET_INGREDIENT from "./puzzle.png";
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "secret-ingredient";
+export const puzzleId = "fridge-magnets";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
-    <Image alt="" src={SECRET_INGREDIENT}></Image>
+  <div>
+    <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the 🧩 sequence.
+    </div>
+    <hr className="my-6 mb-6 border-t border-white" />
+    <div className="max-w-3xl text-center">
+      <Image src={fridge} width={500} height={500} alt="Fridge Magnets" />
+    </div>
   </div>
 );
 
@@ -28,24 +34,27 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl space-y-4 text-center">
-    <div>
-      This puzzle is about the mobile game Little Alchemy (the first one, NOT
-      Little Alchemy 2). That game is about combining elements to create new
-      elements. You start with Earth, Air, Water, and Fire, and create from
-      there by combining two elements at a time.{" "}
+  <div className="max-w-3xl">
+    <div className="mb-6 text-center">
+      Answer: <span className="bg-main-text hover:bg-inherit">DIAPER</span>.
     </div>
-    <div>
-      For this puzzle, you follow along with the combinations laid out in the
-      tree. Each junction is an element created by combining the two above it,
-      leading back to the four basic elements. The blue boxes are labelled with
-      the names of other puzzles, and for those you “plug in” the answer to
-      those puzzles (bird for opening sequences and sun for whats my ride).
+    <div className="mb-6 max-w-3xl">
+      The feeders can be broken down into fragments (SUN)(DAY), (MIN)(NOW)(S),
+      and (FA)(V)(OUR)(ITE) and arranged to form the answers, leaving some
+      blanks. Here are the complete answers (which are clued by the emojis):
     </div>
-    <div>
-      Once you complete the trees, you should get at the blue boxes at the
-      bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
-      puzzle&apos;s answer.
+    <ul className="mb-6 list-none">
+      <li>(DI)(SUN)(ITE)</li>
+      <li>(MIN)(E)</li>
+      <li>(FA)(R)</li>
+      <li>(S)(NOW)(DAY)</li>
+      <li>(V)(AP)(OUR)</li>
+    </ul>
+
+    <div className="mb-6">
+      To complete all of the answers, we needed to add these fragments: (DI),
+      (E), (R), (AP). Anagramming these fragments gives{" "}
+      <span className="bg-main-text hover:bg-inherit">DIAPER</span>.
     </div>
   </div>
 );

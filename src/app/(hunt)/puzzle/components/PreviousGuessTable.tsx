@@ -15,7 +15,7 @@ export default function PreviousGuessTable({
 }) {
   return (
     <div>
-      <Table className="table-fixed md:table-auto mb-12">
+      <Table className="mb-12 table-fixed md:table-auto">
         <TableBody>
           {previousGuesses
             .sort((a, b) => b.submitTime.getTime() - a.submitTime.getTime())
