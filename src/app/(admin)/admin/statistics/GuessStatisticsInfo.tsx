@@ -46,7 +46,7 @@ export default async function GuessStatisticsInfo({
             {previousGuesses.length ? (
               <GuessPieChart previousGuesses={previousGuesses} />
             ) : (
-              <p>No guesses yet.</p>
+              <p className="mx-auto mt-4">No guesses yet.</p>
             )}
           </CardContent>
         </Card>

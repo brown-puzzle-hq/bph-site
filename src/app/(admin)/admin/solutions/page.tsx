@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { db } from "@/db/index";
 import {
   Table,
@@ -102,12 +101,12 @@ export default async function Home() {
                   .map((puzzle) => (
                     <TableRow key={puzzle.id} className="hover:bg-inherit">
                       <TableCell>
-                        <Link
-                          className="text-blue-500 hover:underline"
+                        <a
+                          className="text-link hover:underline"
                           href={`/puzzle/${puzzle.id}`}
                         >
                           {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
-                        </Link>
+                        </a>
                       </TableCell>
                       <TableCell>
                         <p className="text-emerald-600">{puzzle.answer}</p>
@@ -116,13 +115,13 @@ export default async function Home() {
                         {puzzle.nextUnlocks.map((nextUnlock) => (
                           <>
                             <>[</>
-                            <Link
+                            <a
                               key={nextUnlock.id}
                               href={`/puzzle/${nextUnlock.id}`}
                               className="hover:underline"
                             >
                               {nextUnlock.name}
-                            </Link>
+                            </a>
                             <>] </>
                           </>
                         ))}
@@ -130,26 +129,26 @@ export default async function Home() {
                       <TableCell className="justify-center">
                         {puzzle.inPersonBody && (
                           <div className="flex justify-center">
-                            <Link href={`/puzzle/${puzzle.id}`}>
+                            <a href={`/puzzle/${puzzle.id}`}>
                               <Puzzle className="text-red-500 hover:opacity-75" />
-                            </Link>
+                            </a>
                           </div>
                         )}
                       </TableCell>
                       <TableCell className="justify-center">
                         {puzzle.solutionBody && (
                           <div className="flex justify-center">
-                            <Link href={`/puzzle/${puzzle.id}/solution`}>
+                            <a href={`/puzzle/${puzzle.id}/solution`}>
                               <KeyRound className="text-yellow-500 hover:opacity-75" />
-                            </Link>
+                            </a>
                           </div>
                         )}
                       </TableCell>
                       <TableCell className="justify-center">
                         <div className="flex justify-center">
-                          <Link href={`/admin/statistics/${puzzle.id}`}>
+                          <a href={`/admin/statistics/${puzzle.id}`}>
                             <ChartColumn className="text-black-500 hover:opacity-60" />
-                          </Link>
+                          </a>
                         </div>
                       </TableCell>
                       <TableCell className="justify-center">
