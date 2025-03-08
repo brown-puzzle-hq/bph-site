@@ -54,6 +54,7 @@ export default async function Page({
         roomNeeded={team.roomNeeded}
         solvingLocation={team.solvingLocation}
         wantsBox={team.wantsBox}
+        hasBox={team.hasBox}
       />
     </div>
   );

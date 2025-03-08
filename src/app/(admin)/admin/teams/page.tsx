@@ -9,8 +9,8 @@ export default async function Home() {
 
   return (
     // FYI container is important don't be like Alex and spend an hour debugging after removing it
-    <div className="container mx-auto mb-12">
-      <h1 className="text-center">Teams</h1>
+    <div className="container mb-4 md:mb-12">
+      <h1 className="mb-2 w-screen text-center">Teams</h1>
       <TeamTable columns={columns} data={data} />
     </div>
   );

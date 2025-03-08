@@ -48,6 +48,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
       ...teamProperties,
       password: hashedPassword,
       role: "user" as const,
+      hasBox: false,
       createTime: new Date(),
     });
 

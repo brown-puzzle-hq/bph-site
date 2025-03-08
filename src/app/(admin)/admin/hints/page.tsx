@@ -17,8 +17,8 @@ export default async function Home() {
   ).sort((a, b) => b.requestTime!.getTime() - a.requestTime!.getTime());
 
   return (
-    <div className="container mx-auto mb-12">
-      <h1 className="text-center">Hints</h1>
+    <div className="container mx-auto mb-4 md:mb-12">
+      <h1 className="mb-2 text-center">Hints</h1>
       <HintTable columns={columns} data={data} />
     </div>
   );

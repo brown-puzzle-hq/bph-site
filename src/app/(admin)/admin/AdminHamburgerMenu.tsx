@@ -1,4 +1,3 @@
-import { auth } from "~/server/auth/auth";
 import Link from "next/link";
 import { LogoutButton } from "~/app/nav/LogoutButton";
 import { HamburgerMenu, MenuItem } from "~/app/nav/HamburgerMenu";

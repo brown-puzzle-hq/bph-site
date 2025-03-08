@@ -18,6 +18,7 @@ export type TeamProperties = {
   roomNeeded?: boolean;
   solvingLocation?: string;
   wantsBox?: boolean;
+  hasBox: boolean;
 };
 
 export async function updateTeam(id: string, teamProperties: TeamProperties) {

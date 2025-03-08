@@ -75,19 +75,21 @@ export default async function Home() {
   );
 
   return (
-    <div className="flex grow flex-col items-center px-4">
-      <h1 className="mb-2">Puzzles</h1>
-      <div className="min-w-[60%]">
-        <Table className="justify-center">
+    <div className="container mx-auto mb-12">
+      <h1 className="mb-2 text-center">Puzzles</h1>
+      <div className="overflow-y-auto rounded-md px-4">
+        <Table>
           <TableHeader>
             <TableRow className="hover:bg-inherit">
-              <TableHead className="w-1/3">Name</TableHead>
+              <TableHead className="w-1/3 min-w-56">Name</TableHead>
               <TableHead className="w-1/3">Answer</TableHead>
-              <TableHead className="w-1/3">Next Unlock</TableHead>
-              <TableHead className="w-4">Puzzle</TableHead>
-              <TableHead className="w-4">Solution</TableHead>
-              <TableHead className="w-4">Statistics</TableHead>
-              <TableHead className="w-4">Copy</TableHead>
+              <TableHead className="w-1/3 whitespace-nowrap">
+                Next Unlock
+              </TableHead>
+              <TableHead className="w-fit">Puzzle</TableHead>
+              <TableHead className="w-fit">Solution</TableHead>
+              <TableHead className="w-fit">Statistics</TableHead>
+              <TableHead className="w-fit">Copy</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { teams } from "~/server/db/schema";
-import { ChevronsUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ChevronsUpDown, ArrowUp, ArrowDown, Check, X } from "lucide-react";
 import { FormattedTime } from "~/lib/time";
 
 // Define the columns for the table using TanStack
@@ -75,10 +75,11 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
             : "text-violet-900";
 
       return (
-        <div className="inline-block">
-          <div className={`inline-flex rounded-sm ${bgColor} px-1 py-0.5`}>
-            <span className={`font-medium ${textColor}`}>{role}</span>
-          </div>
+        <div
+          // Add role-button to className to disable row redirect
+          className={`font-medium ${textColor} inline-flex rounded-sm ${bgColor} px-1 py-0.5`}
+        >
+          {role}
         </div>
       );
     },
@@ -115,13 +116,38 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
             : "text-gray-900";
 
       return (
-        <div className="inline-block whitespace-nowrap">
-          <div className={`inline-flex rounded-sm ${bgColor} px-1 py-0.5`}>
-            <span className={`font-medium ${textColor}`}>
-              {interactionMode}
-            </span>
-          </div>
+        <div
+          className={`font-medium ${textColor} inline-flex rounded-sm ${bgColor} px-1 py-0.5`}
+          onClick={() => console.log("HELLO")}
+        >
+          {interactionMode}
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: "hasBox",
+    header: ({ column }) => (
+      <div className="flex w-fit items-center space-x-2">
+        <p>Box</p>
+        {column.getIsSorted() === "asc" ? (
+          <ArrowUp className="size-4" />
+        ) : column.getIsSorted() === "desc" ? (
+          <ArrowDown className="size-4" />
+        ) : (
+          <ChevronsUpDown className="size-4" />
+        )}
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <p className="flex justify-center text-neutral-500">
+          {row.getValue("hasBox") ? (
+            <Check className="size-5" />
+          ) : (
+            <X className="size-5" />
+          )}
+        </p>
       );
     },
   },

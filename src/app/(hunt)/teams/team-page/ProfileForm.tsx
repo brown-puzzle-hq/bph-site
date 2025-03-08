@@ -102,6 +102,7 @@ export const profileFormSchema = z
       .max(50, { message: "Max 50 characters" })
       .or(z.literal("")),
     confirmPassword: z.string().or(z.literal("")),
+    hasBox: z.boolean(),
   })
   .refine(
     (data) =>
@@ -135,6 +136,7 @@ type TeamInfoFormProps = {
   roomNeeded: boolean;
   solvingLocation: string;
   wantsBox: boolean | null;
+  hasBox: boolean;
 };
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
@@ -160,6 +162,7 @@ export function ProfileForm({
   roomNeeded,
   solvingLocation,
   wantsBox,
+  hasBox,
 }: TeamInfoFormProps) {
   const router = useRouter();
   const { data: session, update } = useSession();
@@ -181,6 +184,7 @@ export function ProfileForm({
       password: "",
       confirmPassword: "",
       wantsBox: wantsBox ?? undefined,
+      hasBox: hasBox,
     },
     mode: "onChange",
   });
@@ -213,6 +217,7 @@ export function ProfileForm({
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
       wantsBox: data.wantsBox,
+      hasBox: data.hasBox,
       password: data.password,
     });
 
@@ -451,7 +456,7 @@ export function ProfileForm({
                       disabled={new Date() > IN_PERSON.END_TIME}
                     />
                     <FormLabel
-                      className={`font-normal text-main-header opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                      className={`font-normal text-main-text opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
                     >
                       In-person
                     </FormLabel>
@@ -466,7 +471,7 @@ export function ProfileForm({
                       }
                     />
                     <FormLabel
-                      className={`font-normal text-main-header opacity-${
+                      className={`font-normal text-main-text opacity-${
                         new Date() > IN_PERSON.END_TIME ||
                         (new Date() > IN_PERSON.START_TIME &&
                           field.value === "in-person")
@@ -683,6 +688,43 @@ export function ProfileForm({
             />
           )}
 
+          {/* Has box */}
+          {session?.user?.role === "admin" && (
+            <FormField
+              control={form.control}
+              name="hasBox"
+              render={({ field }) => (
+                <FormItem className="mb-8 space-y-3">
+                  <FormLabel className="text-main-header">
+                    Has remote box
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      value={field.value ? "true" : "false"}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="true" />
+                        <FormLabel className="font-normal text-main-text">
+                          Yes
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <RadioGroupItem value="false" />
+                        <FormLabel className="font-normal text-main-text">
+                          No
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )}
+
           {/* Password fields */}
           {(session?.user?.role === "admin" || session?.user?.id === id) && (
             <div className="space-y-6">
@@ -722,6 +764,7 @@ export function ProfileForm({
             </div>
           )}
         </div>
+
         <div
           className={`fixed bottom-3 left-1/2 z-10 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300 ${
             isDirty() ? "translate-y-0" : "translate-y-[5rem]"
