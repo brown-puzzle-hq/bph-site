@@ -309,7 +309,7 @@ export const inPersonBody = (
         alt="Catch My Soul 4"
         className="rounded-lg"
       />
-      <p className="text-lg font-semibold">(1284, 7)</p>
+      <p className="text-lg font-semibold">(1248, 7)</p>
     </div>
     <div className="flex items-center space-x-4">
       <Image
