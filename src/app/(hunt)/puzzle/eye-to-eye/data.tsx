@@ -122,7 +122,7 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `https://docs.google.com/spreadsheets/d/103uKqdsu4fi5W_qSEZvDmk5nRNHgCFCb3HtWhQLfZVw/edit?usp=sharing`;
+export const copyText = `https://docs.google.com/spreadsheets/d/1S7uqNniLW2H_2BTFQGTGmnbkEhljCxViomtvjcG5Ulg/edit?usp=sharing`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
