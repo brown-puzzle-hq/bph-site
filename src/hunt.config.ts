@@ -35,22 +35,22 @@ export const SEQUENCES: Sequence[] = [
     name: "Eyes",
     icon: "👁️",
     puzzles: [
+      "plagiarism",
       "eye-of-the-storm",
       "genetic-counseling",
-      "eye-to-eye",
-      "plagiarism",
-      "one-guard-screen",
       "eye-spy",
+      "one-guard-screen",
+      "eye-to-eye",
     ],
   },
   {
     name: "Word Bank",
     icon: "🧩",
     puzzles: [
-      "study-abroad",
       "youve-got-this-covered",
-      "fridge-magnets",
       "fractal-shanty",
+      "study-abroad",
+      "fridge-magnets",
     ],
   },
   {
@@ -58,8 +58,8 @@ export const SEQUENCES: Sequence[] = [
     icon: "💂",
     puzzles: [
       "two-guards-two-doors",
-      "two-guards-river",
       "ten-guards-ten-doors",
+      "two-guards-river",
       "m-guards-n-doors-and-k-choices",
       "one-guard-screen",
       "the-guard-and-the-door",
@@ -85,8 +85,8 @@ export const SEQUENCES: Sequence[] = [
     icon: "✈️",
     puzzles: [
       "find-ben",
-      "bluenos-puzzle-box",
       "the-snack-zone",
+      "bluenos-puzzle-box",
       "color-transfer",
     ],
   },
@@ -98,15 +98,15 @@ export const SEQUENCES: Sequence[] = [
   {
     name: "Tree",
     icon: "🌲",
-    puzzles: ["opening-sequences", "whats-my-ride", "secret-ingredient"],
+    puzzles: ["whats-my-ride", "opening-sequences", "secret-ingredient"],
   },
   {
     name: "Star",
     icon: "⭐",
     puzzles: [
       "walk-of-fame",
-      "whats-my-ride",
       "galileo-was-wrong",
+      "whats-my-ride",
       "constellation",
     ],
   },
