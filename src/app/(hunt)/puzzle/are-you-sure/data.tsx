@@ -66,33 +66,29 @@ const checkboxPrompts = [
     "Check this box if the ninth nine-letter word in this puzzle (not including the title, but including the flavor text) is “according”",
   ],
   [
-    "Check - Check this box if the total amount of checked boxes in this puzzle (including this one) is 16",
-    "No check - Check this box if there are any boxes that should be checked below this box.",
+    "Check this box if the total amount of checked boxes in this puzzle (including this one) is 16",
+    "Check this box if there are any boxes that should be checked below this box.",
   ],
 ];
 
 export const inPersonBody = (
-  <div className="max-w-4xl">
-    <p className="pb-4">
+  <div className="mb-2 max-w-4xl space-y-6">
+    <p>
       Which of these two things do you like more: Samuel Morse or questions that
       have only two possible answers?
     </p>
 
     {checkboxPrompts.map((prompts, i) => (
-      <div className="pb-8">
-        {prompts.map((prompt) => (
-          <div className="flex">
-            <div>
-              <input
-                id={`checkbox-${i}`}
-                type="checkbox"
-                value=""
-                className="h-4 w-4 rounded-sm border-gray-300 bg-gray-100 text-blue-600"
-              />
-            </div>
-            <div>
-              <p className="px-4">{prompt}</p>
-            </div>
+      <div>
+        {prompts.map((prompt, j) => (
+          <div className="flex space-x-4">
+            <input
+              id={`checkbox-${i}-${j}`}
+              type="checkbox"
+              value=""
+              className="h-6 min-w-4 rounded-sm border-gray-300 bg-gray-100 text-blue-600"
+            />
+            <p>{prompt}</p>
           </div>
         ))}
       </div>
