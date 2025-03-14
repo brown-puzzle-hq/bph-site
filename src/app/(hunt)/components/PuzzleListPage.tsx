@@ -1,5 +1,5 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapIcon, Table } from "lucide-react";
 import PuzzleTable from "../puzzle/components/PuzzleTable";
 import EventTable from "../puzzle/components/EventTable";

@@ -5,7 +5,10 @@ import { db } from "@/db/index";
 import { eq, inArray } from "drizzle-orm";
 import { solves, puzzles, unlocks, answerTokens } from "~/server/db/schema";
 import { Round, ROUNDS } from "@/hunt.config";
-import PuzzleListPage from "../components/PuzzleListPage";
+import dynamic from "next/dynamic";
+const PuzzleListPage = dynamic(() => import("../components/PuzzleListPage"), {
+  ssr: false,
+});
 
 export default async function Home() {
   const session = await auth();
