@@ -26,12 +26,6 @@ export default function PuzzleListPage({
   hasEventInputBox,
 }: PuzzleListPageProps) {
   const [activeTab, setActiveTab] = useState("map");
-  const memoizedMap = useMemo(
-    () => (
-      <Map availablePuzzles={availablePuzzles} solvedPuzzles={solvedPuzzles} />
-    ),
-    [],
-  );
 
   // Will crash on mobile if not memoized
   const memoizedMap = useMemo(
@@ -43,7 +37,7 @@ export default function PuzzleListPage({
 
   return (
     <Tabs defaultValue="map" onValueChange={setActiveTab}>
-      <TabsList className="fixed right-0 z-20 m-2 space-x-1 bg-footer-bg py-5 text-[#6c518e]">
+      <TabsList className="fixed right-0 z-20 m-2 flex h-fit flex-col space-y-1 bg-footer-bg text-[#6c518e] md:flex-row md:space-x-1 md:space-y-0">
         {/* Icons */}
         <TabsTrigger
           className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"

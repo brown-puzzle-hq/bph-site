@@ -82,8 +82,8 @@ export default function Map({
   solvedPuzzles: { puzzleId: string }[];
 }) {
   const bounds = new LatLngBounds([0, 0], [1000, 1000]);
-  const colorlayout = "/map/Map-Layout-by-Section.png";
-  const buildings = "map/Map-Buildings.png";
+  const colorlayout = "/map/Layout.png";
+  const buildings = "map/Buildings.png";
   return (
     <MapContainer
       center={[500, 500]}
