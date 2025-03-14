@@ -4,7 +4,7 @@ import { MapIcon, Table } from "lucide-react";
 import PuzzleTable from "../puzzle/components/PuzzleTable";
 import EventTable from "../puzzle/components/EventTable";
 import Map from "./Map";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 type PuzzleListPageProps = {
   availablePuzzles: any;
@@ -26,6 +26,12 @@ export default function PuzzleListPage({
   hasEventInputBox,
 }: PuzzleListPageProps) {
   const [activeTab, setActiveTab] = useState("map");
+  const memoizedMap = useMemo(
+    () => (
+      <Map availablePuzzles={availablePuzzles} solvedPuzzles={solvedPuzzles} />
+    ),
+    [],
+  );
 
   return (
     <Tabs defaultValue="map" onValueChange={setActiveTab}>
@@ -47,10 +53,7 @@ export default function PuzzleListPage({
 
       {/* Map content */}
       <div className={activeTab === "map" ? "block" : "hidden"}>
-        <Map
-          availablePuzzles={availablePuzzles}
-          solvedPuzzles={solvedPuzzles}
-        />
+        {memoizedMap}
       </div>
 
       {/* Table conent */}
