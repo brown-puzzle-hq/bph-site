@@ -33,6 +33,14 @@ export default function PuzzleListPage({
     [],
   );
 
+  // Will crash on mobile if not memoized
+  const memoizedMap = useMemo(
+    () => (
+      <Map availablePuzzles={availablePuzzles} solvedPuzzles={solvedPuzzles} />
+    ),
+    [availablePuzzles, solvedPuzzles],
+  );
+
   return (
     <Tabs defaultValue="map" onValueChange={setActiveTab}>
       <TabsList className="fixed right-0 z-20 m-2 space-x-1 bg-footer-bg py-5 text-[#6c518e]">
