@@ -132,6 +132,7 @@ export default async function Page({
                 <Link
                   href={`/teams/${hint.team.id}`}
                   className="text-blue-500 hover:underline"
+                  prefetch={false}
                 >
                   {hint.team.displayName} ({hint.team.id})
                 </Link>
@@ -141,6 +142,7 @@ export default async function Page({
                 <Link
                   href={`/puzzle/${hint.puzzleId}`}
                   className="text-blue-500 hover:underline"
+                  prefetch={false}
                 >
                   {hint.puzzle.name}
                 </Link>

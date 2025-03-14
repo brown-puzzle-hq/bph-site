@@ -90,6 +90,7 @@ export default async function DefaultHeader({
           <Link
             href={`/puzzle/${puzzleId}/hint`}
             className="text-link hover:underline"
+            prefetch={false}
           >
             Hint
           </Link>
@@ -100,6 +101,7 @@ export default async function DefaultHeader({
                 <Link
                   href={`/puzzle/${puzzleId}/solution`}
                   className="text-link hover:underline"
+                  prefetch={false}
                 >
                   Solution
                 </Link>

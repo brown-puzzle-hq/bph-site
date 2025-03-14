@@ -77,6 +77,7 @@ export default function Landing() {
         href="/register"
         onMouseEnter={() => controls.start({ opacity: 1 })}
         onMouseLeave={() => controls.start({ opacity: 0 })}
+        prefetch={false}
       />
       <div className="absolute bottom-8 left-1/2 grid w-full -translate-x-1/2 transform grid-cols-3 gap-x-4 gap-y-8 p-4 text-center lg:bottom-16 lg:w-3/4 lg:grid-cols-3 lg:text-lg xl:bottom-32 xl:text-xl">
         <div className="space-y-2">
@@ -86,7 +87,7 @@ export default function Landing() {
           </p>
           <p className="md:hidden">Our third annual puzzlehunt.</p>
           <p>
-            <Link href="/register" className="hover:underline">
+            <Link href="/register" className="hover:underline" prefetch={false}>
               <i>Click here to register!</i>
             </Link>
           </p>
@@ -114,7 +115,7 @@ export default function Landing() {
             {shortFormatter.format(REMOTE.END_TIME)}
           </p>
           <p>
-            <Link href="/info" className="hover:underline">
+            <Link href="/info" className="hover:underline" prefetch={false}>
               <i className="hidden md:inline">
                 What do you mean, there are two weekends?
               </i>
@@ -133,7 +134,7 @@ export default function Landing() {
           </p>
           <p>Anyone can get a Box.</p>
           <p className="hidden md:block">
-            <Link href="/info" className="hover:underline">
+            <Link href="/info" className="hover:underline" prefetch={false}>
               <i>Box? What box?</i>
             </Link>
           </p>

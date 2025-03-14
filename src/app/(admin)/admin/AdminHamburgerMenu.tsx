@@ -18,13 +18,13 @@ export default async function AdminHamburgerMenu() {
           <Ellipsis className="mb-0.5 h-[20px]" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <Link href="/admin/errata">
+          <Link href="/admin/errata" prefetch={false}>
             <DropdownMenuItem>Errata</DropdownMenuItem>
           </Link>
-          <Link href="/admin/feedback">
+          <Link href="/admin/feedback" prefetch={false}>
             <DropdownMenuItem>Feedback</DropdownMenuItem>
           </Link>
-          <Link href="/admin/sql">
+          <Link href="/admin/sql" prefetch={false}>
             <DropdownMenuItem>Queries</DropdownMenuItem>
           </Link>
         </DropdownMenuContent>

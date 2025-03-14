@@ -47,7 +47,11 @@ export function HamburgerMenu({
                 {item.type == "element" ? (
                   item.element!
                 ) : (
-                  <Link href={item.href!} className="hover:underline">
+                  <Link
+                    href={item.href!}
+                    className="hover:underline"
+                    prefetch={false}
+                  >
                     {item.title}
                   </Link>
                 )}
@@ -65,7 +69,11 @@ export function HamburgerMenu({
                 {item.type == "element" ? (
                   item.element!
                 ) : (
-                  <Link href={item.href!} className="hover:underline">
+                  <Link
+                    href={item.href!}
+                    className="hover:underline"
+                    prefetch={false}
+                  >
                     {item.title}
                   </Link>
                 )}
@@ -96,7 +104,9 @@ export function HamburgerMenu({
                   {item.type == "element" ? (
                     item.element!
                   ) : (
-                    <Link href={item.href!}>{item.title}</Link>
+                    <Link href={item.href!} prefetch={false}>
+                      {item.title}
+                    </Link>
                   )}
                 </SheetTrigger>
               </React.Fragment>
