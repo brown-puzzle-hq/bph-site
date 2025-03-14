@@ -6,6 +6,7 @@ import { eq, inArray } from "drizzle-orm";
 import { solves, puzzles, unlocks, answerTokens } from "~/server/db/schema";
 import { Round, ROUNDS } from "@/hunt.config";
 import dynamic from "next/dynamic";
+
 const PuzzleListPage = dynamic(() => import("../components/PuzzleListPage"), {
   ssr: false,
 });
@@ -106,8 +107,6 @@ export default async function Home() {
     (session?.user &&
       session.user.interactionMode === "in-person" &&
       currDate > IN_PERSON.START_TIME);
-
-  if (!canSeeEvents) return;
 
   const availableEvents: {
     id: string;
