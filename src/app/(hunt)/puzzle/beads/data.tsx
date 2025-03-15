@@ -1,5 +1,12 @@
 import Image from "next/image";
 import BEADS from "./beads.jpg";
+const CHAIN = "BBRBGGGRRGBGRRGRGRG";
+
+const COLORS: Record<string, string> = {
+  B: "bg-[#4a86e8]",
+  R: "bg-[#cc0000]",
+  G: "bg-[#cccccc]",
+};
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -22,9 +29,9 @@ export const inPersonBody = (
       </i>
     </div>
   <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="pb-4">You’ve had me bending double from your curses!</i>
+    <i className="pb-4">You've had me bending double from your curses!</i>
     <div className="flex justify-center pb-4">
-      <Image src={BEADS} alt="beads" className="w-1/2" />
+      <Image src={BEADS} alt="beads" />
     </div>
   </div>
   </div>
@@ -46,7 +53,22 @@ export const remoteBoxBody = (
   </div>
 );
 
-export const remoteBody = null;
+export const remoteBody = ( <div>
+  <div className="mb-4 max-w-3xl">
+  <b>
+    This puzzle is a chain puzzle. In-person solvers and box purchasers were given a wire with beads of the following colors, in order:
+  </b>
+  <div className="flex">
+  {CHAIN.split("").map((cell) => (
+    <div
+      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
+    />
+  ))}
+</div>
+</div>
+{inPersonBody}
+</div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.

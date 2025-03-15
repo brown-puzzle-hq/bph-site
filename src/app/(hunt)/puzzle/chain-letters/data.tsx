@@ -106,14 +106,19 @@ export const remoteBoxBody = (
 );
 
 export const remoteBody = (
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+  <div className="flex max-w-3xl flex-col items-center space-y-4">
+  <div className="mb-4 max-w-3xl">
+  <b>
+    This puzzle is a chain puzzle. In-person solvers and box purchasers were given a wire with beads of the following colors, in order:
+  </b>
   <div className="flex">
-    {CHAIN.split("").map((cell) => (
-      <div
-        className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-      />
-    ))}
-  </div>
+  {CHAIN.split("").map((cell) => (
+    <div
+      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
+    />
+  ))}
+</div>
+</div>
   <div className="grid grid-cols-[auto,auto,auto] gap-x-2 text-left">
     <div
       className={`size-[1.5em] rounded-md border border-main-bg ${COLORS["B"]}`}
@@ -131,7 +136,7 @@ export const remoteBody = (
     <p>=</p>
     XEPVITSO
   </div>
-  <div className="grid grid-cols-[repeat(19,1.5em)] grid-rows-[repeat(19,1.5em)]">
+  <div className="grid grid-cols-[repeat(19,1.5em)] grid-rows-[repeat(19,1.5em)] text-center">
     {GRID.flatMap((row) => row.split("").map((cell) => <p>{cell}</p>))}
   </div>
 </div>
