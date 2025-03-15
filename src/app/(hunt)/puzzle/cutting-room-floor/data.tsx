@@ -21,12 +21,11 @@ export const inPersonBody = (
     <hr className="my-6 mb-6 border-t border-white" />
     <div className="mb-6 max-w-3xl">
       <i>
-        The movie is almost done… but there seem to be several different ways to
-        arrange the scenes.
+      The two plotlines of your movie have gotten all mixed up; there seems to be three different ways to arrange the scenes.
       </i>
     </div>
     <div className="max-w-3xl text-center">
-      <i>How should you assemble the movie?</i>
+      <i>How should you put the movie back together?</i>
     </div>
   </div>
 );
