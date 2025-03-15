@@ -40,10 +40,9 @@ export function HamburgerMenu({
   const pathName = usePathname();
   const baseClassName =
     "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 px-1.5 active:bg-opacity-20 bg-slate-400";
-  const elementClassName = (href: string | undefined) =>
-    cn(baseClassName, "py-1", pathName === href ? "bg-opacity-20" : "");
+  const elementClassName = cn(baseClassName, "py-1");
   const linkClassName = (href: string | undefined) =>
-    cn(baseClassName, "py-1.5", pathName === href ? "bg-opacity-20" : "");
+    cn(baseClassName, "py-[7px]", pathName === href ? "bg-opacity-20" : "");
   return (
     <nav
       className={`fixed z-50 flex w-full items-center justify-between ${colorMap[side]} bg-opacity-30 p-[10px] backdrop-blur-md backdrop-filter md:p-3`}
@@ -51,11 +50,11 @@ export function HamburgerMenu({
       {/* Left menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
-          <NavigationMenuList className="flex space-x-2">
+          <NavigationMenuList className="flex space-x-2 h-[32px]">
             {leftMenuItems.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.type == "element" ? (
-                  <div className={elementClassName(item.href)}>
+                  <div className={elementClassName}>
                     {item.element!}
                   </div>
                 ) : (
@@ -76,11 +75,11 @@ export function HamburgerMenu({
       {/* Right menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
-          <NavigationMenuList className="flex space-x-2">
+          <NavigationMenuList className="flex space-x-2 h-[32px]">
             {rightMenuItems.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.type == "element" ? (
-                  <div className={elementClassName(item.href)}>
+                  <div className={elementClassName}>
                     {item.element!}
                   </div>
                 ) : (

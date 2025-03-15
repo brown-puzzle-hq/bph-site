@@ -6,9 +6,6 @@ import "leaflet-defaulticon-compatibility";
 import { MapContainer, Marker, Tooltip, ImageOverlay } from "react-leaflet";
 import L, { LatLngBounds } from "leaflet";
 
-const SVG =
-  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1maWxlLXF1ZXN0aW9uIj48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PHBhdGggZD0iTTE1IDJINmEyIDIgMCAwIDAtMiAydjE2YTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMlY3eiIvPjxwYXRoIGQ9Ik05LjEgOWEzIDMgMCAwIDEgNS44MiAxYzAgMi0zIDMtMyAzIi8+PC9zdmc+";
-
 const positions: Record<string, L.LatLngExpression> = {
   "a-fistful-of-cards": [435, 309],
   "a-fistful-of-cards-ii": [540, 240],
@@ -110,7 +107,9 @@ export default function Map({
           icon={
             new L.Icon({
               // iconUrl: `map/sprites/${puzzle.id}.png`,
-              iconUrl: SVG,
+              iconUrl: solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id)
+                ? "map/sprites/puzzle.svg"
+                : "map/sprites/bookmark-check.svg",
               iconSize: [40, 40],
               iconAnchor: [20, 40],
             })
@@ -119,7 +118,9 @@ export default function Map({
             click: () => window.open(`puzzle/${puzzle.id}`, "_blank"),
           }}
         >
-          <Tooltip direction="bottom">{puzzle.name}</Tooltip>
+          <Tooltip direction="bottom" permanent>
+            {puzzle.name}
+          </Tooltip>
         </Marker>
       ))}
     </MapContainer>
