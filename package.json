@@ -71,6 +71,7 @@
     "react": "*",
     "react-dom": "*",
     "react-draggable": "^4.4.6",
+    "react-force-graph-2d": "^1.27.0",
     "react-hook-form": "^7.53.0",
     "react-leaflet": "4",
     "react-remark": "^2.1.0",
