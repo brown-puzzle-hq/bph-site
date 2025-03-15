@@ -10,9 +10,5 @@ export function LogoutButton() {
     router.push("/");
   };
 
-  return (
-    <button className="hover:underline" onClick={handleLogout}>
-      Logout
-    </button>
-  );
+  return <p onClick={handleLogout}>Logout</p>;
 }

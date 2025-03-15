@@ -1,7 +1,4 @@
 import Link from "next/link";
-import { LogoutButton } from "~/app/nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "~/app/nav/HamburgerMenu";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +6,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
+import { LogoutButton } from "~/app/nav/LogoutButton";
+import { HamburgerMenu, MenuItem } from "~/app/nav/HamburgerMenu";
 
 export default async function AdminHamburgerMenu() {
   const OtherMenuItems = () => {
@@ -19,13 +18,19 @@ export default async function AdminHamburgerMenu() {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <Link href="/admin/errata" prefetch={false}>
-            <DropdownMenuItem>Errata</DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Errata
+            </DropdownMenuItem>
           </Link>
           <Link href="/admin/feedback" prefetch={false}>
-            <DropdownMenuItem>Feedback</DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Feedback
+            </DropdownMenuItem>
           </Link>
           <Link href="/admin/sql" prefetch={false}>
-            <DropdownMenuItem>Queries</DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Queries
+            </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
@@ -8,6 +9,8 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { usePathname } from "next/navigation";
+import { cn } from "~/lib/utils";
 
 export type MenuItem = {
   title: string;
@@ -34,23 +37,32 @@ export function HamburgerMenu({
   hambergerMenuItems,
   side,
 }: Props) {
+  const pathName = usePathname();
+  const baseClassName =
+    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 px-1.5 active:bg-opacity-20 bg-slate-400";
+  const elementClassName = (href: string | undefined) =>
+    cn(baseClassName, "py-1", pathName === href ? "bg-opacity-20" : "");
+  const linkClassName = (href: string | undefined) =>
+    cn(baseClassName, "py-1.5", pathName === href ? "bg-opacity-20" : "");
   return (
     <nav
-      className={`fixed z-50 flex w-full items-center justify-between ${colorMap[side]} bg-opacity-30 p-[10px] backdrop-blur-md backdrop-filter md:p-4`}
+      className={`fixed z-50 flex w-full items-center justify-between ${colorMap[side]} bg-opacity-30 p-[10px] backdrop-blur-md backdrop-filter md:p-3`}
     >
       {/* Left menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
-          <NavigationMenuList className="flex space-x-4">
+          <NavigationMenuList className="flex space-x-2">
             {leftMenuItems.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.type == "element" ? (
-                  item.element!
+                  <div className={elementClassName(item.href)}>
+                    {item.element!}
+                  </div>
                 ) : (
                   <Link
                     href={item.href!}
-                    className="hover:underline"
                     prefetch={false}
+                    className={linkClassName(item.href)}
                   >
                     {item.title}
                   </Link>
@@ -60,18 +72,21 @@ export function HamburgerMenu({
           </NavigationMenuList>
         </NavigationMenu>
       </div>
+
       {/* Right menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
-          <NavigationMenuList className="flex space-x-4">
+          <NavigationMenuList className="flex space-x-2">
             {rightMenuItems.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.type == "element" ? (
-                  item.element!
+                  <div className={elementClassName(item.href)}>
+                    {item.element!}
+                  </div>
                 ) : (
                   <Link
                     href={item.href!}
-                    className="hover:underline"
+                    className={linkClassName(item.href)}
                     prefetch={false}
                   >
                     {item.title}
@@ -82,6 +97,7 @@ export function HamburgerMenu({
           </NavigationMenuList>
         </NavigationMenu>
       </div>
+
       {/* Hamburger */}
       <Sheet>
         <SheetTrigger asChild>
