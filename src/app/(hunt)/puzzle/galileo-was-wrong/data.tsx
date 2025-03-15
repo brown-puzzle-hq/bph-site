@@ -1,4 +1,6 @@
-//TODO: make the bold g bold in copytext, why is not not centered...
+import Image from "next/image";
+import GALILEO from "./galileo.png";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -14,10 +16,9 @@ export const puzzleId = "galileo-was-wrong";
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4">
     <p className="italic">
-      Those curious about the bolded letter will note that closer objects fall
-      more slowly.
+    In our experiments, it seems that there are two letters — one extremely light, and one just a little lighter — that are less heavy than all the others.
     </p>
-    <div className="mx-auto grid w-fit grid-cols-6 gap-0 overflow-x-auto border-2 border-white font-mono">
+    {/* <div className="mx-auto grid w-fit grid-cols-6 gap-0 overflow-x-auto border-2 border-white font-mono">
       {[
         "g",
         "n",
@@ -569,7 +570,8 @@ export const inPersonBody = (
           {cell !== "⬜" && cell}
         </div>
       ))}
-    </div>
+    </div> */}
+    <Image className="mx-auto" src={GALILEO} alt=""/>
   </div>
 );
 
