@@ -7,7 +7,7 @@ import { CirclePause, CirclePlay } from "lucide-react";
 const WIDTH = 900;
 const HEIGHT = 600;
 const RADIUS = 15;
-const ANSWER = "ABCDEFGHIJKLMNOP";
+const ANSWER = "NATIONALSECURITY";
 
 const TTL = 100;
 const SPEED = 2;

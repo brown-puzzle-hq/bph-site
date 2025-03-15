@@ -22,8 +22,8 @@ export const inPersonBody = (
   <div>
     <div className="mb-6 max-w-3xl text-center">
       <i>
-        This is a physical puzzle! If your team has not already picked up a chain,
-        please visit HQ in Friedman 208.
+        This is a physical puzzle! If your team has not already picked up a
+        chain, please visit HQ in Friedman 208.
       </i>
     </div>
     <div className="mb-4 max-w-3xl">
@@ -39,7 +39,7 @@ export const inPersonBody = (
         {Array.from({ length: 20 }).map((_, i) => (
           <div
             key={i}
-            className={`flex h-12 w-12 items-center justify-center border ${
+            className={`flex h-12 w-12 items-center ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} justify-center border ${
               i === 4 ? "border-none" : ""
             }`}
           ></div>

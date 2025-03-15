@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Image1 from "./images/image1.png";
-import Image2 from "./images/image2.png";
+import Image1 from "./media/image1.png";
+import Image2 from "./media/image2.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -20,6 +20,10 @@ export const inPersonBody = (
       This is a sequence metapuzzle. It uses feeders from the ✈️ sequence.
     </div>
     <div className="max-w-2xl">
+      <video width="1280" height="721" controls className="mb-4">
+        <source src="/api/puzzle/color-transfer" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
       <p className="pb-4">
         Your three tickets each entitle you to ride to stops on four trains, on
         the following lines, in the following order:
