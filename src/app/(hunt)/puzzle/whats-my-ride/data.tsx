@@ -35,7 +35,7 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
+  <div className="max-w-3xl">
     <p className="mb-4">
       This puzzle is a family tree based on Greek myth. Specifically, Apollo’s
       family tree. The solvers need to ID that this is 1) a family tree, 2)

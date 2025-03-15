@@ -77,7 +77,7 @@ export const solutionBody = (
   <div className="max-w-3xl">
     <div className="mb-5 text-center">
       Answer:{" "}
-      <span className="bg-main-tex hover:bg-inherit">
+      <span className="bg-main-text hover:bg-inherit">
         INDIANA JONES AND THE LAST CRUSADE
       </span>
       .
