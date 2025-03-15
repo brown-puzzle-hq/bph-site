@@ -23,7 +23,8 @@ export const inPersonBody = (
 <p>The seagull helped her rob a bank, then take over the Dover shallows,<br></br>But her pyrotechnics and leftist ways had brought her to the gallows.</p>
 <p>Molly lost to Davy Jones and was left to rot in hell<br></br>She was fighting for this letter, but instead she took the L</p>
 <p>Jimmy was a leftie and forged his own harpoon<br></br>In trying out his strength, he chucked it at the moon</p>
-<p>Molly had to stay afloat, but women couldn&#39;t be employed<br></br>So she sailed aboard a whaler as one pretty cabin boy<br></br>There she dallied with the second mate and got herself a son<br></br>Then made off to Mogadishu with some baleen and a gun.</p>
+<p>Molly had to stay afloat, but women couldn&#39;t be employed<br></br>So she sailed aboard a whaler as one pretty cabin boy</p>
+<p>There she dallied with the second mate and got herself a son<br></br>Then made off to Mogadishu with some baleen and a gun.</p>
 <p>Jimmy paced along the deck, looking right into the gale<br></br>&quot;In my twenty years of living, I have never stabbed a whale!&quot;</p>
 <p>Molly won the competition and was mentioned in Der Spiegel<br></br>But without her righteous guidance, Marx had turned into an eagle</p>
 <p>She was right a cleptomaniac and would steal her rival&#39;s bones<br></br>Then she was challenged to a duel by a mollusc - Davy Jones</p>

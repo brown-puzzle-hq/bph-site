@@ -20,7 +20,7 @@ export const inPersonBody = (
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
     <div className="max-w-3xl text-center">
-      <Image src={fridge} width={500} height={500} alt="Fridge Magnets" />
+      <Image src={fridge} width={800} height={800} alt="Fridge Magnets" />
     </div>
   </div>
 );
