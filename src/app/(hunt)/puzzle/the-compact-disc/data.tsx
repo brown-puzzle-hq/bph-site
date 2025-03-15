@@ -18,6 +18,12 @@ export const inPersonBody = (
     <div className="mb-4 max-w-3xl">
       This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
     </div>
+    <div className="mb-6 max-w-3xl text-center">
+      <i>
+        This is a physical puzzle! If your team has not already picked up a CD,
+        please visit HQ in Friedman 208.
+      </i>
+    </div>
     <div className="max-w-2xl p-4">
       <div className="flex justify-center pb-4">
         <Image src={Disc} alt="" width={500} height={500} />
@@ -26,9 +32,36 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+<div>
+<div className="mb-4 max-w-3xl">
+  This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+</div>
+<div className="mb-6 max-w-3xl text-center">
+  <i>
+    This is a physical puzzle! It uses an object found in your box.
+  </i>
+</div>
+<div className="max-w-2xl p-4">
+  <div className="flex justify-center pb-4">
+    <Image src={Disc} alt="" width={500} height={500} />
+  </div>
+</div>
+</div>
+);
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+<div>
+<div className="mb-4 max-w-3xl">
+  This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+</div>
+<div className="max-w-2xl p-4">
+  <div className="flex justify-center pb-4">
+    <Image src={Disc} alt="" width={500} height={500} />
+  </div>
+</div>
+</div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.

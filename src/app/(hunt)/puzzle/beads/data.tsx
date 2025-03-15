@@ -14,15 +14,37 @@ export const puzzleId = "beads";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+  <div className="mb-6 max-w-3xl text-center">
+      <i>
+        This is a physical puzzle! If your team has not already picked up a chain,
+        please visit HQ in Friedman 208.
+      </i>
+    </div>
   <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
     <i className="pb-4">You’ve had me bending double from your curses!</i>
     <div className="flex justify-center pb-4">
       <Image src={BEADS} alt="beads" className="w-1/2" />
     </div>
   </div>
+  </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div>
+  <div className="mb-6 max-w-3xl text-center">
+      <i>
+        This is a physical puzzle! You should use an object found in your box.
+      </i>
+    </div>
+  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+    <i className="pb-4">You’ve had me bending double from your curses!</i>
+    <div className="flex justify-center pb-4">
+      <Image src={BEADS} alt="beads" className="w-1/2" />
+    </div>
+  </div>
+  </div>
+);
 
 export const remoteBody = null;
 

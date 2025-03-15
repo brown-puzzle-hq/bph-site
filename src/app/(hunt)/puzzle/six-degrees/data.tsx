@@ -20,8 +20,7 @@ export const inPersonBody = (
     </div>
     <div className="mb-4 max-w-3xl">
       <i>
-        Your documentary is in trouble... your subjects are all paid actors! The
-        release date is approaching. How can you fix your movie and save your
+        Your documentary is in trouble... your subjects are all paid actors! How can you fix your movie and save your
         leads' bacon?
       </i>
     </div>
@@ -38,7 +37,54 @@ export const remoteBody = inPersonBody;
  */
 export const solutionBody = (
   <div className="max-w-3xl text-center">
-    This solution does not exist yet hehe oops.
+    <div className="max-w-3xl mx-auto space-y-6">
+  <p>
+    This whole puzzle is based on the idea of biopics. This should be clued by 
+    combining documentary and the focus on a lead actor in the flavor text. 
+    All of the answers in the round are the names of a biopic. Once they find 
+    the movies, they should look at who the main actor is and their Kevin Bacon number. 
+    They should then index into the lead actor name and organize by release date 
+    (from earliest to most recent), and it should extract to <strong>FILMREAL</strong>. 
+    Refer to the table below to check if their data is correct.
+  </p>
+
+  {/* Table */}
+  <div className="overflow-x-auto">
+    <table className="w-full border-collapse border border-gray-300 text-left">
+      {/* Table Head */}
+      <thead className="bg-gray-100">
+        <tr>
+          <th className="border border-gray-300 px-4 py-2 text-black">Puzzle Answer</th>
+          <th className="border border-gray-300 px-4 py-2 text-black">Release Date</th>
+          <th className="border border-gray-300 px-4 py-2 text-black">Subject of Biopic</th>
+          <th className="border border-gray-300 px-4 py-2 text-black">Lead Actor</th>
+          <th className="border border-gray-300 px-4 py-2 text-black">Bacon Number</th>
+          <th className="border border-gray-300 px-4 py-2 text-black">Index into Lead</th>
+        </tr>
+      </thead>
+
+      {/* Table Body */}
+      <tbody className="text-black">
+        {[
+          ["BIRD", "1988", "Charlie Parker", "Forest Whitaker", "1", "F"],
+          ["WIRED", "1989", "John Belushi", "Michael Chiklis", "2", "I"],
+          ["GATHERING STORM", "2002", "Winston Churchill", "Albert Finney", "2", "L"],
+          ["FIGHTER", "2010", "Micky Ward", "Mark Wahlberg", "1", "M"],
+          ["NATIONAL SECURITY", "2012", "Kim Jong-tae", "Park Won-sang", "3", "R"],
+          ["CONFIRMATION", "2016", "Anita Hill", "Kerry Washington", "2", "E"],
+          ["JUNGLE", "2017", "Yossi Ghinsberg", "Daniel Radcliff", "2", "A"],
+          ["FAVOURITE", "2018", "Queen Anne", "Olivia Colman", "2", "L"]
+        ].map((row, index) => (
+          <tr key={index} className="odd:bg-white even:bg-gray-50">
+            {row.map((cell, i) => (
+              <td key={i} className="border border-gray-300 px-4 py-2">{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
   </div>
 );
 

@@ -1,5 +1,5 @@
 const TEXT =
-  "R A L E R N T O O J W L E N A A B I C E M O, O E I A M I L D R A S O O Y N E L N D A A L, D E E T C L F A L A R T R N A, E S E L I R N A T H C I O, G E A E H A S R N, S O L N N N W M R T S I A N B Y H B R E I R K O S E E M E I L E K E O C T R R T O S N Y B H, A S A F Y G O R D N S O E C A A Y T R T A P O, I M E D S R L I E G L, A R V O J C D I";
+  "R A L E R N T O O J W L E N A A B I C E M O, O E I A M I L D R A S O O Y N E L N D A A L, D E E T C L F A L A R T R N A, E S E L I R N A T H C I O, G E A E H A S R N, S O C N N N W M R T S I A N B Y H B R E I R K O S E E M E I L E K W O C T R R T O S N Y B H, A S A F Y G O R D N S O E C A A Y T R T A P O I, M E D S R L I E E L A R V O J L D I";
 const NAMES = [
   "Alberto",
   "Beryl",

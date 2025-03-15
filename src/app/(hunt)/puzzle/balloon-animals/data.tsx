@@ -29,6 +29,12 @@ export const puzzleId = "balloon-animals";
  */
 export const inPersonBody = (
   <div>
+    <div className="mb-6 max-w-3xl text-center">
+      <i>
+      This is a physical puzzle! If your team has not already picked up your balloons,
+      please visit HQ in Friedman 208.
+      </i>
+    </div>
     <div className="mb-4 max-w-3xl text-center">
       <b>
         This is a metapuzzle. It uses feeders from the{" "}
@@ -54,9 +60,64 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div>
+    <div className="mb-6 max-w-3xl text-center">
+      <i>
+      This is a physical puzzle! You should use an object found in your box.
+      </i>
+    </div>
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a metapuzzle. It uses feeders from the{" "}
+        <span className="underline">COMEDY</span> round.
+      </b>
+    </div>
+    <div className="max-w-3xl space-y-4 text-center">
+      <p>
+        Your circus movie is pretty good, but it requires more mainstream
+        appeal.
+      </p>
+      <p>What do you need?</p>
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        {ITEMS.map(({ name, src, desc }) => (
+          <div className="space-y-4">
+            <p className="font-bold text-main-header">{name}</p>
+            <Image src={src} alt="" className="rounded-lg" />
+            <p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div>
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a metapuzzle. It uses feeders from the{" "}
+        <span className="underline">COMEDY</span> round.
+      </b>
+    </div>
+    <div className="max-w-3xl space-y-4 text-center">
+      <p>
+        Your circus movie is pretty good, but it requires more mainstream
+        appeal.
+      </p>
+      <p>What do you need?</p>
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        {ITEMS.map(({ name, src, desc }) => (
+          <div className="space-y-4">
+            <p className="font-bold text-main-header">{name}</p>
+            <Image src={src} alt="" className="rounded-lg" />
+            <p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.
