@@ -20,7 +20,7 @@ export default async function DefaultHeader({
   // Get sequences that contain this puzzle
   const sequences = SEQUENCES.filter((seq) => seq.puzzles.includes(puzzleId));
 
-  // Highlight only unlocked puzzles in sequences
+  // Only show unlocked puzzles in sequences
   const unlocked: { [key: string]: boolean } = (
     await Promise.all(
       sequences.map(async (seq) => ({
@@ -42,10 +42,7 @@ export default async function DefaultHeader({
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
   })!;
-
-  if (!puzzle) {
-    redirect("/puzzle"); // TODO: this never gets called, just get a 404 error
-  }
+  if (!puzzle) redirect("/puzzle");
 
   return (
     <div className="flex flex-col items-center px-4">
@@ -71,7 +68,9 @@ export default async function DefaultHeader({
                   )}
                 </div>
               ) : (
-                <p className="text-2xl opacity-50">{seq.icon}</p>
+                // Hide puzzle if not unlocked
+                // <p className="text-2xl opacity-50">{seq.icon}</p>
+                <></>
               ),
             )}
           </div>
