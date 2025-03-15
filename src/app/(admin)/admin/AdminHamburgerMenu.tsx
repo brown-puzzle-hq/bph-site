@@ -32,6 +32,11 @@ export default async function AdminHamburgerMenu() {
               Queries
             </DropdownMenuItem>
           </Link>
+          <Link href="/admin/puzzle-graph" prefetch={false}>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Graph
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
     );

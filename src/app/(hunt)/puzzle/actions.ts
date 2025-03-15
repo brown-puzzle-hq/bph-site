@@ -236,7 +236,7 @@ export async function handleSolve(
 
   // Unlock the next puzzles
   const nextPuzzles = PUZZLE_UNLOCK_MAP[puzzleId];
-  if (nextPuzzles) {
+  if (nextPuzzles?.length) {
     const newUnlocks = nextPuzzles.map((puzzleId) => ({
       teamId,
       puzzleId,
