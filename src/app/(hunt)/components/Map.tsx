@@ -108,8 +108,8 @@ export default function Map({
             new L.Icon({
               // iconUrl: `map/sprites/${puzzle.id}.png`,
               iconUrl: solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id)
-                ? "map/sprites/puzzle.svg"
-                : "map/sprites/bookmark-check.svg",
+                ? "map/sprites/bookmark-check.svg"
+                : "map/sprites/puzzle.svg",
               iconSize: [40, 40],
               iconAnchor: [20, 40],
             })
