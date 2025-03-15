@@ -123,7 +123,7 @@ export const SEQUENCES: Sequence[] = [
   {
     name: "Time",
     icon: "⏰",
-    puzzles: ["filming-schedule", "hand-letters"], // Need placeholder
+    puzzles: ["filming-schedule", "hand-letters", "placeholder-ii"], // Need placeholder
   },
 ];
 
