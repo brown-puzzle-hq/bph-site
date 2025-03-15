@@ -2,7 +2,7 @@ import { db } from "@/db/index";
 import { columns } from "./components/team-table/Columns";
 import { TeamTable } from "./components/team-table/TeamTable";
 
-export const fetchCache = "force-no-store";
+export const revalidate = 300;
 
 export default async function Home() {
   const data = await db.query.teams.findMany();

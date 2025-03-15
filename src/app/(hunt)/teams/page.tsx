@@ -13,7 +13,8 @@ import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import { FormattedTime } from "~/lib/time";
-export const fetchCache = "force-no-store";
+
+export const revalidate = 300;
 
 type LeaderboardItem = {
   id: string;
