@@ -20,9 +20,9 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = null;
+export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = null;
+export const remoteBody = <p>This puzzle is still being written... Submit WRECKING</p>;
 
 export const solutionBody = null;
 

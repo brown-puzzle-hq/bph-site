@@ -1,18 +1,18 @@
 import Image from "next/image";
 import MONKEY from "./monkey.png";
 import BAT from "./bat.png";
-import CAT from "./cat.png";
+import DOG from "./dog.png";
 import FISH from "./fish.png";
 import FLOWER from "./flower.png";
 import PLUTO from "./pluto.png";
 
 const ITEMS = [
-  { name: "Bat", src: BAT, desc: "big wings (start beginning)" },
-  { name: "Cat", src: CAT, desc: "snout, left leg (start end)" },
-  { name: "Fish", src: FISH, desc: "bottom tail, head (start beginning)" },
-  { name: "Flower", src: FLOWER, desc: "bottom stem, bottom leaf (start end)" },
-  { name: "Monkey", src: MONKEY, desc: "ears (start beginning)" },
-  { name: "Pluto", src: PLUTO, desc: "back legs (start end)" },
+  { name: "Bat", src: BAT, desc: "big wings" },
+  { name: "Dog", src: DOG, desc: "back, neck" },
+  { name: "Fish", src: FISH, desc: "upper lip, tail" },
+  { name: "Flower", src: FLOWER, desc: "leaves" },
+  { name: "Monkey", src: MONKEY, desc: "neck, right ear" },
+  { name: "Pluto", src: PLUTO, desc: "back legs" },
 ];
 
 /**

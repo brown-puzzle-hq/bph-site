@@ -109,10 +109,10 @@ const puzzleClues = [
 export const inPersonBody = (
   <div className="max-w-3xl py-4">
     <p className="pb-8">
-      Rivers are three letters long and may flow horizontally, vertically, or
-      diagonally. Letters on a river are alphabetical in reading order, first
-      across, then down. Any such triple of letters has a river flowing through
-      it.
+      Rivers are three letters long and may either flow horizontally, vertically, or
+      diagonally. Horizontal and diagonal rivers are read left-to-right,
+      and vertical rivers are read top-to-bottom.
+      Any such triple of letters has a river flowing through it.
     </p>
 
     {/* Puzzle 1 */}
@@ -124,18 +124,18 @@ export const inPersonBody = (
               1
             </div>
             <div className="flex h-12 w-12 items-center justify-center border">
-              4
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center border">
-              5
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center border">
               2
             </div>
+            <div className="flex h-12 w-12 items-center justify-center border">
+              3
+            </div>
+            <div className="flex h-12 w-12 items-center justify-center border">
+              4
+            </div>
             <div className="flex h-12 w-12 items-center justify-center border"></div>
             <div className="flex h-12 w-12 items-center justify-center border"></div>
             <div className="flex h-12 w-12 items-center justify-center border">
-              3
+              5
             </div>
             <div className="flex h-12 w-12 items-center justify-center border"></div>
             <div className="flex h-12 w-12 items-center justify-center border"></div>

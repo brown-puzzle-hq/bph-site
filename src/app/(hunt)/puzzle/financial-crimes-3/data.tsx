@@ -1,3 +1,8 @@
+import Image from "next/image";
+import IDS from "./Financial_Crimes_IDs.png";
+import RECEIPTS from "./Financial_Crimes_Receipts.png";
+export const SCALE=0.15
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -10,39 +15,66 @@ export const puzzleId = "financial-crimes-3";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = (
-  <div className="max-w-3xl">
-    <div className="mb-6">
-      This is a physical puzzle! Please send someone from your team to Friedman
-      208 to pick it up.
-    </div>
+export const body = (
+<div>
     <p className="pb-4">
       <i>
         Hollywood accounting gone wrong! A gang of crooks has been stealing from
-        your movie company under your nose. Fortunately, your old friend
-        Detective Bluenoir tipped you off with a list of suspects and the
-        possibly fraudulent purchases they made. Maybe if you line up the
+        your movie company under your nose. There are 8 suspects, all of whom
+        worked on your company’s recent biopic,</i> North Dakota Williams and the
+        Inscrutable MacGuffin.<i> We have collected 8 lists of purchases that the
+        suspects made, but we don’t know which suspect made which purchases. We
+        also know that exactly 3 of the items purchased were fraudulent, and that
+        each fraudulent purchase was made by a different person. All the
+        information we have to go on is identification for each suspect, the
+        purchase lists, and interview transcripts. Maybe if you line up the
         thieves and their shady dealings, then confiscate the contraband, you’ll
         uncover who’s been putting them up to the task.
       </i>
     </p>
-    <p className="pb-4">
-      Bluenoir: “Hi there. It’s me, your old pal Bluenoir. Listen, I did some
-      digging on your behalf, and I’ve identified some suspects. All 8 of them
-      worked on your company’s recent biopic, North Dakota Williams and the
-      Inscrutable MacGuffin. I also nabbed some shopping lists that were flagged
-      for suspicious transactions. It’s your job to figure out who bought what
-      and which purchases were, say, less than legitimate. I made some routine
-      inquiries and gathered some personal information, but I’ve been forced
-      into hiding due to some legal trouble, if you catch my drift. The rest is
-      up to you. Go get ‘em, kid.”
-    </p>
+    <p className="mb-6">Below are the interview transcripts:</p>
+<p className="mb-4">“My name is Henriksson Fjord, and I was the lead in <em>North Dakota Williams and the Inscrutable MacGuffin</em>… Look, I’ll be honest, working with Speven is terrible. He’s a total control freak. Everything has to be exactly the way he wants it, down to the goddamn lenses on the cameras. He doesn’t even trust anyone but himself or his writer buddy to run errands for him. I’m never acting for him again, no matter how good the pay is… Chef Bo is great. He’s a bit of a control freak too. You know he buys new kitchen equipment for each gig? He refuses to reuse a single pot. But man is that food worth any eccentricities. Going back to DoorDash after filming ended was the saddest day of my life.”</p>
+<p className="mb-4">“My name is Speven Steelberg, and I was the director for <em>North Dakota Williams and the Inscrutable MacGuffin</em>… Yes, I’ve cultivated quite the reputation for my standards. But that’s what gets the movie made. Nobody pays for mediocrity. For example, I hear some directors let actors or writers leave in the middle of the filming day to pick up food or drinks or what have you. It’s ridiculous! You can’t get anything done when half your cast is out for coffee… My commitment to method acting is unparalleled. Everyone on set, not just the lead, needs to be embodying every trait of the main character. And I mean <em>every</em> trait: we emulated absolutely everything we could about the real North Dakota, from his appearance to his diet.”</p>
+<p className="mb-4">“My name is Colleen Hooverville, and I was the writer for <em>North Dakota Williams and the Inscrutable MacGuffin</em>… It was a truly incredible experience working with Dr. Botnik. I have so much respect for him and his work, and his knowledge of North Dakota Williams’ life is second to none. His recall is exceptional too; I’m convinced he hasn’t needed to go back and check his references in years when it comes to the subject… You learn so much when you write a biopic like this. For example, did you know that North Dakota was actually bald under his famous fedora? The hat was his way of coping with the hair loss. What a fascinating character.”</p>
+<p className="mb-4">“My name is Bo E. R. D., and I was the caterer for <em>North Dakota Williams and the Inscrutable MacGuffin</em>… Soffa? Man, I hate that little twerp. She’s always talking about how she loves to cook to try to buddy up to me, but between you and me, she wouldn’t know a whisk from a cleaver. Whenever I’m on set, I always make her go on the drink runs. No need to waste my energy when some annoying kid can do it for me.”</p>
+<p className="mb-4">“My name is Jason Bourne-Again, and I was the security chief for <em>North Dakota Williams and the Inscrutable MacGuffin</em>… I don’t keep track of purchases. Not my job. But I do remember someone raving about the fancy new biographies they got on North Dakota. Probably some nerd who reads or writes for a living.”</p>
+<p className="mb-4">“My name is Dr. Botnik, and I was the historical accuracy consultant for <em>North Dakota Williams and the Inscrutable MacGuffin</em>… As everybody knows, North Dakota was famously deathly afraid of rats, mice, and all other furry vermin. I believe Speven wanted to test one of the actors on their commitment to the role by exposing them to such creatures and seeing if they reacted with adequate amounts of fear. But alas, Henriksson’s stunt double looks so much like him, I just couldn’t tell you which of the two placed the order… One of the many peculiarities about North Dakota was his diet. He was nearly entirely vegan, but made an exception for chicken wings, which he would eat dozens of a day. I must say, I don’t know how he did it. I have been vegan for so long, the mere sight of meat makes me feel profusely ill.”</p>
+<p className="mb-4">“My name is Corbin Copy, and I was Henriksson’s stunt double in <em>North Dakota Williams and the Inscrutable MacGuffin</em>… Working on the film was a fantastic experience. It was just a pity we weren’t able to film everything we wanted to. We had floated the idea of a whole extra act set in Central Europe, but due to length concerns it didn’t make it out of the planning phase.”</p>
+<p className="mb-4">“My name is Soffa Moore, and I was the unpaid intern for <em>North Dakota Williams and the Inscrutable MacGuffin</em>… Me? The plane tickets? No way. They wouldn’t let some intern buy something important like that! That was one of the higher ups. Like, somebody whose name is in the OPENING credits. Isn’t that so cool? Gosh, I sure hope that’s me someday…”</p>
   </div>
 );
 
-export const remoteBoxBody = null;
+export const inPersonBody = (
+<div className="max-w-3xl">
+  <div className="mb-6">
+    This is a physical puzzle! Please send someone from your team to Friedman
+    208 to pick it up.
+  </div>
+  {body}
+  </div>);
 
-export const remoteBody = null;
+export const remoteBoxBody = (
+  <div className="max-w-3xl">
+    <div className="mb-6">
+      This is a physical puzzle! You should have received some documents in your box.
+    </div>
+    {body}
+    </div>);
+
+export const remoteBody = (
+  <div className="max-w-3xl">
+    <div className="mb-4">
+      In-person solvers and box purchasers received two documents along with the puzzle.
+      You may need to print them out; they are the following two images:
+      </div>
+      <div className="flex space-x-6 mb-6">
+      <Image src={IDS} alt="" width={2550*SCALE} height={3300*SCALE}/>
+      <Image src={RECEIPTS} alt=""  width={2550*SCALE} height={3300*SCALE}/>
+      </div>
+      
+    
+    {body}
+    </div>);
 
 /**
  * The `solutionBody` renders in the solution page.

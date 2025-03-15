@@ -1,5 +1,5 @@
 import Image from "next/image";
-import CONTENT from "./Once Upon A Quote.svg";
+import CONTENT from "./barbie.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
