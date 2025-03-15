@@ -440,7 +440,7 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
 
   return (
     <div>
-      <div className="flex max-w-[calc(100vw-32px)] overflow-auto">
+      <div className="no-scrollbar flex max-w-[calc(100vw-32px)] overflow-auto">
         {/* Moves */}
         <ScrollArea className="mr-4 hidden h-[600px] min-w-[13rem] rounded-md bg-footer-bg p-4 lg:block">
           <Table className="w-44">
@@ -580,6 +580,8 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
               hitArea={new Rectangle(20, 50, 260, 80)}
             />
           </Stage>
+          {/* Draggable overlay */}
+          <div className="absolute inset-0 flex h-10 items-center justify-center bg-black bg-opacity-50 lg:hidden" />
           {/* Result overlay */}
           {result && (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">

@@ -100,7 +100,7 @@ async function DefaultPuzzlePage({
   const puzzleBody = inPersonBody;
 
   return (
-    <div className="w-full px-4">
+    <div className="mb-12 w-full px-4">
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>

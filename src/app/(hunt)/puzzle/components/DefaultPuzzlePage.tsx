@@ -106,9 +106,11 @@ export default async function DefaultPuzzlePage({
         <ErratumDialog errataList={errataList} />
       </div>
 
-      <div className="flex items-start justify-center space-x-2">
-        <div className="w-fit">{puzzleBody}</div>
-        {copyText && <CopyButton copyText={copyText} />}
+      <div className="no-scrollbar overflow-auto">
+        <div className="mx-auto flex w-fit items-start justify-center space-x-2">
+          <div className="w-fit">{puzzleBody}</div>
+          {copyText && <CopyButton copyText={copyText} />}
+        </div>
       </div>
 
       {Object.keys(tasks).map((task) => {

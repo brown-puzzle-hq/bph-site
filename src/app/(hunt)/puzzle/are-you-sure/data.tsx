@@ -79,11 +79,10 @@ export const inPersonBody = (
     </p>
 
     {checkboxPrompts.map((prompts, i) => (
-      <div>
+      <div key={`${i}`}>
         {prompts.map((prompt, j) => (
-          <div className="flex space-x-4">
+          <div className="flex space-x-4" key={`${i}-${j}`}>
             <input
-              id={`checkbox-${i}-${j}`}
               type="checkbox"
               value=""
               className="h-6 min-w-4 rounded-sm border-gray-300 bg-gray-100 text-blue-600"

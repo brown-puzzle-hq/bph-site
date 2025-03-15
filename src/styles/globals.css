@@ -6,9 +6,21 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-    font-family: Arial, sans-serif;
+    /* font-family: Arial, sans-serif; */
   }
   h1 {
     @apply text-2xl font-bold; /* Adjust these values as needed */
+  }
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

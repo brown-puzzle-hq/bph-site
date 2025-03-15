@@ -40,13 +40,13 @@ export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
     <p>You spin it right round, I, right round like a... hurricane?</p>
     <div className="mx-auto grid w-fit grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(13,1.5em)] border">
-      {TEXT.split(" ").map((box) => (
-        <p className="flex items-center justify-center border">{box}</p>
+      {TEXT.split(" ").map((box, index) => (
+        <p className="flex items-center justify-center border" key={index}>{box}</p>
       ))}
     </div>
     <div>
-      {NAMES.map((name) => (
-        <p>{name}</p>
+      {NAMES.map((name, index) => (
+        <p key={index}>{name}</p>
       ))}
     </div>
   </div>

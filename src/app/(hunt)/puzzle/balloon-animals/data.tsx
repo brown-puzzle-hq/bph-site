@@ -48,8 +48,8 @@ export const inPersonBody = (
       </p>
       <p>What do you need?</p>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-        {ITEMS.map(({ name, src, desc }) => (
-          <div className="space-y-4">
+        {ITEMS.map(({ name, src, desc }, index) => (
+          <div className="space-y-4" key={index}>
             <p className="font-bold text-main-header">{name}</p>
             <Image src={src} alt="" className="rounded-lg" />
             <p>{desc}</p>

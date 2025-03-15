@@ -67,7 +67,7 @@ export const inPersonBody = (
       XEPVITSO
     </div>
     <div className="grid grid-cols-[repeat(19,1.5em)] grid-rows-[repeat(19,1.5em)]">
-      {GRID.flatMap((row) => row.split("").map((cell) => <p>{cell}</p>))}
+      {GRID.flatMap((row, i) => row.split("").map((cell, j) => <p key={`${i}-${j}`}>{cell}</p>))}
     </div>
   </div>
   </div>

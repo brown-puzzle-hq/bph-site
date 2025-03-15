@@ -78,7 +78,7 @@ export default async function Home() {
       <h1 className="mb-2 text-center">Puzzles</h1>
       <div className="overflow-y-auto rounded-md px-4">
         {ROUNDS.map((round) => (
-          <>
+          <div key={round.name}>
             <h1 className="pt-8 text-center text-2xl">{round.name}</h1>
             <Table>
               <TableHeader>
@@ -125,17 +125,16 @@ export default async function Home() {
                       </TableCell>
                       <TableCell>
                         {puzzle.nextUnlocks.map((nextUnlock) => (
-                          <>
-                            <>[</>
+                          <span key={nextUnlock.id}>
+                            [
                             <a
-                              key={nextUnlock.id}
                               href={`/puzzle/${nextUnlock.id}`}
                               className="hover:underline"
                             >
                               {nextUnlock.name}
                             </a>
-                            <>] </>
-                          </>
+                            ]{" "}
+                          </span>
                         ))}
                       </TableCell>
                       <TableCell className="justify-center">
@@ -174,7 +173,7 @@ export default async function Home() {
                   ))}
               </TableBody>
             </Table>
-          </>
+          </div>
         ))}
       </div>
     </div>
