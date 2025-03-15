@@ -2,8 +2,9 @@
 import { useRef, useState, useMemo } from "react";
 import ForceGraph from "react-force-graph-2d";
 import { LinkObject, NodeObject } from "react-force-graph-2d";
-import { PUZZLE_UNLOCK_MAP, ROUNDS } from "~/hunt.config";
+import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/hunt.config";
 import { CaseUpper, Waypoints, ScanSearch } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
@@ -226,116 +227,151 @@ export default function Graph() {
   };
 
   return (
-    <>
-      <ForceGraph
-        ref={fgRef}
-        graphData={data}
-        width={window.innerWidth - 50}
-        height={window.innerHeight - 100}
-        cooldownTicks={50}
-        autoPauseRedraw={false}
-        d3VelocityDecay={0.2}
-        // Visuals
-        nodeRelSize={NODE_R}
-        nodeLabel={() => ""} // Remove tooltip
-        nodeAutoColorBy="round"
-        nodePointerAreaPaint={(node, color, ctx) => {
-          ctx.fillStyle = color;
-          ctx.beginPath();
-          ctx.arc(node.x!, node.y!, 10, 0, 2 * Math.PI, false);
-          ctx.fill();
-        }}
-        // Prevent moving after dragging
-        onNodeDragEnd={(node) => {
-          node.fx = node.x;
-          node.fy = node.y;
-          node.fz = node.z;
-        }}
-        // Highlight nodes and links on hover or click
-        onNodeHover={handleNodeHover}
-        onNodeDrag={handleNodeHover}
-        onNodeClick={handleNodeClick}
-        onBackgroundClick={() => {
-          setClickNode(null);
-          setClickHighlightNodes(new Set());
-          setClickLinks(new Set());
-          setCurrTeam(null);
-          setPath(null);
-        }}
-        // Draw nodes and links
-        nodeCanvasObjectMode={() => "replace"}
-        nodeCanvasObject={handleNodeRender}
-        linkWidth={(link) =>
-          hoverLinks.has(link) || clickLinks.has(link) ? 5 : 1
-        }
-        linkDirectionalParticles={4}
-        linkDirectionalParticleWidth={(link) =>
-          hoverLinks.has(link) || clickLinks.has(link) ? 4 : 0
-        }
-      />
-      {/* Search team */}
-      <div className="absolute left-10 top-8 flex items-center space-x-2 rounded bg-white">
-        <Input
-          type="text"
-          placeholder={"Search by team ID..."}
-          value={searchTeam}
-          onChange={(e) => setSearchTeam(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearchTeam();
-            }
+    <div className="flex">
+      {/* Graph */}
+      <div className="relative flex-grow px-4">
+        <ForceGraph
+          ref={fgRef}
+          graphData={data}
+          width={window.innerWidth - 350}
+          height={window.innerHeight - 100}
+          cooldownTicks={50}
+          autoPauseRedraw={false}
+          d3VelocityDecay={0.2}
+          // Visuals
+          nodeRelSize={NODE_R}
+          nodeLabel={() => ""} // Remove tooltip
+          nodeAutoColorBy="round"
+          nodePointerAreaPaint={(node, color, ctx) => {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(node.x!, node.y!, 10, 0, 2 * Math.PI, false);
+            ctx.fill();
           }}
-          className={currTeam ? "bg-gray-200" : ""}
+          // Prevent moving after dragging
+          onNodeDragEnd={(node) => {
+            node.fx = node.x;
+            node.fy = node.y;
+            node.fz = node.z;
+          }}
+          // Highlight nodes and links on hover or click
+          onNodeHover={handleNodeHover}
+          onNodeDrag={handleNodeHover}
+          onNodeClick={handleNodeClick}
+          onBackgroundClick={() => {
+            setClickNode(null);
+            setClickHighlightNodes(new Set());
+            setClickLinks(new Set());
+          }}
+          // Draw nodes and links
+          nodeCanvasObjectMode={() => "replace"}
+          nodeCanvasObject={handleNodeRender}
+          linkWidth={(link) =>
+            hoverLinks.has(link) || clickLinks.has(link) ? 5 : 1
+          }
+          linkDirectionalParticles={4}
+          linkDirectionalParticleWidth={(link) =>
+            hoverLinks.has(link) || clickLinks.has(link) ? 4 : 0
+          }
         />
-        <Button
-          onClick={handleSearchTeam}
-          className="rounded bg-blue-500 px-3 py-1 text-white"
+        {/* Search team */}
+        <div className="absolute left-10 top-8 flex items-center space-x-2 rounded bg-white">
+          <Input
+            type="text"
+            placeholder={"Search by team ID..."}
+            value={searchTeam}
+            onChange={(e) => setSearchTeam(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearchTeam();
+              }
+            }}
+            className={currTeam ? "bg-neutral-200" : ""}
+          />
+          <Button
+            onClick={handleSearchTeam}
+            className="rounded bg-blue-500 px-3 py-1 text-white"
+          >
+            Search
+          </Button>
+        </div>
+
+        {/* Search puzzle */}
+        <div className="absolute left-10 top-20 flex items-center space-x-2 rounded bg-white">
+          <Input
+            type="text"
+            placeholder="Search by puzzle ID..."
+            value={searchPuzzle}
+            onChange={(e) => setSearchPuzzle(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSearchPuzzle("");
+                handleSearchPuzzle();
+              }
+            }}
+          />
+          <Button
+            onClick={handleSearchPuzzle}
+            className="rounded bg-blue-500 px-3 py-1 text-white"
+          >
+            Search
+          </Button>
+        </div>
+
+        {/* Words and nodes toggle */}
+        <button
+          className="absolute left-10 top-32 rounded bg-orange-500 px-3 py-2 text-white hover:opacity-70"
+          onClick={() => setShowWords((prev) => !prev)}
         >
-          Search
-        </Button>
+          {showWords ? (
+            <Waypoints className="size-5" />
+          ) : (
+            <CaseUpper className="size-5" />
+          )}
+        </button>
+
+        {/* Zoom to Fit Button */}
+        <button
+          className="absolute left-24 top-32 rounded bg-emerald-600 px-3 py-2 text-white"
+          onClick={() => fgRef.current?.zoomToFit(500)}
+        >
+          <ScanSearch className="size-5" />
+        </button>
       </div>
 
-      {/* Search puzzle */}
-      <div className="absolute left-10 top-20 flex items-center space-x-2 rounded bg-white">
-        <Input
-          type="text"
-          placeholder="Search by puzzle ID..."
-          value={searchPuzzle}
-          onChange={(e) => setSearchPuzzle(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              setSearchPuzzle("");
-              handleSearchPuzzle();
-            }
-          }}
-        />
-        <Button
-          onClick={handleSearchPuzzle}
-          className="rounded bg-blue-500 px-3 py-1 text-white"
-        >
-          Search
-        </Button>
-      </div>
-
-      {/* Words and nodes toggle */}
-      <button
-        className="absolute left-10 top-32 rounded bg-orange-500 px-3 py-2 text-white hover:opacity-70"
-        onClick={() => setShowWords((prev) => !prev)}
-      >
-        {showWords ? (
-          <Waypoints className="size-5" />
-        ) : (
-          <CaseUpper className="size-5" />
-        )}
-      </button>
-
-      {/* Zoom to Fit Button */}
-      <button
-        className="absolute left-24 top-32 rounded bg-emerald-600 px-3 py-2 text-white"
-        onClick={() => fgRef.current?.zoomToFit(500)}
-      >
-        <ScanSearch className="size-5" />
-      </button>
-    </>
+      {/* Side panel */}
+      <ScrollArea className="max-h-[calc(80vh)] w-80 border-l border-neutral-300 bg-neutral-100 text-xs">
+        <div className="p-4">
+          <p className="text-base">Puzzles</p>
+          {ROUNDS.map((round) => (
+            <>
+              <p className="bg-neutral-400 text-white">{round.name}</p>
+              {round.puzzles.map((puzzle) => {
+                const isSolve = path?.solves.includes(puzzle);
+                const isUnlock = path?.unlocks.includes(puzzle);
+                const isMeta = META_PUZZLES.includes(puzzle);
+                return (
+                  <p>
+                    <Link
+                      href={`/puzzle/${puzzle}`}
+                      className={`${isMeta ? "font-semibold" : ""} ${
+                        isSolve
+                          ? "text-lime-600"
+                          : isUnlock
+                            ? "text-amber-500"
+                            : "text-neutral-500"
+                      }`}
+                      prefetch={false}
+                    >
+                      {puzzle}
+                    </Link>
+                  </p>
+                );
+              })}
+            </>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
   );
 }
