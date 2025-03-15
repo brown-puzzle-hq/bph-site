@@ -172,18 +172,19 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "ten-guards-ten-doors": [
     "a-fistful-of-cards",
     "filming-schedule",
-    "a-fistful-of-cards-ii",
     "beads",
     "lost-category",
   ],
-  "a-fistful-of-cards-ii": ["heist-ii"], // ten-guards-ten-doors
-  beads: ["heist-ii", "youve-got-this-covered"], // ten-guards-ten-doors
-  "lost-category": ["youve-got-this-covered"], // ten-guards-ten-doors
+  "a-fistful-of-cards-ii": ["heist-ii", "youve-got-this-covered"], // ten-guards-ten-doors
+  beads: ["heist-ii", "a-fistful-of-cards-ii", "aha-erlebnis"], // ten-guards-ten-doors
+  "lost-category": [
+    "youve-got-this-covered", 
+    "a-fistful-of-cards-ii", 
+    "m-guards-n-doors-and-k-choices"], // ten-guards-ten-doors
   "heist-ii": [
     "a-fistful-of-cards-ii",
     "beads",
     "aha-erlebnis",
-    "m-guards-n-doors-and-k-choices",
     "youve-got-this-covered",
   ],
   "youve-got-this-covered": [
@@ -203,7 +204,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "plagiarism",
     "watching-between-the-lines",
   ],
-  peanuts: ["galileo-was-wrong"], // two-guards-river
+  peanuts: ["galileo-was-wrong", "one-guard-screen"], // two-guards-river
   plagiarism: ["galileo-was-wrong", "fractal-shanty"], // two-guards-river
   "watching-between-the-lines": ["fractal-shanty"], // two-guards-river
   "galileo-was-wrong": [
@@ -217,7 +218,6 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "watching-between-the-lines",
     "plagiarism",
     "galileo-was-wrong",
-    "one-guard-screen",
     "balloon-animals",
   ],
   "balloon-animals": ["galileo-was-wrong", "fractal-shanty"],
@@ -227,55 +227,35 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "heist-ii",
     "youve-got-this-covered",
     "bluenos-puzzle-box",
-    "narcissism",
-    "financial-crimes-3",
+    "identify-this-piece",
+    "piecemeal"
   ],
-  "bluenos-puzzle-box": ["eye-spy", "whats-my-ride", "boring-plot"], // m-guards-n-doors-and-k-choices
-  narcissism: ["whats-my-ride", "boring-plot", "piecemeal"], // m-guards-n-doors-and-k-choices
-  "financial-crimes-3": ["boring-plot", "piecemeal", "genetic-counseling"], // m-guards-n-doors-and-k-choices
+  "bluenos-puzzle-box": ["the-snack-zone", "imagine", "whats-my-ride"], // m-guards-n-doors-and-k-choices
+  narcissism: ["eye-of-the-storm", "piecemeal", "financial-crimes-3"], // m-guards-n-doors-and-k-choices
+  "financial-crimes-3": ["narcissim", "genetic-counseling", "eye-spy", "the-guard-and-the-door"], // m-guards-n-doors-and-k-choices
   "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
   "whats-my-ride": [
-    "bluenos-puzzle-box",
-    "narcissism",
-    "eye-spy",
-    "identify-the-piece",
+    "bluenos-puzzle-box"
   ],
-  piecemeal: [
-    "narcissism",
-    "financial-crimes-3",
-    "genetic-counseling",
-    "identify-the-piece",
-  ],
+  piecemeal: ["once-upon-a-quote", "eye-of-the-storm", "narcissism"],
   "eye-spy": ["bluenos-puzzle-box", "whats-my-ride", "imagine"],
   "identify-the-piece": [
-    "whats-my-ride",
-    "piecemeal",
-    "imagine",
-    "once-upon-a-quote",
+    "the-snack-zone"
   ],
+  "eye-of-the-storm": ["boring-plot", "narcissism"], 
   "genetic-counseling": [
-    "piecemeal",
-    "financial-crimes-3",
-    "once-upon-a-quote",
-    "the-snack-zone",
+    "financial-crimes-3", 
+    "the-guard-and-the-door", 
+    "eye-spy"
   ],
   imagine: [
-    "eye-spy",
-    "identify-the-piece",
-    "once-upon-a-quote",
-    "the-guard-and-the-door",
+    "whats-my-ride"
   ],
   "once-upon-a-quote": [
-    "identify-the-piece",
-    "imagine",
-    "genetic-counseling",
-    "the-snack-zone",
-    "the-guard-and-the-door",
+    "boring-plot"
   ],
   "the-snack-zone": [
-    "genetic-counseling",
-    "once-upon-a-quote",
-    "the-guard-and-the-door",
+    "imagine"
   ],
 
   // REALITY -> COMEDY
@@ -287,37 +267,41 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "opening-sequences": ["a-fistful-of-cards-iii", "hand-letters"],
   "chain-letters": ["hand-letters", "heist-iii"],
-  "a-fistful-of-cards-iii": ["the-guard-and-the-door", "study-abroad"], // opening-sequences
-  "hand-letters": ["study-abroad", "are-you-sure"], // opening-sequences, chain-letters,
-  "heist-iii": ["are-you-sure", "six-degrees"], // chain-letters
+  "a-fistful-of-cards-iii": ["the-guard-and-the-door", "study-abroad", "six-degrees"], // opening-sequences
+  "hand-letters": ["study-abroad", "are-you-sure", "six-degrees"], // opening-sequences, chain-letters,
+  "heist-iii": ["are-you-sure"], // chain-letters
   "study-abroad": [
     "a-fistful-of-cards-iii",
     "hand-letters",
     "are-you-sure",
     "the-guard-and-the-door",
+    "six-degrees"
   ],
-  "are-you-sure": ["study-abroad", "hand-letters", "heist-iii", "six-degrees"],
+  "are-you-sure": ["study-abroad", "hand-letters", "heist-iii"],
 
   "the-guard-and-the-door": [
     // digging
-    "imagine",
-    "once-upon-a-quote",
-    "the-snack-zone",
+    "financial-crimes-3",
+    "genetic-counseling",
     // reality
     "study-abroad",
     "a-fistful-of-cards-iii",
     // cerebral
-    "red-blue",
-    "a-fistful-of-cards-iv",
-    "the-final-heist",
+    "secret-ingredient",
+    "color-transfer",
     "the-compact-disc",
   ],
 
   // CEREBRAL
-  "red-blue": ["constellation", "secret-ingredient"], // the-guard-and-the-door
-  "a-fistful-of-cards-iv": ["constellation", "color-transfer"], // the-guard-and-the-door
-  "the-final-heist": ["color-transfer", "eye-to-eye"], // the-guard-and-the-door
-  "the-compact-disc": ["fridge-magnets", "eye-to-eye"], // the-guard-and-the-door
+  "red-blue": ["the-final-heist", "eye-to-eye", "fridge-magnets"], // the-guard-and-the-door
+  "a-fistful-of-cards-iv": [
+    "placeholder-ii", 
+    "eye-to-eye", 
+    "secret-ingredient", 
+    "color-transfer", 
+    "cutting-room-floor"], // the-guard-and-the-door
+  "the-final-heist": ["fridge-magnets", "eye-to-eye", "color-transfer", "red-blue"], // the-guard-and-the-door
+  "the-compact-disc": ["red-blue", "the-final-heist"], // the-guard-and-the-door
   constellation: [
     "red-blue",
     "a-fistful-of-cards-iv",
@@ -326,32 +310,28 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ], // PLACEHOLDER I is blueberry
   "color-transfer": [
     "a-fistful-of-cards-iv",
-    "the-final-heist",
-    "secret-ingredient",
-    "fridge-magnets",
+    "placeholder-i", 
+    "the-final-heist"
   ],
   "eye-to-eye": [
     "the-final-heist",
-    "the-compact-disc",
+    "constellation",
     "fridge-magnets",
-    "placeholder-ii",
+    "red-blue",
+    "cutting-room-floor"
   ], // PLACEHOLDER II is blueberry
   "secret-ingredient": [
-    "red-blue",
-    "constellation",
-    "color-transfer",
     "placeholder-i",
-    "cutting-room-floor",
+    "a-fistful-of-cards-iv"
   ],
   "fridge-magnets": [
-    "color-transfer",
-    "the-compact-disc",
-    "eye-to-eye",
-    "placeholder-ii",
-    "cutting-room-floor",
+    "constellation", 
+    "eye-to-eye", 
+    "the-final-heist", 
+    "red-blue"
   ],
-  "placeholder-i": ["constellation", "secret-ingredient", "cutting-room-floor"],
-  "placeholder-ii": ["eye-to-eye", "fridge-magnets", "cutting-room-floor"],
+  "placeholder-i": ["placeholder-ii", "color-transfer", "secret-ingredient"],
+  "placeholder-ii": ["placeholder-i", "constellation", "a-fistful-of-cards-iv"],
 };
 
 export type Round = {
