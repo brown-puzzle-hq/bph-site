@@ -112,7 +112,7 @@ export const inPersonBody = (
   <div className="max-w-4xl py-4">
     <p className="pb-8">
       Rivers are three letters long and may either flow horizontally, vertically, or
-      diagonally. Horizontal and diagonal rivers are read left-to-right,
+      diagonally in alphabetical order. Horizontal and diagonal rivers are read left-to-right,
       and vertical rivers are read top-to-bottom.
       Any such triple of letters has a river flowing through it.
     </p>
