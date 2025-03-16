@@ -43,6 +43,7 @@ export const remoteBoxBody = (
     This is a physical puzzle! It uses an object found in your box.
   </i>
 </div>
+<p className="p-4 italic">You take a minute (or several) to listen to your CD.</p>
 <div className="max-w-2xl p-4">
   <div className="flex justify-center pb-4">
     <Image src={Disc} alt="" width={500} height={500} />
@@ -56,6 +57,7 @@ export const remoteBody = (
 <div className="mb-4 max-w-3xl">
   This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
 </div>
+<p className="p-4 italic">You take a minute (or several) to listen to your CD.</p>
 <div className="max-w-2xl p-4">
   <div className="flex justify-center pb-4">
     <Image src={Disc} alt="" width={500} height={500} />
