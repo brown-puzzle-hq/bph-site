@@ -228,7 +228,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "balloon-animals": ["galileo-was-wrong", "fractal-shanty"],
 
-  // DRAMA -> DIGGING
+  // DRAMA -> Adventure
   "m-guards-n-doors-and-k-choices": [
     "heist-ii",
     "youve-got-this-covered",
@@ -287,7 +287,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "cutting-room-floor": [],
 
   "the-guard-and-the-door": [
-    // digging
+    // adventure
     "financial-crimes-3",
     "genetic-counseling",
     // reality
@@ -387,7 +387,7 @@ export const ROUNDS: Round[] = [
     ],
   },
   {
-    name: "Digging",
+    name: "Adventure",
     puzzles: [
       "boring-plot",
       "identify-the-piece",
