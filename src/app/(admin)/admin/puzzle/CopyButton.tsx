@@ -17,7 +17,7 @@ export default function CopyButton({ copyText }: { copyText: string }) {
         });
       }}
     >
-      <Clipboard className="text-yellow-800" />
+      <Clipboard className="size-5 text-yellow-800" />
     </button>
   );
 }

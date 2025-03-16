@@ -1,4 +1,3 @@
-import { db } from "@/db/index";
 import {
   Table,
   TableBody,
@@ -7,44 +6,82 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/hunt.config";
-import { eq } from "drizzle-orm";
-import { puzzles } from "~/server/db/schema";
+import {
+  INITIAL_PUZZLES,
+  ROUNDS,
+  META_PUZZLES,
+  SEQUENCES,
+} from "~/hunt.config";
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
-
+import { db } from "@/db/index";
 export const fetchCache = "force-no-store";
 
+// TODO: would be nice to force in-person body
+
+const roundBgColor: Record<string, string> = {
+  Action: "bg-red-100",
+  Cerebral: "bg-indigo-100",
+  Adventure: "bg-lime-100",
+  Comedy: "bg-amber-100",
+  Drama: "bg-purple-100",
+  Reality: "bg-orange-100",
+};
+
+const roundTextColor: Record<string, string> = {
+  Action: "text-red-900",
+  Cerebral: "text-indigo-900",
+  Adventure: "text-lime-900",
+  Comedy: "text-amber-900",
+  Drama: "text-purple-900",
+  Reality: "text-orange-900",
+};
+
 export default async function Home() {
-  const allPuzzles = await db.query.puzzles.findMany({
+  const numTeams = (await db.query.teams.findMany({ columns: { id: true } }))
+    .length;
+
+  const query = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
+    with: {
+      unlocks: {
+        columns: { id: true },
+      },
+      solves: {
+        columns: { id: true },
+      },
+      guesses: {
+        columns: { id: true },
+      },
+    },
   });
+
+  const allPuzzles = query.map((puzzle) => ({
+    id: puzzle.id,
+    name: puzzle.name,
+    answer: puzzle.answer,
+    unlocks: INITIAL_PUZZLES.includes(puzzle.id)
+      ? "-"
+      : puzzle.unlocks.length,
+    guesses: puzzle.guesses.length,
+    solves: puzzle.solves.length,
+    sequences: SEQUENCES.filter((seq) => seq.puzzles.includes(puzzle.id)),
+  }));
 
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
-      const nextUnlocks = await Promise.all(
-        (PUZZLE_UNLOCK_MAP[puzzle.id] || []).map(async (nextUnlock) => ({
-          id: nextUnlock,
-          name:
-            (
-              await db.query.puzzles.findFirst({
-                where: eq(puzzles.id, nextUnlock),
-                columns: { name: true },
-              })
-            )?.name || "",
-        })),
-      );
-
+      // Check if there is a body, solution, and copy text
       var inPersonBody;
+      var remoteBody;
       var solutionBody;
       var copyText;
-
       try {
         // Try to import the puzzle data from the hunt folder
         const module = await import(
           `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
         );
         inPersonBody = !!module.inPersonBody;
+        remoteBody = !!module.remoteBody;
         solutionBody = !!module.solutionBody;
         copyText = module.copyText;
       } catch (e) {
@@ -54,10 +91,12 @@ export default async function Home() {
             `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
           );
           inPersonBody = !!module.inPersonBody;
+          remoteBody = !!module.remoteBody;
           solutionBody = !!module.solutionBody;
           copyText = module.copyText;
         } catch (e) {
           inPersonBody = null;
+          remoteBody = null;
           solutionBody = null;
           copyText = null;
         }
@@ -65,7 +104,7 @@ export default async function Home() {
 
       return {
         ...puzzle,
-        nextUnlocks: nextUnlocks,
+        remoteBody: remoteBody,
         inPersonBody: inPersonBody,
         solutionBody: solutionBody,
         copyText: copyText,
@@ -77,104 +116,119 @@ export default async function Home() {
     <div className="container mx-auto mb-12">
       <h1 className="mb-2 text-center">Puzzles</h1>
       <div className="overflow-y-auto rounded-md px-4">
-        {ROUNDS.map((round) => (
-          <div key={round.name}>
-            <h1 className="pt-8 text-center text-2xl">{round.name}</h1>
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-inherit">
-                  <TableHead className="w-1/6 min-w-56">Name</TableHead>
-                  <TableHead className="w-1/6">Answer</TableHead>
-                  <TableHead className="w-2/3 whitespace-nowrap">
-                    Next Unlock
-                  </TableHead>
-                  <TableHead className="w-fit">Puzzle</TableHead>
-                  <TableHead className="w-fit">Solution</TableHead>
-                  <TableHead className="w-fit">Statistics</TableHead>
-                  <TableHead className="w-fit">Copy</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {allPuzzlesWithEverything
-                  .filter((puzzle) => round.puzzles.includes(puzzle.id))
-                  .sort((puzzleA, puzzleB) =>
-                    META_PUZZLES.includes(puzzleA.id)
-                      ? META_PUZZLES.includes(puzzleB.id)
-                        ? puzzleA.name.localeCompare(puzzleB.name)
-                        : -1
-                      : META_PUZZLES.includes(puzzleB.id)
-                        ? 1
-                        : puzzleA.name.localeCompare(puzzleB.name),
-                  )
-                  .map((puzzle) => (
-                    <TableRow key={puzzle.id} className="hover:bg-inherit">
-                      <TableCell>
-                        <a
-                          className={
-                            META_PUZZLES.includes(puzzle.id)
-                              ? "font-bold text-blue-500 hover:underline"
-                              : "text-blue-500 hover:underline"
-                          }
-                          href={`/puzzle/${puzzle.id}`}
-                        >
-                          {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
-                        </a>
-                      </TableCell>
-                      <TableCell>
-                        <p className="text-emerald-600">{puzzle.answer}</p>
-                      </TableCell>
-                      <TableCell>
-                        {puzzle.nextUnlocks.map((nextUnlock) => (
-                          <span key={nextUnlock.id}>
-                            [
-                            <a
-                              href={`/puzzle/${nextUnlock.id}`}
-                              className="hover:underline"
-                            >
-                              {nextUnlock.name}
-                            </a>
-                            ]{" "}
-                          </span>
-                        ))}
-                      </TableCell>
-                      <TableCell className="justify-center">
-                        {puzzle.inPersonBody && (
-                          <div className="flex justify-center">
-                            <a href={`/puzzle/${puzzle.id}`}>
-                              <Puzzle className="text-red-500 hover:opacity-75" />
-                            </a>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="justify-center">
-                        {puzzle.solutionBody && (
-                          <div className="flex justify-center">
-                            <a href={`/puzzle/${puzzle.id}/solution`}>
-                              <KeyRound className="text-yellow-500 hover:opacity-75" />
-                            </a>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="justify-center">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-inherit">
+              <TableHead className="w-10 py-0">Round</TableHead>
+              <TableHead className="w-1/6 min-w-56 py-0">Name</TableHead>
+              <TableHead className="w-10 break-all py-0">Answer</TableHead>
+              <TableHead className="w-fit py-0 text-center">Seqs</TableHead>
+              <TableHead className="w-fit py-0 text-center">Unlocks</TableHead>
+              <TableHead className="w-fit py-0 text-center">Solves</TableHead>
+              <TableHead className="w-fit py-0 text-center">Guesses</TableHead>
+              <TableHead className="w-fit py-0 text-center">In-Person</TableHead>
+              <TableHead className="w-fit py-0 text-center">Remote</TableHead>
+              <TableHead className="w-fit py-0 text-center">Solution</TableHead>
+              <TableHead className="w-fit py-0 text-center">Stats</TableHead>
+              <TableHead className="w-fit py-0 text-center">Copy</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {ROUNDS.map((round) =>
+              allPuzzlesWithEverything
+                .filter((puzzle) => round.puzzles.includes(puzzle.id))
+                .sort((puzzleA, puzzleB) =>
+                  META_PUZZLES.includes(puzzleA.id)
+                    ? META_PUZZLES.includes(puzzleB.id)
+                      ? puzzleA.name.localeCompare(puzzleB.name)
+                      : -1
+                    : META_PUZZLES.includes(puzzleB.id)
+                      ? 1
+                      : puzzleA.name.localeCompare(puzzleB.name),
+                )
+                .map((puzzle) => (
+                  <TableRow key={puzzle.id} className="hover:bg-inherit">
+                    <TableCell className="py-0">
+                      <div
+                        className={`${roundBgColor[round.name]} inline-flex rounded-sm ${roundTextColor[round.name]} px-1 py-0.5`}
+                      >
+                        {round.name}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="py-0">
+                      <a
+                        className={
+                          META_PUZZLES.includes(puzzle.id)
+                            ? "font-bold text-blue-500 hover:underline"
+                            : "text-blue-500 hover:underline"
+                        }
+                        href={`/puzzle/${puzzle.id}`}
+                      >
+                        {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
+                      </a>
+                    </TableCell>
+                    <TableCell className="py-0">
+                      <p className="text-emerald-600">{puzzle.answer}</p>
+                    </TableCell>
+                    <TableCell className="text-center text-base">
+                      {puzzle.sequences.map((seq) => seq.icon)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {puzzle.unlocks}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {puzzle.solves}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {puzzle.guesses}
+                    </TableCell>
+                    <TableCell className="justify-center">
+                      {puzzle.inPersonBody && (
                         <div className="flex justify-center">
-                          <a href={`/admin/statistics/${puzzle.id}`}>
-                            <ChartColumn className="text-black-500 hover:opacity-60" />
+                          <a href={`/puzzle/${puzzle.id}`}>
+                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
                           </a>
                         </div>
-                      </TableCell>
-                      <TableCell className="justify-center">
-                        {puzzle.copyText && (
-                          <div className="flex justify-center hover:opacity-60">
-                            <CopyButton copyText={puzzle.copyText} />
-                          </div>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </div>
-        ))}
+                      )}
+                    </TableCell>
+                    <TableCell className="justify-center">
+                      {puzzle.remoteBody && (
+                        <div className="flex justify-center">
+                          <a href={`/puzzle/${puzzle.id}`}>
+                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                          </a>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="justify-center">
+                      {puzzle.solutionBody && (
+                        <div className="flex justify-center">
+                          <a href={`/puzzle/${puzzle.id}/solution`}>
+                            <KeyRound className="size-5 text-yellow-500 hover:opacity-75" />
+                          </a>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="justify-center">
+                      <div className="flex justify-center">
+                        <a href={`/admin/statistics/${puzzle.id}`}>
+                          <ChartColumn className="text-black-500 size-5 hover:opacity-60" />
+                        </a>
+                      </div>
+                    </TableCell>
+                    <TableCell className="justify-center">
+                      {puzzle.copyText && (
+                        <div className="flex justify-center hover:opacity-60">
+                          <CopyButton copyText={puzzle.copyText} />
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )),
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
