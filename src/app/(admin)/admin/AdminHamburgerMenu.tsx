@@ -50,7 +50,7 @@ export default async function AdminHamburgerMenu() {
     },
     {
       title: "Puzzles",
-      href: "/admin/solutions",
+      href: "/admin/puzzle",
       type: "link",
     },
     {
@@ -91,7 +91,7 @@ export default async function AdminHamburgerMenu() {
     },
     {
       title: "Puzzles",
-      href: "/admin/solutions",
+      href: "/admin/puzzle",
       type: "link",
     },
     {

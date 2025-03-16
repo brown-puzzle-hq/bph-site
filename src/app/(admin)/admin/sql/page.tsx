@@ -6,7 +6,7 @@ import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { EnlargedImage } from "~/components/ui/enlarged-component";
 
 import { queryDatabase } from "./actions";
-import CopyButton from "../solutions/CopyButton";
+import CopyButton from "../puzzle/CopyButton";
 import { extractEmails } from "~/lib/utils";
 
 export default function Page() {

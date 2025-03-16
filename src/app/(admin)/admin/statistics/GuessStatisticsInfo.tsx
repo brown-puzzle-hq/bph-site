@@ -22,7 +22,7 @@ export default async function GuessStatisticsInfo({
   })!;
 
   if (!puzzle) {
-    redirect("/admin/solutions");
+    redirect("/admin/puzzle");
   }
 
   // Get previous guesses

@@ -56,7 +56,7 @@ const adminItems = [
   },
   {
     title: "Puzzles",
-    href: "/admin/solutions",
+    href: "/admin/puzzle",
     icon: <Puzzle className="text-blue-500" />,
   },
   {

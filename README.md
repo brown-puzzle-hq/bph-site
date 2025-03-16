@@ -34,7 +34,7 @@ Now you're all ready to start postprodding!
 To run the development server and see your changes live:
 1. Run `pnpm run dev`
 2. Login with `admin123` as the username and password
-3. Go to `http://localhost:3000/admin/solutions`
+3. Go to `http://localhost:3000/admin/puzzle`
 
 #### Adding puzzles
 
