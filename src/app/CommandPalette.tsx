@@ -23,6 +23,7 @@ import {
   ClipboardPenLine,
   UsersRound,
   Database,
+  Waypoints,
 } from "lucide-react";
 
 const huntItems = [
@@ -78,6 +79,11 @@ const adminItems = [
     title: "Feedback",
     href: "/admin/feedback",
     icon: <ClipboardPenLine className="text-blue-500" />,
+  },
+  {
+    title: "Graph",
+    href: "/admin/graph",
+    icon: <Waypoints className="text-blue-500" />,
   },
   {
     title: "Queries",

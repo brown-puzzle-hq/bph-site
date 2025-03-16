@@ -4,7 +4,7 @@ import { teams, guesses, hints } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { INITIAL_PUZZLES } from "~/hunt.config";
 
-export async function getGraphPath(teamId: string) {
+export async function getSearchedTeam(teamId: string) {
   const result = await db.query.teams.findFirst({
     where: eq(teams.id, teamId),
     with: {
@@ -26,12 +26,13 @@ export async function getGraphPath(teamId: string) {
   const solves = result?.solves.map((s) => s.puzzleId) || [];
 
   return {
+    teamId: teamId,
     unlocks: unlocksAndInitialPuzzles,
     solves: solves,
   };
 }
 
-export async function getPuzzleInfo(teamId: string, puzzleId: string) {
+export async function getSearchedPuzzle(teamId: string, puzzleId: string) {
   const result = await db.query.teams.findFirst({
     where: eq(teams.id, teamId),
     columns: {},
@@ -53,5 +54,9 @@ export async function getPuzzleInfo(teamId: string, puzzleId: string) {
     return { error: "Puzzle not found." };
   }
 
-  return result;
+  return {
+    puzzleId: puzzleId,
+    guesses: result.guesses,
+    requestedHints: result.requestedHints
+  };
 }

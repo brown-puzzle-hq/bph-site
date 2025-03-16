@@ -4,18 +4,25 @@ import { useRef, useState, useMemo } from "react";
 import ForceGraph from "react-force-graph-2d";
 import { LinkObject, NodeObject } from "react-force-graph-2d";
 import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/hunt.config";
-import { CaseUpper, Waypoints, ScanSearch, ChevronLeft } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import { getGraphPath, getPuzzleInfo } from "./actions";
+import {
+  CaseUpper,
+  Waypoints,
+  ScanSearch,
+  ChevronLeft,
+  User,
+  Puzzle,
+  Check,
+  X,
+} from "lucide-react";
+import { getSearchedTeam, getSearchedPuzzle } from "./actions";
 
-export type GraphPath = {
+export type SearchedTeam = {
+  teamId: string;
   unlocks: string[];
   solves: string[];
 };
 
-export type PuzzleInfo = {
+export type SearchedPuzzle = {
   puzzleId: string;
   guesses: { guess: string; isCorrect: boolean }[] | null;
   requestedHints: { request: string }[] | null;
@@ -26,27 +33,31 @@ export default function Graph() {
   const fgRef = useRef<any>(null);
 
   // The node being hovered over
-  const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
+  const [hoveredNode, setHoveredNode] = useState<NodeObject | null>(null);
   // The links connected to the hovered node
-  const [hoverLinks, setHoverLinks] = useState(new Set<LinkObject>());
+  const [hoveredLinks, setHoveredLinks] = useState(new Set<LinkObject>());
   // The node that was clicked
-  const [clickNode, setClickNode] = useState<NodeObject | null>(null);
-  // The nodes that are highlighted
-  const [clickHighlightNodes, setClickHighlightNodes] = useState(
+  const [clickedNode, setClickedNode] = useState<NodeObject | null>(null);
+  // The nodes that are highlighted after being clicked
+  const [highlightedNodes, setHighlightedNodes] = useState(
     new Set<NodeObject>(),
   );
-  // The links that are highlighted
-  const [clickLinks, setClickLinks] = useState(new Set<LinkObject>());
+  // The links that are highlighted after being clicked
+  const [highlightedLinks, setHighlightedLinks] = useState(
+    new Set<LinkObject>(),
+  );
 
   const [showWords, setShowWords] = useState(false);
-  const [searchPuzzle, setSearchPuzzle] = useState("");
-  const [searchTeam, setSearchTeam] = useState("");
 
-  const [currTeam, setCurrTeam] = useState<null | string>(null);
+  const [puzzleQuery, setPuzzleQuery] = useState("");
+  const [teamQuery, setTeamQuery] = useState("");
+
   // Team's solves and unlocks
-  const [path, setPath] = useState<GraphPath | null>(null);
+  const [searchedTeam, setSearchedTeam] = useState<SearchedTeam | null>(null);
   // Team's guesses and hints for a puzzle
-  const [puzzleInfo, setPuzzleInfo] = useState<null | PuzzleInfo>(null);
+  const [searchedPuzzle, setSearchedPuzzle] = useState<null | SearchedPuzzle>(
+    null,
+  );
 
   const nodes = useMemo(() => {
     return Object.keys(PUZZLE_UNLOCK_MAP).map((puzzle) => ({
@@ -91,22 +102,22 @@ export default function Graph() {
   }, [nodes, links]);
 
   const handleNodeHover = (node: NodeObject | null) => {
-    setHoverNode(node || null);
-    const hoverLinks = new Set<LinkObject>();
-    node?.links?.forEach((link: any) => hoverLinks.add(link));
-    setHoverLinks(hoverLinks);
+    setHoveredNode(node || null);
+    const hoveredLinks = new Set<LinkObject>();
+    node?.links?.forEach((link: any) => hoveredLinks.add(link));
+    setHoveredLinks(hoveredLinks);
   };
 
   const handleNodeClick = async (node: NodeObject | null) => {
     if (!node) {
-      setClickNode(null);
+      setClickedNode(null);
       return;
     }
-    setClickNode(node);
-    setClickHighlightNodes(
+    setClickedNode(node);
+    setHighlightedNodes(
       (prev) => new Set([...prev, ...[node], ...node.neighbors]),
     );
-    setClickLinks((prev) => new Set([...prev, ...node.links]));
+    setHighlightedLinks((prev) => new Set([...prev, ...node.links]));
     await handlePuzzleInfo(node.name);
   };
 
@@ -120,10 +131,10 @@ export default function Graph() {
     // const yellow400 = "oklch(0.852 0.199 91.936)";
     const neutral400 = "oklch(0.708 0 0)";
 
-    const nodeColor = path
-      ? path.solves.includes(node.name)
+    const nodeColor = searchedTeam
+      ? searchedTeam.solves.includes(node.name)
         ? lime500
-        : path.unlocks.includes(node.name)
+        : searchedTeam.unlocks.includes(node.name)
           ? amber400
           : neutral400
       : node.color;
@@ -131,11 +142,11 @@ export default function Graph() {
     // If showWords is OFF
     if (!showWords) {
       // Check if needs to be highlighted
-      if (clickHighlightNodes.has(node)) {
+      if (highlightedNodes.has(node)) {
         ctx.beginPath();
         ctx.arc(node.x!, node.y!, NODE_R * 1.4, 0, 2 * Math.PI, false);
         ctx.fillStyle =
-          node === hoverNode || node == clickNode ? "red" : "orange";
+          node === hoveredNode || node == clickedNode ? "red" : "orange";
         ctx.fill();
       }
 
@@ -146,7 +157,7 @@ export default function Graph() {
       ctx.fill();
 
       // Show words anyway on hover or click
-      if (node === hoverNode || clickHighlightNodes.has(node)) {
+      if (node === hoveredNode || highlightedNodes.has(node)) {
         const label = node.name as string;
         const fontSize = 12 / globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;
@@ -210,38 +221,36 @@ export default function Graph() {
   };
 
   const handleSearchPuzzle = async () => {
-    if (searchPuzzle === "") return;
+    if (puzzleQuery === "") return;
     // Finds node by full id, then tries substring match
     const node =
-      data.nodes.find((node) => node.id === searchPuzzle) ||
-      data.nodes.find((node) => node.name.includes(searchPuzzle)) ||
+      data.nodes.find((node) => node.id === puzzleQuery) ||
+      data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
       null;
     if (!node) return;
 
     // Focus on the node and highlight it
     if (fgRef.current) fgRef.current.centerAt(node.x, node.y, 1000);
     handleNodeClick(node);
-    setSearchPuzzle("");
+    setPuzzleQuery("");
   };
 
   const handleSearchTeam = async () => {
-    const path = await getGraphPath(searchTeam);
-    if ("error" in path) {
-      setSearchTeam("");
-      setCurrTeam(null);
-      setPath(null);
+    const res = await getSearchedTeam(teamQuery);
+    if ("error" in res) {
+      setTeamQuery("");
+      setSearchedTeam(null);
       return;
     }
-    if ("solves" in path && "unlocks" in path) {
-      setCurrTeam(searchTeam);
-      setPath(path);
+    if ("solves" in res && "unlocks" in res) {
+      setSearchedTeam(res);
     }
   };
 
   const handlePuzzleInfo = async (puzzleId: string) => {
     console.log("puzzleId", puzzleId);
-    if (currTeam == null) {
-      setPuzzleInfo({
+    if (searchedTeam == null) {
+      setSearchedPuzzle({
         puzzleId: puzzleId,
         guesses: null,
         requestedHints: null,
@@ -250,148 +259,176 @@ export default function Graph() {
       return;
     }
 
-    const res = await getPuzzleInfo(currTeam, puzzleId);
+    const res = await getSearchedPuzzle(searchedTeam.teamId, puzzleId);
     if ("error" in res) return;
     if ("guesses" in res && "requestedHints" in res) {
-      setPuzzleInfo({
-        puzzleId: puzzleId,
-        guesses: res.guesses,
-        requestedHints: res.requestedHints,
-      });
+      setSearchedPuzzle(res);
     }
   };
 
   return (
-    <div className="flex">
+    <div className="-mt-20 flex h-screen w-screen">
       {/* Graph */}
-      <div className="relative flex-grow px-4">
-        <ForceGraph
-          ref={fgRef}
-          graphData={data}
-          width={window.innerWidth - 350}
-          height={window.innerHeight - 100}
-          cooldownTicks={50}
-          autoPauseRedraw={false}
-          d3VelocityDecay={0.2}
-          // Visuals
-          nodeRelSize={NODE_R}
-          nodeLabel={() => ""} // Remove tooltip
-          nodeAutoColorBy="round"
-          nodePointerAreaPaint={(node, color, ctx) => {
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(node.x!, node.y!, 10, 0, 2 * Math.PI, false);
-            ctx.fill();
-          }}
-          // Prevent moving after dragging
-          onNodeDragEnd={(node) => {
-            node.fx = node.x;
-            node.fy = node.y;
-            node.fz = node.z;
-          }}
-          // Highlight nodes and links on hover or click
-          onNodeHover={handleNodeHover}
-          onNodeDrag={handleNodeHover}
-          onNodeClick={handleNodeClick}
-          onBackgroundClick={() => {
-            setClickNode(null);
-            setClickHighlightNodes(new Set());
-            setClickLinks(new Set());
-          }}
-          // Draw nodes and links
-          nodeCanvasObjectMode={() => "replace"}
-          nodeCanvasObject={handleNodeRender}
-          linkWidth={(link) =>
-            hoverLinks.has(link) || clickLinks.has(link) ? 5 : 1
-          }
-          linkDirectionalParticles={4}
-          linkDirectionalParticleWidth={(link) =>
-            hoverLinks.has(link) || clickLinks.has(link) ? 4 : 0
-          }
-        />
-
-        {/* Search team */}
-        <div className="absolute left-10 top-8 flex items-center space-x-2 rounded bg-white">
-          <Input
-            type="text"
-            placeholder={"Search team ID..."}
-            value={searchTeam}
-            onChange={(e) => setSearchTeam(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearchTeam();
-              }
+      <div className="grid max-w-full">
+        <div className="col-start-1 row-start-1">
+          <ForceGraph
+            ref={fgRef}
+            graphData={data}
+            width={window.innerWidth - 336}
+            height={window.innerHeight}
+            cooldownTicks={50}
+            autoPauseRedraw={false}
+            d3VelocityDecay={0.2}
+            // Visuals
+            nodeRelSize={NODE_R}
+            nodeLabel={() => ""} // Remove tooltip
+            nodeAutoColorBy="round"
+            nodePointerAreaPaint={(node, color, ctx) => {
+              ctx.fillStyle = color;
+              ctx.beginPath();
+              ctx.arc(node.x!, node.y!, 10, 0, 2 * Math.PI, false);
+              ctx.fill();
             }}
-            className={currTeam ? "bg-neutral-200" : ""}
+            // Prevent moving after dragging
+            onNodeDragEnd={(node) => {
+              node.fx = node.x;
+              node.fy = node.y;
+              node.fz = node.z;
+            }}
+            // Highlight nodes and links on hover or click
+            onNodeHover={handleNodeHover}
+            onNodeDrag={handleNodeHover}
+            onNodeClick={handleNodeClick}
+            onBackgroundClick={() => {
+              setClickedNode(null);
+              setHighlightedNodes(new Set());
+              setHighlightedLinks(new Set());
+            }}
+            // Draw nodes and links
+            nodeCanvasObjectMode={() => "replace"}
+            nodeCanvasObject={handleNodeRender}
+            linkWidth={(link) =>
+              hoveredLinks.has(link) || highlightedLinks.has(link) ? 5 : 1
+            }
+            linkDirectionalParticles={4}
+            linkDirectionalParticleWidth={(link) =>
+              hoveredLinks.has(link) || highlightedLinks.has(link) ? 4 : 0
+            }
           />
-          <Button
-            onClick={handleSearchTeam}
-            className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-500 hover:opacity-70"
-          >
-            Search
-          </Button>
         </div>
 
-        {/* Search puzzle */}
-        <div className="absolute left-10 top-20 flex items-center space-x-2 rounded bg-white">
-          <Input
-            type="text"
-            placeholder="Search puzzle ID..."
-            value={searchPuzzle}
-            onChange={(e) => setSearchPuzzle(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setSearchPuzzle("");
+        <div className="col-start-1 row-start-1 w-80 space-y-2 pl-4">
+          {/* Search team */}
+          <div className="z-10 mt-[56px] flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
+            <div className="rounded bg-neutral-300 p-2">
+              <User className="size-5" />
+            </div>
+            <input
+              placeholder="jcarberr"
+              value={teamQuery}
+              onChange={(e) => setTeamQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearchTeam();
+                }
+              }}
+              className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              autoComplete="off"
+              disabled={!!searchedTeam}
+            />
+            <button
+              onClick={async () => {
+                if (searchedTeam) {
+                  setSearchedTeam(null);
+                  setTeamQuery("");
+                } else {
+                  await handleSearchTeam();
+                }
+              }}
+              className="z-10 rounded p-1 hover:bg-neutral-200 disabled:bg-inherit disabled:opacity-25"
+              disabled={!searchedTeam && !teamQuery}
+            >
+              {searchedTeam ? (
+                <X className="size-5" />
+              ) : (
+                <Check className="size-5" />
+              )}
+            </button>
+          </div>
+
+          {/* Search puzzle */}
+          <div className="flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
+            <div className="rounded bg-neutral-300 p-2">
+              <Puzzle className="size-5" />
+            </div>
+            <input
+              placeholder="example"
+              value={puzzleQuery}
+              onChange={(e) => setPuzzleQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setPuzzleQuery("");
+                  handleSearchPuzzle();
+                }
+              }}
+              className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none"
+              autoComplete="off"
+            />
+            <button
+              onClick={() => {
+                setPuzzleQuery("");
                 handleSearchPuzzle();
-              }
-            }}
-          />
-          <Button
-            onClick={handleSearchPuzzle}
-            className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-500 hover:opacity-70"
+              }}
+              className="z-10 rounded p-1 hover:bg-neutral-200 disabled:bg-inherit disabled:opacity-25"
+              disabled={!puzzleQuery}
+            >
+              <Check className="size-5" />
+            </button>
+          </div>
+
+          {/* Words and nodes toggle */}
+          <button
+            className="absolute z-10 rounded bg-orange-500 p-2 text-white hover:opacity-70"
+            onClick={() => setShowWords((prev) => !prev)}
           >
-            Search
-          </Button>
+            {showWords ? (
+              <Waypoints className="size-5" />
+            ) : (
+              <CaseUpper className="size-5" />
+            )}
+          </button>
+
+          {/* Zoom to Fit Button */}
+          <button
+            className="absolute z-10 translate-y-11 rounded bg-emerald-600 p-2 text-white hover:opacity-70"
+            onClick={() => fgRef.current?.zoomToFit(500, 66)}
+          >
+            <ScanSearch className="size-5" />
+          </button>
         </div>
-
-        {/* Words and nodes toggle */}
-        <button
-          className="absolute left-10 top-32 rounded bg-orange-500 px-3 py-2 text-white hover:opacity-70"
-          onClick={() => setShowWords((prev) => !prev)}
-        >
-          {showWords ? (
-            <Waypoints className="size-5" />
-          ) : (
-            <CaseUpper className="size-5" />
-          )}
-        </button>
-
-        {/* Zoom to Fit Button */}
-        <button
-          className="absolute left-24 top-32 rounded bg-emerald-600 px-3 py-2 text-white hover:opacity-70"
-          onClick={() => fgRef.current?.zoomToFit(500)}
-        >
-          <ScanSearch className="size-5" />
-        </button>
       </div>
 
       {/* Side panel */}
-      <ScrollArea className="max-h-[calc(80vh)] w-80 border-l border-neutral-300 bg-neutral-100 text-xs">
-        <div className="p-4">
-          {puzzleInfo === null ? (
+      <div className="no-scrollbar w-80 overflow-auto pb-4 text-xs">
+        <div className="h-[56px]"></div>
+        <div className="rounded-lg bg-neutral-100 p-4">
+          {searchedPuzzle === null ? (
             // Show list of puzzles
             <>
-              <p className="text-base">Puzzles</p>
+              <p className="text-base text-neutral-700 font-semibold">Puzzles</p>
               {ROUNDS.map((round) => (
                 <>
-                  <p className="my-1 bg-neutral-400 text-white">{round.name}</p>
+                  <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
+                    {round.name}
+                  </p>
                   {round.puzzles.map((puzzle) => {
-                    const isSolve = path?.solves.includes(puzzle);
-                    const isUnlock = path?.unlocks.includes(puzzle);
+                    const isSolve = searchedTeam?.solves.includes(puzzle);
+                    const isUnlock = searchedTeam?.unlocks.includes(puzzle);
                     const isMeta = META_PUZZLES.includes(puzzle);
                     return (
                       <div>
                         <button
+                          className="w-full text-left hover:bg-neutral-200"
                           onClick={async () => await handlePuzzleInfo(puzzle)}
                         >
                           <span
@@ -419,26 +456,28 @@ export default function Graph() {
               <div className="flex">
                 <button
                   onClick={() => {
-                    setPuzzleInfo(null);
+                    setSearchedPuzzle(null);
                   }}
                 >
                   <ChevronLeft className="size-4" />
                 </button>
                 <p
                   className={`text-base ${
-                    META_PUZZLES.includes(puzzleInfo.puzzleId)
+                    META_PUZZLES.includes(searchedPuzzle.puzzleId)
                       ? "font-bold"
                       : ""
-                  } ${path?.solves.includes(puzzleInfo.puzzleId) ? "text-lime-600" : path?.unlocks.includes(puzzleInfo.puzzleId) ? "text-amber-500" : "text-neutral-500"}`}
+                  } ${searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500"}`}
                 >
-                  {puzzleInfo.puzzleId}
+                  {searchedPuzzle.puzzleId}
                 </p>
               </div>
 
-              <p className="my-1 bg-neutral-400 text-white">Info</p>
+              <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
+                Info
+              </p>
               <p>
                 <Link
-                  href={`/puzzle/${puzzleInfo.puzzleId}`}
+                  href={`/puzzle/${searchedPuzzle.puzzleId}`}
                   prefetch={false}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -449,7 +488,7 @@ export default function Graph() {
               </p>
               <p>
                 <Link
-                  href={`/puzzle/${puzzleInfo.puzzleId}/solution`}
+                  href={`/puzzle/${searchedPuzzle.puzzleId}/solution`}
                   prefetch={false}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -460,7 +499,7 @@ export default function Graph() {
               </p>
               <p>
                 <Link
-                  href={`/puzzle/${puzzleInfo.puzzleId}/statistics`}
+                  href={`/admin/statistics/${searchedPuzzle.puzzleId}`}
                   prefetch={false}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -471,10 +510,12 @@ export default function Graph() {
               </p>
 
               {/* Guesses */}
-              {currTeam && (
+              {searchedTeam && (
                 <>
-                  <p className="my-1 bg-neutral-400 text-white">Guesses</p>
-                  {puzzleInfo.guesses?.map((guess, i) => (
+                  <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
+                    Guesses
+                  </p>
+                  {searchedPuzzle.guesses?.map((guess, i) => (
                     <p
                       className={`${
                         guess.isCorrect ? "text-lime-600" : "text-rose-500"
@@ -486,10 +527,10 @@ export default function Graph() {
                   ))}
 
                   {/* Hints */}
-                  <p className="my-1 bg-neutral-400 text-white">
+                  <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
                     Hint Requests
                   </p>
-                  {puzzleInfo.requestedHints?.map((hint, i) => (
+                  {searchedPuzzle.requestedHints?.map((hint, i) => (
                     <p id={`hint-${i}`}>{hint.request}</p>
                   ))}
                 </>
@@ -497,7 +538,7 @@ export default function Graph() {
             </>
           )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
