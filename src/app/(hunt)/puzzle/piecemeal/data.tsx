@@ -63,12 +63,12 @@ const puzzleClues = [
     ],
   },
   {
-    down: [
+    down: ["Pirate's leg", "Indian and pale, perhaps", "Logical negation"],
+    across: [
       "Greek god, or cooking implement",
       "Chess player measuring stick",
       '"___ in loser, we\'re going shopping!"',
     ],
-    across: ["Pirate's leg", "Indian and pale, perhaps", "Logical negation"],
   },
   {
     down: ["Bunny verb", "What you use to hear", "Sardonic"],
