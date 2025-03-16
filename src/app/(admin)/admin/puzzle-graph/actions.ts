@@ -1,18 +1,10 @@
 "use server";
-import { auth } from "@/auth";
 import { db } from "~/server/db";
-import { teams } from "@/db/schema";
+import { teams, guesses, hints } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { INITIAL_PUZZLES } from "~/hunt.config";
 
 export async function getGraphPath(teamId: string) {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    return {
-      error: "Not authenticated, please ensure you're on an admin account.",
-    };
-  }
-
   const result = await db.query.teams.findFirst({
     where: eq(teams.id, teamId),
     with: {
@@ -37,4 +29,29 @@ export async function getGraphPath(teamId: string) {
     unlocks: unlocksAndInitialPuzzles,
     solves: solves,
   };
+}
+
+export async function getPuzzleInfo(teamId: string, puzzleId: string) {
+  const result = await db.query.teams.findFirst({
+    where: eq(teams.id, teamId),
+    columns: {},
+    with: {
+      guesses: {
+        where: eq(guesses.puzzleId, puzzleId),
+        columns: { isCorrect: true, guess: true },
+        orderBy: (g) => g.submitTime,
+      },
+      requestedHints: {
+        where: eq(hints.puzzleId, puzzleId),
+        columns: { request: true },
+        orderBy: (h) => h.requestTime,
+      },
+    },
+  });
+
+  if (!result) {
+    return { error: "Puzzle not found." };
+  }
+
+  return result;
 }
