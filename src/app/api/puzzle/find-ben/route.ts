@@ -19,6 +19,7 @@ export async function GET(req: any) {
     "app",
     "(hunt)",
     "puzzle",
+    "(action)",
     puzzleId,
     "media",
     `${puzzleId}.mp4`,

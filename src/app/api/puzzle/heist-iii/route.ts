@@ -20,6 +20,7 @@ export async function GET() {
     "app",
     "(hunt)",
     "puzzle",
+    "(reality)",
     puzzleId,
     `${puzzleId}.html`,
   );

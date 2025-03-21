@@ -22,7 +22,7 @@ export const puzzleId = "the-snack-zone";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-xl text-center">
+  <div className="max-w-3xl text-center">
     <div className="mb-10 flex justify-center">
       <video width="1280" height="721" controls>
         <source src="/api/puzzle/the-snack-zone" type="video/mp4" />
@@ -158,142 +158,7 @@ export const inPersonBody = (
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = (
-  <div className="max-w-3xl text-center">
-    <div className="max-w-3xl text-center">
-      <div className="mb-10 flex justify-center">
-        <iframe
-          className="h-64 w-full sm:h-80 lg:h-96"
-          src="https://drive.google.com/file/d/1VTwQuOE-T1f5Cprc4bwacRfd3e3j3fzL/view?usp=sharing"
-        ></iframe>
-      </div>
-
-      <div className="border-[2px] border-black bg-gray-500 px-8 py-12">
-        <div className="grid grid-cols-3 gap-[2px] bg-black p-[2px] shadow-lg">
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_I}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_D}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_G}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [I]: NZ$5.02
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [D]: NZ$5.03
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [G]: NZ$5.04
-          </div>
-
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_F}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_E}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_C}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [F]: NZ$5.05
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [E]: NZ$5.08
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [C]: €7.03
-          </div>
-
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_B}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_A}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-white text-center text-white">
-            <Image
-              src={SNACK_H}
-              alt=""
-              width={1280}
-              height={721}
-              className="mb-4"
-              draggable="false"
-            />
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [B]: AU$10.02
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [A]: AU$10.04
-          </div>
-          <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-            [H]: ¥12.07
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+export const remoteBody = inPersonBody;
 
 /**
  * The `solutionBody` renders in the solution page.

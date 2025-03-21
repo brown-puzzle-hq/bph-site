@@ -20,6 +20,7 @@ export async function GET() {
     "app",
     "(hunt)",
     "puzzle",
+    "(drama)",
     puzzleId,
     `${puzzleId}.mp3`,
   );

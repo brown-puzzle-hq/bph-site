@@ -1,7 +1,7 @@
 "use server";
 
 import { Item, Location } from "./Game";
-import { handleGuess } from "../actions";
+import { handleGuess } from "@/puzzle/actions";
 import { puzzleId } from "./data";
 
 export async function checkMoves(moves: Item[][], isSolved: boolean) {
