@@ -79,19 +79,43 @@ export const remoteBoxBody = (
   </div>
 );
 
-export const remoteBody = (<div className="mb-4 max-w-3xl">
-  <b>
-    This puzzle is a chain puzzle. In-person solvers and box purchasers were given a wire with beads of the following colors, in order:
-  </b>
-  <div className="flex">
-  {CHAIN.split("").map((cell) => (
-    <div
-      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-    />
-  ))}
-</div>
-{inPersonBody}
-</div>);
+export const remoteBody = (
+  <div className="mb-4 max-w-3xl">
+    <div className="mb-4">
+      <p className="mb-4">
+        This puzzle is a chain puzzle. In-person solvers and box purchasers were
+        given a wire with beads of the following colors, in order:
+      </p>
+      <div className="flex">
+        {CHAIN.split("").map((cell) => (
+          <div
+            className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
+          />
+        ))}
+      </div>
+    </div>
+    <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+    </div>
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i className="p-4">
+        Hey, isn't blue kinda negative? I think red better fits my positive
+        personality!
+      </i>
+
+      <div className="grid w-60 grid-cols-5 gap-0 pb-4">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div
+            key={i}
+            className={`flex h-12 w-12 items-center ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} justify-center border ${
+              i === 4 ? "border-none" : ""
+            }`}
+          ></div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.
