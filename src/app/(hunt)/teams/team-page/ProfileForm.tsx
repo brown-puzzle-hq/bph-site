@@ -27,7 +27,7 @@ import { deleteTeam, updateTeam } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import { IN_PERSON } from "~/hunt.config";
-import { logout } from "~/app/nav/actions";
+import { logout } from "../../login/actions";
 import {
   AlertDialog,
   AlertDialogAction,

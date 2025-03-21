@@ -25,7 +25,7 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
-  const session = useSession();
+  const { update } = useSession();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -38,18 +38,17 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const result = await login(data.id, data.password);
-    if (result.error !== null) {
-      setError(result.error);
+    const { error, session } = await login(data.id, data.password);
+    if (error) {
+      setError(error);
     } else {
+      update(session);
       if (session.data?.user?.role === "admin") {
         router.push("/admin");
       } else {
         router.push("/");
-        // Not sure how to refresh nav without this,
-        // but this seems to not be a problem for admin
-        router.refresh();
       }
+      router.refresh();
       setError(null);
     }
   };

@@ -1,5 +1,4 @@
 "use server";
-import { redirect } from "next/navigation";
 import { Session } from "next-auth";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";

@@ -17,10 +17,10 @@ import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
 import { solves, guesses, errata } from "~/server/db/schema";
 import { redirect } from "next/navigation";
-import PreviousGuessTable from "../components/PreviousGuessTable";
-import ErratumDialog from "../components/ErratumDialog";
-import { canViewPuzzle } from "../actions";
-import CopyButton from "../components/CopyButton";
+import PreviousGuessTable from "@/puzzle/components/PreviousGuessTable";
+import ErratumDialog from "@/puzzle/components/ErratumDialog";
+import { canViewPuzzle } from "@/puzzle/actions";
+import CopyButton from "@/puzzle/components/CopyButton";
 
 async function DefaultPuzzlePage({
   puzzleId,

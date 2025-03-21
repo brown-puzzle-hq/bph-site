@@ -26,6 +26,7 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { IN_PERSON } from "~/hunt.config";
+import { useSession } from "next-auth/react";
 
 export type Member = {
   id?: number;
@@ -123,6 +124,7 @@ type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 export function RegisterForm({}: RegisterFormProps) {
+  const { update } = useSession();
   const router = useRouter();
   router.prefetch("/");
 
@@ -162,7 +164,7 @@ export function RegisterForm({}: RegisterFormProps) {
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    const result = await insertTeam({
+    const { error, session } = await insertTeam({
       id: data.id,
       displayName: data.displayName,
       password: data.password,
@@ -175,20 +177,20 @@ export function RegisterForm({}: RegisterFormProps) {
       wantsBox: data.wantsBox,
     });
 
-    if (result.error) {
+    if (error) {
       toast({
         title: "Register failed",
-        description: result.error,
+        description: error,
       });
-      return;
+    } else {
+      update(session);
+      toast({
+        title: "Welcome to Brown Puzzlehunt, " + data.displayName + "!",
+        description: "Your team has been registered.",
+      });
+      router.push("/");
+      router.refresh();
     }
-
-    toast({
-      title: "Welcome to Brown Puzzlehunt, " + data.displayName + "!",
-      description: "Your team has been registered.",
-    });
-    router.push("/");
-    router.refresh();
   };
 
   return (

@@ -9,5 +9,9 @@ export function Providers({
   children: React.ReactNode;
   session?: any;
 }) {
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+  return (
+    <SessionProvider refetchOnWindowFocus={false} session={session}>
+      {children}
+    </SessionProvider>
+  );
 }

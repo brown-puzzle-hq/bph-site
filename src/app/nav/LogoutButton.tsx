@@ -1,6 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { logout } from "./actions";
+import { logout } from "../../app/(hunt)/login/actions";
 
 export function LogoutButton() {
 

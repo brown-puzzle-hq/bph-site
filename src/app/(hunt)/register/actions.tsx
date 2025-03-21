@@ -54,7 +54,11 @@ export async function insertTeam(teamProperties: TeamProperties) {
 
     const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.brownpuzzlehunt.com/teams/${teamProperties.id}))`;
     await sendBotMessage(teamMessage);
-    return login(teamProperties.id, teamProperties.password);
+    const { error, session } = await login(
+      teamProperties.id,
+      teamProperties.password,
+    );
+    return { error, session };
   } catch (error) {
     return { error: "An unexpected error occurred." };
   }
