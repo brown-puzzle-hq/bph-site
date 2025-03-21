@@ -14,16 +14,6 @@ const GRID = [
   ".1D29",
 ];
 
-const ARRANGEMENT = [
-  "P10 P5",
-  "P6",
-  "P12 P4",
-  "P2 P11",
-  "P7 P1",
-  "P9 P13 P8",
-  "P3",
-];
-
 const DIGGING = [
   "↘.......↙.....↘...↓..↙....",
   ".↘.....↘.......↓..↓.↘.....",
@@ -94,26 +84,16 @@ export const inPersonBody = (
         show for it. If you dig through the fossil stack instead, going right
         and down, maybe you'll find what you need. What is the plot missing?
       </i>
-            <div className="flex justify-center pb-4">
-              <Image src={MAP} alt="" width={300} height={300} />
-            </div>
+      <div className="flex justify-center pb-4">
+        <Image src={MAP} alt="" width={300} height={300} />
+      </div>
       <p className="font-bold text-main-header">Your Backyard</p>
-      <div className="grid">
-        <div className="col-start-1 row-start-1 grid grid-cols-[0em,repeat(29,1.5em)] grid-rows-[repeat(10,1.5em)]">
-          {FULLGRID.flatMap((row, i) =>
-            row.map((cell, j) => (
-              <div className={COLORS[cell]} key={`${i}-${j}`} />
-            )),
-          )}
-        </div>
-        {/* <div className="col-start-1 row-start-1 pl-1 text-left font-mono font-bold text-main-header">
-          <br />
-          <br />
-          <br />
-          {ARRANGEMENT.map((line, i) => (
-            <div key={`${i}`}>{line}</div>
-          ))}
-        </div> */}
+      <div className="grid grid-cols-[0em,repeat(29,1.5em)] grid-rows-[repeat(10,1.5em)]">
+        {FULLGRID.flatMap((row, i) =>
+          row.map((cell, j) => (
+            <div className={COLORS[cell]} key={`${i}-${j}`} />
+          )),
+        )}
       </div>
       <p className="font-bold text-main-header">Digging Guide</p>
       <div className="grid grid-cols-[repeat(26,1.5em)] grid-rows-[repeat(14,1.5em)] font-mono text-secondary-accent">

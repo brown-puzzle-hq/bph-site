@@ -22,52 +22,55 @@ export const puzzleId = "beads";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-6 max-w-3xl text-center">
+    <div className="mb-6 max-w-3xl text-center">
       <i>
-        This is a physical puzzle! If your team has not already picked up a chain,
-        please visit HQ in Friedman 208.
+        This is a physical puzzle! If your team has not already picked up a
+        chain, please visit HQ in Friedman 208.
       </i>
     </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="pb-4">You've had me bending double from your curses!</i>
-    <div className="flex justify-center pb-4">
-      <Image src={BEADS} alt="beads" />
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i className="pb-4">You've had me bending double from your curses!</i>
+      <div className="flex justify-center pb-4">
+        <Image src={BEADS} alt="beads" />
+      </div>
     </div>
-  </div>
   </div>
 );
 
 export const remoteBoxBody = (
   <div>
-  <div className="mb-6 max-w-3xl text-center">
+    <div className="mb-6 max-w-3xl text-center">
       <i>
         This is a physical puzzle! You should use an object found in your box.
       </i>
     </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="pb-4">You’ve had me bending double from your curses!</i>
-    <div className="flex justify-center pb-4">
-      <Image src={BEADS} alt="beads" className="w-1/2" />
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i className="pb-4">You’ve had me bending double from your curses!</i>
+      <div className="flex justify-center pb-4">
+        <Image src={BEADS} alt="beads" className="w-1/2" />
+      </div>
     </div>
-  </div>
   </div>
 );
 
-export const remoteBody = ( <div>
-  <div className="mb-4 max-w-3xl">
-  <b>
-    This puzzle is a chain puzzle. In-person solvers and box purchasers were given a wire with beads of the following colors, in order:
-  </b>
-  <div className="flex">
-  {CHAIN.split("").map((cell) => (
-    <div
-      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-    />
-  ))}
-</div>
-</div>
-{inPersonBody}
-</div>
+export const remoteBody = (
+  <div>
+    <div className="mb-4 max-w-3xl">
+      <b>
+        This puzzle is a chain puzzle. In-person solvers and box purchasers were
+        given a wire with beads of the following colors, in order:
+      </b>
+      <div className="flex">
+        {CHAIN.split("").map((cell, index) => (
+          <div
+            key={index}
+            className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
+          />
+        ))}
+      </div>
+    </div>
+    {inPersonBody}
+  </div>
 );
 
 /**

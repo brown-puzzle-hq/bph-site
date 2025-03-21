@@ -20,57 +20,69 @@ export const puzzleId = "chain-letters";
  */
 export const inPersonBody = (
   <div>
-  <div className="mb-6 max-w-3xl text-center">
-    <i>
-      This is a physical puzzle! If your team has not already picked up a chain,
-      please visit HQ in Friedman 208.
-    </i>
-  </div>
+    <div className="mb-6 max-w-3xl text-center">
+      <i>
+        This is a physical puzzle! If your team has not already picked up a
+        chain, please visit HQ in Friedman 208.
+      </i>
+    </div>
 
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="pb-4">Some people just can't follow simple instructions.</i>
-    <p><a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"><u>
-      This is a link to download a JSON file.</u></a></p>
-  </div>
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i className="pb-4">Some people just can't follow simple instructions.</i>
+      <p>
+        <a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing">
+          <u>This is a link to download a JSON file.</u>
+        </a>
+      </p>
+    </div>
   </div>
 );
 
 export const remoteBoxBody = (
   <div>
-  <div className="mb-6 max-w-3xl text-center">
+    <div className="mb-6 max-w-3xl text-center">
       <i>
         This is a physical puzzle! You should use an object found in your box.
       </i>
     </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="pb-4">Some people just can't follow simple instructions.</i>
-    <p><a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"><u>
-      This is a link to download a JSON file.</u></a></p>
-  </div>
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+      <i className="pb-4">Some people just can't follow simple instructions.</i>
+      <p>
+        <a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing">
+          <u>This is a link to download a JSON file.</u>
+        </a>
+      </p>
+    </div>
   </div>
 );
 
 export const remoteBody = (
   <div className="flex max-w-3xl flex-col items-center space-y-4">
-  <div className="mb-4 max-w-3xl">
-  <b>
-    This puzzle is a chain puzzle. In-person solvers and box purchasers were given a wire with beads of the following colors, in order:
-  </b>
-  <div className="flex">
-  {CHAIN.split("").map((cell) => (
-    <div
-      className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-    />
-  ))}
+    <div className="mb-4 max-w-3xl">
+      <b>
+        This puzzle is a chain puzzle. In-person solvers and box purchasers were
+        given a wire with beads of the following colors, in order:
+      </b>
+      <div className="flex">
+        {CHAIN.split("").map((cell, index) => (
+          <div
+            key={index}
+            className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
+          />
+        ))}
+      </div>
+      <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+        <i className="pb-4">
+          Some people just can't follow simple instructions.
+        </i>
+        <p>
+          <a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing">
+            <u>This is a link to download a JSON file.</u>
+          </a>
+        </p>
+      </div>
+    </div>
   </div>
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-    <i className="pb-4">Some people just can't follow simple instructions.</i>
-    <p><a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"><u>
-      This is a link to download a JSON file.</u></a></p>
-  </div>
-</div>
-
-</div>
 );
 
 /**

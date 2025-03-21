@@ -146,7 +146,7 @@ export const inPersonBody = (
             <div className="w-full font-bold text-main-header">Across</div>
             <ul className="list-inside list-decimal">
               {clues.across.map((clue, index) => (
-                <li value={across_index[index]}>{clue}</li>
+                <li key={index} value={across_index[index]}>{clue}</li>
               ))}
             </ul>
           </div>

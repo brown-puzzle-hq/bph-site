@@ -87,8 +87,9 @@ export const remoteBody = (
         given a wire with beads of the following colors, in order:
       </p>
       <div className="flex">
-        {CHAIN.split("").map((cell) => (
+        {CHAIN.split("").map((cell, index) => (
           <div
+            key={index}
             className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
           />
         ))}

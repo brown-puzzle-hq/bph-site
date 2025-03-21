@@ -60,9 +60,7 @@ export default async function Home() {
     id: puzzle.id,
     name: puzzle.name,
     answer: puzzle.answer,
-    unlocks: INITIAL_PUZZLES.includes(puzzle.id)
-      ? "-"
-      : puzzle.unlocks.length,
+    unlocks: INITIAL_PUZZLES.includes(puzzle.id) ? "-" : puzzle.unlocks.length,
     guesses: puzzle.guesses.length,
     solves: puzzle.solves.length,
     sequences: SEQUENCES.filter((seq) => seq.puzzles.includes(puzzle.id)),
@@ -78,28 +76,28 @@ export default async function Home() {
       try {
         // Try to import the puzzle data from the hunt folder
         const module = await import(
-          `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
+          `../../../(hunt)/puzzle/(${ROUNDS.find((round) => round.puzzles.includes(puzzle.id))?.name.toLowerCase()})/${puzzle.id}/data.tsx`
         );
         inPersonBody = !!module.inPersonBody;
         remoteBody = !!module.remoteBody;
         solutionBody = !!module.solutionBody;
         copyText = module.copyText;
       } catch (e) {
-        try {
-          // Try to import from the dev folder
-          const module = await import(
-            `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
-          );
-          inPersonBody = !!module.inPersonBody;
-          remoteBody = !!module.remoteBody;
-          solutionBody = !!module.solutionBody;
-          copyText = module.copyText;
-        } catch (e) {
-          inPersonBody = null;
-          remoteBody = null;
-          solutionBody = null;
-          copyText = null;
-        }
+        // try {
+        //   // Try to import from the dev folder
+        //   const module = await import(
+        //     `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
+        //   );
+        //   inPersonBody = !!module.inPersonBody;
+        //   remoteBody = !!module.remoteBody;
+        //   solutionBody = !!module.solutionBody;
+        //   copyText = module.copyText;
+        // } catch (e) {
+        inPersonBody = null;
+        remoteBody = null;
+        solutionBody = null;
+        copyText = null;
+        // }
       }
 
       return {
@@ -126,7 +124,9 @@ export default async function Home() {
               <TableHead className="w-fit py-0 text-center">Unlocks</TableHead>
               <TableHead className="w-fit py-0 text-center">Solves</TableHead>
               <TableHead className="w-fit py-0 text-center">Guesses</TableHead>
-              <TableHead className="w-fit py-0 text-center">In-Person</TableHead>
+              <TableHead className="w-fit py-0 text-center">
+                In-Person
+              </TableHead>
               <TableHead className="w-fit py-0 text-center">Remote</TableHead>
               <TableHead className="w-fit py-0 text-center">Solution</TableHead>
               <TableHead className="w-fit py-0 text-center">Stats</TableHead>
