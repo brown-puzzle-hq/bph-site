@@ -50,13 +50,11 @@ export function HamburgerMenu({
       {/* Left menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
-          <NavigationMenuList className="flex space-x-2 h-[32px]">
+          <NavigationMenuList className="flex h-[32px] space-x-2">
             {leftMenuItems.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.type == "element" ? (
-                  <div className={elementClassName}>
-                    {item.element!}
-                  </div>
+                  <div className={elementClassName}>{item.element!}</div>
                 ) : (
                   <Link
                     href={item.href!}
@@ -75,13 +73,11 @@ export function HamburgerMenu({
       {/* Right menu items */}
       <div className="hidden md:block">
         <NavigationMenu>
-          <NavigationMenuList className="flex space-x-2 h-[32px]">
+          <NavigationMenuList className="flex h-[32px] space-x-2">
             {rightMenuItems.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.type == "element" ? (
-                  <div className={elementClassName}>
-                    {item.element!}
-                  </div>
+                  <div className={elementClassName}>{item.element!}</div>
                 ) : (
                   <Link
                     href={item.href!}

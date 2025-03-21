@@ -4,7 +4,11 @@ import { AuthError } from "next-auth";
 
 export async function login(id: string, password: string) {
   try {
-    const session = await signIn("credentials", { id, password, redirect: false });
+    const session = await signIn("credentials", {
+      id,
+      password,
+      redirect: false,
+    });
     return { error: null, session };
   } catch (error) {
     if (error instanceof AuthError) {

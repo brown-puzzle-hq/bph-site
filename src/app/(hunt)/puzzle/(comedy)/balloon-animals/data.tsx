@@ -31,8 +31,8 @@ export const inPersonBody = (
   <div>
     <div className="mb-6 max-w-3xl text-center">
       <i>
-      This is a physical puzzle! If your team has not already picked up your balloons,
-      please visit HQ in Friedman 208.
+        This is a physical puzzle! If your team has not already picked up your
+        balloons, please visit HQ in Friedman 208.
       </i>
     </div>
     <div className="mb-4 max-w-3xl text-center">
@@ -64,7 +64,7 @@ export const remoteBoxBody = (
   <div>
     <div className="mb-6 max-w-3xl text-center">
       <i>
-      This is a physical puzzle! You should use an object found in your box.
+        This is a physical puzzle! You should use an object found in your box.
       </i>
     </div>
     <div className="mb-4 max-w-3xl text-center">

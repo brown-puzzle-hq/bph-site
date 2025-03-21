@@ -13,8 +13,8 @@ export const puzzleId = "m-guards-n-doors-and-k-choices";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    This puzzle's online component is still a WIP. For now, navigate
-    through <Link href="https://docs.google.com/document/d/1GajJP0ofJeULruNw0oF5vjtnqkLZITYkhEB-fwRbwWI/edit?usp=sharing">
+    This puzzle's online component is still a WIP. For now, navigate through{" "}
+    <Link href="https://docs.google.com/document/d/1GajJP0ofJeULruNw0oF5vjtnqkLZITYkhEB-fwRbwWI/edit?usp=sharing">
       <span className="underline">this doc.</span>
     </Link>
   </div>

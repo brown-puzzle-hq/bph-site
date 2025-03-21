@@ -75,7 +75,7 @@ export default {
       typography: ({ theme }: { theme: any }) => ({
         DEFAULT: {
           css: {
-            "p": {
+            p: {
               marginTop: "0em",
               marginBottom: "0.5em",
             },
@@ -109,7 +109,7 @@ export default {
             "--tw-prose-pre-bg": theme("colors.stone[800]"), // Dark gray background for code blocks
             "--tw-prose-th-borders": theme("colors.stone[300]"), // Faint borders for tables
             "--tw-prose-td-borders": theme("colors.stone[400]"), // Slightly darker borders
-            "p": {
+            p: {
               marginTop: "0em",
               marginBottom: "0.5em",
             },

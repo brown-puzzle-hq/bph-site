@@ -57,6 +57,6 @@ export async function getSearchedPuzzle(teamId: string, puzzleId: string) {
   return {
     puzzleId: puzzleId,
     guesses: result.guesses,
-    requestedHints: result.requestedHints
+    requestedHints: result.requestedHints,
   };
 }

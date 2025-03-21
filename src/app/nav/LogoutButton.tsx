@@ -2,7 +2,6 @@
 import { logout } from "../../app/(hunt)/login/actions";
 
 export function LogoutButton() {
-
   const handleLogout = async () => {
     await logout();
   };

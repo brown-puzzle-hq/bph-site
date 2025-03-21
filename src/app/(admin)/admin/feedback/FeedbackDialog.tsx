@@ -28,7 +28,11 @@ export default function FeedbackDialog({
             <CardHeader className="p-4 pb-0.5">
               <CardDescription className={teamSide ? "text-main-header" : ""}>
                 <strong>
-                  {!teamSide && <span className="rounded-sm bg-slate-200 px-1 py-0.5 mr-1">{feedback.teamId}</span>}
+                  {!teamSide && (
+                    <span className="mr-1 rounded-sm bg-slate-200 px-1 py-0.5">
+                      {feedback.teamId}
+                    </span>
+                  )}
                   <FormattedTime time={feedback.timestamp} />
                 </strong>
               </CardDescription>

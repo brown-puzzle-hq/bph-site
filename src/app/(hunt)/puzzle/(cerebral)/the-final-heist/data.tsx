@@ -20,8 +20,8 @@ export const inPersonBody = (
       <p className="italic">
         You've made it to the final vault, but there's a problem: somebody's
         turned out the lights! fortunately, we've done some reconnaissance on
-        your behalf. The floor plan for this vault is BLIND, and the room
-        layout is as follows:
+        your behalf. The floor plan for this vault is BLIND, and the room layout
+        is as follows:
       </p>
       <p>
         <br></br>⬛⬛⬛⬛⬛

@@ -14,7 +14,7 @@ export async function insertFeedback(description: string, timestamp: Date) {
   await db.insert(feedback).values({
     teamId,
     description,
-    timestamp
+    timestamp,
   });
 
   const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}): ${description}`;

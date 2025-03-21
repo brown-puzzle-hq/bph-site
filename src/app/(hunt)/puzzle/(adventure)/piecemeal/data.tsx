@@ -11,7 +11,7 @@ export const puzzleId = "piecemeal";
  * and interactive puzzle components here.
  */
 
-const across_index = [1, 4, 5]
+const across_index = [1, 4, 5];
 
 const puzzleClues = [
   {
@@ -111,10 +111,10 @@ const puzzleClues = [
 export const inPersonBody = (
   <div className="max-w-4xl py-4">
     <p className="pb-8">
-      Rivers are three letters long and may either flow horizontally, vertically, or
-      diagonally in strict alphabetical order. Horizontal and diagonal rivers are read left-to-right,
-      and vertical rivers are read top-to-bottom.
-      Any such triple of letters has a river flowing through it.
+      Rivers are three letters long and may either flow horizontally,
+      vertically, or diagonally in strict alphabetical order. Horizontal and
+      diagonal rivers are read left-to-right, and vertical rivers are read
+      top-to-bottom. Any such triple of letters has a river flowing through it.
     </p>
 
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
@@ -146,7 +146,9 @@ export const inPersonBody = (
             <div className="w-full font-bold text-main-header">Across</div>
             <ul className="list-inside list-decimal">
               {clues.across.map((clue, index) => (
-                <li key={index} value={across_index[index]}>{clue}</li>
+                <li key={index} value={across_index[index]}>
+                  {clue}
+                </li>
               ))}
             </ul>
           </div>

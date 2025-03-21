@@ -22,7 +22,9 @@ export const inPersonBody = (
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = <p>This puzzle is still being written... Submit WRECKING</p>;
+export const remoteBody = (
+  <p>This puzzle is still being written... Submit WRECKING</p>
+);
 
 export const solutionBody = null;
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Row } from "@tanstack/react-table";
 import { claimHint, unclaimHint, refundHint } from "../../actions";

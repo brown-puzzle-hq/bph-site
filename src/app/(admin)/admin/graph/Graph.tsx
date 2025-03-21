@@ -415,7 +415,9 @@ export default function Graph() {
           {searchedPuzzle === null ? (
             // Show list of puzzles
             <>
-              <p className="text-base text-neutral-700 font-semibold">Puzzles</p>
+              <p className="text-base font-semibold text-neutral-700">
+                Puzzles
+              </p>
               {ROUNDS.map((round) => (
                 <>
                   <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">

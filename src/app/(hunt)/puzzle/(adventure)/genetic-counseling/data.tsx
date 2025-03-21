@@ -64,7 +64,10 @@ export const inPersonBody = (
       </thead>
       <tbody>
         {traits.map((trait, index) => (
-          <tr className={index % 2 ? "bg-neutral-300" : "bg-neutral-100"} key={index}>
+          <tr
+            className={index % 2 ? "bg-neutral-300" : "bg-neutral-100"}
+            key={index}
+          >
             <td className="px-1 outline">{trait}</td>
             <td className="px-1 outline"></td>
             <td className="px-1 outline"></td>

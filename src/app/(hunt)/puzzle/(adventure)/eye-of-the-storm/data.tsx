@@ -41,7 +41,9 @@ export const inPersonBody = (
     <p>You spin it right round, I, right round like a... hurricane?</p>
     <div className="mx-auto grid w-fit grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(13,1.5em)] border">
       {TEXT.split(" ").map((box, index) => (
-        <p className="flex items-center justify-center border" key={index}>{box}</p>
+        <p className="flex items-center justify-center border" key={index}>
+          {box}
+        </p>
       ))}
     </div>
     <div>

@@ -24,12 +24,12 @@ export const remoteBoxBody = inPersonBody;
 
 export const remoteBody = (
   <div className="max-w-3xl text-center">
-    In-person solvers and box purchasers were given a bag of the following 41 packing peanuts:
+    In-person solvers and box purchasers were given a bag of the following 41
+    packing peanuts:
     <div className="flex justify-center pb-4">
       <Image src={PEANUTS} alt="beads" />
     </div>
   </div>
-  
 );
 
 /**

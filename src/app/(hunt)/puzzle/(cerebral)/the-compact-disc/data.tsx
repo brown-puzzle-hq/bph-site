@@ -24,7 +24,9 @@ export const inPersonBody = (
         please visit HQ in Friedman 208.
       </i>
     </div>
-    <p className="p-4 italic">You take a minute (or several) to listen to your CD.</p>
+    <p className="p-4 italic">
+      You take a minute (or several) to listen to your CD.
+    </p>
     <div className="max-w-2xl p-4">
       <div className="flex justify-center pb-4">
         <Image src={Disc} alt="" width={500} height={500} />
@@ -34,36 +36,38 @@ export const inPersonBody = (
 );
 
 export const remoteBoxBody = (
-<div>
-<div className="mb-4 max-w-3xl">
-  This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
-</div>
-<div className="mb-6 max-w-3xl text-center">
-  <i>
-    This is a physical puzzle! It uses an object found in your box.
-  </i>
-</div>
-<p className="p-4 italic">You take a minute (or several) to listen to your CD.</p>
-<div className="max-w-2xl p-4">
-  <div className="flex justify-center pb-4">
-    <Image src={Disc} alt="" width={500} height={500} />
+  <div>
+    <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+    </div>
+    <div className="mb-6 max-w-3xl text-center">
+      <i>This is a physical puzzle! It uses an object found in your box.</i>
+    </div>
+    <p className="p-4 italic">
+      You take a minute (or several) to listen to your CD.
+    </p>
+    <div className="max-w-2xl p-4">
+      <div className="flex justify-center pb-4">
+        <Image src={Disc} alt="" width={500} height={500} />
+      </div>
+    </div>
   </div>
-</div>
-</div>
 );
 
 export const remoteBody = (
-<div>
-<div className="mb-4 max-w-3xl">
-  This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
-</div>
-<p className="p-4 italic">You take a minute (or several) to listen to your CD.</p>
-<div className="max-w-2xl p-4">
-  <div className="flex justify-center pb-4">
-    <Image src={Disc} alt="" width={500} height={500} />
+  <div>
+    <div className="mb-4 max-w-3xl">
+      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+    </div>
+    <p className="p-4 italic">
+      You take a minute (or several) to listen to your CD.
+    </p>
+    <div className="max-w-2xl p-4">
+      <div className="flex justify-center pb-4">
+        <Image src={Disc} alt="" width={500} height={500} />
+      </div>
+    </div>
   </div>
-</div>
-</div>
 );
 
 /**
