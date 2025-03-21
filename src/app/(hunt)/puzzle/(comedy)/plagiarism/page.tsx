@@ -16,7 +16,11 @@ export const metadata = {
     .join(" "),
 };
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | undefined };
+}) {
   return (
     <DefaultPuzzlePage
       puzzleId={data.puzzleId}
@@ -26,6 +30,7 @@ export default async function Page() {
       copyText={data.copyText}
       partialSolutions={data.partialSolutions}
       tasks={data.tasks}
+      interactionMode={searchParams?.interactionMode}
     />
   );
 }

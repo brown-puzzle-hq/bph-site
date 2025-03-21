@@ -17,8 +17,6 @@ import CopyButton from "./CopyButton";
 import { db } from "@/db/index";
 export const fetchCache = "force-no-store";
 
-// TODO: would be nice to force in-person body
-
 const roundBgColor: Record<string, string> = {
   Action: "bg-red-100",
   Cerebral: "bg-indigo-100",
@@ -38,9 +36,6 @@ const roundTextColor: Record<string, string> = {
 };
 
 export default async function Home() {
-  const numTeams = (await db.query.teams.findMany({ columns: { id: true } }))
-    .length;
-
   const query = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
     with: {
@@ -186,7 +181,9 @@ export default async function Home() {
                     <TableCell className="justify-center">
                       {puzzle.inPersonBody && (
                         <div className="flex justify-center">
-                          <a href={`/puzzle/${puzzle.id}`}>
+                          <a
+                            href={`/puzzle/${puzzle.id}?interactionMode=in-person`}
+                          >
                             <Puzzle className="size-5 text-red-500 hover:opacity-75" />
                           </a>
                         </div>
@@ -195,7 +192,9 @@ export default async function Home() {
                     <TableCell className="justify-center">
                       {puzzle.remoteBody && (
                         <div className="flex justify-center">
-                          <a href={`/puzzle/${puzzle.id}`}>
+                          <a
+                            href={`/puzzle/${puzzle.id}?interactionMode=remote`}
+                          >
                             <Puzzle className="size-5 text-red-500 hover:opacity-75" />
                           </a>
                         </div>

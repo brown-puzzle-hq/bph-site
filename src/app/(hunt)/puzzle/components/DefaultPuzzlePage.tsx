@@ -7,7 +7,7 @@ import PreviousGuessTable from "./PreviousGuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
 import { canViewPuzzle } from "../actions";
-import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import { NUMBER_OF_GUESSES_PER_PUZZLE, REMOTE } from "~/hunt.config";
 import CopyButton from "./CopyButton";
 
 export default async function DefaultPuzzlePage({
@@ -18,6 +18,7 @@ export default async function DefaultPuzzlePage({
   copyText,
   partialSolutions,
   tasks,
+  interactionMode,
 }: {
   puzzleId: string;
   inPersonBody: React.ReactNode;
@@ -26,6 +27,7 @@ export default async function DefaultPuzzlePage({
   copyText: string | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
+  interactionMode?: string;
 }) {
   // Authentication
   const session = await auth();
@@ -96,9 +98,20 @@ export default async function DefaultPuzzlePage({
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
-  // TODO: show remote box body
+  // If there is an URL query, use that for admins and after the hunt ends
+  // Otherwise, use the session interaction mode
+  const actualInteractionMode =
+    interactionMode &&
+    (session.user.role === "admin" || new Date() > REMOTE.END_TIME)
+      ? interactionMode
+      : session.user.interactionMode;
+
   const puzzleBody =
-    session.user.interactionMode === "in-person" ? inPersonBody : remoteBody;
+    actualInteractionMode === "remote-box"
+      ? remoteBoxBody
+      : actualInteractionMode === "in-person"
+        ? inPersonBody
+        : remoteBody;
 
   return (
     <div className="w-full px-4">
