@@ -13,7 +13,7 @@ export function extractEmails(memberString: string): string[] {
 export async function sendBotMessage(message: string) {
   if (!process.env.DISCORD_WEBHOOK_URL) return;
   if (message.length > 2000) {
-    const chunks = message.match(/.{1,2000}/g);
+    const chunks = message.match(/[\s\S]{1,2000}/g);
     if (chunks) {
       for (const chunk of chunks) {
         await axios.post(process.env.DISCORD_WEBHOOK_URL, {

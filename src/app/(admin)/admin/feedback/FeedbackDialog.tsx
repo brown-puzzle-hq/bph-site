@@ -9,10 +9,10 @@ import { FormattedTime } from "~/lib/time";
 // import remarkGfm from "remark-gfm";
 
 export default function FeedbackDialog({
-  showTeam,
+  teamSide,
   feedbackList,
 }: {
-  showTeam: boolean;
+  teamSide: boolean;
   feedbackList: {
     id: number;
     teamId: string;
@@ -21,20 +21,20 @@ export default function FeedbackDialog({
   }[];
 }) {
   return (
-    <>
+    <div className="space-y-4">
       {feedbackList.length > 0 &&
         feedbackList.map((feedback) => (
-          <Card className="mt-4 bg-secondary-bg" key={feedback.id}>
-            <CardHeader className="p-4">
-              <CardDescription>
+          <Card className="bg-inherit shadow-none" key={feedback.id}>
+            <CardHeader className="p-4 pb-0.5">
+              <CardDescription className={teamSide ? "text-main-header" : ""}>
                 <strong>
+                  {!teamSide && <span className="rounded-sm bg-slate-200 px-1 py-0.5 mr-1">{feedback.teamId}</span>}
                   <FormattedTime time={feedback.timestamp} />
                 </strong>
-                {showTeam && <p>({feedback.teamId})</p>}
               </CardDescription>
             </CardHeader>
-            <CardContent className="px-4 pb-4">
-              <article className="prose">
+            <CardContent className="p-4 pt-0">
+              <article className={teamSide ? "prose prose-custom" : "prose"}>
                 {useRemarkSync(
                   feedback.description,
                   //   {
@@ -45,6 +45,6 @@ export default function FeedbackDialog({
             </CardContent>
           </Card>
         ))}
-    </>
+    </div>
   );
 }

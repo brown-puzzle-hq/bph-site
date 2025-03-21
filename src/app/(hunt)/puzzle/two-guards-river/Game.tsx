@@ -620,7 +620,7 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
                 </TableRow>
               ))}
               {result === "Losing" && (
-                <TableRow>
+                <TableRow className="hover:bg-inherit">
                   <TableCell className="w-0 font-bold">
                     <DoorOpen className="h-4" />
                   </TableCell>

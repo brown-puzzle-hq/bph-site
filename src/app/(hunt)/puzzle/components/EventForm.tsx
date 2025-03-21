@@ -48,12 +48,15 @@ export default function EventForm({ eventId }: FormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-x-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex w-full space-x-2"
+      >
         <FormField
           control={form.control}
           name="answer"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormControl>
                 <input
                   {...field}
@@ -66,14 +69,14 @@ export default function EventForm({ eventId }: FormProps) {
                   }}
                   placeholder="TOKEN"
                   autoComplete="off"
-                  className={`w-full bg-main-bg ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none`}
+                  className={`w-full bg-inherit ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none`}
                 />
               </FormControl>
             </FormItem>
           )}
         />
         <button
-          className="rounded-sm px-0.5 hover:bg-footer-bg focus:outline-none focus-visible:bg-footer-bg disabled:opacity-0"
+          className="rounded-sm bg-white bg-opacity-0 px-0.5 hover:bg-opacity-10 focus:outline-none focus-visible:bg-opacity-10 disabled:opacity-0"
           type="submit"
           disabled={!form.watch("answer")}
         >

@@ -7,7 +7,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
-import { Card } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardDescription,
+} from "@/components/ui/card";
+import { FormattedTime } from "~/lib/time";
+
 import {
   Form,
   FormControl,
@@ -44,7 +51,8 @@ export default function FeedbackForm({
   });
 
   const onSubmit = async (data: z.infer<typeof feedbackFormSchema>) => {
-    const result = await insertFeedback(data.description);
+    const timestamp = new Date();
+    const result = await insertFeedback(data.description, timestamp);
     if (result.error) {
       toast({
         title: "Submission failed",
@@ -55,7 +63,7 @@ export default function FeedbackForm({
         id: feedbackList.length,
         teamId: teamId,
         description: data.description,
-        timestamp: new Date(),
+        timestamp,
       };
       feedbackList.push(newFeedback);
       toast({
@@ -82,16 +90,23 @@ export default function FeedbackForm({
                   </FormDescription>
                   <FormControl>
                     {preview ? (
-                      <Card>
-                        <div className="p-4">
-                          <article className="prose">
+                      <Card className="bg-inherit">
+                        <CardHeader className="p-4 pb-0.5">
+                          <CardDescription className="text-main-header">
+                            <strong>
+                              <FormattedTime time={new Date()} />
+                            </strong>
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0">
+                          <article className="prose prose-custom">
                             {useRemarkSync(field.value) || <></>}
                           </article>
-                        </div>
+                        </CardContent>
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-secondary-bg text-secondary-accent focus-visible:ring-offset-0"
+                        className="bg-inherit text-main-text focus-visible:ring-offset-0"
                         placeholder="No response yet"
                         {...field}
                       />
@@ -117,7 +132,7 @@ export default function FeedbackForm({
         </form>
       </Form>
       <div>
-        <FeedbackDialog showTeam={false} feedbackList={feedbackList} />
+        <FeedbackDialog teamSide={true} feedbackList={feedbackList} />
       </div>
     </div>
   );

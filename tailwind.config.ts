@@ -73,24 +73,56 @@ export default {
         },
       },
       typography: ({ theme }: { theme: any }) => ({
+        DEFAULT: {
+          css: {
+            "p": {
+              marginTop: "0em",
+              marginBottom: "0.5em",
+            },
+            "h1, h2, h3, h4, h5, h6, li, blockquote": {
+              lineHeight: "1.5",
+              marginTop: "0em",
+              marginBottom: "0em",
+              wordBreak: "break-words",
+            },
+            ":last-child": {
+              marginBottom: "0em",
+            },
+            maxWidth: "100ch", // add required value here
+          },
+        },
         custom: {
           css: {
-            "--tw-prose-body": theme("colors.main-text"),
-            "--tw-prose-headings": theme("colors.main-header"),
-            "--tw-prose-links": theme("colors.link"),
-            "--tw-prose-bold": theme("colors.main-header"),
-            // "--tw-prose-lead": theme("colors.pink[700]"),
-            // "--tw-prose-counters": theme("colors.pink[600]"),
-            // "--tw-prose-bullets": theme("colors.pink[400]"),
-            // "--tw-prose-hr": theme("colors.pink[300]"),
-            // "--tw-prose-quotes": theme("colors.pink[900]"),
-            // "--tw-prose-quote-borders": theme("colors.pink[300]"),
-            // "--tw-prose-captions": theme("colors.pink[700]"),
-            // "--tw-prose-code": theme("colors.pink[900]"),
-            // "--tw-prose-pre-code": theme("colors.pink[100]"),
-            // "--tw-prose-pre-bg": theme("colors.pink[900]"),
-            // "--tw-prose-th-borders": theme("colors.pink[300]"),
-            // "--tw-prose-td-borders": theme("colors.pink[200]"),
+            "--tw-prose-body": theme("colors.stone[100]"), // Light off-white for body text
+            "--tw-prose-headings": theme("colors.stone[50]"), // Pure white for headings
+            "--tw-prose-lead": theme("colors.stone[200]"), // Slightly dimmer white for lead text
+            "--tw-prose-links": theme("colors.blue[300]"), // Light blue for contrast
+            "--tw-prose-bold": theme("colors.stone[50]"), // Bright white for bold text
+            "--tw-prose-counters": theme("colors.stone[300]"), // Softer white for counters
+            "--tw-prose-bullets": theme("colors.stone[200]"), // Subtle light gray for bullets
+            "--tw-prose-hr": theme("colors.stone[400]"), // Faint divider line
+            "--tw-prose-quotes": theme("colors.stone[50]"), // Bright white quotes
+            "--tw-prose-quote-borders": theme("colors.stone[300]"), // Soft white borders
+            "--tw-prose-captions": theme("colors.stone[200]"), // Light gray for captions
+            "--tw-prose-code": theme("colors.amber[300]"), // Warm light yellow for code
+            "--tw-prose-pre-code": theme("colors.stone[50]"), // White for inline code
+            "--tw-prose-pre-bg": theme("colors.stone[800]"), // Dark gray background for code blocks
+            "--tw-prose-th-borders": theme("colors.stone[300]"), // Faint borders for tables
+            "--tw-prose-td-borders": theme("colors.stone[400]"), // Slightly darker borders
+            "p": {
+              marginTop: "0em",
+              marginBottom: "0.5em",
+            },
+            "h1, h2, h3, h4, h5, h6, li, blockquote": {
+              lineHeight: "1.5",
+              marginTop: "0em",
+              marginBottom: "0em",
+              wordBreak: "break-words",
+            },
+            ":last-child": {
+              marginBottom: "0em",
+            },
+            maxWidth: "100ch", // add required value here
           },
         },
       }),
