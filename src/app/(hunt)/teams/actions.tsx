@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
 import { auth } from "~/server/auth/auth";
 import { IN_PERSON } from "~/hunt.config";
+import { sendBotMessage } from "~/lib/utils";
 
 export type TeamProperties = {
   displayName?: string;
@@ -70,6 +71,23 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
     if (result.length === 0) {
       return { error: "No team matching the given ID was found." };
     }
+    return { error: null };
+  } catch (error) {
+    return { error: "An unexpected error occurred." };
+  }
+}
+
+export async function deleteTeam(id: string, displayName: string) {
+  try {
+    const result = await db
+      .delete(teams)
+      .where(eq(teams.id, id))
+      .returning({ id: teams.id });
+    if (result.length === 0) {
+      return { error: "No team matching the given ID was found." };
+    }
+    const teamMessage = `:skull: **Deleted Team**: ${displayName}`;
+    await sendBotMessage(teamMessage);
     return { error: null };
   } catch (error) {
     return { error: "An unexpected error occurred." };
