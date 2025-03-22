@@ -1,83 +1,43 @@
 "use server";
 
 import { auth } from "@/auth";
-import { hints } from "@/db/schema";
+import { hints, followUps, hintStatusEnum } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { sendEmail, extractEmails } from "~/lib/utils";
+import { sendBotMessage, sendEmail, extractEmails } from "~/lib/utils";
 import { HintEmailTemplate } from "~/lib/email-template";
-import { HintWithRelations } from "./components/hint-table/Columns";
+import {
+  FollowUpEmailTemplate,
+  FollowUpEmailTemplateProps,
+} from "~/lib/email-template";
 
-export async function respondToHint(
-  hint: HintWithRelations,
-  response: string,
-  members: string,
+export type MessageType = "request" | "response" | "follow-up";
+
+export async function editHintStatus(
+  hintId: number,
+  status: (typeof hintStatusEnum.enumValues)[number],
 ) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");
   }
 
-  // For a response to go through, the hint claimer must be the user and
-  // the hint status must be no_response
-  let user = session.user.id ? session.user.id : "";
   let result = await db
     .update(hints)
-    .set({
-      response,
-      responseTime: new Date(),
-      status: "answered",
-    })
-    .where(
-      and(
-        eq(hints.id, hint.id),
-        eq(hints.claimer, user),
-        eq(hints.status, "no_response"),
-      ),
-    )
+    .set({ status })
+    .where(eq(hints.id, hintId))
     .returning({ id: hints.id });
 
-  revalidatePath("/admin/");
+  revalidatePath("/admin/hints");
 
-  // Error-handling
   if (result.length != 1) {
-    let hintSearch = await db.query.hints.findFirst({
-      where: eq(hints.id, hint.id),
-    });
-    if (!hintSearch) {
-      return {
-        title: "Error responding to hint",
-        error: "Hint entry not found",
-        response: response,
-      };
-    } else if (hintSearch.claimer !== user) {
-      return {
-        title: "Error responding to hint",
-        error: `Hint not claimed by user. Its current value is ${hintSearch.claimer}.`,
-        response: response,
-      };
-    } else if (hintSearch.status != "no_response") {
-      return {
-        title: "Error responding to hint",
-        error: `Hint status is not no_response. It is ${hintSearch.status}.`,
-        response: response,
-      };
-    } else {
-      return {
-        title: "Error responding to hint",
-        error: "Unexpected error occured",
-        response: response,
-      };
-    }
+    return {
+      title: "Error updating hint status",
+      error: "Hint entry not found",
+    };
   }
 
-  // Send email
-  await sendEmail(
-    extractEmails(members),
-    `Hint Answered [${hint.puzzle.name}]`,
-    HintEmailTemplate({ hint, response }),
-  );
   return { error: null };
 }
 
@@ -104,7 +64,7 @@ export async function claimHint(hintId: number) {
     )
     .returning({ id: hints.id });
 
-  revalidatePath("/admin/");
+  revalidatePath("/admin/hints");
 
   // Error-handling
   if (result.length != 1) {
@@ -155,7 +115,8 @@ export async function unclaimHint(hintId: number) {
       ),
     )
     .returning({ id: hints.id });
-  revalidatePath("/admin/");
+
+  revalidatePath("/admin/hints");
 
   if (result.length != 1) {
     let hint = await db.query.hints.findFirst({ where: eq(hints.id, hintId) });
@@ -206,7 +167,7 @@ export async function refundHint(hintId: number) {
     )
     .returning({ id: hints.id });
 
-  revalidatePath("/admin/");
+  revalidatePath("/admin/hints");
 
   if (result.length != 1) {
     let hint = await db.query.hints.findFirst({ where: eq(hints.id, hintId) });
@@ -234,4 +195,184 @@ export async function refundHint(hintId: number) {
   }
 
   return { error: null };
+}
+
+export async function editMessage(
+  id: number,
+  message: string,
+  type: MessageType,
+) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
+
+  switch (type) {
+    case "request":
+      await db
+        .update(hints)
+        .set({ request: message })
+        .where(and(eq(hints.id, id), eq(hints.teamId, session.user.id)))
+        .returning({ id: hints.id });
+      break;
+    case "response":
+      await db
+        .update(hints)
+        .set({ response: message })
+        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)))
+        .returning({ id: hints.id });
+      break;
+    case "follow-up":
+      await db
+        .update(followUps)
+        .set({ message })
+        .where(and(eq(followUps.id, id), eq(followUps.userId, session.user.id)))
+        .returning({ id: hints.id });
+      break;
+  }
+}
+
+export async function insertFollowUp({
+  hintId,
+  members,
+  teamId,
+  teamDisplayName,
+  puzzleId,
+  puzzleName,
+  message,
+}: FollowUpEmailTemplateProps & {
+  hintId: number;
+  teamId?: string;
+  members: string;
+}) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
+  try {
+    const result = await db
+      .insert(followUps)
+      .values({
+        hintId,
+        userId: session.user.id,
+        message,
+        time: new Date(),
+      })
+      .returning({ id: followUps.id });
+
+    if (result[0]?.id) {
+      // If there are members, then this is a follow-up by a team
+      // So send an email
+      if (members) {
+        await sendEmail(
+          extractEmails(members),
+          `Follow-Up Hint [${puzzleName}]`,
+          FollowUpEmailTemplate({
+            teamDisplayName,
+            puzzleId,
+            puzzleName,
+            message,
+          }),
+        );
+      }
+      // Otherwise, notify admin on Discord that there is a follow-up
+      else if (message !== "[Claimed]") {
+        const hintMessage = `🙏 **Hint** [follow-up](https://www.brownpuzzlehunt.com/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleName}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${message} <@&1310029428864057504>`;
+        await sendBotMessage(hintMessage);
+      }
+      return result[0].id;
+    }
+    return null;
+  } catch (_) {
+    return null;
+  }
+}
+
+export async function insertHintResponse(
+  hintId: number,
+  teamDisplayName: string,
+  puzzleName: string,
+  response: string,
+  members: string,
+) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    throw new Error("Not authorized");
+  }
+
+  // For a response to go through, the hint claimer must be the user and
+  // the hint status must be no_response
+  let user = session.user.id ? session.user.id : "";
+  let result = (
+    await db
+      .update(hints)
+      .set({
+        response,
+        responseTime: new Date(),
+        status: "answered",
+      })
+      .where(
+        and(
+          eq(hints.id, hintId),
+          eq(hints.claimer, user),
+          eq(hints.status, "no_response"),
+        ),
+      )
+      .returning({
+        id: hints.id,
+        request: hints.request,
+        puzzleId: hints.puzzleId,
+      })
+  )?.[0];
+
+  revalidatePath("/admin/");
+
+  // Error-handling
+  if (!result) {
+    let hintSearch = await db.query.hints.findFirst({
+      where: eq(hints.id, hintId),
+    });
+    if (!hintSearch) {
+      return {
+        title: "Error responding to hint",
+        error: "Hint entry not found",
+        response: response,
+      };
+    } else if (hintSearch.claimer !== user) {
+      return {
+        title: "Error responding to hint",
+        error: hintSearch.claimer
+          ? `Hint claimed by ${hintSearch.claimer}.`
+          : "Hint is currently unclaimed.",
+        response: response,
+      };
+    } else if (hintSearch.status != "no_response") {
+      return {
+        title: "Error responding to hint",
+        error: `Hint status is not no_response. It is ${hintSearch.status}.`,
+        response: response,
+      };
+    } else {
+      return {
+        title: "Error responding to hint",
+        error: "Unexpected error occured",
+        response: response,
+      };
+    }
+  }
+
+  // Send email
+  await sendEmail(
+    extractEmails(members),
+    `Hint Answered [${puzzleName}]`,
+    HintEmailTemplate({
+      teamDisplayName: teamDisplayName,
+      puzzleName: puzzleName,
+      puzzleId: result.puzzleId,
+      request: result.request,
+      response,
+    }),
+  );
+
+  return { error: null, id: result.id };
 }

@@ -45,33 +45,19 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     });
   };
 
-  const handleRefund = () => {
-    startTransition(async () => {
-      const { error, title } = await refundHint(hintId);
-      if (error) {
-        toast({
-          variant: "destructive",
-          title,
-          description: error,
-        });
-      }
-    });
-  };
-
-  if (status == "refunded") {
-    return <p className="border-y border-white">Refunded</p>;
-  } else if (!claimer) {
-    return (
-      <button
-        className="hint-button rounded-md border border-emerald-600 text-emerald-600 disabled:pointer-events-none disabled:opacity-50"
-        onClick={handleClaim}
-        disabled={isPending}
-      >
-        <p className="hint-button px-1">CLAIM</p>
-      </button>
-    );
-  } else if (claimer?.id && claimer.id == userId) {
-    if (status == "no_response")
+  if (status == "no_response") {
+    if (!claimer) {
+      return (
+        <button
+          className="hint-button rounded-md border border-emerald-600 text-emerald-600 disabled:pointer-events-none disabled:opacity-50"
+          onClick={handleClaim}
+          disabled={isPending}
+        >
+          <p className="hint-button px-1">CLAIM</p>
+        </button>
+      );
+    }
+    if (claimer.id === userId) {
       return (
         <button
           className="hint-button rounded-md border border-red-600 text-red-600 disabled:pointer-events-none disabled:opacity-50"
@@ -81,42 +67,30 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
           <p className="hint-button px-1">UNCLAIM</p>
         </button>
       );
-    else if (status == "answered") {
-      return followUps[followUps.length - 1]?.userId === teamId ? (
-        <button
-          className="rounded-md border border-yellow-600 text-yellow-600"
-          onClick={() =>
-            (window.location.href = `/admin/hints/${hintId}?reply=true`)
-          }
-        >
-          <p className="px-1">REPLY</p>
-        </button>
-      ) : (
-        <button
-          className="hint-button rounded-md border border-gray-600 text-gray-600 disabled:pointer-events-none disabled:opacity-50"
-          onClick={handleRefund}
-          disabled={isPending}
-        >
-          <p className="hint-button px-1">REFUND</p>
-        </button>
-      );
     }
-  } else {
-    if (status == "no_response") {
-      return <p className="border-y border-white">Claimed</p>;
-    } else if (status == "answered") {
-      return followUps[followUps.length - 1]?.userId === teamId ? (
-        <button
-          className="rounded-md border border-gray-600 text-gray-600"
-          onClick={() =>
-            (window.location.href = `/admin/hints/${hintId}?reply=true`)
-          }
-        >
-          <p className="px-1">REPLY</p>
-        </button>
-      ) : (
-        <p className="border-y border-white">Answered</p>
-      );
-    }
+    return <p className="border-y border-white">Claimed</p>;
   }
+
+  if (followUps[followUps.length - 1]?.userId === teamId) {
+    return (
+      <button
+        className={
+          claimer?.id === userId
+            ? "rounded-md border border-yellow-600 text-yellow-600"
+            : "rounded-md border border-gray-600 text-gray-600"
+        }
+        onClick={() =>
+          (window.location.href = `/admin/hints/${hintId}?reply=true`)
+        }
+      >
+        <p className="px-1">REPLY</p>
+      </button>
+    );
+  }
+  
+  return (
+    <p className="border-y border-white">
+      {status === "answered" ? "Answered" : "Refunded"}
+    </p>
+  );
 }

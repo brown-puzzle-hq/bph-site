@@ -1,13 +1,17 @@
-import { HintWithRelations } from "~/app/(admin)/admin/hints/components/hint-table/Columns";
-
 export interface HintEmailTemplateProps {
-  hint: HintWithRelations;
+  teamDisplayName: string;
+  puzzleId: string;
+  puzzleName: string;
+  request: string;
   response: string;
 }
 
 export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
-  hint,
+  teamDisplayName,
+  puzzleId,
+  puzzleName,
   response,
+  request,
 }) => (
   <div
     style={{
@@ -17,12 +21,11 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
     }}
   >
     <p style={{ marginTop: "0", color: "#333 !important" }}>
-      Hi {hint.team.displayName},
+      Hi {teamDisplayName},
     </p>
 
     <p style={{ color: "#333 !important" }}>
-      Your hint request for <strong>{hint.puzzle.name}</strong> has been
-      answered.
+      Your hint request for <strong>{puzzleName}</strong> has been answered.
     </p>
 
     <p style={{ color: "#333 !important" }}>
@@ -38,7 +41,7 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
         wordWrap: "break-word",
       }}
     >
-      {hint.request}
+      {request}
     </blockquote>
 
     <p style={{ color: "#333 !important" }}>
@@ -60,10 +63,10 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
     <p style={{ color: "#333 !important" }}>
       You can view it at{" "}
       <a
-        href={`https://www.brownpuzzlehunt.com/puzzle/${hint.puzzleId}/hint`}
+        href={`https://www.brownpuzzlehunt.com/puzzle/${puzzleId}/hint`}
         style={{ color: "#1a73e8", textDecoration: "none", fontWeight: "bold" }}
       >
-        https://www.brownpuzzlehunt.com/puzzle/{hint.puzzleId}/hint
+        https://www.brownpuzzlehunt.com/puzzle/{puzzleId}/hint
       </a>
       .
     </p>

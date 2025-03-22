@@ -53,6 +53,7 @@ export function getTimeDifferenceString(time: Time) {
   }
 }
 
-export function ElapsedTime({ date }: { date: Date }) {
+export function ElapsedTime({ date }: { date: Date | null }) {
+  if (!date) return <></>;
   return <>{getTimeDifferenceString(getTimeDifference(new Date(), date))}</>;
 }
