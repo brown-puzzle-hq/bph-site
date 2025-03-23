@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useRef, useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, useMemo, useRef } from "react";
 import ForceGraph from "react-force-graph-2d";
 import { LinkObject, NodeObject } from "react-force-graph-2d";
 import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/hunt.config";
@@ -13,8 +14,29 @@ import {
   Puzzle,
   Check,
   X,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
+
+const roundTextColor: Record<string, string> = {
+  Action: "text-red-600",
+  Cerebral: "text-indigo-600",
+  Adventure: "text-lime-600",
+  Comedy: "text-yellow-500",
+  Drama: "text-purple-500",
+  Reality: "text-orange-500",
+};
+
+const roundNodeColor: Record<string, string> = {
+  Action: "oklch(0.637 0.237 25.331)",
+  Cerebral: "oklch(0.457 0.24 277.023)",
+  Adventure: "oklch(0.768 0.233 130.85)",
+  Comedy: "oklch(0.879 0.169 91.605)",
+  Drama: "oklch(0.827 0.119 306.383)",
+  Reality: "oklch(0.75 0.183 55.934)",
+  Defaut: "oklch(0.708 0 0)",
+};
 
 export type SearchedTeam = {
   teamId: string;
@@ -25,20 +47,169 @@ export type SearchedTeam = {
 export type SearchedPuzzle = {
   puzzleId: string;
   guesses: { guess: string; isCorrect: boolean }[] | null;
-  requestedHints: { request: string }[] | null;
-};
-
-const roundColors: Record<string, string> = {
-  Action: "rgb(248,113,113)", // red-400
-  Cerebral: "rgb(251,191,36)", // amber-400
-  Adventure: "rgb(72,187,120)", // green-400
-  Drama: "rgb(96,165,250)", // blue-400
-  Reality: "rgb(147,51,234)", // purple-400
+  requestedHints:
+    | { id: number; request: string; response: string | null }[]
+    | null;
+  round: string;
 };
 
 export default function Graph() {
   const NODE_R = 8;
   const fgRef = useRef<any>(null);
+  const router = useRouter();
+
+  // Guesses and hints for a puzzle
+  const [puzzleQuery, setPuzzleQuery] = useState("");
+  const [searchedPuzzle, setSearchedPuzzle] = useState<null | SearchedPuzzle>(
+    null,
+  );
+
+  // Individual team's solves and unlocks
+  const [teamQuery, setTeamQuery] = useState("");
+  const [searchedTeam, setSearchedTeam] = useState<SearchedTeam | null>(null);
+
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  const handleSearchPuzzle = async () => {
+    if (puzzleQuery === "") return;
+    // Finds node by full id, then tries substring match
+    const node =
+      data.nodes.find((node) => node.id === puzzleQuery) ||
+      data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
+      null;
+    if (!node) return;
+
+    // Focus on the node and highlight it
+    if (fgRef.current) fgRef.current.centerAt(node.x, node.y, 1000);
+
+    // Handle node click
+    await handleNodeClick(node);
+  };
+
+  const handlePuzzleSidebar = async (puzzleId: string) => {
+    const res = await getSearchedPuzzle(searchedTeam?.teamId || null, puzzleId);
+    if ("error" in res) return;
+    if ("guesses" in res && "requestedHints" in res) {
+      // Set searched puzzle
+      setSearchedPuzzle({
+        ...res,
+        round:
+          ROUNDS.find((round) => round.puzzles.includes(puzzleId))?.name || "",
+      });
+
+      // Set search params
+      const params = new URLSearchParams();
+      const prevTeam = searchParams.get("team");
+      if (prevTeam) params.set("team", prevTeam);
+      params.set("puzzle", res.puzzleId);
+      router.push(`?${params.toString()}`);
+    }
+    setPuzzleQuery("");
+  };
+
+  const handleSearchTeam = async () => {
+    const res = await getSearchedTeam(teamQuery);
+    if ("error" in res) {
+      setTeamQuery("");
+      setSearchedTeam(null);
+      return;
+    }
+    if ("solves" in res && "unlocks" in res) {
+      setSearchedTeam(res);
+
+      // Set search params
+      const params = new URLSearchParams();
+      const prevPuzzle = searchParams.get("puzzle");
+      if (prevPuzzle) params.set("puzzle", prevPuzzle);
+      params.set("team", res.teamId);
+      router.push(`?${params.toString()}`);
+    }
+  };
+
+  const clearSearchPuzzle = () => {
+    setSearchedPuzzle(null);
+    setPuzzleQuery("");
+    const params = new URLSearchParams();
+    const prevTeam = searchParams.get("team");
+    if (prevTeam) params.set("team", prevTeam);
+    router.push(`?${params.toString()}`);
+  };
+
+  const clearSearchTeam = () => {
+    setSearchedTeam(null);
+    setTeamQuery("");
+    const params = new URLSearchParams();
+    const prevPuzzle = searchParams.get("puzzle");
+    if (prevPuzzle) params.set("puzzle", prevPuzzle);
+    router.push(`?${params.toString()}`);
+  };
+
+  // Search params
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const run = async () => {
+      // Get team
+      const team = searchParams.get("team");
+      if (team) {
+        const res = await getSearchedTeam(team);
+        if ("error" in res) {
+          setSearchedTeam(null);
+          return;
+        }
+        if ("solves" in res && "unlocks" in res) {
+          setTeamQuery(team);
+          setSearchedTeam(res);
+        }
+      }
+
+      // Get puzzle
+      const puzzle = searchParams.get("puzzle");
+      if (puzzle) {
+        // Find node and center on it
+        const node = data.nodes.find((node) => node.id === puzzle);
+        if (!node) return;
+        if (fgRef.current) fgRef.current.centerAt(node.x, node.y, 1000);
+        setClickedNode(node);
+        setHighlightedNodes(
+          (prev) => new Set([...prev, ...[node], ...node.neighbors]),
+        );
+        setHighlightedLinks((prev) => new Set([...prev, ...node.links]));
+
+        // Search for puzzle info
+        const res = await getSearchedPuzzle(team || null, puzzle);
+        if ("error" in res) return;
+        if ("guesses" in res && "requestedHints" in res) {
+          setSearchedPuzzle({
+            ...res,
+            round:
+              ROUNDS.find((round) => round.puzzles.includes(puzzle))?.name ||
+              "",
+          });
+        }
+      }
+    };
+
+    run();
+  }, [searchParams]);
+
+  // Dimensions of the graph
+  const [dimensions, setDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // The node being hovered over
   const [hoveredNode, setHoveredNode] = useState<NodeObject | null>(null);
@@ -56,16 +227,6 @@ export default function Graph() {
   );
 
   const [showWords, setShowWords] = useState(false);
-
-  const [puzzleQuery, setPuzzleQuery] = useState("");
-  const [teamQuery, setTeamQuery] = useState("");
-
-  // Team's solves and unlocks
-  const [searchedTeam, setSearchedTeam] = useState<SearchedTeam | null>(null);
-  // Team's guesses and hints for a puzzle
-  const [searchedPuzzle, setSearchedPuzzle] = useState<null | SearchedPuzzle>(
-    null,
-  );
 
   const nodes = useMemo(() => {
     return Object.keys(PUZZLE_UNLOCK_MAP).map((puzzle) => ({
@@ -126,7 +287,9 @@ export default function Graph() {
       (prev) => new Set([...prev, ...[node], ...node.neighbors]),
     );
     setHighlightedLinks((prev) => new Set([...prev, ...node.links]));
-    await handlePuzzleInfo(node.name);
+
+    // Get puzzle info
+    await handlePuzzleSidebar(node.name);
   };
 
   const handleNodeRender = (
@@ -136,16 +299,20 @@ export default function Graph() {
   ) => {
     const lime500 = "oklch(0.768 0.233 130.85)";
     const amber400 = "oklch(0.828 0.189 84.429)";
-    // const yellow400 = "oklch(0.852 0.199 91.936)";
     const neutral400 = "oklch(0.708 0 0)";
 
+    // If there is a searched team, use their solves and unlocks
+    // Otherwise, use the round color
     const nodeColor = searchedTeam
       ? searchedTeam.solves.includes(node.name)
         ? lime500
         : searchedTeam.unlocks.includes(node.name)
           ? amber400
           : neutral400
-      : node.color;
+      : roundNodeColor[
+          ROUNDS.find((round) => round.puzzles.includes(node.name))?.name ||
+            "Default"
+        ] || "oklch(0.708 0 0)";
 
     // If showWords is OFF
     if (!showWords) {
@@ -167,7 +334,7 @@ export default function Graph() {
       // Show words anyway on hover or click
       if (node === hoveredNode || highlightedNodes.has(node)) {
         const label = node.name as string;
-        const fontSize = 12 / globalScale;
+        const fontSize = 12;
         ctx.font = `${fontSize}px Sans-Serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -228,198 +395,161 @@ export default function Graph() {
     ctx.fillText(label, node.x!, node.y!);
   };
 
-  const handleSearchPuzzle = async () => {
-    if (puzzleQuery === "") return;
-    // Finds node by full id, then tries substring match
-    const node =
-      data.nodes.find((node) => node.id === puzzleQuery) ||
-      data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
-      null;
-    if (!node) return;
-
-    // Focus on the node and highlight it
-    if (fgRef.current) fgRef.current.centerAt(node.x, node.y, 1000);
-    handleNodeClick(node);
-    setPuzzleQuery("");
-  };
-
-  const handleSearchTeam = async () => {
-    const res = await getSearchedTeam(teamQuery);
-    if ("error" in res) {
-      setTeamQuery("");
-      setSearchedTeam(null);
-      return;
-    }
-    if ("solves" in res && "unlocks" in res) {
-      setSearchedTeam(res);
-    }
-  };
-
-  const handlePuzzleInfo = async (puzzleId: string) => {
-    console.log("puzzleId", puzzleId);
-    if (searchedTeam == null) {
-      setSearchedPuzzle({
-        puzzleId: puzzleId,
-        guesses: null,
-        requestedHints: null,
-      });
-      console.log("set");
-      return;
-    }
-
-    const res = await getSearchedPuzzle(searchedTeam.teamId, puzzleId);
-    if ("error" in res) return;
-    if ("guesses" in res && "requestedHints" in res) {
-      setSearchedPuzzle(res);
-    }
-  };
-
   return (
     <div className="-mt-20 flex h-screen w-screen">
       {/* Graph */}
-      <div className="grid max-w-full">
-        <div className="col-start-1 row-start-1">
-          <ForceGraph
-            ref={fgRef}
-            graphData={data}
-            width={window.innerWidth - 336}
-            height={window.innerHeight}
-            cooldownTicks={50}
-            autoPauseRedraw={false}
-            d3VelocityDecay={0.2}
-            // Visuals
-            nodeRelSize={NODE_R}
-            nodeLabel={() => ""} // Remove tooltip
-            nodeAutoColorBy="round"
-            nodePointerAreaPaint={(node, color, ctx) => {
-              ctx.fillStyle = color;
-              ctx.beginPath();
-              ctx.arc(node.x!, node.y!, 10, 0, 2 * Math.PI, false);
-              ctx.fill();
+      <div className="absolute">
+        <ForceGraph
+          ref={fgRef}
+          graphData={data}
+          width={dimensions.width}
+          height={dimensions.height}
+          cooldownTicks={50}
+          autoPauseRedraw={false}
+          d3VelocityDecay={0.2}
+          // Visuals
+          nodeRelSize={NODE_R}
+          nodeLabel={() => ""} // Remove tooltip
+          nodeAutoColorBy="round"
+          nodePointerAreaPaint={(node, color, ctx) => {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(node.x!, node.y!, 10, 0, 2 * Math.PI, false);
+            ctx.fill();
+          }}
+          // Prevent moving after dragging
+          onNodeDragEnd={(node) => {
+            node.fx = node.x;
+            node.fy = node.y;
+            node.fz = node.z;
+          }}
+          // Highlight nodes and links on hover or click
+          onNodeHover={handleNodeHover}
+          onNodeDrag={handleNodeHover}
+          onNodeClick={handleNodeClick}
+          onBackgroundClick={() => {
+            setClickedNode(null);
+            setHighlightedNodes(new Set());
+            setHighlightedLinks(new Set());
+          }}
+          // Draw nodes and links
+          nodeCanvasObjectMode={() => "replace"}
+          nodeCanvasObject={handleNodeRender}
+          linkWidth={(link) =>
+            hoveredLinks.has(link) || highlightedLinks.has(link) ? 5 : 1
+          }
+          linkDirectionalParticles={4}
+          linkDirectionalParticleWidth={(link) =>
+            hoveredLinks.has(link) || highlightedLinks.has(link) ? 4 : 0
+          }
+        />
+      </div>
+
+      <div className="absolute w-full space-y-2 px-4 sm:w-80">
+        {/* Search team */}
+        <div className="z-10 mt-[56px] flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
+          <div className="rounded bg-neutral-300 p-2">
+            <User className="size-5" />
+          </div>
+          <input
+            placeholder="jcarberr"
+            value={teamQuery}
+            onChange={(e) => setTeamQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearchTeam();
+              }
             }}
-            // Prevent moving after dragging
-            onNodeDragEnd={(node) => {
-              node.fx = node.x;
-              node.fy = node.y;
-              node.fz = node.z;
-            }}
-            // Highlight nodes and links on hover or click
-            onNodeHover={handleNodeHover}
-            onNodeDrag={handleNodeHover}
-            onNodeClick={handleNodeClick}
-            onBackgroundClick={() => {
-              setClickedNode(null);
-              setHighlightedNodes(new Set());
-              setHighlightedLinks(new Set());
-            }}
-            // Draw nodes and links
-            nodeCanvasObjectMode={() => "replace"}
-            nodeCanvasObject={handleNodeRender}
-            linkWidth={(link) =>
-              hoveredLinks.has(link) || highlightedLinks.has(link) ? 5 : 1
-            }
-            linkDirectionalParticles={4}
-            linkDirectionalParticleWidth={(link) =>
-              hoveredLinks.has(link) || highlightedLinks.has(link) ? 4 : 0
-            }
+            className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            autoComplete="off"
+            disabled={!!searchedTeam}
           />
-        </div>
-
-        <div className="col-start-1 row-start-1 w-80 space-y-2 pl-4">
-          {/* Search team */}
-          <div className="z-10 mt-[56px] flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
-            <div className="rounded bg-neutral-300 p-2">
-              <User className="size-5" />
-            </div>
-            <input
-              placeholder="jcarberr"
-              value={teamQuery}
-              onChange={(e) => setTeamQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearchTeam();
-                }
-              }}
-              className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-              autoComplete="off"
-              disabled={!!searchedTeam}
-            />
-            <button
-              onClick={async () => {
-                if (searchedTeam) {
-                  setSearchedTeam(null);
-                  setTeamQuery("");
-                } else {
-                  await handleSearchTeam();
-                }
-              }}
-              className="z-10 rounded p-1 hover:bg-neutral-200 disabled:bg-inherit disabled:opacity-25"
-              disabled={!searchedTeam && !teamQuery}
-            >
-              {searchedTeam ? (
-                <X className="size-5" />
-              ) : (
-                <Check className="size-5" />
-              )}
-            </button>
-          </div>
-
-          {/* Search puzzle */}
-          <div className="flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
-            <div className="rounded bg-neutral-300 p-2">
-              <Puzzle className="size-5" />
-            </div>
-            <input
-              placeholder="example"
-              value={puzzleQuery}
-              onChange={(e) => setPuzzleQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  setPuzzleQuery("");
-                  handleSearchPuzzle();
-                }
-              }}
-              className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none"
-              autoComplete="off"
-            />
-            <button
-              onClick={() => {
-                setPuzzleQuery("");
-                handleSearchPuzzle();
-              }}
-              className="z-10 rounded p-1 hover:bg-neutral-200 disabled:bg-inherit disabled:opacity-25"
-              disabled={!puzzleQuery}
-            >
-              <Check className="size-5" />
-            </button>
-          </div>
-
-          {/* Words and nodes toggle */}
           <button
-            className="absolute z-10 rounded bg-orange-500 p-2 text-white hover:opacity-70"
-            onClick={() => setShowWords((prev) => !prev)}
+            onClick={async () => {
+              if (searchedTeam) {
+                clearSearchTeam();
+              } else {
+                await handleSearchTeam();
+              }
+            }}
+            className="z-10 rounded p-1 hover:bg-neutral-200 disabled:bg-inherit disabled:opacity-25"
+            disabled={!searchedTeam && !teamQuery}
           >
-            {showWords ? (
-              <Waypoints className="size-5" />
+            {searchedTeam ? (
+              <X className="size-5" />
             ) : (
-              <CaseUpper className="size-5" />
+              <Check className="size-5" />
             )}
           </button>
+        </div>
 
-          {/* Zoom to Fit Button */}
+        {/* Search puzzle */}
+        <div className="flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
+          <div className="rounded bg-neutral-300 p-2">
+            <Puzzle className="size-5" />
+          </div>
+          <input
+            placeholder="example"
+            value={puzzleQuery}
+            onChange={(e) => setPuzzleQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setPuzzleQuery("");
+                handleSearchPuzzle();
+              }
+            }}
+            className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none"
+            autoComplete="off"
+          />
           <button
-            className="absolute z-10 translate-y-11 rounded bg-emerald-600 p-2 text-white hover:opacity-70"
-            onClick={() => fgRef.current?.zoomToFit(500, 66)}
+            onClick={() => {
+              setPuzzleQuery("");
+              handleSearchPuzzle();
+            }}
+            className="z-10 rounded p-1 hover:bg-neutral-200 disabled:bg-inherit disabled:opacity-25"
+            disabled={!puzzleQuery}
           >
-            <ScanSearch className="size-5" />
+            <Check className="size-5" />
           </button>
         </div>
+
+        {/* Words and nodes toggle */}
+        <button
+          className="absolute z-10 rounded bg-orange-500 p-2 text-white hover:opacity-70"
+          onClick={() => setShowWords((prev) => !prev)}
+        >
+          {showWords ? (
+            <Waypoints className="size-5" />
+          ) : (
+            <CaseUpper className="size-5" />
+          )}
+        </button>
+
+        {/* Zoom to Fit Button */}
+        <button
+          className="absolute z-10 translate-y-11 rounded bg-emerald-600 p-2 text-white hover:opacity-70"
+          onClick={() => fgRef.current?.zoomToFit(500, 66)}
+        >
+          <ScanSearch className="size-5" />
+        </button>
       </div>
 
       {/* Side panel */}
-      <div className="no-scrollbar w-80 overflow-auto pb-4 text-xs">
-        <div className="h-[56px]"></div>
-        <div className="rounded-lg bg-neutral-100 p-4">
+      <div
+        className={`no-scrollbar absolute bottom-0 ${showSidebar ? "max-h-[60vh]" : "max-h-4"} w-full overflow-auto text-xs sm:w-80 md:right-4 md:top-0 md:max-h-screen md:pb-4`}
+      >
+        <div className="fixed min-h-2 w-full -translate-y-1 bg-neutral-200 shadow-sm sm:w-80 md:hidden"></div>
+        <div
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="fixed left-1/2 w-12 -translate-x-1/2 -translate-y-4 rounded-md bg-neutral-300 text-neutral-600 hover:cursor-pointer sm:left-40 md:hidden"
+        >
+          {showSidebar ? (
+            <ChevronDown className="mx-auto" />
+          ) : (
+            <ChevronUp className="mx-auto" />
+          )}
+        </div>
+        <div className="bg-neutral-100 p-4 sm:rounded-lg md:mt-14">
           {searchedPuzzle === null ? (
             // Show list of puzzles
             <>
@@ -428,7 +558,7 @@ export default function Graph() {
               </p>
               {ROUNDS.map((round) => (
                 <>
-                  <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
+                  <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                     {round.name}
                   </p>
                   {round.puzzles.map((puzzle) => {
@@ -439,15 +569,19 @@ export default function Graph() {
                       <div>
                         <button
                           className="w-full text-left hover:bg-neutral-200"
-                          onClick={async () => await handlePuzzleInfo(puzzle)}
+                          onClick={async () =>
+                            await handlePuzzleSidebar(puzzle)
+                          }
                         >
                           <span
                             className={`${isMeta ? "font-semibold" : ""} ${
-                              isSolve
-                                ? "text-lime-600"
-                                : isUnlock
-                                  ? "text-amber-500"
-                                  : "text-neutral-500"
+                              searchedTeam
+                                ? isSolve
+                                  ? "text-lime-600"
+                                  : isUnlock
+                                    ? "text-amber-500"
+                                    : "text-neutral-500"
+                                : roundTextColor[round.name]
                             }`}
                           >
                             {puzzle}
@@ -464,11 +598,7 @@ export default function Graph() {
             <>
               {/* Title */}
               <div className="flex">
-                <button
-                  onClick={() => {
-                    setSearchedPuzzle(null);
-                  }}
-                >
+                <button onClick={clearSearchPuzzle}>
                   <ChevronLeft className="size-4" />
                 </button>
                 <p
@@ -476,7 +606,7 @@ export default function Graph() {
                     META_PUZZLES.includes(searchedPuzzle.puzzleId)
                       ? "font-bold"
                       : ""
-                  } ${searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500"}`}
+                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : roundTextColor[searchedPuzzle.round]}`}
                 >
                   {searchedPuzzle.puzzleId}
                 </p>
@@ -520,7 +650,7 @@ export default function Graph() {
               </p>
 
               {/* Guesses */}
-              {searchedTeam && (
+              {searchedPuzzle.guesses && (
                 <>
                   <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
                     Guesses
@@ -535,14 +665,39 @@ export default function Graph() {
                       {guess.guess}
                     </p>
                   ))}
+                </>
+              )}
 
-                  {/* Hints */}
+              {/* Hints */}
+              {searchedPuzzle.requestedHints && (
+                <>
                   <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
                     Hint Requests
                   </p>
-                  {searchedPuzzle.requestedHints?.map((hint, i) => (
-                    <p id={`hint-${i}`}>{hint.request}</p>
-                  ))}
+                  {searchedPuzzle.requestedHints
+                    ?.sort((a, b) => a.id - b.id)
+                    .map((hint) => (
+                      <div className="pb-1">
+                        <div className="flex justify-between space-x-2">
+                          <p id={`hint-${hint.id}`} className="break-all">
+                            {hint.request}
+                          </p>
+                          <div>
+                            <Link
+                              href={`/admin/hints/${hint.id}`}
+                              className="text-blue-500 hover:underline"
+                            >
+                              [{hint.id}]
+                            </Link>{" "}
+                          </div>
+                        </div>
+                        {hint.response && (
+                          <p className="break-all rounded-md text-gray-500">
+                            {">"} {hint.response}
+                          </p>
+                        )}
+                      </div>
+                    ))}
                 </>
               )}
             </>

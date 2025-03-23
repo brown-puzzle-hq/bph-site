@@ -83,7 +83,7 @@ export default async function AdminHamburgerMenu() {
     },
   ];
 
-  const hambergerMenuItems: MenuItem[] = [
+  const hamburgerMenuItems: MenuItem[] = [
     {
       title: "Dashboard",
       href: "/admin",
@@ -115,6 +115,11 @@ export default async function AdminHamburgerMenu() {
       type: "link",
     },
     {
+      title: "Graph",
+      href: "/admin/graph",
+      type: "link",
+    },
+    {
       title: "Queries",
       href: "/admin/sql",
       type: "link",
@@ -135,7 +140,7 @@ export default async function AdminHamburgerMenu() {
     <HamburgerMenu
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
-      hambergerMenuItems={hambergerMenuItems}
+      hamburgerMenuItems={hamburgerMenuItems}
       side="admin"
     />
   );

@@ -31,7 +31,7 @@ export default async function RootLayout({
           </Link>{" "}
           to your friendly neighborhood{" "}
           <Link
-            href="http://brownpuzzle.club/"
+            href="https://brownpuzzle.club/"
             className="text-link hover:underline"
           >
             puzzle club

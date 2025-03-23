@@ -27,22 +27,30 @@ const colorMap: Record<string, string> = {
 type Props = {
   leftMenuItems: MenuItem[];
   rightMenuItems: MenuItem[];
-  hambergerMenuItems: MenuItem[];
+  hamburgerMenuItems: MenuItem[];
   side: "hunt" | "admin";
 };
 
 export function HamburgerMenu({
   leftMenuItems,
   rightMenuItems,
-  hambergerMenuItems,
+  hamburgerMenuItems,
   side,
 }: Props) {
   const pathName = usePathname();
   const baseClassName =
-    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 px-1.5 active:bg-opacity-20 bg-slate-400";
+    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 px-1.5 hover:bg-slate-400 bg-slate-400";
   const elementClassName = cn(baseClassName, "py-1");
   const linkClassName = (href: string | undefined) =>
-    cn(baseClassName, "py-[7px]", pathName === href ? "bg-opacity-20" : "");
+    cn(
+      baseClassName,
+      "py-[7px]",
+      pathName === href
+        ? side === "hunt"
+          ? "bg-opacity-30 bg-black"
+          : "bg-opacity-20"
+        : "",
+    );
   return (
     <nav
       className={`fixed z-50 flex w-full items-center justify-between ${colorMap[side]} bg-opacity-30 p-[10px] backdrop-blur-md backdrop-filter md:p-3`}
@@ -109,7 +117,7 @@ export function HamburgerMenu({
           className={`w-full ${colorMap[side]} border-0 ${side == "hunt" ? "bg-opacity-30 backdrop-blur-md backdrop-filter" : ""}`}
         >
           <nav className="flex flex-col items-center space-y-2">
-            {hambergerMenuItems.map((item) => (
+            {hamburgerMenuItems.map((item) => (
               <React.Fragment key={item.title}>
                 <SheetTrigger asChild>
                   {item.type == "element" ? (

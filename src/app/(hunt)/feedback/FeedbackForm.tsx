@@ -106,7 +106,7 @@ export default function FeedbackForm({
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-inherit text-main-text focus-visible:ring-offset-0"
+                        className="bg-inherit text-main-text placeholder:text-white/40 focus-visible:ring-offset-0"
                         placeholder="No response yet"
                         {...field}
                       />

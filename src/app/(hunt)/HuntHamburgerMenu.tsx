@@ -64,13 +64,13 @@ export async function HuntHamburgerMenu() {
     });
   }
 
-  const hambergerMenuItems = [...leftMenuItems, ...rightMenuItems];
+  const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
   return (
     <HamburgerMenu
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
-      hambergerMenuItems={hambergerMenuItems}
+      hamburgerMenuItems={hamburgerMenuItems}
       side="hunt"
     />
   );

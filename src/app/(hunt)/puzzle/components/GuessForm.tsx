@@ -114,7 +114,6 @@ export default function GuessForm({
           )}
         />
         <Button
-          className="hover:bg-otherblue"
           type="submit"
           disabled={
             !form.watch("guess") ||

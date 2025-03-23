@@ -277,6 +277,7 @@ export function ProfileForm({
       if (session?.user?.id !== id && session?.user?.role === "admin") {
         router.push("/admin/teams");
       } else {
+        update({ role: null });
         await logout();
       }
     }
@@ -335,7 +336,7 @@ export function ProfileForm({
                   </span>
                   <FormMessage className="text-error" />
                 </FormLabel>
-                <FormControl className="">
+                <FormControl className="placeholder:text-white/40">
                   <Input placeholder="Josiah Carberry" {...field} />
                 </FormControl>
                 <FormDescription>
@@ -366,7 +367,7 @@ export function ProfileForm({
                   name={`members.${index}.name`}
                   render={({ field }) => (
                     <FormItem className="w-1/2">
-                      <FormControl className="text-main-text placeholder:text-main-accent">
+                      <FormControl className="text-main-text placeholder:text-white/40">
                         <Input
                           className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
                           {...field}
@@ -410,7 +411,7 @@ export function ProfileForm({
                   name={`members.${index}.email`}
                   render={({ field }) => (
                     <FormItem className="w-1/2">
-                      <FormControl className="text-main-text placeholder:text-main-accent">
+                      <FormControl className="text-main-text placeholder:text-white/40">
                         <Input
                           className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "border-red-300" : ""} text-current shadow-none focus-visible:ring-transparent`}
                           {...field}
@@ -451,7 +452,7 @@ export function ProfileForm({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-7 p-1 hover:bg-footer-bg hover:text-main-text focus-visible:bg-footer-bg focus-visible:ring-0"
+                  className="h-7 w-7 p-1 hover:bg-black hover:bg-opacity-20 focus-visible:bg-black focus-visible:bg-opacity-20 focus-visible:ring-0"
                   disabled={
                     fields.length == 1 &&
                     form.watch("members")[0]?.name === "" &&
