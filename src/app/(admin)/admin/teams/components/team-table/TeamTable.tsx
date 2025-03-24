@@ -269,7 +269,7 @@ export function TeamTable<TData, TValue>({
                             <button
                               className={cn(
                                 colorMap[currValue],
-                                "rounded-md px-1 font-medium outline-none",
+                                "rounded-md px-1 font-medium outline-none transition-opacity",
                                 Object.keys(editedRows).length &&
                                   !editedRows[teamId]?.[field] &&
                                   "opacity-50",
