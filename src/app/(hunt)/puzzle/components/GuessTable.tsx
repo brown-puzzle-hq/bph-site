@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
 
-export default function PreviousGuessTable({
+export default function GuessTable({
   puzzleAnswer,
   previousGuesses,
   partialSolutions,

@@ -1,11 +1,10 @@
-import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
 import { followUps, guesses, hints, unlocks } from "@/db/schema";
 import { and, asc, eq } from "drizzle-orm";
 import Toast from "../components/hint-page/Toast";
-import PreviousHintTable from "../components/hint-page/AdminHintPage";
-import PreviousGuessTable from "~/app/(hunt)/puzzle/components/PreviousGuessTable";
-import { IN_PERSON, REMOTE } from "~/hunt.config";
+import AdminHintThread from "../components/hint-page/AdminHintThread";
+import GuessTable from "~/app/(hunt)/puzzle/components/GuessTable";
+import { IN_PERSON, REMOTE, ROUNDS } from "~/hunt.config";
 
 export default async function Page({
   params,
@@ -14,12 +13,6 @@ export default async function Page({
   params: Promise<{ slug: number }>;
   searchParams?: { reply?: boolean };
 }) {
-  // Authentication
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Not authorized.");
-  }
-
   // Check if slug is a valid number
   const { slug } = await params;
   const reply = searchParams?.reply;
@@ -53,6 +46,15 @@ export default async function Page({
         orderBy: [asc(followUps.time)],
       },
     },
+    columns: {
+      id: true,
+      request: true,
+      response: true,
+      status: true,
+      requestTime: true,
+      claimTime: true,
+      responseTime: true,
+    },
   });
 
   if (!hint) {
@@ -70,8 +72,8 @@ export default async function Page({
       await db.query.unlocks.findFirst({
         columns: { unlockTime: true },
         where: and(
-          eq(unlocks.teamId, hint.teamId),
-          eq(unlocks.puzzleId, hint.puzzleId),
+          eq(unlocks.teamId, hint.team.id),
+          eq(unlocks.puzzleId, hint.puzzle.id),
         ),
       })
     )?.unlockTime ??
@@ -81,29 +83,43 @@ export default async function Page({
 
   const previousGuesses = await db.query.guesses.findMany({
     where: and(
-      eq(guesses.teamId, hint.teamId),
-      eq(guesses.puzzleId, hint.puzzleId),
+      eq(guesses.teamId, hint.team.id),
+      eq(guesses.puzzleId, hint.puzzle.id),
     ),
   });
+
+  // Get partial solutions and tasks
+  const roundName = ROUNDS.find((round) =>
+    round.puzzles.includes(hint.puzzle.id),
+  )?.name.toLowerCase();
+
+  const module = await import(
+    `../../../.../../../(hunt)/puzzle/(${roundName})/${hint.puzzle.id}/data.tsx`
+  ).catch(() => null);
+
+  const partialSolutions = module?.partialSolutions ?? {};
+  const tasks = module?.tasks ?? {};
 
   return (
     <div className="mx-auto mb-12 flex max-w-[calc(min(100vw,968px))] flex-col items-center px-4">
       <h1 className="px-4 pb-4">Hint #{hint.id}</h1>
-      <PreviousHintTable
-        hint={hint}
-        unlockTime={unlockTime}
-        reply={reply ? hintId : undefined}
-      />
+      <div className="w-full pb-4">
+        <AdminHintThread
+          hint={hint}
+          unlockTime={unlockTime}
+          reply={reply ? hintId : undefined}
+        />
+      </div>
       {previousGuesses.length > 0 && (
-        <div className="w-full max-w-3xl space-y-2">
+        <div className="w-full space-y-2">
           <p className="w-full text-center text-sm font-semibold text-zinc-700">
-            Previous Guesses
+            Team's Guesses
           </p>
-          <PreviousGuessTable
+          <GuessTable
             puzzleAnswer={hint.puzzle.answer}
             previousGuesses={previousGuesses}
-            partialSolutions={{}} // TODO: Import from puzzle
-            tasks={{}} // TODO: Import from puzzle
+            partialSolutions={partialSolutions}
+            tasks={tasks}
           />
         </div>
       )}

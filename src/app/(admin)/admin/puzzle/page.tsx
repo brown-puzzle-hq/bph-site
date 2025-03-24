@@ -63,44 +63,20 @@ export default async function Home() {
 
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
-      // Check if there is a body, solution, and copy text
-      var inPersonBody;
-      var remoteBody;
-      var solutionBody;
-      var copyText;
-      try {
-        // Try to import the puzzle data from the hunt folder
-        const module = await import(
-          `../../../(hunt)/puzzle/(${ROUNDS.find((round) => round.puzzles.includes(puzzle.id))?.name.toLowerCase()})/${puzzle.id}/data.tsx`
-        );
-        inPersonBody = !!module.inPersonBody;
-        remoteBody = !!module.remoteBody;
-        solutionBody = !!module.solutionBody;
-        copyText = module.copyText;
-      } catch (e) {
-        // try {
-        //   // Try to import from the dev folder
-        //   const module = await import(
-        //     `../../../(hunt)/puzzle/(dev)/${puzzle.id}/data.tsx`
-        //   );
-        //   inPersonBody = !!module.inPersonBody;
-        //   remoteBody = !!module.remoteBody;
-        //   solutionBody = !!module.solutionBody;
-        //   copyText = module.copyText;
-        // } catch (e) {
-        inPersonBody = null;
-        remoteBody = null;
-        solutionBody = null;
-        copyText = null;
-        // }
-      }
+      const roundName = ROUNDS.find((round) =>
+        round.puzzles.includes(puzzle.id),
+      )?.name.toLowerCase();
+
+      const module = await import(
+        `../../../(hunt)/puzzle/(${roundName})/${puzzle.id}/data.tsx`
+      ).catch(() => null);
 
       return {
         ...puzzle,
-        remoteBody: remoteBody,
-        inPersonBody: inPersonBody,
-        solutionBody: solutionBody,
-        copyText: copyText,
+        inPersonBody: module?.inPersonBody ?? null,
+        remoteBody: module?.remoteBody ?? null,
+        solutionBody: module?.solutionBody ?? null,
+        copyText: module?.copyText ?? null,
       };
     }),
   );

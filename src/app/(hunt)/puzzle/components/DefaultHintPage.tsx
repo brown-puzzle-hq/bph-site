@@ -6,7 +6,7 @@ import { eq, and, asc } from "drizzle-orm";
 import { followUps, solves, hints, puzzles } from "~/server/db/schema";
 import { canViewPuzzle } from "../actions";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
-import PreviousHintTable from "./HuntHintPage";
+import HuntHintThreads from "./HuntHintThreads";
 
 export default async function DefaultHintPage({
   puzzleId,
@@ -95,7 +95,7 @@ export default async function DefaultHintPage({
 
   return (
     <div className="mb-12 w-full max-w-4xl">
-      <PreviousHintTable
+      <HuntHintThreads
         previousHints={previousHints}
         hintRequestState={hintState}
         teamDisplayName={session.user?.displayName}

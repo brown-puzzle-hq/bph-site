@@ -3,7 +3,7 @@ import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
 import { puzzles, solves, guesses, errata } from "~/server/db/schema";
 import { redirect } from "next/navigation";
-import PreviousGuessTable from "./PreviousGuessTable";
+import GuessTable from "./GuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
 import { canViewPuzzle } from "../actions";
@@ -146,7 +146,7 @@ export default async function DefaultPuzzlePage({
       </div>
 
       <div className="mx-auto max-w-3xl">
-        <PreviousGuessTable
+        <GuessTable
           puzzleAnswer={puzzleAnswer}
           previousGuesses={previousGuesses}
           partialSolutions={partialSolutions}

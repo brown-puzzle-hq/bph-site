@@ -4,7 +4,7 @@ import { useState, useEffect, startTransition } from "react";
 import { useSession } from "next-auth/react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
-import { EyeOff } from "lucide-react";
+import { EyeOff, RefreshCw, Waypoints } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { insertHintResponse } from "../../actions";
 import { toast } from "~/hooks/use-toast";
@@ -74,12 +74,13 @@ type FollowUp = {
   message: string;
 };
 
-export default function PreviousHintTable({
+export default function AdminHintThread({
   hint,
   unlockTime,
   reply,
 }: TableProps) {
   const { data: session } = useSession();
+  const [statusLoading, setStatusLoading] = useState(true);
 
   const handleStatus = async (
     selectedStatus: "no_response" | "answered" | "refunded",
@@ -88,8 +89,10 @@ export default function PreviousHintTable({
       ...prev,
       status: selectedStatus,
     }));
+    setStatusLoading(true);
     startTransition(async () => {
       const { error, title } = await editHintStatus(hint.id, selectedStatus);
+      setStatusLoading(false);
       if (error) {
         toast({
           variant: "destructive",
@@ -274,6 +277,7 @@ export default function PreviousHintTable({
         block: "center",
       });
     }
+    setStatusLoading(false);
   }, []);
 
   useEffect(() => {
@@ -282,10 +286,11 @@ export default function PreviousHintTable({
 
   return (
     <>
-      <div className="grid w-full grid-cols-1 gap-4 text-sm text-zinc-700 sm:grid-cols-2">
+      {/* Header */}
+      <div className="grid w-full grid-cols-1 gap-4 py-4 text-sm text-zinc-700 sm:grid-cols-2">
         <div>
-          <p className="w-full truncate text-ellipsis">
-            <span className="font-semibold">Team: </span>
+          <div className="flex w-full flex-row items-center space-x-1 truncate text-ellipsis">
+            <span className="font-semibold">Team:</span>
             <Link
               href={`/teams/${hint.team.id}`}
               className="text-blue-500 hover:underline"
@@ -293,9 +298,20 @@ export default function PreviousHintTable({
             >
               {hint.team.displayName} ({hint.team.id})
             </Link>
-          </p>
-          <p>
-            <span className="font-semibold">Puzzle: </span>
+            <div className="flex items-center text-blue-500">
+              [
+              <Link
+                href={`/admin/graph?team=${hint.team.id}`}
+                className="hover:opacity-85"
+              >
+                <Waypoints className="size-4" />
+              </Link>
+              ]
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-1">
+            <span className="font-semibold">Puzzle:</span>
             <Link
               href={`/puzzle/${hint.puzzle.id}`}
               className="text-blue-500 hover:underline"
@@ -303,7 +319,18 @@ export default function PreviousHintTable({
             >
               {hint.puzzle.name}
             </Link>
-          </p>
+            <div className="flex items-center text-blue-500">
+              [
+              <Link
+                href={`/admin/graph?puzzle=${hint.puzzle.id}`}
+                className="hover:opacity-85"
+              >
+                <Waypoints className="size-4" />
+              </Link>
+              ]
+            </div>
+          </div>
+
           <p>
             <span className="font-semibold">Claimer: </span>
             {hint.claimer?.displayName}
@@ -328,6 +355,7 @@ export default function PreviousHintTable({
                 </SelectContent>
               </Select>
             )}
+            {statusLoading && <RefreshCw className="size-4 animate-spin" />}
           </div>
         </div>
         <div>
@@ -361,6 +389,8 @@ export default function PreviousHintTable({
           </p>
         </div>
       </div>
+
+      {/* Hint table */}
       <Table className="table-fixed">
         <TableBody>
           {/* Hint request row */}

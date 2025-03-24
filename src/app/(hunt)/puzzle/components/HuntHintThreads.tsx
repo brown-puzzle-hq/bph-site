@@ -68,7 +68,7 @@ type FollowUp = {
   message: string;
 };
 
-export default function PreviousHintTable({
+export default function HuntHintThreads({
   previousHints,
   hintRequestState,
   teamDisplayName,
