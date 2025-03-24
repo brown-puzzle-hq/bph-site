@@ -38,6 +38,10 @@ export function HamburgerMenu({
   side,
 }: Props) {
   const pathName = usePathname();
+  const [optimisticPath, setOptimisticPath] = React.useState<string>(pathName);
+  const handleClick = (href: string) => {
+    setOptimisticPath(href);
+  };
   const baseClassName =
     "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 px-1.5 hover:bg-slate-400 bg-slate-400";
   const elementClassName = cn(baseClassName, "py-1");
@@ -45,7 +49,7 @@ export function HamburgerMenu({
     cn(
       baseClassName,
       "py-[7px]",
-      pathName === href
+      optimisticPath === href
         ? side === "hunt"
           ? "bg-opacity-30 bg-black"
           : "bg-opacity-20"
@@ -68,6 +72,7 @@ export function HamburgerMenu({
                     href={item.href!}
                     prefetch={false}
                     className={linkClassName(item.href)}
+                    onClick={() => handleClick(item.href!)}
                   >
                     {item.title}
                   </Link>
@@ -89,8 +94,9 @@ export function HamburgerMenu({
                 ) : (
                   <Link
                     href={item.href!}
-                    className={linkClassName(item.href)}
                     prefetch={false}
+                    className={linkClassName(item.href)}
+                    onClick={() => handleClick(item.href!)}
                   >
                     {item.title}
                   </Link>
