@@ -30,6 +30,7 @@ export async function insertErratum(puzzleId: string, description: string) {
   await db.insert(errata).values({
     puzzleId,
     description,
+    timestamp: new Date(),
   });
 
   let emails: string[] = [];
