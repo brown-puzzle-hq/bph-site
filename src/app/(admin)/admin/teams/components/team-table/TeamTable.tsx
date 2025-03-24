@@ -269,12 +269,13 @@ export function TeamTable<TData, TValue>({
                             <button
                               className={cn(
                                 colorMap[currValue],
-                                "font-medium outline-none",
-                                editedRows[teamId]?.[field] &&
-                                  "bg-red-900 text-red-200",
+                                "rounded-md px-1 font-medium outline-none",
+                                Object.keys(editedRows).length &&
+                                  !editedRows[teamId]?.[field] &&
+                                  "opacity-50",
                                 isCompact
-                                  ? "py-0.25 rounded-2xl px-1 text-xs"
-                                  : "rounded-md px-1 py-0.5",
+                                  ? "py-0.25 flex items-center text-xs"
+                                  : "py-0.5",
                               )}
                               onClick={() =>
                                 handleEditRow(teamId, field, cellValue)
