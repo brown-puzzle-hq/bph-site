@@ -230,9 +230,9 @@ Most documentation out there is still for v4, so check that you are reading docu
     1. Register (`src/app/register`)
     2. Login (`src/app/login`)
     3. Make guesses (`src/app/puzzle/components/GuessForm.tsx`)
-    4. See previous guesses (`src/app/puzzle/components/PreviousGuessTable.tsx`)
+    4. See guesses (`src/app/puzzle/components/GuessTable.tsx`)
     5. Request hints (`src/app/puzzle/components/HintForm.tsx`)
-    6. See previous hints (`src/app/puzzle/components/PreviousHintTable.tsx`)
+    6. See hints (`src/app/puzzle/components/HuntHintThreads.tsx`)
     7. See the leaderboard (`src/app/leaderboard`)
 
 3. Admins can:

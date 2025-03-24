@@ -1,7 +1,6 @@
 "use client";
 
 import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
-import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -25,7 +24,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { deleteTeam, updateTeam } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
-import { X } from "lucide-react";
+import { AlertCircle, X } from "lucide-react";
 import { IN_PERSON } from "~/hunt.config";
 import { logout } from "../../login/actions";
 import {
