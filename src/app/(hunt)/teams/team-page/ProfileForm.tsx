@@ -452,7 +452,7 @@ export function ProfileForm({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-7 p-1 hover:bg-black hover:bg-opacity-20 focus-visible:bg-black focus-visible:bg-opacity-20 focus-visible:ring-0"
+                  className="h-7 w-7 p-1 hover:bg-black/20 focus-visible:bg-black/20 focus-visible:ring-0"
                   disabled={
                     fields.length == 1 &&
                     form.watch("members")[0]?.name === "" &&
@@ -460,7 +460,7 @@ export function ProfileForm({
                   }
                   onClick={() => remove(index)}
                 >
-                  <X />
+                  <X className="text-main-text" />
                 </Button>
               </div>
             ))}
@@ -598,7 +598,7 @@ export function ProfileForm({
                     </div>
                     <FormControl>
                       <Switch
-                        className="focus-visible:ring-offset-0 data-[state=checked]:bg-violet-400 data-[state=unchecked]:bg-violet-950"
+                        className="focus-visible:ring-offset-0 data-[state=checked]:bg-white/50 data-[state=unchecked]:bg-black/50"
                         checked={form.watch("roomNeeded")}
                         onCheckedChange={field.onChange}
                       />
@@ -805,9 +805,9 @@ export function ProfileForm({
               isDirty() ? "translate-y-0" : "translate-y-[5rem]"
             }`}
           >
-            <Alert className="w-full border-footer-bg bg-slate-300 p-2 shadow-lg">
+            <Alert className="w-full border-0 bg-slate-700/50 p-2 shadow-lg backdrop-blur-md backdrop-filter">
               <div className="flex items-center justify-between">
-                <AlertDescription className="flex items-center space-x-2">
+                <AlertDescription className="flex items-center space-x-2 text-main-text">
                   <AlertCircle className="h-4 w-4" />
                   <span className="hidden sm:block">
                     Careful — you have unsaved changes!

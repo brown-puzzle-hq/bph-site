@@ -384,7 +384,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 p-1 hover:bg-black hover:bg-opacity-20 focus-visible:bg-black focus-visible:bg-opacity-20 focus-visible:ring-0"
+                className="h-7 w-7 p-1 hover:bg-black/20 focus-visible:bg-black/20 focus-visible:ring-0"
                 disabled={
                   fields.length == 1 &&
                   form.watch("members")[0]?.name === "" &&
@@ -392,7 +392,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 }
                 onClick={() => remove(index)}
               >
-                <X className="text-white" />
+                <X className="text-main-text" />
               </Button>
             </div>
           ))}
@@ -511,7 +511,7 @@ export function RegisterForm({}: RegisterFormProps) {
                   </div>
                   <FormControl className="text-main-text">
                     <Switch
-                      className="focus-visible:ring-offset-0 data-[state=checked]:bg-violet-400 data-[state=unchecked]:bg-violet-950"
+                      className="focus-visible:ring-offset-0 data-[state=checked]:bg-white/50 data-[state=unchecked]:bg-black/50"
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
