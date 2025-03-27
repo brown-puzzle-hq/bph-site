@@ -85,8 +85,8 @@ export const SEQUENCES: Sequence[] = [
     icon: "✈️",
     puzzles: [
       "find-ben",
-      "the-snack-zone",
       "bluenos-puzzle-box",
+      "the-snack-zone",
       "color-transfer",
     ],
   },

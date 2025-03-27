@@ -32,9 +32,9 @@ export const inPersonBody = (
 
     <div className="border-[2px] border-black bg-gray-500 px-8 py-12">
       <div className="grid grid-cols-3 gap-[2px] bg-black p-[2px] shadow-lg">
-        <div className="bg-white text-center text-white">
+        <div className="flex flex-col items-center justify-center bg-white text-white">
           <Image
-            src={SNACK_I}
+            src={SNACK_A}
             alt=""
             width={1280}
             height={721}
@@ -42,9 +42,9 @@ export const inPersonBody = (
             draggable="false"
           />
         </div>
-        <div className="bg-white text-center text-white">
+        <div className="flex flex-col items-center justify-center bg-white text-white">
           <Image
-            src={SNACK_D}
+            src={SNACK_B}
             alt=""
             width={1280}
             height={721}
@@ -52,47 +52,7 @@ export const inPersonBody = (
             draggable="false"
           />
         </div>
-        <div className="bg-white text-center text-white">
-          <Image
-            src={SNACK_G}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [I]: NZ$5.02
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [D]: NZ$5.03
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [G]: NZ$5.04
-        </div>
-
-        <div className="bg-white text-center text-white">
-          <Image
-            src={SNACK_F}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="bg-white text-center text-white">
-          <Image
-            src={SNACK_E}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="bg-white text-center text-white">
+        <div className="flex flex-col items-center justify-center bg-white text-white">
           <Image
             src={SNACK_C}
             alt=""
@@ -103,18 +63,18 @@ export const inPersonBody = (
           />
         </div>
         <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [F]: NZ$5.05
+          AU$10.04
         </div>
         <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [E]: NZ$5.08
+          AU$10.02
         </div>
         <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [C]: €7.03
+          €7.03
         </div>
 
-        <div className="bg-white text-center text-white">
+        <div className="flex flex-col items-center justify-center bg-white text-white">
           <Image
-            src={SNACK_B}
+            src={SNACK_D}
             alt=""
             width={1280}
             height={721}
@@ -122,9 +82,9 @@ export const inPersonBody = (
             draggable="false"
           />
         </div>
-        <div className="bg-white text-center text-white">
+        <div className="flex flex-col items-center justify-center bg-white text-white">
           <Image
-            src={SNACK_A}
+            src={SNACK_E}
             alt=""
             width={1280}
             height={721}
@@ -132,7 +92,37 @@ export const inPersonBody = (
             draggable="false"
           />
         </div>
-        <div className="bg-white text-center text-white">
+        <div className="flex flex-col items-center justify-center bg-white text-white">
+          <Image
+            src={SNACK_F}
+            alt=""
+            width={1280}
+            height={721}
+            className="mb-4"
+            draggable="false"
+          />
+        </div>
+        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
+          NZ$5.03
+        </div>
+        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
+          NZ$5.08
+        </div>
+        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
+          NZ$5.05
+        </div>
+
+        <div className="flex flex-col items-center justify-center bg-white text-white">
+          <Image
+            src={SNACK_G}
+            alt=""
+            width={1280}
+            height={721}
+            className="mb-4"
+            draggable="false"
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center bg-white text-white">
           <Image
             src={SNACK_H}
             alt=""
@@ -142,14 +132,24 @@ export const inPersonBody = (
             draggable="false"
           />
         </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [B]: AU$10.02
+        <div className="flex flex-col items-center justify-center bg-white text-white">
+          <Image
+            src={SNACK_I}
+            alt=""
+            width={1280}
+            height={721}
+            className="mb-4"
+            draggable="false"
+          />
         </div>
         <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [A]: AU$10.04
+          NZ$5.04
         </div>
         <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          [H]: ¥12.07
+          ¥12.07
+        </div>
+        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
+          NZ$5.02
         </div>
       </div>
     </div>
@@ -305,3 +305,18 @@ export const partialSolutions: Record<string, string> = {};
  * more content will be added to the puzzle body. Keys must be in all caps, no spaces.
  */
 export const tasks: Record<string, JSX.Element> = {};
+
+/**
+
+[A]: AU$10.04
+[B]: AU$10.02
+[C]: €7.03
+[D]: NZ$5.03
+[E]: NZ$5.08
+[F]: NZ$5.05
+[G]: NZ$5.04
+[H]: ¥12.07
+[I]: NZ$5.02
+
+
+ */
