@@ -42,6 +42,7 @@ declare module "next-auth" {
     displayName: string;
     role: string;
     interactionMode: string;
+    hasBox: boolean;
   }
 }
 
@@ -77,6 +78,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
                 displayName: user.displayName,
                 role: user.role,
                 interactionMode: user.interactionMode,
+                hasBox: user.hasBox,
               };
             }
           }

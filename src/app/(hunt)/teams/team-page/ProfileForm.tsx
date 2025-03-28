@@ -252,6 +252,9 @@ export function ProfileForm({
       ) {
         update({ interactionMode: data.interactionMode });
       }
+      if (data.hasBox != form.formState.defaultValues?.hasBox) {
+        update({ hasBox: data.hasBox });
+      }
     }
 
     form.reset({

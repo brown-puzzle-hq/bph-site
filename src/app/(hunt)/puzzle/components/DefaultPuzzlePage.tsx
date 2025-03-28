@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
-import { puzzles, solves, guesses, errata } from "~/server/db/schema";
+import { teams, puzzles, solves, guesses, errata } from "~/server/db/schema";
 import { redirect } from "next/navigation";
 import GuessTable from "./GuessTable";
 import ErratumDialog from "./ErratumDialog";
@@ -9,6 +9,7 @@ import GuessForm from "./GuessForm";
 import { canViewPuzzle } from "../actions";
 import { NUMBER_OF_GUESSES_PER_PUZZLE, REMOTE } from "~/hunt.config";
 import CopyButton from "./CopyButton";
+import TokenRefresher from "./TokenRefresher";
 
 export default async function DefaultPuzzlePage({
   puzzleId,
@@ -98,13 +99,27 @@ export default async function DefaultPuzzlePage({
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
+  var refresh = false;
+  if (typeof session.user.hasBox === "undefined") {
+    const user = await db.query.teams.findFirst({
+      where: eq(teams.id, session.user.id),
+    });
+    const hasBox = user!.hasBox;
+    session.user.hasBox = hasBox;
+    refresh = true;
+  }
+
   // If there is an URL query, use that for admins and after the hunt ends
   // Otherwise, use the session interaction mode
   const actualInteractionMode =
     interactionMode &&
     (session.user.role === "admin" || new Date() > REMOTE.END_TIME)
       ? interactionMode
-      : session.user.interactionMode;
+      : session.user.interactionMode === "in-person"
+        ? "in-person"
+        : session.user.hasBox
+          ? "remote-box"
+          : "remote";
 
   const puzzleBody =
     actualInteractionMode === "remote-box"
@@ -115,6 +130,9 @@ export default async function DefaultPuzzlePage({
 
   return (
     <div className="w-full px-4">
+
+      {refresh && <TokenRefresher hasBox={session.user.hasBox} />}
+
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>
