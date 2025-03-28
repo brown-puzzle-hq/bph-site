@@ -105,20 +105,20 @@ export const registerFormSchema = z
   })
   .refine(
     (data) =>
-      !(data.interactionMode === "remote" && data.wantsBox === undefined),
-    {
-      message: "Required",
-      path: ["wantsBox"],
-    },
-  )
-  .refine(
-    (data) =>
       !(data.interactionMode === "in-person" && data.phoneNumber === ""),
     {
       message: "Required",
       path: ["phoneNumber"],
     },
   );
+// .refine(
+//   (data) =>
+//     !(data.interactionMode === "remote" && data.wantsBox === undefined),
+//   {
+//     message: "Required",
+//     path: ["wantsBox"],
+//   },
+// )
 
 type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
@@ -541,6 +541,8 @@ export function RegisterForm({}: RegisterFormProps) {
             />
           </div>
         )}
+
+        {/* Sold out of boxes
         {form.watch("interactionMode") === "remote" && (
           <div className="mb-8 space-y-8">
             <FormField
@@ -554,39 +556,31 @@ export function RegisterForm({}: RegisterFormProps) {
                     </span>
                     <FormMessage className="text-error" />
                   </FormLabel>
-                  <FormDescription>
+                  <FormDescription className="text-muted-foreground">
                     Are you interested in purchasing a box of physical puzzles?
-                    This is non-binding and only offered to remote teams.
+                    This is non-binding and only offered to remote teams.{" "}
                   </FormDescription>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={
-                        (value) =>
-                          field.onChange(
-                            value === "true"
-                              ? true
-                              : value === "false"
-                                ? false
-                                : undefined,
-                          ) // Map string to boolean
-                      }
+                      onValueChange={() => {}}
                       value={
                         field.value === undefined
                           ? undefined
                           : field.value === true
                             ? "true"
                             : "false"
-                      } // Map boolean to string
+                      }
                       className="flex flex-col space-y-1"
+                      disabled
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
-                        <RadioGroupItem value="true" />
+                        <RadioGroupItem value="true" disabled />
                         <FormLabel className="font-normal text-main-header">
                           Yes, I might be interested!
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
-                        <RadioGroupItem value="false" />
+                        <RadioGroupItem value="false" disabled />
                         <FormLabel className="font-normal text-main-header">
                           No thank you.
                         </FormLabel>
@@ -598,6 +592,7 @@ export function RegisterForm({}: RegisterFormProps) {
             />
           </div>
         )}
+      */}
 
         <Button type="submit">Register</Button>
 

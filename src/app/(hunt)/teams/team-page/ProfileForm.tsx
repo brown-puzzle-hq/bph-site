@@ -115,14 +115,14 @@ export const profileFormSchema = z
     confirmPassword: z.string().or(z.literal("")),
     hasBox: z.boolean(),
   })
-  .refine(
-    (data) =>
-      !(data.interactionMode === "remote" && data.wantsBox === undefined),
-    {
-      message: "Required",
-      path: ["wantsBox"],
-    },
-  )
+  // .refine(
+  //   (data) =>
+  //     !(data.interactionMode === "remote" && data.wantsBox === undefined),
+  //   {
+  //     message: "Required",
+  //     path: ["wantsBox"],
+  //   },
+  // )
   .refine(
     (data) =>
       !(data.interactionMode === "in-person" && data.phoneNumber === ""),
@@ -628,6 +628,7 @@ export function ProfileForm({
             </div>
           ) : (
             <div className="mb-8 space-y-8">
+              {/*
               <FormField
                 control={form.control}
                 name="wantsBox"
@@ -682,6 +683,7 @@ export function ProfileForm({
                   </FormItem>
                 )}
               />
+              */}
             </div>
           )}
 
@@ -824,9 +826,9 @@ export function ProfileForm({
                       !form
                         .watch("members")
                         .some((member: Member) => member?.email) ||
-                      (form.watch("interactionMode") === "remote" &&
-                        form.watch("wantsBox") !== true &&
-                        form.watch("wantsBox") !== false) ||
+                      // (form.watch("interactionMode") === "remote" &&
+                      //   form.watch("wantsBox") !== true &&
+                      //   form.watch("wantsBox") !== false) ||
                       form.watch("password") !== form.watch("confirmPassword")
                     }
                   >

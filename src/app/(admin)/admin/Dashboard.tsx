@@ -274,7 +274,8 @@ export async function Dashboard() {
             <CardContent>
               <div className="text-2xl font-bold">{numBoxesHad}</div>
               <p className="text-muted-foreground text-xs">
-                {numBoxesWanted} teams interested
+                {numBoxesWanted} teams interested{" "}
+                <span className="text-neutral-300">(frozen 3/27)</span>
               </p>
             </CardContent>
           </Card>

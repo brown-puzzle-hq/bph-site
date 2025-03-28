@@ -271,6 +271,14 @@ export default function Page() {
             <TOCSection sectionId={2} tocTitle="What are the Boxes?">
               <h2>What are the Boxes?</h2>
               <p>
+                [
+                <span className="italic">
+                  Update: Boxes are sold out! Thank you to everyone who bought a
+                  Box.
+                </span>
+                ]
+              </p>
+              <p>
                 Starting from <strong>12:00PM EST on March 8th</strong>, we will
                 be selling Boxes to 50 remote teams (first come, first served).
               </p>
