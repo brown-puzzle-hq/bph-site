@@ -99,7 +99,11 @@ export function CommandPalette() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (
+        session.data?.user?.role === "admin" &&
+        e.key === "k" &&
+        (e.metaKey || e.ctrlKey)
+      ) {
         e.preventDefault();
         e.stopPropagation();
         setOpen((open) => !open);
@@ -108,10 +112,6 @@ export function CommandPalette() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
-
-  if (session?.data?.user?.role != "admin") {
-    return <></>;
-  }
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>

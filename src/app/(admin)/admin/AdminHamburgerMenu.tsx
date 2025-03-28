@@ -13,7 +13,7 @@ export default async function AdminHamburgerMenu() {
   const OtherMenuItems = () => {
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger className="align-middle">
+        <DropdownMenuTrigger className="align-middle px-1.5 py-1">
           <Ellipsis className="mb-0.5 h-[20px]" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>

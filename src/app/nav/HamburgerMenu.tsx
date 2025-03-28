@@ -42,13 +42,12 @@ export function HamburgerMenu({
   const handleClick = (href: string) => {
     setOptimisticPath(href);
   };
-  const baseClassName =
-    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 px-1.5 hover:bg-slate-400 bg-slate-400";
-  const elementClassName = cn(baseClassName, "py-1");
+  const elementClassName =
+    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 hover:bg-slate-400 bg-slate-400";
   const linkClassName = (href: string | undefined) =>
     cn(
-      baseClassName,
-      "py-[7px]",
+      elementClassName,
+      "px-1.5 py-[7px]",
       optimisticPath === href
         ? side === "hunt"
           ? "bg-opacity-30 bg-black"
