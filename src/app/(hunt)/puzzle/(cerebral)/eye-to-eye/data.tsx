@@ -122,7 +122,118 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `https://docs.google.com/spreadsheets/d/1S7uqNniLW2H_2BTFQGTGmnbkEhljCxViomtvjcG5Ulg/edit?usp=sharing`;
+
+export const copyText = `
+  <style type="text/css">
+  .tg {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .tg td {
+    border: none;
+  }
+  .tg tr:first-child td,
+  .tg tr:first-child th {
+    border-top: 2px solid black;
+  }
+  .tg tr:last-child td,
+  .tg tr:last-child th {
+    border-bottom: 2px solid black;
+  }
+  .tg tr td:first-child,
+  .tg tr th:first-child {
+    border-left: 2px solid black;
+  }
+  .tg tr td:last-child,
+  .tg tr th:last-child {
+    border-right: 2px solid black;
+  }
+  .tg .tg-87il{background-color:#000000;text-align:left;vertical-align:bottom}
+  .tg .tg-ttet{background-color:#000000;text-align:left;vertical-align:bottom}
+  .tg .tg-1tnc{background-color:#000000;color:#333333;font-weight:bold;text-align:center;vertical-align:top}
+  .tg .tg-fll5{font-weight:bold;text-align:center;vertical-align:bottom}
+  .tg .tg-za14{text-align:left;vertical-align:bottom}
+  </style>
+  <table class="tg">
+  <tbody>
+    <tr>
+      <th class="tg-fll5"><span style="font-weight:bold">T</span></th>
+      <th class="tg-za14"></th>
+      <th class="tg-za14"></th>
+      <th class="tg-za14"></th>
+      <th class="tg-fll5"><span style="font-weight:bold">👁️</span></th>
+      <th class="tg-za14"></th>
+      <th class="tg-za14"></th>
+      <th class="tg-za14"></th>
+      <th class="tg-ttet"></th>
+    </tr>
+    <tr>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-fll5">👁️</td>
+      <td class="tg-za14"></td>
+      <td class="tg-1tnc"></td>
+      <td class="tg-ttet"></td>
+    </tr>
+    <tr>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-fll5">👁️</td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-ttet"></td>
+    </tr>
+    <tr>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-fll5"><span style="font-weight:bold">👁️</span></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-ttet"></td>
+    </tr>
+    <tr>
+      <td class="tg-87il"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-fll5"><span style="font-weight:bold">👁️</span></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+    </tr>
+    <tr>
+      <td class="tg-87il"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-fll5"><span style="font-weight:bold">👁️</span></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-ttet"></td>
+    </tr>
+    <tr>
+      <td class="tg-87il"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-fll5"><span style="font-weight:bold">👁️</span></td>
+      <td class="tg-za14"></td>
+      <td class="tg-za14"></td>
+      <td class="tg-ttet"></td>
+      <td class="tg-ttet"></td>
+    </tr>
+  </tbody></table>`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
