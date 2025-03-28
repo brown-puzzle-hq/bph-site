@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -26,7 +25,6 @@ export default function PuzzleTable({
   availablePuzzles: puzzleList;
   solvedPuzzles: { puzzleId: string }[];
 }) {
-  const router = useRouter();
   return (
     <div>
       {availableRounds.map((round) => (
@@ -55,13 +53,8 @@ export default function PuzzleTable({
                 )
                 .map((puzzle) => (
                   <TableRow
-                    onClick={(event) => {
-                      if (event.metaKey || event.ctrlKey) {
-                        window.open(`/puzzle/${puzzle.id}`, "_blank");
-                      } else {
-                        router.push(`/puzzle/${puzzle.id}`);
-                        router.refresh();
-                      }
+                    onClick={() => {
+                      window.open(`/puzzle/${puzzle.id}`, "_blank");
                     }}
                     className="hover:cursor-pointer hover:bg-white hover:bg-opacity-10"
                     key={puzzle.id}

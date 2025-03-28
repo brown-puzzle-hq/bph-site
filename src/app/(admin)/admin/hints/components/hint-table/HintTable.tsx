@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
   Filter,
@@ -36,6 +36,8 @@ interface HintTableProps<TData, TValue> {
   data: TData[];
 }
 
+import { getCookie, setCookie } from "typescript-cookie";
+
 export function HintTable<TData, TValue>({
   columns,
   data,
@@ -51,6 +53,9 @@ export function HintTable<TData, TValue>({
   const pageSize = 100;
 
   const [isCompact, setIsCompact] = useState(true);
+  useEffect(() => {
+    setIsCompact(getCookie("compact") !== "false");
+  }, []);
 
   const table = useReactTable({
     data,
@@ -141,7 +146,10 @@ export function HintTable<TData, TValue>({
         <div className="flex items-center space-x-2">
           <button
             className="hover:opacity-70"
-            onClick={() => setIsCompact(!isCompact)}
+            onClick={() => {
+              setIsCompact(!isCompact);
+              setCookie("compact", !isCompact);
+            }}
           >
             {isCompact ? (
               <Rows2 className="size-5" />
