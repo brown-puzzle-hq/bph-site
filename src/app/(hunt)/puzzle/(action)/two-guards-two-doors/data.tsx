@@ -48,14 +48,14 @@ export const inPersonBody = (
       through it.
     </div>
 
-    <div className="relative flex items-center justify-center gap-20">
+    <div className="relative flex min-w-[480px] items-center justify-center gap-20">
       <div className="relative">
         <Image src={DoorImage} width={200} height={400} alt="Door G" />
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <Image src={GImage} width={80} height={80} alt="Letter G" />
         </div>
 
-        <div className="absolute left-[150%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[50%] left-[150%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={350}
@@ -64,7 +64,7 @@ export const inPersonBody = (
             className="rotate-[230deg] scale-[1.75]"
           />
         </div>
-        <div className="absolute left-[150%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[50%] left-[150%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={150}
@@ -116,7 +116,7 @@ export const inPersonBody = (
           <Image src={TImage} width={80} height={80} alt="Letter T" />
         </div>
 
-        <div className="absolute left-[150%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[50%] left-[150%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={350}
@@ -125,7 +125,7 @@ export const inPersonBody = (
             className="rotate-[230deg] scale-[1.75]"
           />
         </div>
-        <div className="absolute left-[150%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[50%] left-[150%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={150}
@@ -175,7 +175,7 @@ export const inPersonBody = (
           <Image src={MImage} width={90} height={80} alt="Letter M" />
         </div>
 
-        <div className="absolute left-[170%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[70%] left-[170%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={350}
@@ -184,7 +184,7 @@ export const inPersonBody = (
             className="rotate-[310deg] scale-[1.75]"
           />
         </div>
-        <div className="absolute left-[170%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[70%] left-[170%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={150}
@@ -237,7 +237,7 @@ export const inPersonBody = (
           <Image src={RImage} width={80} height={80} alt="Letter R" />
         </div>
 
-        <div className="absolute left-[170%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[70%] left-[170%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={350}
@@ -246,7 +246,7 @@ export const inPersonBody = (
             className="rotate-[310deg] scale-[1.75]"
           />
         </div>
-        <div className="absolute left-[170%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[70%] left-[170%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={150}
@@ -301,7 +301,7 @@ export const inPersonBody = (
           <Image src={RImage} width={80} height={80} alt="Letter R" />
         </div>
 
-        <div className="absolute left-[170%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[70%] left-[170%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={350}
@@ -310,7 +310,7 @@ export const inPersonBody = (
             className="rotate-[310deg] scale-[1.75]"
           />
         </div>
-        <div className="absolute left-[170%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[70%] left-[170%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={150}
@@ -362,7 +362,7 @@ export const inPersonBody = (
           <Image src={SImage} width={80} height={80} alt="Letter S" />
         </div>
 
-        <div className="absolute left-[150%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[50%] left-[150%] top-[60%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={350}
@@ -371,7 +371,7 @@ export const inPersonBody = (
             className="rotate-[230deg] scale-[1.75]"
           />
         </div>
-        <div className="absolute left-[150%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute -right-[50%] left-[150%] top-[85%] z-10 -ml-20 -translate-x-1/2 -translate-y-1/2">
           <Image
             src={HandImage}
             width={150}
