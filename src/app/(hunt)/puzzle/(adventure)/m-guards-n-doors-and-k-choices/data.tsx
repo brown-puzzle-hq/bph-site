@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -20,9 +21,9 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
-
-export const remoteBody = inPersonBody;
+// Defined in RemoteBody.tsx
+export const remoteBody = <></>;
+export const remoteBoxBody = <></>;
 
 /**
  * The `solutionBody` renders in the solution page.

@@ -5,6 +5,7 @@ import {
   pgTableCreator,
   pgEnum,
   serial,
+  integer,
   text,
   timestamp,
   unique,
@@ -252,7 +253,7 @@ export const feedback = createTable("feedback", {
 });
 
 export const events = createTable("event", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
   startTime: timestamp("start_time", { withTimezone: true }).notNull(),
@@ -387,3 +388,43 @@ export const answerTokenRelations = relations(answerTokens, ({ one }) => ({
     references: [puzzles.id],
   }),
 }));
+
+// M Guards, N doors, and K Choices
+export const mnkDecisionEnum = pgEnum("mnk_decision", [
+  "door_1",
+  "door_2",
+  "door_3",
+  "stay",
+  "switch",
+]);
+
+export const mnkDecisionTypeEnum = pgEnum("mnk_decision_type", [
+  "door",
+  "final",
+]);
+
+export const mnk = createTable(
+  "m_guards_n_doors_k_choices",
+  {
+    id: serial("id").primaryKey(),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    run: integer("run").notNull(),
+    scenario: integer("scenario").notNull(), // 1-4
+    decision: mnkDecisionEnum("decision").notNull(),
+    decisionType: mnkDecisionTypeEnum("decision_type").notNull(), // door, final
+    time: timestamp("time", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    unique_decision: unique("unique_decision").on(
+      table.teamId,
+      table.run,
+      table.scenario,
+      table.decisionType,
+    ),
+  }),
+);
+
+export type MNKDecision = (typeof mnkDecisionEnum.enumValues)[number];
+export type MNKDecisionType = (typeof mnkDecisionTypeEnum.enumValues)[number];

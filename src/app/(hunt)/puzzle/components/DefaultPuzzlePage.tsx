@@ -3,13 +3,13 @@ import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
 import { teams, puzzles, solves, guesses, errata } from "~/server/db/schema";
 import { redirect } from "next/navigation";
-import GuessTable from "./GuessTable";
-import ErratumDialog from "./ErratumDialog";
-import GuessForm from "./GuessForm";
-import { canViewPuzzle } from "../actions";
+import GuessTable from "@/puzzle/components/GuessTable";
+import ErratumDialog from "@/puzzle/components/ErratumDialog";
+import GuessForm from "@/puzzle/components/GuessForm";
+import CopyButton from "@/puzzle/components/CopyButton";
+import TokenRefresher from "@/puzzle/components/TokenRefresher";
+import { canViewPuzzle } from "@/puzzle/actions";
 import { NUMBER_OF_GUESSES_PER_PUZZLE, REMOTE } from "~/hunt.config";
-import CopyButton from "./CopyButton";
-import TokenRefresher from "./TokenRefresher";
 
 export default async function DefaultPuzzlePage({
   puzzleId,
@@ -130,7 +130,6 @@ export default async function DefaultPuzzlePage({
 
   return (
     <div className="w-full px-4">
-
       {refresh && <TokenRefresher hasBox={session.user.hasBox} />}
 
       <div className="mx-auto max-w-3xl">

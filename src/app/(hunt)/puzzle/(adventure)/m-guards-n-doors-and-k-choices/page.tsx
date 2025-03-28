@@ -1,6 +1,12 @@
 import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
 import * as data from "./data";
 
+import { db } from "~/server/db";
+import { eq, sql } from "drizzle-orm";
+import { mnk } from "~/server/db/schema";
+import { auth } from "~/server/auth/auth";
+import RemoteBody from "./RemoteBody";
+
 export const metadata = {
   title: data.puzzleId
     .split("-")
@@ -21,12 +27,26 @@ export default async function Page({
 }: {
   searchParams?: { [key: string]: string | undefined };
 }) {
+  const session = await auth();
+  const teamId = session?.user?.id;
+  if (!teamId) return null;
+
+  const lastRun = await db
+    .select()
+    .from(mnk)
+    .where(
+      eq(
+        mnk.run,
+        sql`(SELECT MAX(${mnk.run}) FROM ${mnk} WHERE ${mnk.teamId} = ${teamId})`,
+      ),
+    );
+
   return (
     <DefaultPuzzlePage
       puzzleId={data.puzzleId}
       inPersonBody={data.inPersonBody}
-      remoteBoxBody={data.remoteBoxBody}
-      remoteBody={data.remoteBody}
+      remoteBoxBody={<RemoteBody run={lastRun} />}
+      remoteBody={<RemoteBody run={lastRun} />}
       copyText={data.copyText}
       partialSolutions={data.partialSolutions}
       tasks={data.tasks}
