@@ -6,6 +6,7 @@ import { eq, sql } from "drizzle-orm";
 import { mnk } from "~/server/db/schema";
 import { auth } from "~/server/auth/auth";
 import RemoteBody from "./RemoteBody";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: data.puzzleId
@@ -29,7 +30,7 @@ export default async function Page({
 }) {
   const session = await auth();
   const teamId = session?.user?.id;
-  if (!teamId) return null;
+  if (!teamId) redirect("/login");
 
   const lastRun = await db
     .select()
