@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   // Redirect register page to home page if the user is logged in
-  let session = await auth();
+  const session = await auth();
   if (session?.user?.role && session?.user?.role !== "admin") {
     redirect("/");
   }

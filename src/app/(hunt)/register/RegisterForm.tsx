@@ -126,7 +126,6 @@ type RegisterFormValues = z.infer<typeof registerFormSchema>;
 export function RegisterForm({}: RegisterFormProps) {
   const { update } = useSession();
   const router = useRouter();
-  router.prefetch("/");
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -189,7 +188,6 @@ export function RegisterForm({}: RegisterFormProps) {
         description: "Your team has been registered.",
       });
       router.push("/");
-      router.refresh();
     }
   };
 
