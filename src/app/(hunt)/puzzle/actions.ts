@@ -23,6 +23,7 @@ import {
   META_PUZZLES,
   NUMBER_OF_GUESSES_PER_PUZZLE,
   PUZZLE_UNLOCK_MAP,
+  ROUNDS,
 } from "~/hunt.config";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
 import { sendBotMessage, sendEmail, extractEmails } from "~/lib/utils";
@@ -131,7 +132,18 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   if (!puzzle) return { error: "Puzzle not found!" };
 
-  if (puzzle.guesses.length >= NUMBER_OF_GUESSES_PER_PUZZLE) {
+  const roundName = ROUNDS.find((round) =>
+    round.puzzles.includes(puzzleId),
+  )?.name.toLowerCase();
+  const module = await import(`./(${roundName})/${puzzleId}/data.tsx`).catch(
+    () => null,
+  );
+  const tasks = module?.tasks ?? {};
+
+  if (
+    puzzle.guesses.filter(({ guess }) => !(guess in tasks)).length >=
+    NUMBER_OF_GUESSES_PER_PUZZLE
+  ) {
     revalidatePath(`/puzzle/${puzzleId}`);
     return;
   }
