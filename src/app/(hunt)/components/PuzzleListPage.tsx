@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapIcon, Table } from "lucide-react";
+import { MapIcon, RefreshCw, Table } from "lucide-react";
 import PuzzleTable from "../puzzle/components/PuzzleTable";
 import EventTable from "../puzzle/components/EventTable";
 import { useState, useMemo, useEffect } from "react";
@@ -10,7 +10,11 @@ import dynamic from "next/dynamic";
 
 const Map = dynamic(() => import("./Map"), {
   ssr: false,
-  loading: () => <div className="flex justify-center">Loading...</div>,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center">
+      <RefreshCw className="size-40 animate-spin opacity-30" />
+    </div>
+  ),
 });
 
 type PuzzleListPageProps = {
@@ -32,10 +36,8 @@ export default function PuzzleListPage({
   finishedEvents,
   hasEventInputBox,
 }: PuzzleListPageProps) {
-  const [activeTab, setActiveTab] = useState("map");
-  useEffect(() => {
-    setActiveTab(getCookie("puzzle_view") ?? "map");
-  }, []);
+  const [activeTab, setActiveTab] = useState(() => getCookie("puzzle_view") ?? "map");
+  const [needMap, setNeedMap] = useState(activeTab === "map");
 
   // Will crash on mobile if not memoized
   const memoizedMap = useMemo(
@@ -46,11 +48,12 @@ export default function PuzzleListPage({
   );
 
   return (
-    <div className="grid min-h-[90vh]">
+    <div className="grid min-h-[calc(100vh-56px-32px)]">
       <Tabs
-        defaultValue={getCookie("puzzle_view")}
+        defaultValue={getCookie("puzzle_view") ?? "map"}
         onValueChange={(value) => {
           setActiveTab(value);
+          setNeedMap(true);
           setCookie("puzzle_view", value);
         }}
         className="col-start-1 row-start-1"
@@ -60,6 +63,7 @@ export default function PuzzleListPage({
           <TabsTrigger
             className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
             value="map"
+            onMouseEnter={() => setNeedMap(true)}
           >
             <MapIcon />
           </TabsTrigger>
@@ -73,7 +77,9 @@ export default function PuzzleListPage({
       </Tabs>
 
       {/* Map content */}
-      <div className={"col-start-1 row-start-1"}>{memoizedMap}</div>
+      {needMap && (
+        <div className={"col-start-1 row-start-1"}>{memoizedMap}</div>
+      )}
 
       {/* Table conent */}
       <div
