@@ -150,7 +150,7 @@ export default function Game() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    setWidth(window.screen.width);
+    setWidth(window.screen.width - 32);
   }, []);
 
   const handleScroll = () => {
@@ -176,7 +176,7 @@ export default function Game() {
       <div
         id="scrollDemo"
         ref={scrollRef}
-        className="no-scrollbar w-screen overflow-auto"
+        className="no-scrollbar w-[calc(100vw-32px)] overflow-auto"
         onScroll={handleScroll}
       >
         {/* TODO: should the scroll behavior be more subtle and kick in later? */}
@@ -208,22 +208,16 @@ export default function Game() {
         </button>
         <input
           type="range"
-          className="w-48 [&::-webkit-slider-runnable-track]:rounded-xl [&::-webkit-slider-runnable-track]:bg-footer-bg"
+          className="w-48 [&::-webkit-slider-runnable-track]:rounded-xl [&::-webkit-slider-runnable-track]:bg-footer-bg [&::-webkit-slider-thumb]:hover:cursor-pointer"
           defaultValue={1}
           min={1}
-          max={10}
+          max={20}
           step={1}
           onChange={(e) => setRate(Number(e.target.value))}
         />
         <p className="w-9 font-mono text-xl">
           {rate}
           <span className="text-lg">x</span>
-        </p>
-        {/* TODO: remove this */}
-        <p>
-          {scrollPosition >= width / 2 + WIDTH / 4 - HEIGHT / 16
-            ? "TRUE"
-            : "FALSE"}
         </p>
       </div>
     </div>
