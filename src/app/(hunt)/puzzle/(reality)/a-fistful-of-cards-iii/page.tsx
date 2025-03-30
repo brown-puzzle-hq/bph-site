@@ -1,10 +1,6 @@
 import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
 import * as data from "./data";
 
-export const metadata = {
-  title: "A Fistful of Cards III - Brown Puzzlehunt"
-};
-
 export default async function Page({
   searchParams,
 }: {

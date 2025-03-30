@@ -1,6 +1,10 @@
 import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "@/puzzle/components/DefaultHeader";
 
+export const metadata = {
+  title: "M Guards, N Doors, and K Choices - Brown Puzzlehunt"
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

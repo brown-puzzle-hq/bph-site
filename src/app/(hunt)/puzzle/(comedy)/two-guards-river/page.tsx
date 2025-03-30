@@ -1,9 +1,5 @@
 import * as data from "./data";
 
-export const metadata = {
-  title: "Two Guards:  Two Doors:  a Boat:  a River:  and a Cabbage - Brown Puzzlehunt"
-};
-
 export default async function Page() {
   return (
     <DefaultPuzzlePage

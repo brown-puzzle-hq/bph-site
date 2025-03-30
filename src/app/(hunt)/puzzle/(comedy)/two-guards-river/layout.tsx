@@ -1,6 +1,10 @@
 import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "@/puzzle/components/DefaultHeader";
 
+export const metadata = {
+  title: "Two Guards, Two Doors, a Boat, a River, and a Cabbage - Brown Puzzlehunt"
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

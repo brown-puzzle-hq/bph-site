@@ -1,10 +1,6 @@
 import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
 import * as data from "./data";
 
-export const metadata = {
-  title: "Partaking in a Nontrivial Amount of Fraud:  Embezzlement:  and Other Financial Crimes 3 - Brown Puzzlehunt"
-};
-
 export default async function Page({
   searchParams,
 }: {

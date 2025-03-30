@@ -1,10 +1,6 @@
 import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
 import * as data from "./data";
 
-export const metadata = {
-  title: "Watching Between the Lines - Brown Puzzlehunt"
-};
-
 export default async function Page({
   searchParams,
 }: {

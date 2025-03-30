@@ -1,6 +1,10 @@
 import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "@/puzzle/components/DefaultHeader";
 
+export const metadata = {
+  title: "Galileo Was Wrong - Brown Puzzlehunt"
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

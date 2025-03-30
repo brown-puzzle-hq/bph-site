@@ -8,10 +8,6 @@ import { auth } from "~/server/auth/auth";
 import RemoteBody from "./RemoteBody";
 import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "M Guards:  N Doors:  and K Choices - Brown Puzzlehunt"
-};
-
 export default async function Page({
   searchParams,
 }: {
