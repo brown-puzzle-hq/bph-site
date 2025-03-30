@@ -45,7 +45,7 @@ export default async function DefaultPuzzlePage({
   // TODO: which version should we show?
   if (!session?.user?.id) {
     return (
-      <div className="mb-12 w-full px-4">
+      <div className="w-full px-4">
         <div className="flex items-start justify-center space-x-2">
           <div className="w-fit">{inPersonBody}</div>
           {copyText && <CopyButton copyText={copyText} />}

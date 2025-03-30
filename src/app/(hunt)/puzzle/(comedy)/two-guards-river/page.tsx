@@ -30,7 +30,7 @@ async function DefaultPuzzlePage({
   tasks,
 }: {
   puzzleId: string;
-  inPersonBody: (isSolved: boolean) => React.JSX.Element;
+  inPersonBody: (isSolved: boolean) => React.ReactNode;
   copyText: string | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
@@ -49,7 +49,7 @@ async function DefaultPuzzlePage({
   // If user is not logged in, show puzzle without errata or guesses
   if (!session?.user?.id) {
     return (
-      <div className="mb-12 w-full px-4">
+      <div className="w-full px-4">
         <div className="flex items-start justify-center space-x-2">
           <div className="w-fit">{inPersonBody(true)}</div>
           {copyText && <CopyButton copyText={copyText} />}
@@ -100,14 +100,16 @@ async function DefaultPuzzlePage({
   const puzzleBody = inPersonBody;
 
   return (
-    <div className="mb-12 w-full px-4">
+    <div className="w-full px-4">
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>
 
-      <div className="flex items-start justify-center space-x-2">
-        <div className="w-fit">{puzzleBody(isSolved)}</div>
-        {copyText && <CopyButton copyText={copyText} />}
+      <div className="no-scrollbar overflow-auto">
+        <div className="mx-auto flex w-fit items-start justify-center space-x-2">
+          <div className="w-fit">{puzzleBody(isSolved)}</div>
+          {copyText && <CopyButton copyText={copyText} />}
+        </div>
       </div>
 
       <div className="mx-auto max-w-3xl">
