@@ -1,4 +1,4 @@
-import { auth } from "~/middleware";
+import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
