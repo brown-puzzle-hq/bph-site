@@ -2,7 +2,7 @@ import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
 import * as data from "./data";
 
 import { db } from "~/server/db";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { mnk } from "~/server/db/schema";
 import { auth } from "~/server/auth/auth";
 import RemoteBody from "./RemoteBody";
@@ -21,9 +21,12 @@ export default async function Page({
     .select()
     .from(mnk)
     .where(
-      eq(
-        mnk.run,
-        sql`(SELECT MAX(${mnk.run}) FROM ${mnk} WHERE ${mnk.teamId} = ${teamId})`,
+      and(
+        eq(
+          mnk.run,
+          sql`(SELECT MAX(${mnk.run}) FROM ${mnk} WHERE ${mnk.teamId} = ${teamId})`,
+        ),
+        eq(mnk.teamId, teamId),
       ),
     );
 

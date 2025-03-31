@@ -1,10 +1,11 @@
 "use server";
 import { db } from "~/server/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { mnk } from "~/server/db/schema";
 import { auth } from "~/server/auth/auth";
 import { MNKDecision, MNKDecisionType } from "~/server/db/schema";
-import { coolDownTime } from "./RemoteBody";
+
+const coolDownTime = 30 * 60 * 1000; // 30 minutes
 
 export async function insertMNKDecision(
   run: number,
@@ -18,15 +19,23 @@ export async function insertMNKDecision(
   if (scenario > 4) return { error: "Scenario must be between 1 and 4" };
 
   try {
-    const lastRun = await db.query.mnk.findFirst({
-      where: eq(mnk.teamId, teamId),
+    const lastFinalDecision = await db.query.mnk.findFirst({
+      where: and(
+        eq(mnk.teamId, teamId),
+        eq(mnk.decisionType, "final"),
+        eq(mnk.scenario, 4),
+      ),
       orderBy: ({ time }, { desc }) => desc(time),
     });
 
-    if (lastRun && new Date().getTime() < lastRun.time.getTime() + coolDownTime)
+    if (
+      lastFinalDecision &&
+      Date.now() < lastFinalDecision.time.getTime() + coolDownTime
+    ) {
       return {
         error: "You must wait 30 minutes before playing the interaction again.",
       };
+    }
 
     const result = await db
       .insert(mnk)
@@ -58,6 +67,7 @@ export async function insertMNKDecision(
           sql`(SELECT MAX(${mnk.run}) FROM ${mnk} WHERE ${mnk.teamId} = ${teamId})`,
         ),
       );
+
     return {
       error: "Error inserting decision. Updating to latest puzzle state.",
       lastRun,

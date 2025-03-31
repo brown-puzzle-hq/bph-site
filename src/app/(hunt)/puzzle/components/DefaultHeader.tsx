@@ -48,10 +48,11 @@ export default async function DefaultHeader({
     <div className="flex flex-col items-center px-4">
       <div className="flex flex-col space-y-3 sm:flex-row sm:space-x-2 sm:space-y-0">
         {sequences.map((seq) => (
-          <div className="flex space-x-2">
+          <div key={seq.name} className="flex space-x-2">
             {seq.puzzles.map((puzzId) =>
               unlocked[puzzId] ? (
                 <Link
+                  key={puzzId}
                   className="text-2xl"
                   href={`/puzzle/${puzzId}`}
                   prefetch={false}
