@@ -12,7 +12,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 import { login, logout } from "./actions";
@@ -26,7 +25,7 @@ export const loginFormSchema = z.object({
 
 export function LoginForm() {
   const { update } = useSession();
-  const [error, setError] = useState<string | null>(null);
+  const [shaking, setShaking] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -40,7 +39,12 @@ export function LoginForm() {
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
     const { error, session } = await login(data.id, data.password);
     if (error) {
-      setError(error);
+      const input = document.querySelector(
+        "input[name='password']",
+      ) as HTMLInputElement;
+      input?.select();
+      setShaking(true);
+      setTimeout(() => setShaking(false), 200);
     } else {
       update(session);
       if (session.data?.user?.role === "admin") {
@@ -49,7 +53,6 @@ export function LoginForm() {
         router.push("/");
       }
       router.refresh();
-      setError(null);
     }
   };
 
@@ -84,9 +87,13 @@ export function LoginForm() {
                 </Link>
               </div>
               <FormControl className="placeholder:text-white/40 focus-visible:ring-opacity-20">
-                <Input type="password" placeholder="password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="password"
+                  className={shaking ? "animate-shake" : undefined}
+                  {...field}
+                />
               </FormControl>
-              <FormMessage className="text-error">{error}</FormMessage>
             </FormItem>
           )}
         />

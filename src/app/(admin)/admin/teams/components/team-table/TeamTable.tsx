@@ -167,7 +167,8 @@ export function TeamTable<TData, TValue>({
       return acc;
     }, {});
     await updateTeam(editedTeams);
-    setEditedRows({});
+    // TODO: avoid flash some other way
+    setTimeout(() => setEditedRows({}), 30);
   };
 
   return (
@@ -190,9 +191,9 @@ export function TeamTable<TData, TValue>({
             <button
               className="hover:opacity-70"
               onClick={() => {
-              setIsCompact(!isCompact);
-              setCookie("compact", !isCompact);
-            }}
+                setIsCompact(!isCompact);
+                setCookie("compact", !isCompact);
+              }}
             >
               {isCompact ? (
                 <Rows2 className="size-5" />

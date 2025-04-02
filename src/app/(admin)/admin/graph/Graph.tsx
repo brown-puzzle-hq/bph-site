@@ -18,6 +18,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
+import { cn } from "~/lib/utils";
 
 const roundTextColor: Record<string, string> = {
   Action: "text-red-600",
@@ -60,12 +61,14 @@ export default function Graph() {
 
   // Guesses and hints for a puzzle
   const [puzzleQuery, setPuzzleQuery] = useState("");
+  const [puzzleQueryShaking, setPuzzleQueryShaking] = useState(false);
   const [searchedPuzzle, setSearchedPuzzle] = useState<null | SearchedPuzzle>(
     null,
   );
 
   // Individual team's solves and unlocks
   const [teamQuery, setTeamQuery] = useState("");
+  const [teamQueryShaking, setTeamQueryShaking] = useState(false);
   const [searchedTeam, setSearchedTeam] = useState<SearchedTeam | null>(null);
 
   const [showSidebar, setShowSidebar] = useState(false);
@@ -77,7 +80,17 @@ export default function Graph() {
       data.nodes.find((node) => node.id === puzzleQuery) ||
       data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
       null;
-    if (!node) return;
+    if (!node) {
+      const input = document.querySelector(
+        "input[name='puzzleQuery']",
+      ) as HTMLInputElement;
+      input?.select();
+      setPuzzleQueryShaking(true);
+      setTimeout(() => setPuzzleQueryShaking(false), 200);
+      return;
+    }
+
+    setPuzzleQuery("");
 
     // Focus on the node and highlight it
     if (fgRef.current) fgRef.current.centerAt(node.x, node.y, 1000);
@@ -110,7 +123,12 @@ export default function Graph() {
   const handleSearchTeam = async () => {
     const res = await getSearchedTeam(teamQuery);
     if ("error" in res) {
-      setTeamQuery("");
+      const input = document.querySelector(
+        "input[name='teamQuery']",
+      ) as HTMLInputElement;
+      input?.select();
+      setTeamQueryShaking(true);
+      setTimeout(() => setTeamQueryShaking(false), 200);
       setSearchedTeam(null);
       return;
     }
@@ -452,6 +470,7 @@ export default function Graph() {
             <User className="size-5" />
           </div>
           <input
+            name="teamQuery"
             placeholder="jcarberr"
             value={teamQuery}
             onChange={(e) => setTeamQuery(e.target.value)}
@@ -460,7 +479,10 @@ export default function Graph() {
                 handleSearchTeam();
               }
             }}
-            className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className={cn(
+              "z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+              teamQueryShaking && "animate-shake",
+            )}
             autoComplete="off"
             disabled={!!searchedTeam}
           />
@@ -489,16 +511,19 @@ export default function Graph() {
             <Puzzle className="size-5" />
           </div>
           <input
+            name="puzzleQuery"
             placeholder="example"
             value={puzzleQuery}
             onChange={(e) => setPuzzleQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setPuzzleQuery("");
                 handleSearchPuzzle();
               }
             }}
-            className="z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none"
+            className={cn(
+              "z-10 w-full border-b border-neutral-400 bg-transparent text-sm text-neutral-500 focus:outline-none",
+              puzzleQueryShaking && "animate-shake",
+            )}
             autoComplete="off"
           />
           <button
