@@ -23,11 +23,16 @@ export const puzzleId = "the-snack-zone";
  */
 export const inPersonBody = (
   <div className="max-w-3xl text-center">
-    <div className="mb-10 flex justify-center">
-      <video width="1280" height="721" controls>
-        <source src="/api/puzzle/the-snack-zone" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+    <div className="mb-4 flex justify-center">
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube-nocookie.com/embed/h3FAvml0EVU"
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      ></iframe>
     </div>
 
     <div className="border-[2px] border-black bg-gray-500 px-8 py-12">
@@ -320,3 +325,4 @@ export const tasks: Record<string, JSX.Element> = {};
 
 
  */
+

@@ -20,10 +20,17 @@ export const inPersonBody = (
       This is a sequence metapuzzle. It uses feeders from the ✈️ sequence.
     </div>
     <div className="max-w-2xl">
-      <video width="1280" height="721" controls className="mb-4">
-        <source src="/api/puzzle/color-transfer" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <div className="flex justify-center pb-4">
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube-nocookie.com/embed/UrX1BOCMXqE"
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
+      </div>
       <p className="pb-4">
         Your three tickets each entitle you to ride to stops on four trains, on
         the following lines, in the following order:

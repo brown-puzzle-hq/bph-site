@@ -13,17 +13,35 @@ export const puzzleId = "bluenos-puzzle-box";
 export const inPersonBody = (
   <div className="max-w-3xl text-center">
     <p className="mb-4 italic">This is an interactive puzzle.</p>
-    <video width="1280" height="721" controls className="mb-4">
-      <source src="/api/puzzle/bluenos-puzzle-box" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube-nocookie.com/embed/k2KJdVept8Y"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    ></iframe>
   </div>
 );
 
 export const remoteBoxBody = inPersonBody;
 
 export const remoteBody = (
-  <p>This puzzle is still being written... Submit WRECKING</p>
+  <div className="max-w-3xl text-center">
+    <p className="mb-4">
+      This puzzle is still being written... Submit WRECKING
+    </p>
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube-nocookie.com/embed/k2KJdVept8Y"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    ></iframe>
+  </div>
 );
 
 export const solutionBody = null;
