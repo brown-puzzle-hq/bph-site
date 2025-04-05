@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
 import { auth } from "~/server/auth/auth";
 import { IN_PERSON } from "~/hunt.config";
-import { sendBotMessage } from "~/lib/utils";
+import { sendBotMessage } from "~/lib/comms";
 
 export type TeamProperties = {
   displayName?: string;

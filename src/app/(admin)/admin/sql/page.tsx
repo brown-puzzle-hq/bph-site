@@ -7,7 +7,7 @@ import { EnlargedImage } from "~/components/ui/enlarged-component";
 
 import { queryDatabase } from "./actions";
 import CopyButton from "../puzzle/CopyButton";
-import { extractEmails } from "~/lib/utils";
+import { extractEmails } from "~/lib/comms";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("emails");

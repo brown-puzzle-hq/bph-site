@@ -1,32 +1,16 @@
 "use client";
 
-import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+// Hooks
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "~/hooks/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { deleteTeam, updateTeam } from "../actions";
-import { roleEnum, interactionModeEnum } from "~/server/db/schema";
-import { AlertCircle, X } from "lucide-react";
-import { IN_PERSON } from "~/hunt.config";
-import { logout } from "../../login/actions";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// UI components
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,29 +22,32 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { AlertCircle, X } from "lucide-react";
 
-export type Member = {
-  id?: number;
-  name: string | undefined;
-  email: string | undefined;
-};
-
-export function serializeMembers(members: Member[]): string {
-  return JSON.stringify(
-    members
-      .filter((person) => person.name || person.email)
-      .map((person) => [person.name, person.email]),
-  );
-}
-
-export function deserializeMembers(memberString: string): Member[] {
-  if (!memberString) return [];
-  return JSON.parse(memberString).map(([name, email]: [string, string]) => ({
-    id: undefined,
-    name,
-    email,
-  }));
-}
+// Other
+import { deleteTeam, updateTeam } from "../actions";
+import { logout } from "../../login/actions";
+import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
+import { roleEnum, interactionModeEnum } from "~/server/db/schema";
+import { IN_PERSON } from "~/hunt.config";
+import {
+  Member,
+  deserializeMembers,
+  serializeMembers,
+} from "~/lib/team-members";
 
 const zPhone = z.string().transform((arg, ctx) => {
   if (!arg) {
@@ -151,7 +138,7 @@ type TeamInfoFormProps = {
 };
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-function formatPhoneNumber(phoneNumber: string | null): string {
+export function formatPhoneNumber(phoneNumber: string | null): string {
   if (!phoneNumber) return "";
   const parsed = parsePhoneNumberFromString(phoneNumber);
   if (parsed && parsed.country === "US") {

@@ -16,8 +16,13 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
 } from "lucide-react";
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
+import { Team } from "~/server/db/schema";
+import { FormattedTime } from "~/lib/time";
+import { deserializeMembers } from "~/lib/team-members";
+import { formatPhoneNumber } from "src/app/(hunt)/teams/team-page/ProfileForm";
 import { cn } from "~/lib/utils";
 
 const roundTextColor: Record<string, string> = {
@@ -39,8 +44,10 @@ const roundNodeColor: Record<string, string> = {
   Defaut: "oklch(0.708 0 0)",
 };
 
-export type SearchedTeam = {
-  teamId: string;
+export type SearchedTeam = Omit<
+  Team,
+  "password" | "wantsBox" | "roomNeeded"
+> & {
   unlocks: string[];
   solves: string[];
 };
@@ -70,6 +77,7 @@ export default function Graph() {
   const [teamQuery, setTeamQuery] = useState("");
   const [teamQueryShaking, setTeamQueryShaking] = useState(false);
   const [searchedTeam, setSearchedTeam] = useState<SearchedTeam | null>(null);
+  const [teamSidebar, setTeamSidebar] = useState(false);
 
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -100,7 +108,7 @@ export default function Graph() {
   };
 
   const handlePuzzleSidebar = async (puzzleId: string) => {
-    const res = await getSearchedPuzzle(searchedTeam?.teamId || null, puzzleId);
+    const res = await getSearchedPuzzle(searchedTeam?.id || null, puzzleId);
     if ("error" in res) return;
     if ("guesses" in res && "requestedHints" in res) {
       // Set searched puzzle
@@ -134,12 +142,13 @@ export default function Graph() {
     }
     if ("solves" in res && "unlocks" in res) {
       setSearchedTeam(res);
+      setTeamSidebar(true);
 
       // Set search params
       const params = new URLSearchParams();
       const prevPuzzle = searchParams.get("puzzle");
       if (prevPuzzle) params.set("puzzle", prevPuzzle);
-      params.set("team", res.teamId);
+      params.set("team", res.id);
       router.push(`?${params.toString()}`);
     }
   };
@@ -164,7 +173,6 @@ export default function Graph() {
 
   // Search params
   const searchParams = useSearchParams();
-
   useEffect(() => {
     const run = async () => {
       // Get team
@@ -178,6 +186,7 @@ export default function Graph() {
         if ("solves" in res && "unlocks" in res) {
           setTeamQuery(team);
           setSearchedTeam(res);
+          setTeamSidebar(true);
         }
       }
 
@@ -463,7 +472,7 @@ export default function Graph() {
         />
       </div>
 
-      <div className="absolute w-full space-y-2 px-4 sm:w-80">
+      <div className="absolute w-full space-y-2 px-4 md:w-80">
         {/* Search team */}
         <div className="z-10 mt-[56px] flex items-center space-x-2 rounded bg-neutral-100 pr-1 backdrop-blur-md">
           <div className="rounded bg-neutral-300 p-2">
@@ -561,12 +570,12 @@ export default function Graph() {
 
       {/* Side panel */}
       <div
-        className={`no-scrollbar absolute bottom-0 ${showSidebar ? "max-h-[60vh]" : "max-h-4"} w-full overflow-auto text-xs sm:w-80 md:right-4 md:top-0 md:max-h-screen md:pb-4`}
+        className={`no-scrollbar absolute bottom-0 ${showSidebar ? "max-h-[60vh]" : "max-h-4"} w-full overflow-auto text-xs md:right-4 md:top-0 md:max-h-screen md:w-80 md:pb-4`}
       >
-        <div className="fixed min-h-2 w-full -translate-y-1 bg-neutral-200 shadow-sm sm:w-80 md:hidden"></div>
+        <div className="fixed min-h-2 w-full -translate-y-1 bg-neutral-200 shadow-sm md:hidden md:w-80"></div>
         <div
           onClick={() => setShowSidebar(!showSidebar)}
-          className="fixed left-1/2 w-12 -translate-x-1/2 -translate-y-4 rounded-md bg-neutral-300 text-neutral-600 hover:cursor-pointer sm:left-40 md:hidden"
+          className="fixed left-1/2 w-12 -translate-x-1/2 -translate-y-4 rounded-md bg-neutral-300 text-neutral-600 hover:cursor-pointer md:left-40 md:hidden"
         >
           {showSidebar ? (
             <ChevronDown className="mx-auto" />
@@ -574,13 +583,116 @@ export default function Graph() {
             <ChevronUp className="mx-auto" />
           )}
         </div>
-        <div className="bg-neutral-100 p-4 sm:rounded-lg md:mt-14">
-          {searchedPuzzle === null ? (
-            // Show list of puzzles
-            <>
-              <p className="text-base font-semibold text-neutral-700">
-                Puzzles
+        <div className="bg-neutral-100 p-4 md:mt-14 md:rounded-lg">
+          {teamSidebar && searchedTeam ? (
+            <div className="text-neutral-500">
+              <div className="flex">
+                <button onClick={() => setTeamSidebar(false)}>
+                  <ChevronLeft className="size-4" />
+                </button>
+                <p className="text-base font-semibold text-neutral-700">Team</p>
+              </div>
+              <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
+                Info
               </p>
+              <p>
+                <span className="font-semibold">ID: </span>
+                {searchedTeam.id}
+              </p>
+              <p>
+                <span className="font-semibold">Display name: </span>
+                {searchedTeam.displayName}
+              </p>
+              <p>
+                <span className="font-semibold"> Role: </span>
+                {searchedTeam.role}
+              </p>
+              <p>
+                <span className="font-semibold"> Mode: </span>
+                {searchedTeam.interactionMode}
+              </p>
+              {searchedTeam.interactionMode === "in-person" && (
+                <>
+                  <p>
+                    <span className="font-semibold">
+                      Number of Brown members:{" "}
+                    </span>
+                    {searchedTeam.numCommunity}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone number: </span>
+                    {formatPhoneNumber(searchedTeam.phoneNumber)}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Solving location: </span>
+                    {searchedTeam.solvingLocation}
+                  </p>
+                </>
+              )}
+              {searchedTeam.interactionMode === "remote" && (
+                <p>
+                  <span className="font-semibold">Has box: </span>
+                  {searchedTeam.hasBox ? "yes" : "no"}
+                </p>
+              )}
+              <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
+                Members
+              </p>
+              <table>
+                {deserializeMembers(searchedTeam.members).map(
+                  (member, index) => (
+                    <tr className="w-full">
+                      <td className="text-center">{index + 1}</td>
+                      <td className="break-all pl-2">{member.name}</td>
+                      <td className="break-all pl-2">{member.email}</td>
+                    </tr>
+                  ),
+                )}
+              </table>
+              <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
+                Stats
+              </p>
+              <p>
+                <span className="font-semibold">Unlocked puzzles:</span>{" "}
+                {searchedTeam.unlocks.length}
+              </p>
+              <p>
+                <span className="font-semibold">Solved puzzles:</span>{" "}
+                {searchedTeam.solves.length}
+              </p>
+              <p>
+                <span className="font-semibold">Solved metas:</span>{" "}
+                {
+                  searchedTeam.solves.filter((solve) =>
+                    META_PUZZLES.includes(solve),
+                  ).length
+                }
+              </p>
+              <p>
+                <span className="font-semibold">Register time:</span>{" "}
+                <FormattedTime time={searchedTeam.createTime} />
+              </p>
+              <p>
+                <span className="font-semibold">Finish time:</span>{" "}
+                <FormattedTime time={searchedTeam.finishTime} />
+              </p>
+            </div>
+          ) : searchedPuzzle === null ? (
+            // Show list of puzzles
+            <div>
+              <div className="flex justify-between">
+                <p className="text-base font-semibold text-neutral-700">
+                  Puzzles
+                </p>
+                {searchedTeam && (
+                  <button onClick={() => setTeamSidebar(true)}>
+                    <div className="flex items-center space-x-1 text-neutral-500">
+                      Team
+                      <ChevronRight className="size-3" />
+                    </div>
+                  </button>
+                )}
+              </div>
               {ROUNDS.map((round) => (
                 <>
                   <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
@@ -617,10 +729,10 @@ export default function Graph() {
                   })}
                 </>
               ))}
-            </>
+            </div>
           ) : (
-            // Show the team's puzzle information
-            <>
+            // Show the puzzle information
+            <div>
               {/* Title */}
               <div className="flex">
                 <button onClick={clearSearchPuzzle}>
@@ -725,7 +837,7 @@ export default function Graph() {
                     ))}
                 </>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

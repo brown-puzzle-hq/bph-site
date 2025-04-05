@@ -5,7 +5,7 @@ import { hints, followUps, hintStatusEnum } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { sendBotMessage, sendEmail, extractEmails } from "~/lib/utils";
+import { sendBotMessage, sendEmail, extractEmails } from "~/lib/comms";
 import { HintEmailTemplate } from "~/lib/email-template";
 import {
   FollowUpEmailTemplate,

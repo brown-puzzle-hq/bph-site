@@ -26,7 +26,7 @@ import {
   ROUNDS,
 } from "~/hunt.config";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
-import { sendBotMessage, sendEmail, extractEmails } from "~/lib/utils";
+import { sendBotMessage, sendEmail, extractEmails } from "~/lib/comms";
 import {
   FollowUpEmailTemplate,
   FollowUpEmailTemplateProps,
