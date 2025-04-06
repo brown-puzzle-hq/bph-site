@@ -142,7 +142,7 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `<table><tr><td>It's really hard to register and coordinate my Brown University courses with this filming schedule.<tr><tr><td><b>EDUC 0610</b><tr><td>"The Halfblood's _____" by Devin Hanson [5]<tr><tr><td><b>IAPA 1502</b><tr><td>"____" by Ali Hazelwood (now titled "Deep End") [4]<tr><tr><td><b>RELS 1325C</b><tr><td>"The Aeneid" by ______ [6]<tr><tr><td><b>LITR 1153C</b><tr><td>"_____ in the Hills" by Elizabeth West [5]<tr><tr><td><b>PHP 1650</b><tr><td>"The ____" by A.E. Ellis [4]<tr><tr><td><b>APMA 2610</b><tr><td>"In the Name of ______ Citizens: The Trials of Frank de Groot" by Brian Wright [6]</table>`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
