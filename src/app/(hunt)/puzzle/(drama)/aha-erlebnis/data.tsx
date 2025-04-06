@@ -27,7 +27,7 @@ export const inPersonBody = (
 
     <div className="flex flex-col space-y-4 p-6 text-white">
       <div>
-        <div className="font-bold">Attraction:</div>
+        <div className="font-bold text-4xl">😍:</div>
         <div className="mt-8 flex gap-4">
           {[
             "",
@@ -58,7 +58,7 @@ export const inPersonBody = (
 
     <div className="flex flex-col space-y-4 p-6 text-white">
       <div>
-        <div className="font-bold">Tiredness:</div>
+        <div className="font-bold text-4xl">🥱:</div>
         <div className="mt-8 flex gap-4">
           {[
             "3",
@@ -91,7 +91,7 @@ export const inPersonBody = (
 
     <div className="flex flex-col space-y-4 p-6 text-white">
       <div>
-        <div className="font-bold">Pain:</div>
+        <div className="font-bold text-4xl">🤕:</div>
         <div className="mt-8 flex gap-4">
           {["", "", "6", "", "", "", "5", "", "", "", ""].map(
             (value, index) => (
@@ -107,7 +107,7 @@ export const inPersonBody = (
 
     <div className="flex flex-col space-y-4 p-6 text-white">
       <div>
-        <div className="font-bold">Panic:</div>
+        <div className="font-bold text-4xl">😱:</div>
         <div className="mt-8 flex gap-4">
           {["", "9", "", "", "", "", "", "", "", "", "7", "", "", "", ""].map(
             (value, index) => (
@@ -123,7 +123,7 @@ export const inPersonBody = (
 
     <div className="flex flex-col space-y-4 p-6 text-white">
       <div>
-        <div className="font-bold">Emptiness:</div>
+        <div className="font-bold text-4xl">😶:</div>
         <div className="mt-8 flex gap-4">
           {["", "10", "", "", "", "", "", "", "", "", "8", ""].map(
             (value, index) => (
@@ -139,7 +139,7 @@ export const inPersonBody = (
 
     <div className="flex flex-col space-y-4 p-6 text-white">
       <div>
-        <div className="font-bold">Happiness:</div>
+        <div className="font-bold text-4xl">🙂:</div>
         <div className="mt-8 flex gap-4">
           {["", "", "", "", "", "", "", "11", "", "", "", "", ""].map(
             (value, index) => (

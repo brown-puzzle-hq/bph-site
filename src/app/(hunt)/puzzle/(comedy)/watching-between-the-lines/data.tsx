@@ -24,11 +24,11 @@ export const puzzleId = "watching-between-the-lines";
 export const inPersonBody = (
   <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
     <p className="space-y-4 text-lg font-medium">
-      <span className="font-bold">F</span>or{" "}
+      {/* <span className="font-bold">F</span>or{" "}
       <span className="font-bold">T</span>he{" "}
       <span className="font-bold">L</span>ast{" "}
-      <span className="font-bold">N</span>
-      ine days I've been trying to figure out why all these movies are familiar.
+      <span className="font-bold">N</span> */}
+      For the last nine days I've been trying to figure out why all these movies are familiar.
       They remind me of something from the days of yore...
     </p>
     <div className="flex items-center space-x-4">

@@ -28,7 +28,7 @@ const puzzleClues = [
   },
   {
     down: [
-      "Known to be honest",
+      "One known to be honest",
       "Your grandma probably bites with this",
       "Attention-seeking exclamations",
     ],
@@ -40,7 +40,7 @@ const puzzleClues = [
   },
   {
     down: [
-      "Keeps a baby's shirt clean",
+      "What keeps a baby's shirt clean",
       "The rocks",
       "Used to color soft materials",
     ],
@@ -57,17 +57,19 @@ const puzzleClues = [
       "What you do with your eye",
     ],
     across: [
-      'Stands in for Charles, followed by "Majesty"',
+      'Stand-in for Charles, followed by "Majesty"',
       "Adam counterpart",
       "Poor-soil- and low-temperature-tolerant cereal",
     ],
   },
   {
-    down: ["Pirate's leg", "Indian and pale, perhaps", "Logical negation"],
+    down: ["All women born after 1993, according to the Internet", 
+      "What one might do in hell", 
+      "Belonging to me and you"],
     across: [
-      "Greek god, or cooking implement",
-      "Chess player measuring stick",
-      '"___ in loser, we\'re going shopping!"',
+      "Casual fraternal address",
+      "Acknowledgement of debt",
+      'Common data type',
     ],
   },
   {
@@ -83,7 +85,7 @@ const puzzleClues = [
     across: [
       "What you'd pay off after a long night",
       "Ordinary Differential Equation",
-      "Useful to catch fish with",
+      "Useful item to catch fish with",
     ],
   },
   {
