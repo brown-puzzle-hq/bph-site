@@ -24,7 +24,7 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
       <div className="w-44 truncate">
         <a
           className="text-blue-500 hover:underline"
-          href={`/teams/${row.getValue("id")}`}
+          href={`/admin/graph?team=${row.getValue("id")}`}
         >
           {row.getValue("id")}
         </a>

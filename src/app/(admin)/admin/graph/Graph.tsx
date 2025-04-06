@@ -83,6 +83,7 @@ export default function Graph() {
 
   const handleSearchPuzzle = async () => {
     if (puzzleQuery === "") return;
+
     // Finds node by full id, then tries substring match
     const node =
       data.nodes.find((node) => node.id === puzzleQuery) ||
@@ -97,7 +98,6 @@ export default function Graph() {
       setTimeout(() => setPuzzleQueryShaking(false), 200);
       return;
     }
-
     setPuzzleQuery("");
 
     // Focus on the node and highlight it
@@ -111,12 +111,13 @@ export default function Graph() {
     const res = await getSearchedPuzzle(searchedTeam?.id || null, puzzleId);
     if ("error" in res) return;
     if ("guesses" in res && "requestedHints" in res) {
-      // Set searched puzzle
+      // Set searched puzzle and remove team sidebar
       setSearchedPuzzle({
         ...res,
         round:
           ROUNDS.find((round) => round.puzzles.includes(puzzleId))?.name || "",
       });
+      setTeamSidebar(false);
 
       // Set search params
       const params = new URLSearchParams();
@@ -173,10 +174,13 @@ export default function Graph() {
 
   // Search params
   const searchParams = useSearchParams();
+
   useEffect(() => {
     const run = async () => {
-      // Get team
       const team = searchParams.get("team");
+      const puzzle = searchParams.get("puzzle");
+
+      // Get team
       if (team) {
         const res = await getSearchedTeam(team);
         if ("error" in res) {
@@ -186,12 +190,11 @@ export default function Graph() {
         if ("solves" in res && "unlocks" in res) {
           setTeamQuery(team);
           setSearchedTeam(res);
-          setTeamSidebar(true);
+          if (!puzzle) setTeamSidebar(true);
         }
       }
 
       // Get puzzle
-      const puzzle = searchParams.get("puzzle");
       if (puzzle) {
         // Find node and center on it
         const node = data.nodes.find((node) => node.id === puzzle);
@@ -218,7 +221,7 @@ export default function Graph() {
     };
 
     run();
-  }, [searchParams]);
+  }, []);
 
   // Dimensions of the graph
   const [dimensions, setDimensions] = useState({
@@ -585,6 +588,7 @@ export default function Graph() {
         </div>
         <div className="bg-neutral-100 p-4 md:mt-14 md:rounded-lg">
           {teamSidebar && searchedTeam ? (
+            // Show team information
             <div className="text-neutral-500">
               <div className="flex">
                 <button onClick={() => setTeamSidebar(false)}>
@@ -749,12 +753,13 @@ export default function Graph() {
                 </p>
               </div>
 
+              {/* Puzzle information */}
               <p className="my-1 bg-neutral-400 pl-0.5 font-semibold text-white">
                 Info
               </p>
               <p>
                 <Link
-                  href={`/puzzle/${searchedPuzzle.puzzleId}`}
+                  href={`/puzzle/${searchedPuzzle.puzzleId}${searchedTeam ? "?interactionMode=" + (searchedTeam.interactionMode === "remote" && searchedTeam.hasBox ? "remote-box" : searchedTeam.interactionMode) : ""}`}
                   prefetch={false}
                   rel="noopener noreferrer"
                   target="_blank"

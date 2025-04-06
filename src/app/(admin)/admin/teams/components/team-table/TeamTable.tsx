@@ -45,7 +45,11 @@ const colorMap: Record<string, string> = {
   testsolver: "bg-violet-200 text-violet-900",
   remote: "bg-lime-200 text-lime-900",
   "in-person": "bg-orange-200 text-orange-900",
+  true: "bg-emerald-200 text-emerald-900",
+  false: "bg-red-200 text-red-900",
 };
+
+export const editableFieldKeys = ["role", "interactionMode", "hasBox"];
 
 export type EditedRow = {
   [K in keyof EditableFields]?: {
@@ -112,12 +116,14 @@ export function TeamTable<TData, TValue>({
     cellValue: any,
   ) {
     setEditedRows((prev) => {
-      const options: string[] =
+      const options: any[] =
         field === "role"
           ? roleEnum.enumValues
           : field === "interactionMode"
             ? interactionModeEnum.enumValues
-            : [];
+            : field === "hasBox"
+              ? ["true", "false"]
+              : [];
 
       const prevEdits = prev[teamId] ?? {};
       const oldValue = prevEdits[field]?.old ?? cellValue;
@@ -261,15 +267,16 @@ export function TeamTable<TData, TValue>({
                   >
                     {row.getVisibleCells().map((cell) => {
                       const columnId = cell.column.id;
-                      const teamId = row.getValue("id") as string;
-                      const cellValue = cell.getValue();
+                      const teamId = String(row.getValue("id"));
+                      const cellValue = String(cell.getValue());
 
                       // Check whether column is editable
-                      if (["role", "interactionMode"].includes(columnId)) {
+                      if (editableFieldKeys.includes(columnId)) {
                         const field = columnId as keyof EditableFields;
-                        const currValue =
-                          editedRows[teamId]?.[field]?.new ??
-                          (cellValue as string);
+                        const currValue = String(
+                          editedRows[teamId]?.[field]?.new ?? cellValue,
+                        );
+
                         return (
                           <TableCell
                             key={cell.id}
