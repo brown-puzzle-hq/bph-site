@@ -80,7 +80,26 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl">
+    <p className="mb-4">
+      This puzzle is about time zone differences. There are six formations of
+      boarding passes, all having a city and one having a time. The first thing
+      to do is to determine what time it is in each city with question marks for
+      their arrival time when it is the time in the city with the labelled time.
+      Each formation has a different time, but all boarding passes in any one
+      formation have times that correspond to one single moment.
+    </p>
+    <p className="mb-4">
+      Once the times have been determined, the solver must draw the analog
+      clocks showing those times and arrange them in the same way the boarding
+      passes are arranged. Looking at the clock hands (just hour and minute, no
+      second hands) reveals the vague shape of a letter spelled out by each
+      formation. Putting these letters together, one gets the answer to the
+      puzzle: JUNGLE.
+    </p>
+  </div>
+);
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

@@ -15,8 +15,10 @@ export const puzzleId = "placeholder-ii";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the ⏰ sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the ⏰ sequence.
+      </b>
     </div>
     <div className="max-w-3xl space-y-4 text-center">
       <Image src={CLOCK} alt="" />

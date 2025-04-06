@@ -15,8 +15,10 @@ export const puzzleId = "the-compact-disc";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+      </b>
     </div>
     <div className="mb-6 max-w-3xl text-center">
       <i>
@@ -37,8 +39,10 @@ export const inPersonBody = (
 
 export const remoteBoxBody = (
   <div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+      </b>
     </div>
     <div className="mb-6 max-w-3xl text-center">
       <i>This is a physical puzzle! It uses an object found in your box.</i>
@@ -56,8 +60,10 @@ export const remoteBoxBody = (
 
 export const remoteBody = (
   <div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
+      </b>
     </div>
     <p className="p-4 italic">
       You take a minute (or several) to listen to your CD.

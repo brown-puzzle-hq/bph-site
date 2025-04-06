@@ -59,11 +59,13 @@ export const remoteBoxBody = (
 export const remoteBody = (
   <div className="flex max-w-3xl flex-col items-center space-y-4">
     <div className="mb-4 max-w-3xl">
-      <b>
-        This puzzle is a chain puzzle. In-person solvers and box purchasers were
-        given a wire with beads of the following colors, in order:
-      </b>
-      <div className="flex">
+      <div className="mb-4">
+        <b>
+          This puzzle is a chain puzzle. In-person solvers and box purchasers
+          were given a wire with beads of the following colors, in order:
+        </b>
+      </div>
+      <div className="mb-4 flex">
         {CHAIN.split("").map((cell, index) => (
           <div
             key={index}

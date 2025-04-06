@@ -15,8 +15,10 @@ export const puzzleId = "eye-to-eye";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the 👁️ sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the 👁️ sequence.
+      </b>
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
     <div className="mb-4 max-w-3xl">

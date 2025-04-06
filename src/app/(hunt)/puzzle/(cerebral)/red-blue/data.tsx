@@ -26,8 +26,10 @@ export const inPersonBody = (
         chain, please visit HQ in Friedman 208.
       </i>
     </div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+      </b>
     </div>
     <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
       <i className="p-4">
@@ -56,8 +58,10 @@ export const remoteBoxBody = (
         This is a physical puzzle! You should use an object found in your box.
       </i>
     </div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+      </b>
     </div>
     <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
       <i className="p-4">
@@ -95,8 +99,10 @@ export const remoteBody = (
         ))}
       </div>
     </div>
-    <div className="mb-4 max-w-3xl">
-      This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+    <div className="mb-4 max-w-3xl text-center">
+      <b>
+        This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+      </b>
     </div>
     <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
       <i className="p-4">
