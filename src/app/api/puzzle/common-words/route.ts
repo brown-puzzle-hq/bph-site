@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { canViewPuzzle } from "~/app/(hunt)/puzzle/actions";
 
 export async function GET() {
-  const puzzleId = "the-final-heist";
+  const puzzleId = "common-words";
 
   // Authentication
   const session = await auth();
@@ -20,25 +20,25 @@ export async function GET() {
     "app",
     "(hunt)",
     "puzzle",
-    "(horror)",
+    "(drama)",
     puzzleId,
-    `${puzzleId}.html`,
+    `${puzzleId}.mp3`,
   );
 
   try {
     if (!fs.existsSync(filePath)) {
-      return new NextResponse("File not found", { status: 404 });
+      return new NextResponse("Audio file not found", { status: 404 });
     }
 
-    const fileContent = fs.readFileSync(filePath, "utf8");
+    const audioBuffer = fs.readFileSync(filePath);
 
-    return new NextResponse(fileContent, {
+    return new NextResponse(audioBuffer, {
       headers: {
-        "Content-Type": "text/html",
-        "Content-Disposition": `inline; filename=${puzzleId}.html`,
+        "Content-Type": "audio/mpeg",
+        "Content-Disposition": `inline; filename=${puzzleId}.mp3`,
       },
     });
   } catch (error) {
-    return new NextResponse("Error loading file.");
+    return new NextResponse("Error loading audio file.");
   }
 }

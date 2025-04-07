@@ -5,7 +5,7 @@ import Link from "next/link";
  * Feel free to make this creative, because the route to the puzzle will be
  * exampxe.com/puzzle/puzzleId.
  */
-export const puzzleId = "lost-category";
+export const puzzleId = "common-words";
 
 /**
  * The `puzzleBody` renders above the guess submission form. Put flavor text, images,
@@ -46,7 +46,7 @@ export const remoteBody = (
     </div>
     <div className="flex justify-center pb-4">
       <audio controls>
-        <source src="/api/puzzle/lost-category" type="audio/mpeg" />
+        <source src="/api/puzzle/common-words" type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </div>

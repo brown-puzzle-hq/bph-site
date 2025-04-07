@@ -7,7 +7,7 @@ import CLOCK from "./clockwork.png";
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "placeholder-ii";
+export const puzzleId = "like-clockwork";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,

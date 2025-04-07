@@ -15,7 +15,7 @@ export const inPersonBody = (
     <div className="mb-4 max-w-3xl text-center">
       <b>
         This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">CEREBRAL</span> round.
+        <span className="underline">HORROR</span> round.
       </b>
     </div>
     <hr className="my-6 mb-6 border-t border-white" />

@@ -74,7 +74,7 @@ export const SEQUENCES: Sequence[] = [
     name: "CD",
     icon: "💿",
     puzzles: [
-      "lost-category",
+      "common-words",
       "youve-got-this-covered",
       "imagine",
       "the-compact-disc",
@@ -123,7 +123,7 @@ export const SEQUENCES: Sequence[] = [
   {
     name: "Time",
     icon: "⏰",
-    puzzles: ["filming-schedule", "hand-letters", "placeholder-ii"], // Need placeholder
+    puzzles: ["filming-schedule", "hand-letters", "like-clockwork"],
   },
 ];
 
@@ -178,11 +178,11 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "a-fistful-of-cards",
     "filming-schedule",
     "beads",
-    "lost-category",
+    "common-words",
   ],
   "a-fistful-of-cards-ii": ["heist-ii", "youve-got-this-covered"], // ten-guards-ten-doors
   beads: ["heist-ii", "a-fistful-of-cards-ii", "aha-erlebnis"], // ten-guards-ten-doors
-  "lost-category": [
+  "common-words": [
     "youve-got-this-covered",
     "a-fistful-of-cards-ii",
     "m-guards-n-doors-and-k-choices",
@@ -196,7 +196,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "youve-got-this-covered": [
     "heist-ii",
     "beads",
-    "lost-category",
+    "common-words",
     "aha-erlebnis",
     "m-guards-n-doors-and-k-choices",
   ],
@@ -246,7 +246,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ], // m-guards-n-doors-and-k-choices
   "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
   "whats-my-ride": ["bluenos-puzzle-box"],
-  piecemeal: ["once-upon-a-quote", "eye-of-the-storm", "narcissism"],
+  piecemeal: ["barbie", "eye-of-the-storm", "narcissism"],
   "eye-spy": ["bluenos-puzzle-box", "whats-my-ride", "imagine"],
   "identify-the-piece": ["the-snack-zone"],
   "eye-of-the-storm": ["boring-plot", "narcissism"],
@@ -256,7 +256,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "eye-spy",
   ],
   imagine: ["whats-my-ride"],
-  "once-upon-a-quote": ["boring-plot"],
+  "barbie": ["boring-plot"],
   "the-snack-zone": ["imagine"],
 
   // REALITY -> COMEDY
@@ -293,16 +293,16 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     // reality
     "study-abroad",
     "a-fistful-of-cards-iii",
-    // cerebral
+    // horror
     "secret-ingredient",
     "color-transfer",
     "the-compact-disc",
   ],
 
-  // CEREBRAL
+  // HORROR
   "red-blue": ["the-final-heist", "eye-to-eye", "fridge-magnets"], // the-guard-and-the-door
   "a-fistful-of-cards-iv": [
-    "placeholder-ii",
+    "like-clockwork",
     "eye-to-eye",
     "secret-ingredient",
     "color-transfer",
@@ -340,8 +340,8 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "the-final-heist",
     "red-blue",
   ],
-  "placeholder-i": ["placeholder-ii", "color-transfer", "secret-ingredient"],
-  "placeholder-ii": ["placeholder-i", "constellation", "a-fistful-of-cards-iv"],
+  "placeholder-i": ["like-clockwork", "color-transfer", "secret-ingredient"],
+  "like-clockwork": ["placeholder-i", "constellation", "a-fistful-of-cards-iv"],
 };
 
 export type Round = {
@@ -369,7 +369,7 @@ export const ROUNDS: Round[] = [
       "beads",
       "ten-guards-ten-doors",
       "a-fistful-of-cards-ii",
-      "lost-category",
+      "common-words",
       "youve-got-this-covered",
       "heist-ii",
     ],
@@ -391,7 +391,7 @@ export const ROUNDS: Round[] = [
     puzzles: [
       "boring-plot",
       "identify-the-piece",
-      "once-upon-a-quote",
+      "barbie",
       "imagine",
       "narcissism",
       "genetic-counseling",
@@ -420,7 +420,7 @@ export const ROUNDS: Round[] = [
     ],
   },
   {
-    name: "Cerebral",
+    name: "Horror",
     puzzles: [
       "cutting-room-floor",
       "color-transfer",
@@ -431,7 +431,7 @@ export const ROUNDS: Round[] = [
       "fridge-magnets",
       "red-blue",
       "secret-ingredient",
-      "placeholder-ii",
+      "like-clockwork",
       "constellation",
       "the-compact-disc",
       "the-final-heist",

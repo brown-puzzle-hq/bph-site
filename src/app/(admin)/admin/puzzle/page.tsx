@@ -19,7 +19,7 @@ export const fetchCache = "force-no-store";
 
 const roundBgColor: Record<string, string> = {
   Action: "bg-red-100",
-  Cerebral: "bg-indigo-100",
+  Horror: "bg-indigo-100",
   Adventure: "bg-lime-100",
   Comedy: "bg-amber-100",
   Drama: "bg-purple-100",
@@ -28,7 +28,7 @@ const roundBgColor: Record<string, string> = {
 
 const roundTextColor: Record<string, string> = {
   Action: "text-red-900",
-  Cerebral: "text-indigo-900",
+  Horror: "text-indigo-900",
   Adventure: "text-lime-900",
   Comedy: "text-amber-900",
   Drama: "text-purple-900",

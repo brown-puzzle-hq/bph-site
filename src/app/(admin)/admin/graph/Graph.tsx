@@ -27,7 +27,7 @@ import { cn } from "~/lib/utils";
 
 const roundTextColor: Record<string, string> = {
   Action: "text-red-600",
-  Cerebral: "text-indigo-600",
+  Horror: "text-indigo-600",
   Adventure: "text-lime-600",
   Comedy: "text-yellow-500",
   Drama: "text-purple-500",
@@ -36,7 +36,7 @@ const roundTextColor: Record<string, string> = {
 
 const roundNodeColor: Record<string, string> = {
   Action: "oklch(0.637 0.237 25.331)",
-  Cerebral: "oklch(0.457 0.24 277.023)",
+  Horror: "oklch(0.457 0.24 277.023)",
   Adventure: "oklch(0.768 0.233 130.85)",
   Comedy: "oklch(0.879 0.169 91.605)",
   Drama: "oklch(0.827 0.119 306.383)",
