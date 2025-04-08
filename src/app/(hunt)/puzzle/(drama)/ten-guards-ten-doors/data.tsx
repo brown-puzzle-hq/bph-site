@@ -17,7 +17,7 @@ export const puzzleId = "ten-guards-ten-doors";
 export const inPersonBody = (
   <div>
     <div className="mb-5 max-w-3xl">
-      You are a guard, and are standing in a large circle with ten doors and
+      You are a guard and are standing in a large circle with ten doors and
       nine other guards, with each of you standing in front of a door and facing
       the center such that you can see every door but your own. Going through
       your door will lead to the next area of the puzzle hunt, but if any guard
@@ -55,7 +55,7 @@ export const inPersonBody = (
       before walking through it.
     </div>
     <div className="mb-5 max-w-3xl">
-      What is the earliest day that each guard attempts to leave.
+      What is the earliest day that each guard attempts to leave?
     </div>
   </div>
 );

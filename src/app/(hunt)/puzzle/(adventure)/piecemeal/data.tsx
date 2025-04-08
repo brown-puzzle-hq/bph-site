@@ -33,7 +33,7 @@ const puzzleClues = [
       "Attention-seeking exclamations",
     ],
     across: [
-      'Immediately preceding "in a land far, far away"',
+      'Immediately preceding "in a galaxy far, far away"',
       "Wall street order",
       "Common pre-med volunteer gig",
     ],
