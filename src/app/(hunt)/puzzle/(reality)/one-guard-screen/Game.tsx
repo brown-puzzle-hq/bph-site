@@ -8,23 +8,25 @@ const WIDTH = 900;
 const HEIGHT = 600;
 const RADIUS = 15;
 const ANSWER = "NATIONALSECURITY";
+const INDEX1 = 4;
 
 const TTL = 100;
 const SPEED = 2;
 const DOORX = WIDTH / 4;
+const DOORY = (INDEX1 + 0.5) * HEIGHT/16;
 const DESTX = (WIDTH * 3) / 4;
 const DX0 =
-  (SPEED * DOORX) / Math.sqrt(Math.pow(DOORX, 2) + Math.pow(HEIGHT / 6, 2));
-const DY0 = (DX0 * (HEIGHT / 6)) / (DOORX + RADIUS);
+  (SPEED * (DOORX)) / Math.sqrt(Math.pow(DOORX, 2) + Math.pow((HEIGHT/2 - DOORY), 2));
+const DY0 = (DX0 * (HEIGHT/2 - DOORY)) / (DOORX);
 
 function randomIndex(): number {
   let u = 1 - Math.random();
   let v = Math.random();
   let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v); // Standard Normal (0,1)
 
-  let num = 7.5 + z * 2.5;
+  let center = Math.random() < 0.5 ? INDEX1 : (15 - INDEX1);
 
-  return Math.max(0, Math.min(15, Math.round(num)));
+  return Math.max(0, Math.min(15, Math.round(center + z * 2.25)));
 }
 
 const EventComponent = ({
@@ -74,7 +76,7 @@ const EventComponent = ({
 
     if (elapsedTime.current >= 3) {
       elapsedTime.current = 0;
-      const index = scatter ? randomIndex() : Math.random() < 0.5 ? 5 : 10;
+      const index = randomIndex();
       const destY = (HEIGHT * index) / 16 + HEIGHT / 32;
       setGuards((prev) => [
         ...prev,
@@ -96,7 +98,16 @@ const EventComponent = ({
     setGuards((prev) =>
       prev
         .map((guard) => {
-          if (!guard.door && guard.x > DOORX) {
+          if (!guard.door && guard.x > DOORX - RADIUS) {
+            if (!scatter) {
+              if (guard.destY < HEIGHT / 2) {
+                guard.destY = DOORY;
+                guard.letter = ANSWER.at(INDEX1)!;
+              } else {
+                guard.destY = HEIGHT - DOORY
+                guard.letter = ANSWER.at(15 - INDEX1)!;
+              }
+            }
             // Recompute dx, dy
             guard.dx =
               (SPEED * (DESTX - guard.x)) /
@@ -121,8 +132,8 @@ const EventComponent = ({
     <Container>
       <Graphics draw={drawWall} x={DOORX} y={0} />
       <Graphics draw={drawWall} x={DESTX} y={0} />
-      <Graphics draw={drawDoor} x={DOORX} y={HEIGHT / 3} />
-      <Graphics draw={drawDoor} x={DOORX} y={(HEIGHT * 2) / 3} />
+      <Graphics draw={drawDoor} x={DOORX} y={DOORY} />
+      <Graphics draw={drawDoor} x={DOORX} y={HEIGHT - DOORY} />
       {guards.map((guard) => (
         <Container x={guard.x} y={guard.y}>
           <Graphics
@@ -190,7 +201,7 @@ export default function Game() {
             <EventComponent
               running={running}
               rate={rate}
-              scatter={scrollPosition >= width / 2 + WIDTH / 4 - HEIGHT / 16}
+              scatter={scrollPosition >= width / 2 - WIDTH / 4 + HEIGHT / 16}
             />
           </Stage>
         </div>
@@ -211,7 +222,7 @@ export default function Game() {
           className="w-48 [&::-webkit-slider-runnable-track]:rounded-xl [&::-webkit-slider-runnable-track]:bg-footer-bg [&::-webkit-slider-thumb]:hover:cursor-pointer"
           defaultValue={1}
           min={1}
-          max={20}
+          max={30}
           step={1}
           onChange={(e) => setRate(Number(e.target.value))}
         />
