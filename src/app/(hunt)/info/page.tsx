@@ -67,7 +67,7 @@ export default function Page() {
           <TableOfContents />
         </div>
         <div className="flex w-full px-4 md:w-2/3 lg:w-1/2">
-          <article className="prose prose-custom w-full max-w-none">
+          <article className="prose prose-info w-full max-w-none">
             <h1>Hunt Information</h1>
             <TOCSection
               sectionId={0}

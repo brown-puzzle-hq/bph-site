@@ -38,7 +38,7 @@ export default function FeedbackDialog({
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <article className={teamSide ? "prose prose-custom" : "prose"}>
+              <article className={teamSide ? "prose prose-feedback" : "prose"}>
                 {useRemarkSync(
                   feedback.description,
                   //   {

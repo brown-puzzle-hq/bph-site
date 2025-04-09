@@ -99,7 +99,7 @@ export default function FeedbackForm({
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0">
-                          <article className="prose prose-custom">
+                          <article className="prose prose-feedback">
                             {useRemarkSync(field.value) || <></>}
                           </article>
                         </CardContent>
