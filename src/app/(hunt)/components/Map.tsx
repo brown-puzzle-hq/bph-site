@@ -52,7 +52,7 @@ const positions: Record<string, L.LatLngExpression> = {
   "red-blue": [460, 510],
   "secret-ingredient": [610, 570],
   "six-degrees": [542, 700],
-  "study-abroad": [560, 780],
+  "international-neighbors": [560, 780],
   "ten-guards-ten-doors": [480, 310],
   "the-compact-disc": [540, 620],
   "the-final-heist": [480, 550],

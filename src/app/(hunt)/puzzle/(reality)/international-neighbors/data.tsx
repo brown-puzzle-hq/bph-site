@@ -4,7 +4,7 @@
  * Feel free to make this creative, because the route to the puzzle will be
  * exampxe.com/puzzle/puzzleId.
  */
-export const puzzleId = "study-abroad";
+export const puzzleId = "international-neighbors";
 
 /**
  * The `puzzleBody` renders above the guess submission form. Put flavor text, images,

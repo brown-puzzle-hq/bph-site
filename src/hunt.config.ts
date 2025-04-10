@@ -49,7 +49,7 @@ export const SEQUENCES: Sequence[] = [
     puzzles: [
       "youve-got-this-covered",
       "fractal-shanty",
-      "study-abroad",
+      "international-neighbors",
       "fridge-magnets",
     ],
   },
@@ -270,19 +270,19 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "chain-letters": ["hand-letters", "heist-iii"],
   "a-fistful-of-cards-iii": [
     "the-guard-and-the-door",
-    "study-abroad",
+    "international-neighbors",
     "six-degrees",
   ], // opening-sequences
-  "hand-letters": ["study-abroad", "are-you-sure", "six-degrees"], // opening-sequences, chain-letters,
+  "hand-letters": ["international-neighbors", "are-you-sure", "six-degrees"], // opening-sequences, chain-letters,
   "heist-iii": ["are-you-sure"], // chain-letters
-  "study-abroad": [
+  "international-neighbors": [
     "a-fistful-of-cards-iii",
     "hand-letters",
     "are-you-sure",
     "the-guard-and-the-door",
     "six-degrees",
   ],
-  "are-you-sure": ["study-abroad", "hand-letters", "heist-iii"],
+  "are-you-sure": ["international-neighbors", "hand-letters", "heist-iii"],
   "six-degrees": [],
   "cutting-room-floor": [],
 
@@ -291,7 +291,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "financial-crimes-3",
     "genetic-counseling",
     // reality
-    "study-abroad",
+    "international-neighbors",
     "a-fistful-of-cards-iii",
     // horror
     "secret-ingredient",
@@ -414,7 +414,7 @@ export const ROUNDS: Round[] = [
       "chain-letters",
       "hand-letters",
       "one-guard-screen",
-      "study-abroad",
+      "international-neighbors",
       "a-fistful-of-cards-iii",
       "heist-iii",
     ],
