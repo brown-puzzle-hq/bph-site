@@ -81,36 +81,36 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
   >("uncollapsed");
 
   const onLeftCoordinates: Record<Item, Coordinates> = {
-    guard_1: { x: 50, y: 500 },
-    guard_2: { x: 150, y: 450 },
-    door_1: { x: 250, y: 425 },
-    door_2: { x: 350, y: 450 },
-    cabbage: { x: 450, y: 550 },
-    boat: { x: 250, y: 575 },
-    player: { x: 450, y: 500 },
+    door_1: { x: 250, y: 450 },
+    door_2: { x: 170, y: 480 },
+    guard_1: { x: 95, y: 500 },
+    guard_2: { x: 25, y: 560 },
+    cabbage: { x: 170, y: 600 },
+    boat: { x: 275, y: 600 },
+    player: { x: 405, y: 475 },
   };
 
   const onLeftBoatCoordinates: Record<Item, Coordinates> = {
-    guard_1: { x: 325, y: 525 },
-    guard_2: { x: 325, y: 525 },
-    door_1: { x: 325, y: 525 },
-    door_2: { x: 325, y: 525 },
-    cabbage: { x: 325, y: 625 },
+    door_1: { x: 330, y: 525 },
+    door_2: { x: 330, y: 525 },
+    guard_1: { x: 340, y: 460 },
+    guard_2: { x: 340, y: 460 },
+    cabbage: { x: 350, y: 620 },
     boat: { x: 0, y: 0 }, // This is not used
     player: { x: 0, y: 0 }, // This is not used
   };
 
   const onRightCoordinates: Record<Item, Coordinates> = {
-    guard_1: { x: 775, y: 250 },
-    guard_2: { x: 875, y: 200 },
-    door_1: { x: 975, y: 175 },
-    door_2: { x: 1075, y: 200 },
-    cabbage: { x: 1125, y: 375 },
-    boat: { x: 650, y: 450 },
-    player: { x: 850, y: 375 },
+    door_1: { x: 1075, y: 500 },
+    door_2: { x: 975, y: 500 },
+    guard_1: { x: 1025, y: 560 },
+    guard_2: { x: 925, y: 560 },
+    cabbage: { x: 1100, y: 675 },
+    boat: { x: 575, y: 600 },
+    player: { x: 705, y: 475 },
   };
 
-  const onRightBoatOffset: Coordinates = { x: 400, y: -125 };
+  const onRightBoatOffset: Coordinates = { x: 300, y: 0 };
 
   const startLocation: Record<Item, Location> = {
     guard_1: "left",
@@ -130,7 +130,7 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
     if (inBoat.includes(key)) {
       if (locations["boat"] === "left") {
         return {
-          x: onLeftBoatCoordinates[key].x + 100 * inBoat.indexOf(key),
+          x: onLeftBoatCoordinates[key].x + 145 * inBoat.indexOf(key),
           y: onLeftBoatCoordinates[key].y,
         };
       } else {
@@ -138,7 +138,7 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
           x:
             onLeftBoatCoordinates[key].x +
             onRightBoatOffset.x +
-            100 * inBoat.indexOf(key),
+            145 * inBoat.indexOf(key),
           y: onLeftBoatCoordinates[key].y + onRightBoatOffset.y,
         };
       }
@@ -494,52 +494,28 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
             className="rounded-md border-8 border-footer-bg"
             style={{ cursor }}
           >
-            <Sprite image={RIVER.src} scale={2 * SCALE} />
+            <Sprite
+              image={RIVER.src}
+              width={WIDTH * SCALE}
+              height={HEIGHT * SCALE}
+            />
+            <Sprite
+              image={BOAT.src}
+              eventMode="static"
+              pointerdown={(event) => onClickBoat(event.currentTarget)}
+              pointerover={(event) => onHover(event.currentTarget, "boat")}
+              pointerout={(event) => onHoverOut(event.currentTarget)}
+              x={getCoordinates("boat").x * SCALE}
+              y={getCoordinates("boat").y * SCALE}
+              scale={0.5 * SCALE}
+              hitArea={new Rectangle(90, 50, 575, 220)}
+            />
             <Sprite
               image={PLAYER.src}
-              eventMode="static"
+              eventMode="none"
               x={getCoordinates("player").x * SCALE}
               y={getCoordinates("player").y * SCALE}
-              scale={0.22 * SCALE}
-            />
-            <Sprite
-              image={GUARD.src}
-              eventMode="dynamic"
-              pointerdown={(event) =>
-                onClickItem(event.currentTarget, "guard_1")
-              }
-              pointerover={(event) => onHover(event.currentTarget, "guard_1")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
-              key="guard_1"
-              x={getCoordinates("guard_1").x * SCALE}
-              y={getCoordinates("guard_1").y * SCALE}
-              scale={0.15 * SCALE}
-            />
-            <Sprite
-              image={GUARD.src}
-              eventMode="dynamic"
-              pointerdown={(event) =>
-                onClickItem(event.currentTarget, "guard_2")
-              }
-              pointerover={(event) => onHover(event.currentTarget, "guard_2")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
-              key="guard_2"
-              x={getCoordinates("guard_2").x * SCALE}
-              y={getCoordinates("guard_2").y * SCALE}
-              scale={0.15 * SCALE}
-            />
-            <Sprite
-              image={CABBAGE.src}
-              eventMode="dynamic"
-              pointerdown={(event) =>
-                onClickItem(event.currentTarget, "cabbage")
-              }
-              pointerover={(event) => onHover(event.currentTarget, "cabbage")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
-              key="cabbage"
-              x={getCoordinates("cabbage").x * SCALE}
-              y={getCoordinates("cabbage").y * SCALE}
-              scale={0.15 * SCALE}
+              scale={0.25 * SCALE}
             />
             <Sprite
               image={DOOR.src}
@@ -552,7 +528,7 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
               key="door_1"
               x={getCoordinates("door_1").x * SCALE}
               y={getCoordinates("door_1").y * SCALE}
-              scale={0.4 * SCALE}
+              scale={0.2 * SCALE}
             />
             <Sprite
               image={DOOR.src}
@@ -565,18 +541,46 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
               key="door_2"
               x={getCoordinates("door_2").x * SCALE}
               y={getCoordinates("door_2").y * SCALE}
-              scale={0.4 * SCALE}
+              scale={0.2 * SCALE}
             />
             <Sprite
-              image={BOAT.src}
-              eventMode="static"
-              pointerdown={(event) => onClickBoat(event.currentTarget)}
-              pointerover={(event) => onHover(event.currentTarget, "boat")}
+              image={CABBAGE.src}
+              eventMode="dynamic"
+              pointerdown={(event) =>
+                onClickItem(event.currentTarget, "cabbage")
+              }
+              pointerover={(event) => onHover(event.currentTarget, "cabbage")}
               pointerout={(event) => onHoverOut(event.currentTarget)}
-              x={getCoordinates("boat").x * SCALE}
-              y={getCoordinates("boat").y * SCALE}
-              scale={1.5 * SCALE}
-              hitArea={new Rectangle(20, 50, 260, 80)}
+              key="cabbage"
+              x={getCoordinates("cabbage").x * SCALE}
+              y={getCoordinates("cabbage").y * SCALE}
+              scale={0.1 * SCALE}
+            />
+            <Sprite
+              image={GUARD.src}
+              eventMode="dynamic"
+              pointerdown={(event) =>
+                onClickItem(event.currentTarget, "guard_1")
+              }
+              pointerover={(event) => onHover(event.currentTarget, "guard_1")}
+              pointerout={(event) => onHoverOut(event.currentTarget)}
+              key="guard_1"
+              x={getCoordinates("guard_1").x * SCALE}
+              y={getCoordinates("guard_1").y * SCALE}
+              scale={0.25 * SCALE}
+            />
+            <Sprite
+              image={GUARD.src}
+              eventMode="dynamic"
+              pointerdown={(event) =>
+                onClickItem(event.currentTarget, "guard_2")
+              }
+              pointerover={(event) => onHover(event.currentTarget, "guard_2")}
+              pointerout={(event) => onHoverOut(event.currentTarget)}
+              key="guard_2"
+              x={getCoordinates("guard_2").x * SCALE}
+              y={getCoordinates("guard_2").y * SCALE}
+              scale={0.25 * SCALE}
             />
           </Stage>
           {/* Draggable overlay */}
