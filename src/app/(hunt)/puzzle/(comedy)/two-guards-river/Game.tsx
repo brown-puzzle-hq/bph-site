@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "@pixi/events";
 import { Stage, Sprite } from "@pixi/react";
+import type { EventMode } from "pixi.js";
 import { Rectangle } from "@pixi/math";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,6 +32,88 @@ import GUARD from "./guard.png";
 import CABBAGE from "./cabbage.png";
 import DOOR from "./door.png";
 import BOAT from "./boat.png";
+
+interface AnimatedSpriteProps {
+  image: string;
+  x: number;
+  y: number;
+  scale: number;
+  eventMode?: EventMode;
+  hitArea?: Rectangle;
+  onPointerDown?: (event: any) => void;
+  onPointerOver?: (event: any) => void;
+  onPointerOut?: (event: any) => void;
+}
+
+const AnimatedSprite: React.FC<AnimatedSpriteProps> = ({
+  image,
+  x,
+  y,
+  scale,
+  eventMode,
+  hitArea,
+  onPointerDown,
+  onPointerOver,
+  onPointerOut,
+}) => {
+  const spriteRef = useRef<any>(null);
+  const prevPosition = useRef({ x, y });
+
+  useEffect(() => {
+    if (!spriteRef.current) return;
+
+    const startX = prevPosition.current.x;
+    const startY = prevPosition.current.y;
+    const targetX = x;
+    const targetY = y;
+
+    // Don't animate on first render
+    if (startX === targetX && startY === targetY) return;
+
+    let startTime: number | null = null;
+    const duration = 100;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const easeProgress =
+        progress < 0.5
+          ? 2 * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      if (spriteRef.current) {
+        spriteRef.current.x = startX + (targetX - startX) * easeProgress;
+        spriteRef.current.y = startY + (targetY - startY) * easeProgress;
+      }
+
+      if (progress < 1) {
+        const animationFrameId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationFrameId);
+      } else {
+        prevPosition.current = { x: targetX, y: targetY };
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [x, y]);
+
+  return (
+    <Sprite
+      ref={spriteRef}
+      image={image}
+      x={prevPosition.current.x}
+      y={prevPosition.current.y}
+      scale={scale}
+      eventMode={eventMode}
+      hitArea={hitArea}
+      pointerdown={onPointerDown}
+      pointerover={onPointerOver}
+      pointerout={onPointerOut}
+    />
+  );
+};
 
 export type Item =
   | "guard_1"
@@ -499,84 +582,84 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
               width={WIDTH * SCALE}
               height={HEIGHT * SCALE}
             />
-            <Sprite
+            <AnimatedSprite
               image={BOAT.src}
               eventMode="static"
-              pointerdown={(event) => onClickBoat(event.currentTarget)}
-              pointerover={(event) => onHover(event.currentTarget, "boat")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
+              onPointerDown={(event) => onClickBoat(event.currentTarget)}
+              onPointerOver={(event) => onHover(event.currentTarget, "boat")}
+              onPointerOut={(event) => onHoverOut(event.currentTarget)}
               x={getCoordinates("boat").x * SCALE}
               y={getCoordinates("boat").y * SCALE}
               scale={0.5 * SCALE}
               hitArea={new Rectangle(90, 50, 575, 220)}
             />
-            <Sprite
+            <AnimatedSprite
               image={PLAYER.src}
               eventMode="none"
               x={getCoordinates("player").x * SCALE}
               y={getCoordinates("player").y * SCALE}
               scale={0.25 * SCALE}
             />
-            <Sprite
+            <AnimatedSprite
               image={DOOR.src}
               eventMode="dynamic"
-              pointerdown={(event) =>
+              onPointerDown={(event) =>
                 onClickItem(event.currentTarget, "door_1")
               }
-              pointerover={(event) => onHover(event.currentTarget, "door_1")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
+              onPointerOver={(event) => onHover(event.currentTarget, "door_1")}
+              onPointerOut={(event) => onHoverOut(event.currentTarget)}
               key="door_1"
               x={getCoordinates("door_1").x * SCALE}
               y={getCoordinates("door_1").y * SCALE}
               scale={0.2 * SCALE}
             />
-            <Sprite
+            <AnimatedSprite
               image={DOOR.src}
               eventMode="dynamic"
-              pointerdown={(event) =>
+              onPointerDown={(event) =>
                 onClickItem(event.currentTarget, "door_2")
               }
-              pointerover={(event) => onHover(event.currentTarget, "door_2")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
+              onPointerOver={(event) => onHover(event.currentTarget, "door_2")}
+              onPointerOut={(event) => onHoverOut(event.currentTarget)}
               key="door_2"
               x={getCoordinates("door_2").x * SCALE}
               y={getCoordinates("door_2").y * SCALE}
               scale={0.2 * SCALE}
             />
-            <Sprite
+            <AnimatedSprite
               image={CABBAGE.src}
               eventMode="dynamic"
-              pointerdown={(event) =>
+              onPointerDown={(event) =>
                 onClickItem(event.currentTarget, "cabbage")
               }
-              pointerover={(event) => onHover(event.currentTarget, "cabbage")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
+              onPointerOver={(event) => onHover(event.currentTarget, "cabbage")}
+              onPointerOut={(event) => onHoverOut(event.currentTarget)}
               key="cabbage"
               x={getCoordinates("cabbage").x * SCALE}
               y={getCoordinates("cabbage").y * SCALE}
               scale={0.1 * SCALE}
             />
-            <Sprite
+            <AnimatedSprite
               image={GUARD.src}
               eventMode="dynamic"
-              pointerdown={(event) =>
+              onPointerDown={(event) =>
                 onClickItem(event.currentTarget, "guard_1")
               }
-              pointerover={(event) => onHover(event.currentTarget, "guard_1")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
+              onPointerOver={(event) => onHover(event.currentTarget, "guard_1")}
+              onPointerOut={(event) => onHoverOut(event.currentTarget)}
               key="guard_1"
               x={getCoordinates("guard_1").x * SCALE}
               y={getCoordinates("guard_1").y * SCALE}
               scale={0.25 * SCALE}
             />
-            <Sprite
+            <AnimatedSprite
               image={GUARD.src}
               eventMode="dynamic"
-              pointerdown={(event) =>
+              onPointerDown={(event) =>
                 onClickItem(event.currentTarget, "guard_2")
               }
-              pointerover={(event) => onHover(event.currentTarget, "guard_2")}
-              pointerout={(event) => onHoverOut(event.currentTarget)}
+              onPointerOver={(event) => onHover(event.currentTarget, "guard_2")}
+              onPointerOut={(event) => onHoverOut(event.currentTarget)}
               key="guard_2"
               x={getCoordinates("guard_2").x * SCALE}
               y={getCoordinates("guard_2").y * SCALE}
