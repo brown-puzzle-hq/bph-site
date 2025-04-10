@@ -67,6 +67,7 @@ export default async function DefaultHintPage({
   const hintsRemaining = await getNumberOfHintsRemaining(
     teamId,
     session!.user!.role,
+    session!.user!.interactionMode,
   );
 
   const query = await db.query.hints.findFirst({

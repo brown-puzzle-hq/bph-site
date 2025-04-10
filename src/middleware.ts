@@ -1,7 +1,4 @@
-import NextAuth from "next-auth";
-import { authConfig } from "@/auth.config";
-
-export const { auth } = NextAuth(authConfig);
+import { auth } from "@/auth";
 
 export default auth(async (req) => {
   // Allow admins to access all pages

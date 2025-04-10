@@ -482,14 +482,14 @@ export default function AdminHintThread({
                                   message: "",
                                 });
                               }}
-                              className="text-link hover:underline"
+                              className="text-blue-500 hover:underline"
                             >
                               Reply
                             </button>
                           ) : (
                             <button
                               onClick={() => setNewFollowUp(null)}
-                              className="text-link hover:underline"
+                              className="text-blue-500 hover:underline"
                             >
                               Cancel
                             </button>
@@ -512,7 +512,7 @@ export default function AdminHintThread({
                                     "response",
                                   )
                                 }
-                                className="text-link hover:underline"
+                                className="text-blue-500 hover:underline"
                               >
                                 Save
                               </button>
@@ -527,7 +527,7 @@ export default function AdminHintThread({
                                   type: "response",
                                 });
                               }}
-                              className="text-link hover:underline"
+                              className="text-blue-500 hover:underline"
                             >
                               Edit
                             </button>
@@ -605,7 +605,7 @@ export default function AdminHintThread({
                               "",
                             )
                           }
-                          className="text-link hover:underline"
+                          className="text-blue-500 hover:underline"
                         >
                           Claim
                         </button>
@@ -621,14 +621,14 @@ export default function AdminHintThread({
                               message: "",
                             });
                           }}
-                          className="text-link hover:underline"
+                          className="text-blue-500 hover:underline"
                         >
                           Reply
                         </button>
                       ) : (
                         <button
                           onClick={() => setNewFollowUp(null)}
-                          className="text-link hover:underline"
+                          className="text-blue-500 hover:underline"
                         >
                           Cancel
                         </button>
@@ -648,7 +648,7 @@ export default function AdminHintThread({
                                   "follow-up",
                                 )
                               }
-                              className="text-link hover:underline"
+                              className="text-blue-500 hover:underline"
                             >
                               Save
                             </button>
@@ -662,7 +662,7 @@ export default function AdminHintThread({
                                   type: "follow-up",
                                 });
                               }}
-                              className="text-link hover:underline"
+                              className="text-blue-500 hover:underline"
                             >
                               Edit
                             </button>

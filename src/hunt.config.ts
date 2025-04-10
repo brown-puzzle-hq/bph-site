@@ -445,18 +445,26 @@ export const ROUNDS: Round[] = [
  */
 
 /** Calculates the total number of hints given to a team */
-export function getTotalHints(teamId: string, role: string) {
+export function getTotalHints(role: string, interactionMode: string) {
   const initialNumberOfHints =
     role == "admin" || role == "testsolver" ? 1e6 : 1;
   const currentTime = new Date();
-  const timeDifference = currentTime.getTime() - IN_PERSON.START_TIME.getTime(); // In milliseconds
+  const timeDifference =
+    currentTime.getTime() -
+    (interactionMode === "in-person"
+      ? IN_PERSON.START_TIME.getTime()
+      : REMOTE.START_TIME.getTime()); // In milliseconds
   const rate = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
   return initialNumberOfHints + Math.max(Math.floor(timeDifference / rate), 0);
 }
 
 /** Calculates the total number of hints available to a team */
-export async function getNumberOfHintsRemaining(teamId: string, role: string) {
-  const totalHints = getTotalHints(teamId, role);
+export async function getNumberOfHintsRemaining(
+  teamId: string,
+  role: string,
+  interactionMode: string,
+) {
+  const totalHints = getTotalHints(role, interactionMode);
   const query = await db
     .select({ count: count() })
     .from(hints)

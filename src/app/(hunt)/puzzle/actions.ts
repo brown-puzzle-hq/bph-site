@@ -326,9 +326,11 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
   }
   const teamId = session.user.id;
   const role = session.user.role;
+  const interactionMode = session.user.interactionMode;
 
   // Checks
-  const hasHint = (await getNumberOfHintsRemaining(teamId, role)) > 0;
+  const hasHint =
+    (await getNumberOfHintsRemaining(teamId, role, interactionMode)) > 0;
   const hasUnansweredHint = (await db.query.hints.findFirst({
     columns: { id: true },
     where: and(eq(hints.teamId, teamId), eq(hints.status, "no_response")),
@@ -348,9 +350,10 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
       })
       .returning({ id: hints.id });
 
-    // TODO: get specific hint ID
-    const hintMessage = `🙏 **Hint** [request](https://www.brownpuzzlehunt.com/admin/hints) by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
-    await sendBotMessage(hintMessage);
+    if (result[0]) {
+      const hintMessage = `🙏 **Hint** [request](https://www.brownpuzzlehunt.com/admin/hints/${result[0].id}) by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
+      await sendBotMessage(hintMessage);
+    }
 
     return result[0]?.id;
   }
