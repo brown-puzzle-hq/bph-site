@@ -71,12 +71,23 @@ export default async function Home() {
         `../../../(hunt)/puzzle/(${roundName})/${puzzle.id}/data.tsx`
       ).catch(() => null);
 
+      const {
+        inPersonBody,
+        remoteBoxBody,
+        remoteBody,
+        solutionBody,
+        copyText,
+      } = module ?? {};
+
       return {
         ...puzzle,
-        inPersonBody: module?.inPersonBody ?? null,
-        remoteBody: module?.remoteBody ?? null,
-        solutionBody: module?.solutionBody ?? null,
-        copyText: module?.copyText ?? null,
+        inPersonBody: inPersonBody ?? null,
+        remoteBoxBody:
+          remoteBoxBody !== inPersonBody ? (remoteBoxBody ?? null) : null,
+        remoteBody: remoteBody !== inPersonBody ? (remoteBody ?? null) : null,
+        solutionBody:
+          solutionBody !== inPersonBody ? (solutionBody ?? null) : null,
+        copyText: copyText ?? null,
       };
     }),
   );
@@ -98,6 +109,7 @@ export default async function Home() {
               <TableHead className="w-fit py-0 text-center">
                 In-Person
               </TableHead>
+              <TableHead className="w-fit py-0 text-center">Box</TableHead>
               <TableHead className="w-fit py-0 text-center">Remote</TableHead>
               <TableHead className="w-fit py-0 text-center">Solution</TableHead>
               <TableHead className="w-fit py-0 text-center">Stats</TableHead>
@@ -159,6 +171,17 @@ export default async function Home() {
                         <div className="flex justify-center">
                           <a
                             href={`/puzzle/${puzzle.id}?interactionMode=in-person`}
+                          >
+                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                          </a>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="justify-center">
+                      {puzzle.remoteBoxBody && (
+                        <div className="flex justify-center">
+                          <a
+                            href={`/puzzle/${puzzle.id}?interactionMode=remote-box`}
                           >
                             <Puzzle className="size-5 text-red-500 hover:opacity-75" />
                           </a>
