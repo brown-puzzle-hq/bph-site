@@ -95,22 +95,26 @@ export async function canViewSolution(
   puzzleId: string,
   session: Session | null,
 ): Promise<viewStatus> {
-  // If the hunt has ended, anyone can view solutions
-  if (new Date() > REMOTE.END_TIME) return "success";
-  // If the hunt has not ended, users must be signed-in
   if (!session?.user?.id) return "not_authenticated";
-  // Admin can always view the solution
   if (session.user.role == "admin") return "success";
+  else return "not_authorized";
 
-  // Everyone else needs to have solved the puzzle
-  const solved = await db.query.solves.findFirst({
-    where: and(
-      eq(solves.teamId, session.user.id),
-      eq(solves.puzzleId, puzzleId),
-    ),
-  });
-
-  return solved ? "success" : "not_authorized";
+  // // If the hunt has ended, anyone can view solutions
+  // if (new Date() > REMOTE.END_TIME) return "success";
+  // // If the hunt has not ended, users must be signed-in
+  // if (!session?.user?.id) return "not_authenticated";
+  // // Admin can always view the solution
+  // if (session.user.role == "admin") return "success";
+  //
+  // // Everyone else needs to have solved the puzzle
+  // const solved = await db.query.solves.findFirst({
+  //   where: and(
+  //     eq(solves.teamId, session.user.id),
+  //     eq(solves.puzzleId, puzzleId),
+  //   ),
+  // });
+  //
+  // return solved ? "success" : "not_authorized";
 }
 
 /** Handles a guess for a puzzle. May call handleSolve.
