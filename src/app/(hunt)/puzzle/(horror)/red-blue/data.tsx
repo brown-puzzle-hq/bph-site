@@ -19,7 +19,7 @@ export const puzzleId = "red-blue";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="items-center">
+  <div>
   <div className="mx-auto mb-6 max-w-3xl text-center italic">
         This is a physical puzzle! If your team has not already picked up a
         chain, please visit HQ in Friedman 208.
@@ -37,12 +37,13 @@ export const inPersonBody = (
         personality!
       </i>
     </p>
-    <div className="text-center mx-auto grid w-0 grid-cols-[22] gap-0 pb-4">
-      {Array.from({ length: 22 }).map((_, i) => (
+    <div>The first bead in the chain is blue.</div>
+    <div className="mx-auto grid w-60 grid-cols-5 gap-0 pb-4">
+      {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
-          className={`aspect-square ${(i == 4 || i == 10 || i == 16) ? "" : i >= 17 ? "bg-neutral-600" : "bg-neutral-400"} ${
-            (i == 4 || i == 10 || i == 16) ? "" : "border-1 border border-white ring-1 ring-white"
+          className={`aspect-square ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} ${
+            i === 4 ? "" : "border-1 border border-white ring-1 ring-white"
           }`}
         />
       ))}
