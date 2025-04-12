@@ -24,7 +24,7 @@ export const inPersonBody = (
   <div className="mx-auto mb-6 max-w-3xl text-center italic">
         This is a physical puzzle! If your team has not already picked up a
         chain, please visit HQ in Friedman 208.
-        <hr className="my-6 mb-6 w-[848px] border-t border-white" />
+        <hr className="my-6 mb-6 w-full border-t border-white" />
     <p>
       <i>You've had me bending double from your curses!</i>
     </p>

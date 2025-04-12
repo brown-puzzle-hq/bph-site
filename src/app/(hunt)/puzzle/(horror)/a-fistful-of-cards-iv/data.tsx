@@ -47,7 +47,7 @@ export const inPersonBody = (
         Please visit HQ in Friedman 208 if you believe you are missing these
         supplies.
     </div>
-    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
+    <hr className="my-6 mb-6 w-full border-t border-white" />
     <div className="mb-6 max-w-3xl">
       Howdy Pardner! Great job slinging dynamite so far - just one more task to
       go. If you want to complete it you'll need to use everything at your

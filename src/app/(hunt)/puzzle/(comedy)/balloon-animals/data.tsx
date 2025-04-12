@@ -34,7 +34,7 @@ export const inPersonBody = (
         This is a physical puzzle! If your team has not already picked up your
         balloons, please visit HQ in Friedman 208.
     </div>
-    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
+    <hr className="my-6 mb-6 w-full border-t border-white" />
     <div className="font-bold">
       This is a metapuzzle. It uses feeders from the Comedy round.
     </div>
