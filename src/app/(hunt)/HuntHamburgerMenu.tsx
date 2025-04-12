@@ -1,6 +1,8 @@
 import { auth } from "~/server/auth/auth";
 import { LogoutButton } from "../nav/LogoutButton";
 import { HamburgerMenu, MenuItem } from "../nav/HamburgerMenu";
+import Countdown from "./Countdown";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 export async function HuntHamburgerMenu() {
   const session = await auth();
@@ -66,11 +68,22 @@ export async function HuntHamburgerMenu() {
 
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
+  const middleElement = session?.user?.id ? (
+    <Countdown
+      targetDate={
+        session.user.interactionMode === "in-person"
+          ? IN_PERSON.START_TIME
+          : REMOTE.START_TIME
+      }
+    />
+  ) : undefined;
+
   return (
     <HamburgerMenu
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}
+      middleElement={middleElement}
       side="hunt"
     />
   );

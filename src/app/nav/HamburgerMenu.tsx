@@ -29,11 +29,13 @@ type Props = {
   rightMenuItems: MenuItem[];
   hamburgerMenuItems: MenuItem[];
   side: "hunt" | "admin";
+  middleElement?: JSX.Element;
 };
 
 export function HamburgerMenu({
   leftMenuItems,
   rightMenuItems,
+  middleElement,
   hamburgerMenuItems,
   side,
 }: Props) {
@@ -80,6 +82,11 @@ export function HamburgerMenu({
             ))}
           </NavigationMenuList>
         </NavigationMenu>
+      </div>
+
+      {/* Middle element */}
+      <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
+        {middleElement}
       </div>
 
       {/* Right menu items */}
