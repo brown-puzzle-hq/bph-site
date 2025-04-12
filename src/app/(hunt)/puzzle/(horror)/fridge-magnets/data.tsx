@@ -1,5 +1,6 @@
 import Image from "next/image";
-import fridge from "./fridge.png";
+import fridge from "./fridge_magnets.svg";
+import box from "./fm_box.svg"
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -14,14 +15,17 @@ export const puzzleId = "fridge-magnets";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="space-y-4 max-w-3xl text-center">
+  <div className="max-w-3xl items-center space-y-4">
+    <div className="text-center">
       <b>
         This is a sequence metapuzzle. It uses feeders from the 🧩 sequence.
       </b>
     </div>
-    <div className="max-w-3xl text-center">
-      <Image src={fridge} width={800} height={800} alt="Fridge Magnets" />
+    <div className="flex text-center justify-center">
+      <Image src={fridge} alt="" className=""/>
+    </div>
+    <div className="border-4 border-white p-4 space-y-6">
+    <Image src={box} alt="" className=""/>
     </div>
   </div>
 );
