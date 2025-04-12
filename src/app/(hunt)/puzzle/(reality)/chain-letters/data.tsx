@@ -28,11 +28,14 @@ export const puzzleId = "chain-letters";
       </a>
       .
     </p> */
-const body = (<div>
-  <div className="max-w-3xl space-y-4 text-center pb-2.5 italic"> 
+const body = (<div className="space-y-4">
+  <div className="max-w-3xl text-center italic"> 
     The further a message travels, the harder it is to follow its instructions.
     </div>
     
+    <div>The first bead in the chain is blue.</div>
+
+    <div>
     Download the puzzle{" "}
         <a
         href="/api/puzzle/chain-letters"
@@ -40,6 +43,7 @@ const body = (<div>
       >
         here.
       </a>
+      </div>
 </div>);
 
 export const inPersonBody = (
