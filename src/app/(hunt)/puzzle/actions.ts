@@ -164,8 +164,9 @@ export async function handleGuess(puzzleId: string, guess: string) {
   var isCorrect = puzzle.answer === guess;
   var solveType: (typeof solveTypeEnum.enumValues)[number] = "guess";
 
-  // If the guess is not correct, check if it is an answer token
-  if (!isCorrect) {
+  // If the guess is not correct and it is not a meta puzzle
+  // check if it is an answer token
+  if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
     const event = await db.query.events.findFirst({
       columns: { id: true },
       where: eq(events.answer, guess),
