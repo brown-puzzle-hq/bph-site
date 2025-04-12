@@ -69,13 +69,18 @@ export async function HuntHamburgerMenu() {
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
   const middleElement = session?.user?.id ? (
-    <Countdown
-      targetDate={
-        session.user.interactionMode === "in-person"
-          ? IN_PERSON.START_TIME
-          : REMOTE.START_TIME
-      }
-    />
+    <div>
+      <Countdown
+        targetDate={
+          session.user.interactionMode === "in-person"
+            ? IN_PERSON.START_TIME
+            : REMOTE.START_TIME
+        }
+      />
+      <p className="hidden text-center font-mono text-sm lg:block">
+        PUSHED BACK TO 1:30 PM
+      </p>
+    </div>
   ) : undefined;
 
   return (

@@ -10,7 +10,7 @@ export const REGISTRATION_END_TIME = new Date("2030-11-24T17:00:00Z");
 export const IN_PERSON = {
   KICKOFF_DOOR_TIME: new Date("2025-04-12T15:30:00.000Z"),
   KICKOFF_TIME: new Date("2025-04-12T16:00:00.000Z"),
-  START_TIME: new Date("2025-04-12T17:00:00.000Z"),
+  START_TIME: new Date("2025-04-12T17:30:00.000Z"),
   END_TIME: new Date("2025-04-13T23:00:00Z"),
   WRAPUP_DOOR_TIME: new Date("2025-04-13T23:30:00.000Z"),
   WRAPUP_TIME: new Date("2025-04-14T00:00:00Z"),
@@ -134,7 +134,12 @@ export const SEQUENCES: Sequence[] = [
   {
     name: "Music",
     icon: "🎶",
-    puzzles: ["fractal-shanty", "identify-the-piece", "imagine", "sound-of-music"],
+    puzzles: [
+      "fractal-shanty",
+      "identify-the-piece",
+      "imagine",
+      "sound-of-music",
+    ],
   },
 ];
 
@@ -259,7 +264,12 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
   "whats-my-ride": ["bluenos-puzzle-box"],
   piecemeal: ["barbie", "eye-of-the-storm", "narcissism"],
-  "eye-spy": ["bluenos-puzzle-box", "whats-my-ride", "imagine", "international-neighbours"],
+  "eye-spy": [
+    "bluenos-puzzle-box",
+    "whats-my-ride",
+    "imagine",
+    "international-neighbours",
+  ],
   "identify-the-piece": ["the-snack-zone"],
   "eye-of-the-storm": ["boring-plot", "narcissism"],
   "genetic-counseling": [
@@ -282,10 +292,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "opening-sequences": ["a-fistful-of-cards-iii", "hand-letters"],
   "chain-letters": ["hand-letters", "heist-iii"],
-  "a-fistful-of-cards-iii": [
-    "international-neighbors",
-    "six-degrees",
-  ], // opening-sequences
+  "a-fistful-of-cards-iii": ["international-neighbors", "six-degrees"], // opening-sequences
   "hand-letters": ["international-neighbors", "are-you-sure", "six-degrees"], // opening-sequences, chain-letters,
   "heist-iii": ["are-you-sure"], // chain-letters
   "international-neighbors": [
@@ -331,11 +338,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "secret-ingredient",
     "sound-of-music",
   ], // PLACEHOLDER I is blueberry
-  "color-wheel": [
-    "a-fistful-of-cards-iv",
-    "sound-of-music",
-    "the-final-heist",
-  ],
+  "color-wheel": ["a-fistful-of-cards-iv", "sound-of-music", "the-final-heist"],
   "eye-to-eye": [
     "the-final-heist",
     "constellation",
@@ -351,7 +354,11 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "red-blue",
   ],
   "sound-of-music": ["like-clockwork", "color-wheel", "secret-ingredient"],
-  "like-clockwork": ["sound-of-music", "constellation", "a-fistful-of-cards-iv"],
+  "like-clockwork": [
+    "sound-of-music",
+    "constellation",
+    "a-fistful-of-cards-iv",
+  ],
 };
 
 export const ROUNDS: Round[] = [
