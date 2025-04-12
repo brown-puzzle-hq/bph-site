@@ -249,9 +249,10 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "m-guards-n-doors-and-k-choices": [
     "heist-ii",
     "youve-got-this-covered",
-    "bluenos-puzzle-box",
     "identify-the-piece",
     "piecemeal",
+    "lost-lyric",
+    "bluenos-puzzle-box",
   ],
   "bluenos-puzzle-box": [
     "the-snack-zone",
@@ -259,19 +260,13 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "whats-my-ride",
     "m-guards-n-doors-and-k-choices",
   ],
-  narcissism: [
-    "eye-of-the-storm",
-    "piecemeal",
-    "financial-crimes-3",
-    "m-guards-n-doors-and-k-choices",
-  ],
+  narcissism: ["eye-of-the-storm", "piecemeal", "financial-crimes-3"],
   "financial-crimes-3": [
     "narcissism",
     "genetic-counseling",
     "eye-spy",
     "like-clockwork",
     "constellation",
-    "m-guards-n-doors-and-k-choices",
   ],
   "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
   "whats-my-ride": ["bluenos-puzzle-box"],
