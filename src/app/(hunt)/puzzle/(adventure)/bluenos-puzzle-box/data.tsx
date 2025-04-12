@@ -1,3 +1,4 @@
+import Link from "next/link";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -11,16 +12,20 @@ export const puzzleId = "bluenos-puzzle-box";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
-    <p className="mb-4 italic">This is an interactive puzzle.</p>
+  <div className="max-w-3xl text-center items-center space-y-4">
     <iframe
-      className="aspect-video w-[576px] max-w-full"
+      className="aspect-video w-full max-w-full flex"
       src="https://www.youtube-nocookie.com/embed/k2KJdVept8Y"
       title="YouTube video player"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       referrerPolicy="strict-origin-when-cross-origin"
       allowFullScreen
     ></iframe>
+    <div className="mb-4 italic">This is an interactive puzzle. 
+      Please schedule a time using <Link href="https://calendly.com/brownpuzzlehq/blueno-s-puzzle-box">
+      <span className="underline">this link</span>
+      </Link> 
+      {" "} and send two members of your team to Salomon 202 then.</div>
   </div>
 );
 

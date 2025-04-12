@@ -37,12 +37,12 @@ const traits = [
 
 export const inPersonBody = (
   <div className="max-w-4xl">
-    <p className="pb-4">
-      Your back-alley DNA testing company has really started to get off the
-      ground, but your lack of programming skills means you're forced to chain
-      together this report by hand. What can you tell about this person from
-      their DNA? (13)
-    </p>
+    <div className="pb-4 italic">
+    Working as an unpaid film intern doesn't pay the bills, so you've 
+    recently picked up an extra job at a back-alley DNA testing company, 
+    SchmancestryDNA. As your first assignment, your manager has given you 
+    this report to fill out by hand… What can you tell about this person from their DNA?
+    </div>
     <p className="pb-6">
       Use this{" "}
       <a

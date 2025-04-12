@@ -15,7 +15,7 @@ export const puzzleId = "find-ben";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="w-fit max-w-xl text-center">
+  <div className="w-fit max-w-3xl text-center">
     <iframe
       className="mb-4 aspect-video w-full"
       src="https://www.youtube-nocookie.com/embed/G04LbGyI9g8"

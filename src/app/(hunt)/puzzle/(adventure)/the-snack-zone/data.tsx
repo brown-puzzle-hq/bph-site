@@ -22,7 +22,7 @@ export const puzzleId = "the-snack-zone";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-xl">
+  <div className="max-w-3xl">
     <div className="mb-4 flex">
       <iframe
         className="aspect-video w-full"
