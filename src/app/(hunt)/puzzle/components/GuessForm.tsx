@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { handleGuess } from "../actions";
 import { useTransition } from "react";
+import { toast } from "~/hooks/use-toast";
 
 function sanitizeAnswer(answer: any) {
   return typeof answer === "string"
@@ -60,7 +61,19 @@ export default function GuessForm({
       setError(null);
       const result = await handleGuess(puzzleId, data.guess);
       if (result && result.error) {
-        setError(result.error);
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+      }
+      if (result && result.hasFinishedHunt) {
+        toast({
+          className: "bg-emerald-300",
+          title: "Congratulations on completing BPH 2025 🥳!",
+          description:
+            "Please email HQ at brownpuzzlehq@gmail.com for runaround.",
+        });
       }
       form.reset();
     });

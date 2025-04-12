@@ -4,7 +4,8 @@ import { and, count, eq, ne } from "drizzle-orm";
 
 /** REGISTRATION AND HUNT START */
 export const REGISTRATION_START_TIME = new Date("2024-11-17T17:00:00.000Z");
-export const REGISTRATION_END_TIME = new Date("2027-11-24T17:00:00Z");
+// TODO: Check whether we should end registration at some point
+export const REGISTRATION_END_TIME = new Date("2030-11-24T17:00:00Z");
 
 export const IN_PERSON = {
   KICKOFF_DOOR_TIME: new Date("2025-04-12T15:30:00.000Z"),
@@ -19,6 +20,11 @@ export const REMOTE = {
   START_TIME: new Date("2025-04-19T16:00:00.000Z"),
   END_TIME: new Date("2025-04-25T16:00:00.000Z"),
   WRAPUP_TIME: new Date("2025-04-26T17:00:00Z"),
+};
+
+export type Round = {
+  name: string;
+  puzzles: string[];
 };
 
 type Sequence = {
@@ -256,7 +262,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "eye-spy",
   ],
   imagine: ["whats-my-ride"],
-  "barbie": ["boring-plot"],
+  barbie: ["boring-plot"],
   "the-snack-zone": ["imagine"],
 
   // REALITY -> COMEDY
@@ -342,11 +348,6 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "placeholder-i": ["like-clockwork", "color-transfer", "secret-ingredient"],
   "like-clockwork": ["placeholder-i", "constellation", "a-fistful-of-cards-iv"],
-};
-
-export type Round = {
-  name: string;
-  puzzles: string[];
 };
 
 export const ROUNDS: Round[] = [
@@ -454,7 +455,7 @@ export function getTotalHints(role: string, interactionMode: string) {
     (interactionMode === "in-person"
       ? IN_PERSON.START_TIME.getTime()
       : REMOTE.START_TIME.getTime()); // In milliseconds
-  const rate = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const rate = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
   return initialNumberOfHints + Math.max(Math.floor(timeDifference / rate), 0);
 }
 

@@ -8,12 +8,12 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import EventForm from "./EventForm";
-import { PencilLine } from "lucide-react";
+import { Calendar, PencilLine } from "lucide-react";
 
 type Event = {
   id: string;
   name: string;
-  startTime: Date;
+  startTime: string;
   description: string;
   answer: string;
 };
@@ -71,7 +71,15 @@ export default function EventTable({
                     </div>
                   )}
                 </TableCell>
-                <TableCell>{event.description}</TableCell>
+                <TableCell>
+                  <div>
+                    <div className="my-1 flex items-center space-x-1 text-sm">
+                      <Calendar className="size-4" />{" "}
+                      <p className="font-semibold">Time: {event.startTime}</p>
+                    </div>
+                    <p>{event.description}</p>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>

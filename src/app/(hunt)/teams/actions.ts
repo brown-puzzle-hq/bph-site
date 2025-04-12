@@ -87,7 +87,7 @@ export async function deleteTeam(id: string, displayName: string) {
       return { error: "No team matching the given ID was found." };
     }
     const teamMessage = `:skull: **Deleted Team**: ${displayName}`;
-    await sendBotMessage(teamMessage);
+    await sendBotMessage(teamMessage, "team");
     return { error: null };
   } catch (error) {
     return { error: "An unexpected error occurred." };

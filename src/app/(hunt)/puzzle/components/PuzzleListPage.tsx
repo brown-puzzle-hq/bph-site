@@ -1,14 +1,15 @@
 "use client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapIcon, RefreshCw, Table } from "lucide-react";
-import PuzzleTable from "../puzzle/components/PuzzleTable";
-import EventTable from "../puzzle/components/EventTable";
-import { useState, useMemo, useEffect } from "react";
+import PuzzleTable from "./PuzzleTable";
+import EventTable from "./EventTable";
+import { useState, useMemo } from "react";
 import { getCookie, setCookie } from "typescript-cookie";
 import { cn } from "~/lib/utils";
 import dynamic from "next/dynamic";
+import { Round } from "~/hunt.config";
 
-const Map = dynamic(() => import("./Map"), {
+const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full items-center justify-center">
@@ -17,14 +18,37 @@ const Map = dynamic(() => import("./Map"), {
   ),
 });
 
+export type AvailablePuzzle = {
+  unlockTime: Date | null;
+  id: string;
+  name: string;
+  answer: string;
+};
+
+export type SolvedPuzzle = { puzzleId: string };
+
+export type AvailableEvent = {
+  id: string;
+  name: string;
+  answer: string;
+  description: string;
+  startTime: string;
+};
+
+export type FinishedEvent = {
+  eventId: string;
+  puzzleId: string | null;
+};
+
 type PuzzleListPageProps = {
-  availablePuzzles: any;
-  solvedPuzzles: any;
-  availableRounds: any;
-  canSeeEvents: any;
-  availableEvents: any;
-  finishedEvents: any;
+  availablePuzzles: AvailablePuzzle[];
+  solvedPuzzles: SolvedPuzzle[];
+  availableRounds: Round[];
+  canSeeEvents: boolean;
+  availableEvents: AvailableEvent[];
+  finishedEvents: FinishedEvent[];
   hasEventInputBox: boolean;
+  hasFinishedHunt: boolean;
 };
 
 export default function PuzzleListPage({
@@ -35,8 +59,11 @@ export default function PuzzleListPage({
   availableEvents,
   finishedEvents,
   hasEventInputBox,
+  hasFinishedHunt,
 }: PuzzleListPageProps) {
-  const [activeTab, setActiveTab] = useState(() => getCookie("puzzle_view") ?? "map");
+  const [activeTab, setActiveTab] = useState(
+    () => getCookie("puzzle_view") ?? "map",
+  );
   const [needMap, setNeedMap] = useState(activeTab === "map");
 
   // Will crash on mobile if not memoized
@@ -90,6 +117,15 @@ export default function PuzzleListPage({
       >
         <div className="mx-auto mb-6 flex w-full max-w-3xl grow flex-col items-center p-4 pt-6">
           <h1 className="mb-2">Puzzles</h1>
+
+          {hasFinishedHunt && (
+            <div>
+              <p className="text-base italic text-main-text">
+                Congratulations on completing BPH 2025! Please contact HQ at
+                brownpuzzlehq@gmail.com for runaround.
+              </p>
+            </div>
+          )}
 
           {/* Puzzle table */}
           <PuzzleTable

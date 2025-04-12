@@ -256,7 +256,7 @@ export const events = createTable("event", {
   id: varchar("id", { length: 255 }).primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
-  startTime: timestamp("start_time", { withTimezone: true }).notNull(),
+  startTime: varchar("start_time").notNull(),
   description: text("description").notNull(),
 });
 

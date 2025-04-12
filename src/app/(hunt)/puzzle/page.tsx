@@ -1,13 +1,25 @@
 import { auth } from "@/auth";
-import { IN_PERSON, INITIAL_PUZZLES, REMOTE } from "@/hunt.config";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { db } from "@/db/index";
 import { eq, inArray } from "drizzle-orm";
-import { solves, puzzles, unlocks, answerTokens } from "~/server/db/schema";
+import {
+  teams,
+  puzzles,
+  unlocks,
+  solves,
+  answerTokens,
+} from "~/server/db/schema";
+import { IN_PERSON, INITIAL_PUZZLES, REMOTE } from "@/hunt.config";
 import { Round, ROUNDS } from "@/hunt.config";
-import dynamic from "next/dynamic";
+import {
+  AvailablePuzzle,
+  SolvedPuzzle,
+  AvailableEvent,
+  FinishedEvent,
+} from "./components/PuzzleListPage";
 
-const PuzzleListPage = dynamic(() => import("../components/PuzzleListPage"), {
+const PuzzleListPage = dynamic(() => import("./components/PuzzleListPage"), {
   ssr: false,
 });
 
@@ -15,14 +27,12 @@ export default async function Home() {
   const session = await auth();
   const currDate = new Date();
 
-  var availablePuzzles: {
-    unlockTime: Date | null;
-    id: string;
-    name: string;
-    answer: string;
-  }[] = [];
-
-  var solvedPuzzles: { puzzleId: string }[] = [];
+  var availablePuzzles: AvailablePuzzle[] = [];
+  var solvedPuzzles: SolvedPuzzle[] = [];
+  var hasFinishedHunt = false;
+  var canSeeEvents = false;
+  var availableEvents: AvailableEvent[] = [];
+  var finishedEvents: FinishedEvent[] = [];
 
   // Not logged in
   if (!session?.user?.id) {
@@ -93,6 +103,27 @@ export default async function Home() {
       columns: { puzzleId: true },
       where: eq(solves.teamId, session.user.id),
     });
+
+    // Only in-person users can see events after the hunt starts
+    canSeeEvents =
+      session.user.interactionMode === "in-person" &&
+      currDate > IN_PERSON.START_TIME;
+
+    // TODO: not a great way to order events
+    availableEvents = await db.query.events.findMany({
+      orderBy: (events, { asc }) => [asc(events.startTime)],
+    });
+
+    finishedEvents = await db.query.answerTokens.findMany({
+      where: eq(answerTokens.teamId, session.user?.id!),
+    });
+
+    // Check if the user has finished the hunt
+    const finishTime = await db.query.teams.findFirst({
+      columns: { finishTime: true },
+      where: eq(teams.id, session.user.id),
+    });
+    hasFinishedHunt = !!finishTime?.finishTime;
   }
 
   const availableRounds: Round[] = ROUNDS.map((round) => ({
@@ -101,29 +132,6 @@ export default async function Home() {
       availablePuzzles.some((ap) => ap.id === puzzle),
     ),
   })).filter((round) => round.puzzles.length > 0);
-
-  const canSeeEvents =
-    currDate > REMOTE.END_TIME ||
-    (session?.user &&
-      session.user.interactionMode === "in-person" &&
-      currDate > IN_PERSON.START_TIME);
-
-  const availableEvents: {
-    id: string;
-    name: string;
-    answer: string;
-    description: string;
-    startTime: Date;
-  }[] = await db.query.events.findMany();
-
-  const finishedEvents: {
-    eventId: string;
-    puzzleId: string | null;
-  }[] = session?.user
-    ? await db.query.answerTokens.findMany({
-        where: eq(answerTokens.teamId, session.user?.id!),
-      })
-    : [];
 
   return (
     <PuzzleListPage
@@ -134,6 +142,7 @@ export default async function Home() {
       availableEvents={availableEvents}
       finishedEvents={finishedEvents}
       hasEventInputBox={!!session?.user}
+      hasFinishedHunt={hasFinishedHunt}
     />
   );
 }

@@ -28,6 +28,8 @@ type FormProps = {
 };
 
 export default function EventForm({ eventId }: FormProps) {
+  const [shaking, setShaking] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
@@ -43,6 +45,8 @@ export default function EventForm({ eventId }: FormProps) {
     const result = await insertAnswerToken(eventId, data.answer);
     if (result && result.error) {
       setError(result.error);
+      setShaking(true);
+      setTimeout(() => setShaking(false), 200);
     }
   };
 
@@ -69,7 +73,7 @@ export default function EventForm({ eventId }: FormProps) {
                   }}
                   placeholder="TOKEN"
                   autoComplete="off"
-                  className={`w-full bg-inherit placeholder:text-white/40 ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none`}
+                  className={`w-full bg-inherit placeholder:text-white/40 ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none ${shaking ? "animate-shake" : ""}`}
                 />
               </FormControl>
             </FormItem>

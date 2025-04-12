@@ -31,6 +31,7 @@ import {
   FollowUpEmailTemplate,
   FollowUpEmailTemplateProps,
 } from "~/lib/email-template";
+import { ensureError } from "~/lib/utils";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 export type viewStatus = "success" | "not_authenticated" | "not_authorized";
@@ -38,6 +39,7 @@ export type viewStatus = "success" | "not_authenticated" | "not_authorized";
 /** Checks whether the user can view the puzzle.
  * Admins can always view the puzzle, testsolvers can view the puzzle if it is unlocked,
  * and teams can view the puzzle if the hunt has started AND it is unlocked.
+ * Returns a viewStatus string.
  */
 export async function canViewPuzzle(
   puzzleId: string,
@@ -47,7 +49,7 @@ export async function canViewPuzzle(
 
   // If the hunt has ended for everyone, anyone can view the puzzle
   if (currentTime > REMOTE.END_TIME) return "success";
-  // Otherwise, they must be signed-in
+  // Otherwise, they must be signed in
   if (!session?.user?.id) return "not_authenticated";
   // Admin can always view the puzzle
   if (session.user.role == "admin") return "success";
@@ -87,6 +89,7 @@ export async function canViewPuzzle(
 
 /** Checks whether the user can view the solution.
  *  Does not check whether the solution actually exists.
+ * Returns a viewStatus string.
  */
 export async function canViewSolution(
   puzzleId: string,
@@ -110,13 +113,12 @@ export async function canViewSolution(
   return solved ? "success" : "not_authorized";
 }
 
-/** Handles a guess for a puzzle. Calls handleSolve. */
+/** Handles a guess for a puzzle. May call handleSolve.
+ * Returns a { error?: string, hasFinishedHunt?: boolean } */
 export async function handleGuess(puzzleId: string, guess: string) {
   // Check that the user is logged in
   const session = await auth();
-  if (!session?.user?.id) {
-    return { error: "Not logged in!" };
-  }
+  if (!session?.user?.id) return { error: "Not logged in" };
   const teamId = session.user.id;
   const currDate = new Date();
 
@@ -130,8 +132,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
     },
   });
 
-  if (!puzzle) return { error: "Puzzle not found!" };
+  if (!puzzle) return { error: "Puzzle not found" };
 
+  if (puzzle.guesses.find((g) => g.guess === guess))
+    return { error: "Already guessed!" };
+
+  // Don't penalize guess if it is a task
   const roundName = ROUNDS.find((round) =>
     round.puzzles.includes(puzzleId),
   )?.name.toLowerCase();
@@ -140,40 +146,41 @@ export async function handleGuess(puzzleId: string, guess: string) {
   );
   const tasks = module?.tasks ?? {};
 
+  // Check if the number of guesses is exceeded
   if (
     puzzle.guesses.filter(({ guess }) => !(guess in tasks)).length >=
     NUMBER_OF_GUESSES_PER_PUZZLE
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
-    return;
-  }
-
-  if (puzzle.guesses.find((g) => g.guess === guess)) {
-    return { error: "Already guessed!" };
+    return { error: "You have no guesses left. Please contact HQ for help." };
   }
 
   // Insert the guess into the guess table
   // If the guess is correct, handle the solve
-  var correct = puzzle.answer === guess;
+  var isCorrect = puzzle.answer === guess;
   var solveType: (typeof solveTypeEnum.enumValues)[number] = "guess";
 
-  if (!correct) {
+  // If the guess is not correct, check if it is an answer token
+  if (!isCorrect) {
     const event = await db.query.events.findFirst({
+      columns: { id: true },
       where: eq(events.answer, guess),
     });
 
     if (event) {
-      // Check if the team has already submitted a token for this event
+      // Check if it is an answer token.
       const answerToken = await db.query.answerTokens.findFirst({
         where: and(
-          eq(answerTokens.teamId, teamId),
           eq(answerTokens.eventId, event.id),
+          eq(answerTokens.teamId, teamId),
         ),
       });
 
-      // If there is an answer token and it hasn't been used yet, update it
+      // If the answer token already exists and the it is not used yet,
+      // update it with the puzzleId and use it to solve the puzzle
+      // Mark the guess as correct with solveType "answer_token"
       if (answerToken && !answerToken.puzzleId) {
-        correct = true;
+        isCorrect = true;
         solveType = "answer_token";
         await db
           .update(answerTokens)
@@ -187,8 +194,9 @@ export async function handleGuess(puzzleId: string, guess: string) {
       }
 
       // If there is no answer token, insert a new one
+      // Mark the guess as correct with solveType "answer_token"
       if (!answerToken) {
-        correct = true;
+        isCorrect = true;
         solveType = "answer_token";
         await db.insert(answerTokens).values({
           teamId,
@@ -200,28 +208,60 @@ export async function handleGuess(puzzleId: string, guess: string) {
     }
   }
 
-  await db.transaction(async (tx) => {
-    await tx.insert(guesses).values({
-      teamId,
-      puzzleId,
-      guess,
-      isCorrect: correct,
-      submitTime: currDate,
-    });
+  // Insert the guess into the guess table, handle the solve
+  // And check if the team has completed the hunt
+  var hasFinishedHunt = false;
 
-    if (correct) {
-      await handleSolve(tx, teamId, puzzleId, solveType);
-    }
-  });
+  try {
+    await db.transaction(async (tx) => {
+      await tx.insert(guesses).values({
+        teamId,
+        puzzleId,
+        guess,
+        isCorrect,
+        submitTime: currDate,
+      });
+
+      // Handle the solve
+      if (isCorrect) {
+        const res = await handleSolve(tx, teamId, puzzleId, solveType);
+        // Check if the team has completed the hunt
+        if (res?.hasFinishedHunt) hasFinishedHunt = true;
+      }
+    });
+  } catch (e) {
+    const error = ensureError(e);
+    const errorMessage = `Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
+    sendBotMessage(errorMessage, "dev");
+    return { error: "An unexpected error occurred. Please try again." };
+  }
+
+  // Message the guess channel
+  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "𝔼 → ✓") : "✕"}]`;
+  await sendBotMessage(guessMessage, "guess");
+
+  // Message interaction channel about action meta solve and ping the lore role
+  if (isCorrect && puzzleId == "drop-the") {
+    const actionInteractionMessage = `💥 **Action Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}) <@&1201541948880736378>`;
+    await sendBotMessage(actionInteractionMessage, "interaction");
+  }
+
+  // Message interaction channel about horror guard and ping the lore role
+  if (isCorrect && puzzleId == "the-guard-and-the-door") {
+    const cerebralInteractionMessage = `👻 **Horror Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}) <@&1201541948880736378>`;
+    await sendBotMessage(cerebralInteractionMessage, "interaction");
+  }
+
+  // If the team has finished the hunt, message the finish channel and ping the lore role
+  if (hasFinishedHunt) {
+    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) <@&900958940475559969>`;
+    await sendBotMessage(finishMessage, "interaction");
+  }
 
   revalidatePath(`/puzzle/${puzzleId}`);
 
-  // Send a message to the bot channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): \`${guess}\` [${correct ? (solveType === "guess" ? "✓" : "𝔼 → ✓") : "✕"}]`;
-  await sendBotMessage(guessMessage);
-
   // Refund hints if the guess is correct
-  if (correct) {
+  if (isCorrect) {
     await db
       .update(hints)
       .set({
@@ -237,6 +277,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
         ),
       );
   }
+
+  return { hasFinishedHunt };
 }
 
 /** Handles a solve for a puzzle */
@@ -266,7 +308,8 @@ export async function handleSolve(
     await tx.insert(unlocks).values(newUnlocks).onConflictDoNothing();
   }
 
-  // Check if the team has completed the six metas
+  // Check if the team has just completed the hunt
+  // by solving the six metas
   if (META_PUZZLES.includes(puzzleId)) {
     const query = await tx
       .select({ count: count() })
@@ -275,24 +318,24 @@ export async function handleSolve(
         and(eq(solves.teamId, teamId), inArray(solves.puzzleId, META_PUZZLES)),
       );
 
-    // They win the hunt when the finish the runaround event, not when they solve the last puzzle
-    // TODO: make this unlock the runaround, not just the finish time
     if (query[0]?.count === META_PUZZLES.length) {
       await tx
         .update(teams)
         .set({ finishTime: new Date() })
         .where(eq(teams.id, teamId));
+      return { hasFinishedHunt: true };
     }
   }
+
+  return { hasFinishedHunt: false };
 }
 
 /** Inserts an answer token into the token table */
 export async function insertAnswerToken(eventId: string, guess: string) {
   // Check that the user is logged in
   const session = await auth();
-  if (!session?.user?.id) {
-    return { error: "Not logged in!" };
-  }
+  if (!session?.user?.id) return { error: "Not logged in!" };
+
   const teamId = session.user.id;
   const currDate = new Date();
 
@@ -321,9 +364,8 @@ export type MessageType = "request" | "response" | "follow-up";
 /** Inserts a hint request into the hint table */
 export async function insertHintRequest(puzzleId: string, hint: string) {
   const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Not logged in");
-  }
+  if (!session?.user?.id) throw new Error("Not logged in");
+
   const teamId = session.user.id;
   const role = session.user.role;
   const interactionMode = session.user.interactionMode;
@@ -375,7 +417,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
   }
 
   const hintMessage = `🙏 **Hint** [request](https://www.brownpuzzlehunt.com/admin/hints/${result.id}) by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
-  await sendBotMessage(hintMessage);
+  await sendBotMessage(hintMessage, "hint");
 
   return { error: null, id: result.id };
 }
@@ -463,7 +505,7 @@ export async function insertFollowUp({
       // Otherwise, notify admin on Discord that there is a follow-up
       else if (message !== "[Claimed]") {
         const hintMessage = `🙏 **Hint** [follow-up](https://www.brownpuzzlehunt.com/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleName}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${message} <@&1310029428864057504>`;
-        await sendBotMessage(hintMessage);
+        await sendBotMessage(hintMessage, "hint");
       }
       return result[0].id;
     }
