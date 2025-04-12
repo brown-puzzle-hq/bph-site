@@ -1,5 +1,5 @@
 import Image from "next/image";
-import MAP from "./images/mapcode.png";
+import MAP from "./images/boring_plot_map.svg";
 
 const GRID = [
   "S30",
@@ -84,7 +84,7 @@ export const inPersonBody = (
     </div>
     <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
       <div className="flex justify-center pb-4">
-        <Image src={MAP} alt="" width={300} height={300} />
+        <Image src={MAP} alt="" /*width={300} height={300}*/ />
       </div>
       <p className="font-bold text-main-header">Your Backyard</p>
       <div className="grid grid-cols-[0em,repeat(29,1.5em)] grid-rows-[repeat(10,1.5em)]">
