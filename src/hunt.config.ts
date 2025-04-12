@@ -208,6 +208,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "beads",
     "aha-erlebnis",
     "youve-got-this-covered",
+    "m-guards-n-doors-and-k-choices",
   ],
   "youve-got-this-covered": [
     "heist-ii",
@@ -274,14 +275,19 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
   "whats-my-ride": ["bluenos-puzzle-box"],
-  piecemeal: ["barbie", "eye-of-the-storm", "narcissism"],
+  piecemeal: [
+    "barbie",
+    "eye-of-the-storm",
+    "narcissism",
+    "m-guards-n-doors-and-k-choices",
+  ],
   "eye-spy": [
     "bluenos-puzzle-box",
     "whats-my-ride",
     "imagine",
     "international-neighbours",
   ],
-  "identify-the-piece": ["the-snack-zone"],
+  "identify-the-piece": ["the-snack-zone", "m-guards-n-doors-and-k-choices"],
   "eye-of-the-storm": ["boring-plot", "narcissism"],
   "genetic-counseling": [
     "financial-crimes-3",
