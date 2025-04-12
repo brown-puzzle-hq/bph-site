@@ -30,6 +30,7 @@ export default async function Page({
       ),
     );
 
+  // TODO: doesn't work if not logged in
   return (
     <DefaultPuzzlePage
       puzzleId={data.puzzleId}

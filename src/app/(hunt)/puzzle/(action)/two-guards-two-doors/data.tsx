@@ -1,14 +1,14 @@
 import Image from "next/image";
-import DoorImage from "./door.png";
-import GImage from "./g.png";
-import SImage from "./s.png";
-import TImage from "./t.png";
-import IImage from "./i.png";
-import MImage from "./m.png";
-import EImage from "./e.png";
-import RImage from "./r.png";
-import NImage from "./n.png";
-import HandImage from "./pointer.png";
+import DoorImage from "./media/door.png";
+import GImage from "./media/g.png";
+import SImage from "./media/s.png";
+import TImage from "./media/t.png";
+import IImage from "./media/i.png";
+import MImage from "./media/m.png";
+import EImage from "./media/e.png";
+import RImage from "./media/r.png";
+import NImage from "./media/n.png";
+import HandImage from "./media/pointer.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.

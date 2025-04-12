@@ -19,6 +19,7 @@ export async function insertMNKDecision(
   if (scenario > 4) return { error: "Scenario must be between 1 and 4" };
 
   try {
+    // Check that the cooldown time has passed
     const lastFinalDecision = await db.query.mnk.findFirst({
       where: and(
         eq(mnk.teamId, teamId),
@@ -69,7 +70,8 @@ export async function insertMNKDecision(
       );
 
     return {
-      error: "Error inserting decision. Updating to latest puzzle state.",
+      error:
+        "An error occurred while processing your request. Updating to latest puzzle state.",
       lastRun,
     };
   }

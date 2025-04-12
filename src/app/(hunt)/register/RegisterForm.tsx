@@ -501,7 +501,9 @@ export function RegisterForm({}: RegisterFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between space-x-1">
                   <div>
-                    <FormLabel>Room needed</FormLabel>
+                    <FormLabel className="text-main-header">
+                      Room needed
+                    </FormLabel>
                     <FormDescription>
                       Hunt weekend will be busy. Select this if you'll need a
                       room.

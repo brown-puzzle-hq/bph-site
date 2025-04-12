@@ -11,7 +11,9 @@ import DOOR from "./door.svg";
 import { cn } from "~/lib/utils";
 
 type Row = InferSelectModel<typeof mnk>;
+
 type Step = "initial" | "door_1" | "door_2" | "door_3" | "switch" | "stay";
+
 type State = {
   run: number;
   scenario: number;
@@ -161,12 +163,15 @@ export default function RemoteBody({ run }: { run: Row[] }) {
   const { toast } = useToast();
 
   // Keep track of the current run
-  const [currRun, setRun] = useState<Row[]>(run);
-
   // Initialize the current state of the puzzle
+  const [currRun, setRun] = useState<Row[]>(run);
   const lastRow = getLastRow(run);
   const currState = getStateFromRow(lastRow);
   const [state, setState] = useState<State>(currState);
+  const [pendingConfirmation, setPendingConfirmation] = useState<{
+    decision: MNKDecision;
+    decisionType: MNKDecisionType;
+  } | null>(null);
 
   // Figure out when the cooldown ends
   const [cooldown, setCooldown] = useState<Date | null>(null);
@@ -180,37 +185,55 @@ export default function RemoteBody({ run }: { run: Row[] }) {
   const handleDecisionClick = async (
     decision: MNKDecision,
     decisionType: MNKDecisionType,
+    e: React.MouseEvent,
   ) => {
-    const result = await insertMNKDecision(
-      state.run,
-      state.scenario,
-      decision,
-      decisionType,
-    );
+    // Prevent the click from bubbling up to the document
+    e.stopPropagation();
 
-    // If error, toast and
-    // Try to update the state with the last run
-    if (result?.error) {
-      toast({
-        title: "Error",
-        description: result.error,
-        variant: "destructive",
-      });
+    if (
+      pendingConfirmation &&
+      pendingConfirmation.decision === decision &&
+      pendingConfirmation.decisionType === decisionType
+    ) {
+      const result = await insertMNKDecision(
+        state.run,
+        state.scenario,
+        decision,
+        decisionType,
+      );
+      setPendingConfirmation(null);
 
-      if (result?.lastRun) {
-        setRun(result.lastRun);
-        setState(getStateFromRow(getLastRow(result.lastRun)));
+      // If error, toast and
+      // Try to update the state with the last run
+      if (result?.error) {
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+
+        if (result?.lastRun) {
+          setRun(result.lastRun);
+          setState(getStateFromRow(getLastRow(result.lastRun)));
+        }
       }
-    }
 
-    // Otherwise, update the run and the state with the last row
-    // And check whether there is a cooldown
-    if (result?.row != null) {
-      const row = result.row;
-      setRun((prevState) => [...prevState, row]);
-      setState((prevState) => ({ ...prevState, step: decision }));
-      if (row.decisionType === "final" && row.scenario === 4)
-        setCooldown(new Date(result.row.time.getTime() + coolDownTime));
+      // Otherwise, update the run and the state with the last row
+      // And check whether there is a cooldown
+      if (result?.row != null) {
+        const row = result.row;
+        setRun((prevState) => [...prevState, row]);
+        setState((prevState) => ({ ...prevState, step: decision }));
+        if (row.decisionType === "final" && row.scenario === 4)
+          setCooldown(new Date(result.row.time.getTime() + coolDownTime));
+      }
+    } else {
+      setPendingConfirmation({ decision, decisionType });
+
+      toast({
+        title: "Click again to confirm",
+        description: "This decision is final for this attempt.",
+      });
     }
   };
 
@@ -229,6 +252,19 @@ export default function RemoteBody({ run }: { run: Row[] }) {
       step,
     }));
   };
+
+  useEffect(() => {
+    // Handler for clicks anywhere on the document
+    const handleGlobalClick = () => {
+      if (pendingConfirmation) {
+        setPendingConfirmation(null);
+      }
+    };
+    document.addEventListener("click", handleGlobalClick);
+    return () => {
+      document.removeEventListener("click", handleGlobalClick);
+    };
+  }, [pendingConfirmation, toast]);
 
   return (
     <div className="mb-2 flex space-x-8">
@@ -374,15 +410,20 @@ export default function RemoteBody({ run }: { run: Row[] }) {
                   disabled={
                     !!prevDecision && prevDecision.decision !== decision
                   }
-                  onClick={() =>
+                  onClick={(e) =>
                     prevDecision
                       ? handlePreviousScenarioClick(
                           state.scenario,
                           decision as Step,
                         )
-                      : handleDecisionClick(decision as MNKDecision, "door")
+                      : handleDecisionClick(decision as MNKDecision, "door", e)
                   }
-                  className="grid enabled:hover:opacity-90 disabled:cursor-not-allowed"
+                  className={cn(
+                    "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
+                    pendingConfirmation?.decision === decision &&
+                      pendingConfirmation.decisionType === "door" &&
+                      "animate-subtlePulse enabled:hover:animate-none enabled:hover:opacity-80",
+                  )}
                 >
                   <Image
                     src={DOOR}
@@ -427,7 +468,7 @@ export default function RemoteBody({ run }: { run: Row[] }) {
                         (decision === stayDoor ? "stay" : "switch")) ||
                     (decision !== stayDoor && decision !== switchDoor)
                   }
-                  onClick={() =>
+                  onClick={(e) =>
                     prevDecision
                       ? handlePreviousScenarioClick(
                           state.scenario,
@@ -438,13 +479,17 @@ export default function RemoteBody({ run }: { run: Row[] }) {
                             ? "stay"
                             : "switch") as MNKDecision,
                           "final",
+                          e,
                         )
                   }
                   className={cn(
                     "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
-                    decision !== stayDoor &&
-                      decision !== switchDoor &&
-                      "disabled:opacity-50",
+                    decision !== stayDoor && decision !== switchDoor
+                      ? "disabled:opacity-50"
+                      : pendingConfirmation?.decision ===
+                          (decision === stayDoor ? "stay" : "switch") &&
+                          pendingConfirmation.decisionType === "final" &&
+                          "animate-subtlePulse enabled:hover:animate-none enabled:hover:opacity-80",
                   )}
                 >
                   <Image
