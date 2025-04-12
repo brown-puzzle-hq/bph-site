@@ -8,7 +8,7 @@ import PLUTO from "./pluto.png";
 
 const ITEMS = [
   { name: "Bat", src: BAT, desc: <div>It has majestic <u>big wings.</u></div>},
-  { name: "Dog", src: DOG, desc: <div>Be careful with its <u>back</u> and <u>neck.</u></div>},
+  { name: "Dog", src: DOG, desc: <div>Be careful with its <u>neck</u> and <u>back.</u></div>},
   { name: "Fish", src: FISH, desc: <div>I love its <u>upper lip</u> and <u>tail.</u></div>},
   { name: "Flower", src: FLOWER, desc: <div>What pretty <u>leaves</u> it has!</div> },
   { name: "Monkey", src: MONKEY, desc: <div>The monkey is ticklish on its <u>neck</u> and <u>right ear.</u></div> },
