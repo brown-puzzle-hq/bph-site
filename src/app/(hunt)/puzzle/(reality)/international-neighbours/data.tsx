@@ -12,25 +12,38 @@ export const puzzleId = "international-neighbours";
  */
 export const inPersonBody = (
   <div className="flex max-w-3xl flex-col items-center space-y-4">
-    <p className="text-center italic pb-2.5">
-     You ask a friend for help with your linguistics assignment, but they pronounce things a little differently each time.
+    <p className="pb-2.5 text-center italic">
+      You ask a friend for help with your linguistics assignment, but they
+      pronounce things a little differently each time.
     </p>
     <div className="grid grid-cols-1 gap-4">
-      <div><span className="bg-yellow-200 text-black">_</span> _ _ _ _</div>
-      <div><span className="bg-yellow-200 text-black">_</span> _ _ _ _</div>
-      <div>_ _ _ _ <span className="bg-yellow-200 text-black">_</span></div>
-      <div>_ <span className="bg-yellow-200 text-black">_</span> _ _ _</div>
-      <div>_ _ _ <span className="bg-yellow-200 text-black">_</span> _</div>
-      <div><span className="bg-yellow-200 text-black">_</span> _ _ _ _</div>
+      <div>
+        <span className="bg-yellow-200 text-black">_</span> _ _ _ _
+      </div>
+      <div>
+        <span className="bg-yellow-200 text-black">_</span> _ _ _ _
+      </div>
+      <div>
+        _ _ _ _ <span className="bg-yellow-200 text-black">_</span>
+      </div>
+      <div>
+        _ <span className="bg-yellow-200 text-black">_</span> _ _ _
+      </div>
+      <div>
+        _ _ _ <span className="bg-yellow-200 text-black">_</span> _
+      </div>
+      <div>
+        <span className="bg-yellow-200 text-black">_</span> _ _ _ _
+      </div>
     </div>
     <div></div>
     <div className="border-4 border-white p-4">
-    <div>Someone who collapses</div>
-    <div>Partner of copier</div>
-    <div>Wider</div>
-    <div>Religion associated with reggae, for short</div>
-    <div>Christian leader of a congregation</div>
-    <div>Christian leader of a congregation</div>
+      <div>Someone who collapses</div>
+      <div>Partner of copier</div>
+      <div>Wider</div>
+      <div>Religion associated with reggae, for short</div>
+      <div>Christian leader of a congregation</div>
+      <div>Leonardo da Vinci or Pablo Picasso, for two</div>
     </div>
   </div>
 );
@@ -49,14 +62,13 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `Religion associated with reggae, for short \t _ _ _ _ _ (1, 4)
-Wider \t _ _ _ _ _ (1, 3)
-Christian leader of a congregation \t _ _ _ _ _ (5, 5)
-Partner of copier \t _ _ _ _ _ (2, 2)
-Leonardo da Vinci or Pablo Picasso, for two \t _ _ _ _ _ (4, 6)
-Volume 10 vis á vis volume 50 \t _ _ _ _ _ (1, 1)
-_ _ _ _ _ _
-1 2 3 4 5 6`;
+export const copyText = `Someone who collapses \t
+Partner of copier \t
+Wider \t
+Religion associated with reggae, for short \t
+Christian leader of a congregation \t
+Leonardo da Vinci or Pablo Picasso, for two
+`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
