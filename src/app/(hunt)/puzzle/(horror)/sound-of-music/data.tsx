@@ -1,3 +1,5 @@
+import Image from "next/image";
+import MUSIC from "./sound-of-music.png";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -10,7 +12,16 @@ export const puzzleId = "sound-of-music";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = <i>This is a placeholder.</i>;
+export const inPersonBody = (
+    <div className="space-y-4 max-w-3xl text-center items-center">
+      <div className="font-bold">
+        This is a sequence metapuzzle. It uses feeders from the 🎼 sequence.
+      </div>
+      <div className="pb-2.5 italic">Identifying notes is an important musical skill.</div>
+    <div className="max-w-3xl text-center">
+      <Image src={MUSIC} /*width={800} height={800}*/ alt="" />
+    </div>
+</div>);
 
 export const remoteBoxBody = inPersonBody;
 
