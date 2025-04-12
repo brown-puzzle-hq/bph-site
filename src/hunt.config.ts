@@ -80,7 +80,7 @@ export const SEQUENCES: Sequence[] = [
     name: "CD",
     icon: "💿",
     puzzles: [
-      "common-words",
+      "lost-lyric",
       "youve-got-this-covered",
       "imagine",
       "the-compact-disc",
@@ -93,7 +93,7 @@ export const SEQUENCES: Sequence[] = [
       "find-ben",
       "bluenos-puzzle-box",
       "the-snack-zone",
-      "color-transfer",
+      "color-wheel",
     ],
   },
   {
@@ -111,7 +111,7 @@ export const SEQUENCES: Sequence[] = [
     icon: "⭐",
     puzzles: [
       "walk-of-fame",
-      "galileo-was-wrong",
+      "connect-the-dots",
       "whats-my-ride",
       "constellation",
     ],
@@ -184,11 +184,11 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "a-fistful-of-cards",
     "filming-schedule",
     "beads",
-    "common-words",
+    "lost-lyric",
   ],
   "a-fistful-of-cards-ii": ["heist-ii", "youve-got-this-covered"], // ten-guards-ten-doors
   beads: ["heist-ii", "a-fistful-of-cards-ii", "aha-erlebnis"], // ten-guards-ten-doors
-  "common-words": [
+  "lost-lyric": [
     "youve-got-this-covered",
     "a-fistful-of-cards-ii",
     "m-guards-n-doors-and-k-choices",
@@ -202,7 +202,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "youve-got-this-covered": [
     "heist-ii",
     "beads",
-    "common-words",
+    "lost-lyric",
     "aha-erlebnis",
     "m-guards-n-doors-and-k-choices",
   ],
@@ -216,10 +216,10 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "plagiarism",
     "watching-between-the-lines",
   ],
-  peanuts: ["galileo-was-wrong", "one-guard-screen"], // two-guards-river
-  plagiarism: ["galileo-was-wrong", "fractal-shanty"], // two-guards-river
+  peanuts: ["connect-the-dots", "one-guard-screen"], // two-guards-river
+  plagiarism: ["connect-the-dots", "fractal-shanty"], // two-guards-river
   "watching-between-the-lines": ["fractal-shanty"], // two-guards-river
-  "galileo-was-wrong": [
+  "connect-the-dots": [
     "peanuts",
     "plagiarism",
     "fractal-shanty",
@@ -229,10 +229,10 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "fractal-shanty": [
     "watching-between-the-lines",
     "plagiarism",
-    "galileo-was-wrong",
+    "connect-the-dots",
     "balloon-animals",
   ],
-  "balloon-animals": ["galileo-was-wrong", "fractal-shanty"],
+  "balloon-animals": ["connect-the-dots", "fractal-shanty"],
 
   // DRAMA -> Adventure
   "m-guards-n-doors-and-k-choices": [
@@ -267,7 +267,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
 
   // REALITY -> COMEDY
   "one-guard-screen": [
-    "galileo-was-wrong",
+    "connect-the-dots",
     "fractal-shanty",
     "opening-sequences",
     "chain-letters",
@@ -301,7 +301,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "a-fistful-of-cards-iii",
     // horror
     "secret-ingredient",
-    "color-transfer",
+    "color-wheel",
     "the-compact-disc",
   ],
 
@@ -311,13 +311,13 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "like-clockwork",
     "eye-to-eye",
     "secret-ingredient",
-    "color-transfer",
+    "color-wheel",
     "cutting-room-floor",
   ], // the-guard-and-the-door
   "the-final-heist": [
     "fridge-magnets",
     "eye-to-eye",
-    "color-transfer",
+    "color-wheel",
     "red-blue",
   ], // the-guard-and-the-door
   "the-compact-disc": ["red-blue", "the-final-heist"], // the-guard-and-the-door
@@ -327,7 +327,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "secret-ingredient",
     "placeholder-i",
   ], // PLACEHOLDER I is blueberry
-  "color-transfer": [
+  "color-wheel": [
     "a-fistful-of-cards-iv",
     "placeholder-i",
     "the-final-heist",
@@ -346,7 +346,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "the-final-heist",
     "red-blue",
   ],
-  "placeholder-i": ["like-clockwork", "color-transfer", "secret-ingredient"],
+  "placeholder-i": ["like-clockwork", "color-wheel", "secret-ingredient"],
   "like-clockwork": ["placeholder-i", "constellation", "a-fistful-of-cards-iv"],
 };
 
@@ -370,7 +370,7 @@ export const ROUNDS: Round[] = [
       "beads",
       "ten-guards-ten-doors",
       "a-fistful-of-cards-ii",
-      "common-words",
+      "lost-lyric",
       "youve-got-this-covered",
       "heist-ii",
     ],
@@ -380,7 +380,7 @@ export const ROUNDS: Round[] = [
     puzzles: [
       "balloon-animals",
       "two-guards-river",
-      "galileo-was-wrong",
+      "connect-the-dots",
       "fractal-shanty",
       "watching-between-the-lines",
       "peanuts",
@@ -424,7 +424,7 @@ export const ROUNDS: Round[] = [
     name: "Horror",
     puzzles: [
       "cutting-room-floor",
-      "color-transfer",
+      "color-wheel",
       "the-guard-and-the-door",
       "a-fistful-of-cards-iv",
       "placeholder-i",

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { canViewPuzzle } from "~/app/(hunt)/puzzle/actions";
 
 export async function GET(request: Request) {
-  const puzzleId = "common-words";
+  const puzzleId = "lost-lyric";
 
   // Authentication
   const session = await auth();

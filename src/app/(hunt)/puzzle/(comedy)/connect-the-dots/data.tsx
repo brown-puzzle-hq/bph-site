@@ -7,7 +7,7 @@ import GALILEO from "./galileo.png";
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "galileo-was-wrong";
+export const puzzleId = "connect-the-dots";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,

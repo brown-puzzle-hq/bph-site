@@ -5,7 +5,7 @@ import Link from "next/link";
  * Feel free to make this creative, because the route to the puzzle will be
  * exampxe.com/puzzle/puzzleId.
  */
-export const puzzleId = "common-words";
+export const puzzleId = "lost-lyric";
 
 /**
  * The `puzzleBody` renders above the guess submission form. Put flavor text, images,
@@ -37,7 +37,7 @@ export const remoteBoxBody = (
 export const remoteBody = (
   <div className="flex justify-center py-4">
     <audio controls className="w-96 max-w-full">
-      <source src="/api/puzzle/common-words" type="audio/mpeg" />
+      <source src="/api/puzzle/lost-lyric" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
   </div>

@@ -2,7 +2,7 @@ import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "@/puzzle/components/DefaultHeader";
 
 export const metadata = {
-  title: "Color Transfer - Brown Puzzlehunt"
+  title: "Lost Lyric - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

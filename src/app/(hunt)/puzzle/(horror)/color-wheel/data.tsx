@@ -8,7 +8,7 @@ import Image2 from "./media/image2.png";
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "color-transfer";
+export const puzzleId = "color-wheel";
 
 /**
  * The `puzzleBody` renders above the guess submission form. Put flavor text, images,
