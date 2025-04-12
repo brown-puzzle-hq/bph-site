@@ -18,10 +18,18 @@ import {
   AvailableEvent,
   FinishedEvent,
 } from "./components/PuzzleListPage";
+import { headers } from "next/headers";
 
 const PuzzleListPage = dynamic(() => import("./components/PuzzleListPage"), {
   ssr: false,
 });
+
+const MobilePuzzleListPage = dynamic(
+  () => import("./components/MobilePuzzleListPage"),
+  {
+    ssr: false,
+  },
+);
 
 export default async function Home() {
   const session = await auth();
@@ -132,6 +140,28 @@ export default async function Home() {
       availablePuzzles.some((ap) => ap.id === puzzle),
     ),
   })).filter((round) => round.puzzles.length > 0);
+
+  const headersList = headers();
+  const userAgent = headersList.get("user-agent") || "";
+  const isMobile =
+    /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+      userAgent,
+    );
+
+  if (isMobile) {
+    return (
+      <MobilePuzzleListPage
+        availablePuzzles={availablePuzzles}
+        solvedPuzzles={solvedPuzzles}
+        availableRounds={availableRounds}
+        canSeeEvents={canSeeEvents}
+        availableEvents={availableEvents}
+        finishedEvents={finishedEvents}
+        hasEventInputBox={!!session?.user}
+        hasFinishedHunt={hasFinishedHunt}
+      />
+    );
+  }
 
   return (
     <PuzzleListPage
