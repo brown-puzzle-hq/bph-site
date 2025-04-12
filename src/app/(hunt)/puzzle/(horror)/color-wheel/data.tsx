@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Image1 from "./media/color_wheel.svg";
+import Image1 from "./media/color-wheel.svg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.

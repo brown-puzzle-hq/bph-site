@@ -1,7 +1,8 @@
 //TODO: make less jank
 
 import Image from "next/image";
-import CONS from "./Constellation.svg";
+import CONS1 from "./Constellation1.svg";
+import CONS2 from "./Constellation2.svg";
 const SCALE = 0.5;
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -22,13 +23,22 @@ export const inPersonBody = (
         This is a sequence metapuzzle. It uses feeders from the ⭐ sequence.
       </b>
     </p>
+    <div className="flex justify-center">
     <Image
-    src={CONS}
+    src={CONS1}
     alt=""
-    width={1638 * SCALE}
-    height={1752 * SCALE}
+    // width={1638 * SCALE}
+    // height={1752 * SCALE}
     className="mb-5 align-center"
-  />
+  /> </div>
+  <div className="flex justify-center">
+      <Image
+    src={CONS2}
+    alt=""
+    // width={1638 * SCALE}
+    // height={1752 * SCALE}
+    className="mb-5 align-center"
+  /></div>
     </div>
 );
 
