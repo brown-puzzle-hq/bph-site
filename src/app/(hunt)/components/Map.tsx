@@ -291,12 +291,6 @@ export default function Map({
   // Define layer order (from lowest to highest)
   const layerOrder = ["Adventure", "Comedy", "Drama", "Horror", "Action"];
 
-  // For debugging
-  useEffect(() => {
-    console.log("Available rounds:", availableRoundNames);
-    console.log("Layout paths:", layouts);
-  }, [availableRoundNames, layouts]);
-
   // Image loading error handling
   const handleImageError = (roundName: string) => {
     console.error(`Failed to load image for round: ${roundName}`);
@@ -327,11 +321,7 @@ export default function Map({
 
       for (const round of rounds) {
         const exists = await checkImageExists(`/map/${round}.png`);
-        if (!exists) {
-          console.error(`Image not found: /map/${round}.png`);
-        } else {
-          console.log(`Image found: /map/${round}.png`);
-        }
+        if (!exists) console.error(`Image not found: /map/${round}.png`);
       }
     };
 
@@ -554,7 +544,11 @@ export default function Map({
             {/* Adventure Layer (lowest) */}
             <Container>
               <Sprite
-                image={availableRoundNames.includes("Adventure") ? "/map/Adventure.png" : "/map/AdventureGray.png"}
+                image={
+                  availableRoundNames.includes("Adventure")
+                    ? "/map/Adventure.png"
+                    : "/map/AdventureGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
@@ -566,7 +560,11 @@ export default function Map({
             {/* RealityUnder Layer */}
             <Container>
               <Sprite
-                image={isRealityAvailable ? "/map/RealityUnder.png" : "/map/RealityUnderGray.png"}
+                image={
+                  isRealityAvailable
+                    ? "/map/RealityUnder.png"
+                    : "/map/RealityUnderGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
@@ -578,7 +576,11 @@ export default function Map({
             {/* Comedy Layer */}
             <Container>
               <Sprite
-                image={availableRoundNames.includes("Comedy") ? "/map/Comedy.png" : "/map/ComedyGray.png"}
+                image={
+                  availableRoundNames.includes("Comedy")
+                    ? "/map/Comedy.png"
+                    : "/map/ComedyGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
@@ -590,7 +592,11 @@ export default function Map({
             {/* Drama Layer */}
             <Container>
               <Sprite
-                image={availableRoundNames.includes("Drama") ? "/map/Drama.png" : "/map/DramaGray.png"}
+                image={
+                  availableRoundNames.includes("Drama")
+                    ? "/map/Drama.png"
+                    : "/map/DramaGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
@@ -602,7 +608,11 @@ export default function Map({
             {/* Horror Layer */}
             <Container>
               <Sprite
-                image={availableRoundNames.includes("Horror") ? "/map/Horror.png" : "/map/HorrorGray.png"}
+                image={
+                  availableRoundNames.includes("Horror")
+                    ? "/map/Horror.png"
+                    : "/map/HorrorGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
@@ -614,7 +624,11 @@ export default function Map({
             {/* RealityOver Layer */}
             <Container>
               <Sprite
-                image={isRealityAvailable ? "/map/RealityOver.png" : "/map/RealityOverGray.png"}
+                image={
+                  isRealityAvailable
+                    ? "/map/RealityOver.png"
+                    : "/map/RealityOverGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
@@ -626,7 +640,11 @@ export default function Map({
             {/* Action Layer (highest) */}
             <Container>
               <Sprite
-                image={availableRoundNames.includes("Action") ? "/map/Action.png" : "/map/ActionGray.png"}
+                image={
+                  availableRoundNames.includes("Action")
+                    ? "/map/Action.png"
+                    : "/map/ActionGray.png"
+                }
                 width={WIDTH}
                 height={HEIGHT}
                 x={0}
