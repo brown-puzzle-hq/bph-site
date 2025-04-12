@@ -69,9 +69,9 @@ export default function PuzzleListPage({
   // Will crash on mobile if not memoized
   const memoizedMap = useMemo(
     () => (
-      <Map availablePuzzles={availablePuzzles} solvedPuzzles={solvedPuzzles} />
+      <Map availablePuzzles={availablePuzzles} solvedPuzzles={solvedPuzzles} availableRounds={availableRounds} />
     ),
-    [availablePuzzles, solvedPuzzles],
+    [availablePuzzles, solvedPuzzles, availableRounds],
   );
 
   return (
