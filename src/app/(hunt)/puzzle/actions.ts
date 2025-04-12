@@ -235,7 +235,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
     });
   } catch (e) {
     const error = ensureError(e);
-    const errorMessage = `Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
+    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message} <@?1287563929282678795>`;
     sendBotMessage(errorMessage, "dev");
     return { error: "An unexpected error occurred. Please try again." };
   }
@@ -251,7 +251,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
       where: eq(teams.id, teamId),
     });
 
-    const actionInteractionMessage = `💥 **Action Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}). ${query ? `They are in ${query.solvingLocation}` : ""} <@&1201541948880736378>`;
+    const actionInteractionMessage = `💥 **Action Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}). ${query && query.solvingLocation ? `They are in ${query.solvingLocation}` : ""} <@&1201541948880736378>`;
     await sendBotMessage(actionInteractionMessage, "interaction");
   }
 
@@ -262,7 +262,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
       where: eq(teams.id, teamId),
     });
 
-    const horrorInteractionMessage = `👻 **Horror Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}). ${query ? `They are in ${query.solvingLocation}` : ""} <@&1201541948880736378>`;
+    const horrorInteractionMessage = `👻 **Horror Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}). ${query && query.solvingLocation ? `They are in ${query.solvingLocation}` : ""} <@&1201541948880736378>`;
     await sendBotMessage(horrorInteractionMessage, "interaction");
   }
 

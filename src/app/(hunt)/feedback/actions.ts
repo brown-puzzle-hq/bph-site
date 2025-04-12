@@ -21,7 +21,10 @@ export async function insertFeedback(description: string, timestamp: Date) {
   } catch (e) {
     // Message the dev channel
     const error = ensureError(e);
-    await sendBotMessage(`Feedback insert failed: ${error.message}`, "dev");
+    await sendBotMessage(
+      `🐛 Feedback insert failed: ${error.message} <@?1287563929282678795>`,
+      "dev",
+    );
     return { error: "Failed to submit feedback." };
   }
 

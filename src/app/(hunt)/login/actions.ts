@@ -17,7 +17,10 @@ export async function login(id: string, password: string) {
     if (error instanceof AuthError) {
       return { error: "Username or password is incorrect" };
     } else {
-      sendBotMessage(`Login for ${id} failed: ${error.message}`, "dev");
+      sendBotMessage(
+        `🐛 Login for ${id} failed: ${error.message} <@?1287563929282678795>`,
+        "dev",
+      );
       return { error: "An unexpected error occurred" };
     }
   }
