@@ -1,5 +1,5 @@
 import Image from "next/image";
-import CLOCK from "./clockwork.png";
+import CLOCK from "./like_clockwork.svg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.

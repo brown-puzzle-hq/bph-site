@@ -2,7 +2,7 @@ import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "@/puzzle/components/DefaultHeader";
 
 export const metadata = {
-  title: "Placeholder I - Brown Puzzlehunt"
+  title: "Sound of Music - Brown Puzzlehunt"
 };
 
 export default async function RootLayout({

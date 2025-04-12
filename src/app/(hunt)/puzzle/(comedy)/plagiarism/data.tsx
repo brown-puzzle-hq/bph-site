@@ -21,51 +21,12 @@ export const puzzleId = "plagiarism";
 export const inPersonBody = (
   <div>
     <div className="max-w-2xl p-4">
-      {/* <p className="font-bold text-main-header">1. CV</p> */}
-      <div className="flex justify-center pb-4">
-        <p>
-          <br></br>[Missing image: this part of the puzzle is not complete yet,
-          sorry. This is not a puzzle.]
-        </p>
-      </div>
-
-      {/* <p className="font-bold text-main-header">2. Dining Hall</p> */}
-      <div className="flex justify-center pb-4">
-        <Image src={DINING} alt="" />
-      </div>
-
-      {/* <p className="font-bold text-main-header">3. MI</p> */}
-      <div className="flex justify-center pb-4">
-        <p>
-          <br></br>[Missing image: this part of the puzzle is not complete yet,
-          sorry. This is not a puzzle.]
-        </p>
-      </div>
-
-      {/* <p className="font-bold text-main-header">4. Football Coach</p> */}
-      <div className="flex justify-center pb-4">
-        <Image src={FOOTBALL} alt="" />
-      </div>
-
-      {/* <p className="font-bold text-main-header">5. Economics Nobel Laureates</p> */}
-      <div className="flex justify-center pb-4">
-        <Image src={ECON} alt="" />
-      </div>
-
-      {/* <p className="font-bold text-main-header">6. Radio Station</p> */}
-      <div className="flex justify-center pb-4">
-        <Image src={RADIO} alt="" />
-      </div>
-
-      {/* <p className="font-bold text-main-header">7. State</p> */}
-      <div className="flex justify-center pb-4">
-        <Image src={STATE} alt="" />
-      </div>
-
-      {/* <p className="font-bold text-main-header">8. Other University</p> */}
-      <div className="flex justify-center pb-4">
-        <Image src={OTHER} alt="" />
-      </div>
+      <p>We were too lazy to write our own puzzle, so we stole a 
+        puzzle from the CMU Spring 2025 Puzzlehunt. 
+        (Yes, the one that's happening right now.)</p>
+      <br></br>
+      <p><a href="https://puzzlehunt.club.cc.cmu.edu/protected/hunt/27/files/puzzle_28001_28001-index.html">
+      <u>You can view their puzzle here.</u></a></p>
     </div>
   </div>
 );

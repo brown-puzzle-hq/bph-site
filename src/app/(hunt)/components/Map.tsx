@@ -46,7 +46,7 @@ const positions: Record<string, L.LatLngExpression> = {
   "opening-sequences": [430, 610],
   peanuts: [382, 445],
   piecemeal: [671, 435],
-  "placeholder-i": [670, 480],
+  "sound-of-music": [670, 480],
   "like-clockwork": [590, 400],
   plagiarism: [335, 460],
   "red-blue": [460, 510],

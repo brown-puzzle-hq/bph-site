@@ -131,6 +131,11 @@ export const SEQUENCES: Sequence[] = [
     icon: "⏰",
     puzzles: ["filming-schedule", "hand-letters", "like-clockwork"],
   },
+  {
+    name: "Music",
+    icon: "🎶",
+    puzzles: ["fractal-shanty", "identify-the-piece", "imagine", "sound-of-music"],
+  },
 ];
 
 /** GUESSES */
@@ -176,7 +181,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "drop-the",
     "two-guards-river",
   ],
-  "drop-the": [],
+  "drop-the": ["the-guard-and-the-door"],
   heist: ["filming-schedule", "drop-the", "two-guards-river"], // two-guards-two-doors
 
   // ACTION -> DRAMA
@@ -248,18 +253,21 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "narcissism",
     "genetic-counseling",
     "eye-spy",
-    "the-guard-and-the-door",
+    "like-clockwork",
+    "constellation",
   ], // m-guards-n-doors-and-k-choices
   "boring-plot": ["bluenos-puzzle-box", "narcissism", "financial-crimes-3"],
   "whats-my-ride": ["bluenos-puzzle-box"],
   piecemeal: ["barbie", "eye-of-the-storm", "narcissism"],
-  "eye-spy": ["bluenos-puzzle-box", "whats-my-ride", "imagine"],
+  "eye-spy": ["bluenos-puzzle-box", "whats-my-ride", "imagine", "international-neighbours"],
   "identify-the-piece": ["the-snack-zone"],
   "eye-of-the-storm": ["boring-plot", "narcissism"],
   "genetic-counseling": [
     "financial-crimes-3",
-    "the-guard-and-the-door",
+    "like-clockwork",
+    "constellation",
     "eye-spy",
+    "international-neighbours",
   ],
   imagine: ["whats-my-ride"],
   barbie: ["boring-plot"],
@@ -275,7 +283,6 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "opening-sequences": ["a-fistful-of-cards-iii", "hand-letters"],
   "chain-letters": ["hand-letters", "heist-iii"],
   "a-fistful-of-cards-iii": [
-    "the-guard-and-the-door",
     "international-neighbors",
     "six-degrees",
   ], // opening-sequences
@@ -285,7 +292,8 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "a-fistful-of-cards-iii",
     "hand-letters",
     "are-you-sure",
-    "the-guard-and-the-door",
+    "eye-spy",
+    "genetic-counseling",
     "six-degrees",
   ],
   "are-you-sure": ["international-neighbors", "hand-letters", "heist-iii"],
@@ -293,12 +301,8 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "cutting-room-floor": [],
 
   "the-guard-and-the-door": [
-    // adventure
-    "financial-crimes-3",
-    "genetic-counseling",
-    // reality
-    "international-neighbors",
-    "a-fistful-of-cards-iii",
+    // action
+    "drop-the",
     // horror
     "secret-ingredient",
     "color-wheel",
@@ -325,11 +329,11 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "red-blue",
     "a-fistful-of-cards-iv",
     "secret-ingredient",
-    "placeholder-i",
+    "sound-of-music",
   ], // PLACEHOLDER I is blueberry
   "color-wheel": [
     "a-fistful-of-cards-iv",
-    "placeholder-i",
+    "sound-of-music",
     "the-final-heist",
   ],
   "eye-to-eye": [
@@ -339,15 +343,15 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "red-blue",
     "cutting-room-floor",
   ], // PLACEHOLDER II is blueberry
-  "secret-ingredient": ["placeholder-i", "a-fistful-of-cards-iv"],
+  "secret-ingredient": ["sound-of-music", "a-fistful-of-cards-iv"],
   "fridge-magnets": [
     "constellation",
     "eye-to-eye",
     "the-final-heist",
     "red-blue",
   ],
-  "placeholder-i": ["like-clockwork", "color-wheel", "secret-ingredient"],
-  "like-clockwork": ["placeholder-i", "constellation", "a-fistful-of-cards-iv"],
+  "sound-of-music": ["like-clockwork", "color-wheel", "secret-ingredient"],
+  "like-clockwork": ["sound-of-music", "constellation", "a-fistful-of-cards-iv"],
 };
 
 export const ROUNDS: Round[] = [
@@ -427,7 +431,7 @@ export const ROUNDS: Round[] = [
       "color-wheel",
       "the-guard-and-the-door",
       "a-fistful-of-cards-iv",
-      "placeholder-i",
+      "sound-of-music",
       "eye-to-eye",
       "fridge-magnets",
       "red-blue",

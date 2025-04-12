@@ -4,7 +4,7 @@
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "placeholder-i";
+export const puzzleId = "sound-of-music";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
