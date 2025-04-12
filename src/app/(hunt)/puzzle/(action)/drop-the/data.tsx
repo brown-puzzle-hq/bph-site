@@ -20,7 +20,7 @@ export const inPersonBody = (
       You're trying to adapt these characters -- better known by other names --
       into your movie, but people are butting heads. What do they need?
     </div>
-    <div className="mx-auto flex aspect-[4/3] w-full max-w-sm flex-col items-center pb-[1px] leading-10">
+    <div className="mx-auto flex aspect-[4/3] w-full max-w-sm flex-col items-center pb-[1px]">
       <div className="grid h-[16.666%] w-full grid-cols-8 ring-1 ring-white">
         <div className="border border-white" />
         <div className="border border-white" />
@@ -28,42 +28,62 @@ export const inPersonBody = (
         <div className="border border-white" />
         <div className="border border-white" />
         <div className="border border-white" />
-        <div className="border border-white">4</div>
-        <div className="border border-white">5</div>
+        <div className="flex items-center justify-center border border-white">
+          4
+        </div>
+        <div className="flex items-center justify-center border border-white">
+          5
+        </div>
       </div>
       <div className="grid h-[16.666%] w-[87.5%] grid-cols-7 ring-1 ring-white">
         <div className="border border-white" />
         <div className="border border-white" />
-        <div className="border border-white">10</div>
+        <div className="flex items-center justify-center border border-white">
+          10
+        </div>
         <div className="border border-white" />
         <div className="border border-white" />
-        <div className="border border-white">6</div>
+        <div className="flex items-center justify-center border border-white">
+          6
+        </div>
         <div className="border border-white" />
       </div>
       <div className="grid h-[16.666%] w-3/4 grid-cols-6 ring-1 ring-white">
         <div className="border border-white" />
         <div className="border border-white" />
         <div className="border border-white" />
-        <div className="border border-white">7</div>
-        <div className="border border-white">8</div>
+        <div className="flex items-center justify-center border border-white">
+          7
+        </div>
+        <div className="flex items-center justify-center border border-white">
+          8
+        </div>
         <div className="border border-white" />
       </div>
       <div className="grid h-[16.666%] w-[62.5%] grid-cols-5 ring-1 ring-white">
-        <div className="border border-white">3</div>
+        <div className="flex items-center justify-center border border-white">
+          3
+        </div>
         <div className="border border-white" />
         <div className="border border-white" />
         <div className="border border-white" />
-        <div className="border border-white">9</div>
+        <div className="flex items-center justify-center border border-white">
+          9
+        </div>
       </div>
       <div className="grid h-[16.666%] w-1/2 grid-cols-4 ring-1 ring-white">
         <div className="border border-white" />
         <div className="border border-white" />
-        <div className="border border-white">2</div>
+        <div className="flex items-center justify-center border border-white">
+          2
+        </div>
         <div className="border border-white" />
       </div>
       <div className="grid h-[16.666%] w-[37.5%] grid-cols-3 ring-1 ring-white">
         <div className="border border-white" />
-        <div className="border border-white">1</div>
+        <div className="flex items-center justify-center border border-white">
+          1
+        </div>
         <div className="border border-white" />
       </div>
     </div>
