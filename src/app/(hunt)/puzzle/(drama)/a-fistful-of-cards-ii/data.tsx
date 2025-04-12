@@ -28,7 +28,7 @@ export const puzzleId = "a-fistful-of-cards-ii";
  */
 export const inPersonBody = (
   <div>
-    <div className="mx-auto mb-6 max-w-3xl text-center">
+    <div className="mx-auto mb-6 max-w-3xl text-center italic">
       <i>
         This is a physical puzzle! You should have received it at kickoff.
         Please visit HQ in Friedman 208 if you believe you are missing these
@@ -65,13 +65,6 @@ export const inPersonBody = (
       <li>Money Cache</li>
       <li>Robbery</li>
     </ul>
-
-    <div className="mt-8 flex justify-center gap-4">
-      <Image src={booklet1} alt="Booklet #1" width={200} height={400} />
-      <Image src={booklet2} alt="Booklet #2" width={200} height={400} />
-      <Image src={booklet3} alt="Booklet #3" width={200} height={400} />
-      <Image src={booklet4} alt="Booklet #4" width={200} height={400} />
-    </div>
   </div>
 );
 

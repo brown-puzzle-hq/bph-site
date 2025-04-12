@@ -38,12 +38,14 @@ export const puzzleId = "eye-of-the-storm";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    <p>You spin it right round, I, right round like a... hurricane?</p>
-    <div className="mx-auto grid w-fit grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(13,1.5em)] border text-center leading-snug">
+        <div className="pb-2.5 italic">
+        You spin it right round, I, right round like a... hurricane?
+    </div>
+    <div className="mx-auto grid w-fit grid-cols-[repeat(13,2em)] grid-rows-[repeat(13,2em)] border text-center leading-none">
       {TEXT.split(" ").map((box, index) => (
-        <p className="border" key={index}>
+        <div className="border flex justify-center items-center" key={index}>
           {box}
-        </p>
+        </div>
       ))}
     </div>
     <div>

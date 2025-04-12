@@ -73,10 +73,10 @@ const checkboxPrompts = [
 
 export const inPersonBody = (
   <div className="mb-2 max-w-4xl space-y-6">
-    <p>
+    <div className="pb-2.5 italic text-center">
       Which of these two things do you like more: Samuel Morse or questions that
       have only two possible answers?
-    </p>
+    </div>
 
     {checkboxPrompts.map((prompts, i) => (
       <div key={`${i}`}>

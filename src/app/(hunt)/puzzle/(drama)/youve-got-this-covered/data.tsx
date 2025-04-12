@@ -13,11 +13,10 @@ export const puzzleId = "youve-got-this-covered";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-6 max-w-3xl text-center">
-      This is a physical puzzle! If your team has not already picked up a CD,
-      please visit HQ in Friedman 208.
+    <div className="mx-auto mb-6 max-w-3xl text-center italic">
+      This is a physical puzzle! If your team has not already picked up a CD
+      or needs a place to play it, please visit HQ in Friedman 208.
     </div>
-    <hr className="my-6 mb-6 border-t border-white" />
   </div>
 );
 

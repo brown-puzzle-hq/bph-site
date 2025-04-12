@@ -18,7 +18,9 @@ export const puzzleId = "narcissism";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-    <i>Your therapist asks if you feel that something’s missing.</i>
+        <div className="pb-2.5 italic">
+        Your therapist asks if you feel that something's missing.
+    </div>
     <div className="grid grid-cols-1 gap-8 p-4 sm:grid-cols-2">
       <Image src={IMG1} className="rounded-lg" alt="" />
       <Image src={IMG2} className="rounded-lg" alt="" />

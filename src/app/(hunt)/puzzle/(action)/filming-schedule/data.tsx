@@ -12,16 +12,16 @@ export const puzzleId = "filming-schedule";
  */
 export const inPersonBody = (
   <div className="mx-auto max-w-3xl space-y-4 text-center">
-    <p className="text-lg font-medium">
-      It’s really hard to register and coordinate my Brown University courses
-      with this filming schedule.
-    </p>
+        <div className="pb-2.5 italic">
+        It's really hard to register and coordinate my Brown University courses
+        for this semester with this filming schedule.
+    </div>
     <ol className="list-inside list-decimal space-y-3 text-left">
       <li>
         <span className="font-semibold">EDUC 0610</span>
         <ol className="ml-5 list-inside list-disc">
           <li>
-            “The Halfblood’s _____” by Devin Hanson{" "}
+            “The Halfblood's _____” by Devin Hanson{" "}
             <span className="text-gray-400">[5]</span>
           </li>
         </ol>

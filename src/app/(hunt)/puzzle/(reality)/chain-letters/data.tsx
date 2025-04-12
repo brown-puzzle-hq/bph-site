@@ -18,25 +18,38 @@ export const puzzleId = "chain-letters";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
+
+/**      Use this{" "}
+      <a
+        href="/api/puzzle/genetic-counseling"
+        className="text-link hover:underline"
+      >
+        data sheet
+      </a>
+      .
+    </p> */
+const body = (<div>
+  <div className="max-w-3xl space-y-4 text-center pb-2.5 italic"> 
+    The further a message travels, the harder it is to follow instructions.
+    </div>
+    
+    Download the puzzle{" "}
+        <a
+        href="/api/puzzle/chain-letters"
+        className="text-link hover:underline"
+      >
+        here.
+      </a>
+</div>);
+
 export const inPersonBody = (
-  <div className="max-w-xl space-y-4 text-center">
-    <p>
-      <i>
+  <div>
+  <div className="mx-auto mb-6 max-w-3xl text-center italic">
         This is a physical puzzle! If your team has not already picked up a
         chain, please visit HQ in Friedman 208.
-      </i>
-    </p>
-    <p>
-      <i>Some people just can't follow simple instructions.</i>
-    </p>
-    <p>
-      <a
-        href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"
-        className="text-blue-200 hover:underline"
-      >
-        This is a link to download a JSON file.
-      </a>
-    </p>
+  </div>
+  <hr className="my-6 mb-6 w-[848px] border-t border-white" />
+  {body}
   </div>
 );
 
@@ -47,17 +60,7 @@ export const remoteBoxBody = (
         This is a physical puzzle! You should use an object found in your box.
       </i>
     </p>
-    <p>
-      <i>Some people just can't follow simple instructions.</i>
-    </p>
-    <p>
-      <a
-        href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"
-        className="text-blue-200 hover:underline"
-      >
-        This is a link to download a JSON file.
-      </a>
-    </p>
+    {body}
   </div>
 );
 
@@ -75,17 +78,7 @@ export const remoteBody = (
         />
       ))}
     </div>
-    <p>
-      <i>Some people just can't follow simple instructions.</i>
-    </p>
-    <p>
-      <a
-        href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"
-        className="text-blue-200 hover:underline"
-      >
-        This is a link to download a JSON file.
-      </a>
-    </p>
+    {body}
   </div>
 );
 

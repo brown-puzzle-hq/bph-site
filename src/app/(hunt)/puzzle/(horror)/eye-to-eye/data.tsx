@@ -16,15 +16,12 @@ export const puzzleId = "eye-to-eye";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a sequence metapuzzle. It uses feeders from the 👁️ sequence.
-      </b>
+    <div className="max-w-3xl space-y-4 text-center">
+<div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 👁️ sequence.
     </div>
-    <hr className="my-6 mb-6 border-t border-white" />
-    <div className="mb-4 max-w-3xl pb-1.5">
-      <i>Only one of my eyes ever work... What do I need to fix my eyesight?</i>
+    <div className="pb-2.5 italic">
+    Only one of my eyes ever work... What do I need to fix my eyesight?
     </div>
     <div className="mx-auto grid w-full max-w-80 grid-cols-9 border text-center text-lg font-bold leading-8">
       {DATA.split(",").map((cell, index) => (
@@ -36,7 +33,7 @@ export const inPersonBody = (
         </div>
       ))}
     </div>
-  </div>
+</div>
 );
 
 // Flagging: need actual emoji integration here

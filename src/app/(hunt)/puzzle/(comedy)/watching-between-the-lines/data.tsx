@@ -22,15 +22,16 @@ export const puzzleId = "watching-between-the-lines";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center font-semibold">
-    <p className="font-normal">
-      {/* <span className="font-bold">F</span>or{" "}
-      <span className="font-bold">T</span>he{" "}
-      <span className="font-bold">L</span>ast{" "}
-      <span className="font-bold">N</span> */}
-      For the last nine days I've been trying to figure out why all these movies
-      are familiar. They remind me of something from the days of yore...
-    </p>
+  <div className="max-w-3xl space-y-4 text-center">
+  <div className="pb-2.5 italic">
+    For too long now, I've been struggling with my favorite movies. 
+      Firstly, they look not at all alike. Also, I've found that lots, 
+      notably, are repeats. Finally, the list needs some more diverse 
+      inspirations.
+</div>
+  <div className="flex flex-col items-center font-semibold">
+    
+      
     <div className="grid w-fit grid-cols-[100px_min-content] place-items-center justify-items-start gap-4 text-nowrap md:w-full md:grid-cols-[100px_1fr_100px_1fr_100px_min-content]">
       <Image
         src={WSS}
@@ -289,6 +290,7 @@ export const inPersonBody = (
       />
       <p>(0289, 4)</p>
     </div>
+  </div>
   </div>
 );
 

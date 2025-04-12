@@ -29,12 +29,10 @@ export const puzzleId = "a-fistful-of-cards-iii";
  */
 export const inPersonBody = (
   <div>
-    <div className="mx-auto mb-6 max-w-3xl text-center">
-      <i>
+    <div className="mx-auto mb-6 max-w-3xl text-center italic">
         This is a physical puzzle! You should have received it at kickoff.
         Please visit HQ in Friedman 208 if you believe you are missing these
         supplies.
-      </i>
     </div>
     <hr className="my-6 mb-6 w-[848px] border-t border-white" />
     <div className="mb-6 max-w-3xl text-center">
@@ -67,13 +65,6 @@ export const inPersonBody = (
       <li>Recycling Waste</li>
       <li>Resell</li>
     </ul>
-
-    <div className="mt-8 flex justify-center gap-4">
-      <Image src={booklet1} alt="Booklet #1" width={200} height={400} />
-      <Image src={booklet2} alt="Booklet #2" width={200} height={400} />
-      <Image src={booklet3} alt="Booklet #3" width={200} height={400} />
-      <Image src={booklet4} alt="Booklet #4" width={200} height={400} />
-    </div>
   </div>
 );
 

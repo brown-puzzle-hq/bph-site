@@ -72,18 +72,17 @@ export const puzzleId = "boring-plot";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">ADVENTURE</span> round.
-      </b>
+    <div className="max-w-3xl space-y-4 text-center">
+    <div className="font-bold">
+      This is a metapuzzle. It uses feeders from the Adventure round.
     </div>
-    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-      <i>
-        You've spent ages digging through your backyard with only 6 fossils to
+    <div className="pb-2.5 italic">
+    You've spent ages digging through your backyard with only 6 fossils to
         show for it. If you dig through the fossil stack instead, going right
         and down, maybe you'll find what you need. What is the plot missing?
-      </i>
+    </div>
+    </div>
+    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
       <div className="flex justify-center pb-4">
         <Image src={MAP} alt="" width={300} height={300} />
       </div>

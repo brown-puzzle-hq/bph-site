@@ -14,17 +14,21 @@ export const puzzleId = "the-compact-disc";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+    <div className="mx-auto mb-6 max-w-3xl text-center italic">
+  This is a physical puzzle! If your team has not already picked up a CD,
+  please visit HQ in Friedman 208.
+</div>
+<hr className="my-6 mb-6 w-[848px] border-t border-white" />
   <div className="max-w-3xl space-y-4 text-center">
     <div className="font-bold">
       This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
     </div>
-    <div className="italic">
-      This is a physical puzzle! If your team has not already picked up a CD,
-      please visit HQ in Friedman 208.
-    </div>
-    <div className="italic">
+
+    <div className="pb-2.5 italic">
       You take a minute (or several) to listen to your CD.
     </div>
+  </div>
   </div>
 );
 

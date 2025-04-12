@@ -12,17 +12,16 @@ export const puzzleId = "aha-erlebnis";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
+    <div className="space-y-4 max-w-3xl text-center">
+      <div className="font-bold">
         This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">DRAMA</span> round.
-      </b>
-    </div>
-    <div className="mb-4 max-w-3xl">
-      <i>
-        The emotions of the characters just aren't connecting with audiences.
-        How can you make this German film more accessible?
-      </i>
+        Drama round.
+      </div>
+    
+      <div className="pb-2.5 italic">
+          The emotions of the characters just aren't connecting with audiences.
+          How can you make this German film more accessible?
+      </div>
     </div>
 
     <div className="flex flex-col space-y-4 p-6 text-white">

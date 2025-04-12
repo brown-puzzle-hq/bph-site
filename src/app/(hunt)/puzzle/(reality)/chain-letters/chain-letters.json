@@ -1,0 +1,419 @@
+[
+    {
+        "name": "Alabaster",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 40 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Apple",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Maroon 5",
+            "Poppy"
+        ]
+    },
+    {
+        "name": "Aqua",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Cyan",
+            "Zaffre"
+        ]
+    },
+    {
+        "name": "Azure",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 87 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Bianca",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Blanche",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 72 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Blaze",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 53 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Blue",
+        "message_received": "N/A",
+        "forwarded_to": [
+            "Cerulean",
+            "Sky"
+        ]
+    },
+    {
+        "name": "Bone",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Chalk"
+        ]
+    },
+    {
+        "name": "Burgundy",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Garnet"
+        ]
+    },
+    {
+        "name": "Cardinal",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Blaze"
+        ]
+    },
+    {
+        "name": "Carmine",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Cayenne",
+            "Hibiscus"
+        ]
+    },
+    {
+        "name": "Carnation",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 57 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Cayenne",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Carnation"
+        ]
+    },
+    {
+        "name": "Cerulean",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Azure"
+        ]
+    },
+    {
+        "name": "Chalk",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 76 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Cherry",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Apple",
+            "Ruby"
+        ]
+    },
+    {
+        "name": "Cloud",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Frost",
+            "Jasmine"
+        ]
+    },
+    {
+        "name": "Cobalt",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 66 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Cream",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Gypsum"
+        ]
+    },
+    {
+        "name": "Crimson",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 75 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Cyan",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Cobalt"
+        ]
+    },
+    {
+        "name": "Dove",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Bone",
+            "Eggshell"
+        ]
+    },
+    {
+        "name": "Eggshell",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Glacier",
+            "Milk"
+        ]
+    },
+    {
+        "name": "Frost",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Marshmallow"
+        ]
+    },
+    {
+        "name": "Gardenia",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Pearl"
+        ]
+    },
+    {
+        "name": "Garnet",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 79 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Ghost",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Cloud",
+            "Meringue"
+        ]
+    },
+    {
+        "name": "Glacier",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Blanche"
+        ]
+    },
+    {
+        "name": "Gypsum",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 69 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Hail",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 79 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Hibiscus",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Cardinal",
+            "Mahogany"
+        ]
+    },
+    {
+        "name": "Indigo",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Sapphire"
+        ]
+    },
+    {
+        "name": "Ivory",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Vanilla"
+        ]
+    },
+    {
+        "name": "Jasmine",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Bianca",
+            "Gardenia"
+        ]
+    },
+    {
+        "name": "Lake",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 84 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Lapis",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Aqua",
+            "Navy"
+        ]
+    },
+    {
+        "name": "Limestone",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Hail"
+        ]
+    },
+    {
+        "name": "Mahogany",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Maroon 5",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Burgundy",
+            "Rowan"
+        ]
+    },
+    {
+        "name": "Marshmallow",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 44 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Meringue",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Alabaster"
+        ]
+    },
+    {
+        "name": "Milk",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Ghost",
+            "Limestone"
+        ]
+    },
+    {
+        "name": "Navy",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Lake"
+        ]
+    },
+    {
+        "name": "Pearl",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 41 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Phoenix",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 84 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Poppy",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Phoenix"
+        ]
+    },
+    {
+        "name": "Red",
+        "message_received": "N/A",
+        "forwarded_to": [
+            "Cherry",
+            "Rose"
+        ]
+    },
+    {
+        "name": "Rose",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Saffron"
+        ]
+    },
+    {
+        "name": "Rowan",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Carmine",
+            "Scarlet"
+        ]
+    },
+    {
+        "name": "Ruby",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Sienna"
+        ]
+    },
+    {
+        "name": "Saffron",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 84 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Sapphire",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 79 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Scarlet",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Crimson"
+        ]
+    },
+    {
+        "name": "Sienna",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 70 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "Sky",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Indigo",
+            "Lapis"
+        ]
+    },
+    {
+        "name": "Snow",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+            "Cream",
+            "Dove"
+        ]
+    },
+    {
+        "name": "Vanilla",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 87 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    },
+    {
+        "name": "White",
+        "message_received": "N/A",
+        "forwarded_to": [
+            "Ivory",
+            "Snow"
+        ]
+    },
+    {
+        "name": "Zaffre",
+        "message_received": "A cookie rested peacefully upon my shelf. Suddenly, Cookie Monster appeared. Cookie Monster ate the cookie. It was no longer able to be eaten by me. I was so sad. Send this to 2 other people or Cookie Monster will eat your cookie!",
+        "forwarded_to": [
+        ]
+    }
+]

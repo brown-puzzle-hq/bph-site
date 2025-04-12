@@ -7,12 +7,12 @@ import FLOWER from "./flower.png";
 import PLUTO from "./pluto.png";
 
 const ITEMS = [
-  { name: "Bat", src: BAT, desc: "big wings" },
-  { name: "Dog", src: DOG, desc: "back, neck" },
-  { name: "Fish", src: FISH, desc: "upper lip, tail" },
-  { name: "Flower", src: FLOWER, desc: "leaves" },
-  { name: "Monkey", src: MONKEY, desc: "neck, right ear" },
-  { name: "Pluto", src: PLUTO, desc: "back legs" },
+  { name: "Bat", src: BAT, desc: <div>It has majestic <u>big wings.</u></div>},
+  { name: "Dog", src: DOG, desc: <div>Be careful with its <u>back</u> and <u>neck.</u></div>},
+  { name: "Fish", src: FISH, desc: <div>I love its <u>upper lip</u> and <u>tail.</u></div>},
+  { name: "Flower", src: FLOWER, desc: <div>What pretty <u>leaves</u> it has!</div> },
+  { name: "Monkey", src: MONKEY, desc: <div>The monkey is ticklish on its <u>neck</u> and <u>right ear.</u></div> },
+  { name: "Pluto", src: PLUTO, desc: <div>Why doesn't he walk on his <u>hind legs?</u></div> },
 ];
 
 /**
@@ -29,30 +29,29 @@ export const puzzleId = "balloon-animals";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-6 max-w-3xl text-center">
-      <i>
+    <div className="max-w-3xl space-y-4 text-center">
+    <div className="mx-auto mb-6 max-w-3xl text-center italic">
         This is a physical puzzle! If your team has not already picked up your
         balloons, please visit HQ in Friedman 208.
-      </i>
     </div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">COMEDY</span> round.
-      </b>
+    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
+    <div className="font-bold">
+      This is a metapuzzle. It uses feeders from the Comedy round.
     </div>
-    <div className="max-w-3xl space-y-4 text-center">
-      <p>
-        Your circus movie is pretty good, but it requires more mainstream
+<div className="pb-2.5 italic">
+Your circus movie is pretty good, but it requires more mainstream
         appeal.
-      </p>
-      <p>What do you need?</p>
+        <br></br>
+        What do you need?
+    </div>
+        
+      
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         {ITEMS.map(({ name, src, desc }, index) => (
           <div className="space-y-4" key={index}>
             <p className="font-bold text-main-header">{name}</p>
             <Image src={src} alt="" className="rounded-lg" />
-            <p>{desc}</p>
+            {desc}
           </div>
         ))}
       </div>
@@ -84,7 +83,7 @@ export const remoteBoxBody = (
           <div className="space-y-4" key={index}>
             <p className="font-bold text-main-header">{name}</p>
             <Image src={src} alt="" className="rounded-lg" />
-            <p>{desc}</p>
+            {desc}
           </div>
         ))}
       </div>
@@ -111,7 +110,7 @@ export const remoteBody = (
           <div className="space-y-4" key={index}>
             <p className="font-bold text-main-header">{name}</p>
             <Image src={src} alt="" className="rounded-lg" />
-            <p>{desc}</p>
+            {desc}
           </div>
         ))}
       </div>

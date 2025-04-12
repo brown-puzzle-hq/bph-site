@@ -1,10 +1,11 @@
 import Image from "next/image";
-import HL_1 from "./hl-1.png";
-import HL_2 from "./hl-2.png";
-import HL_3 from "./hl-3.png";
-import HL_4 from "./hl-4.png";
-import HL_5 from "./hl-5.png";
-import HL_6 from "./hl-6.png";
+import HL_1 from "./hl-1.svg";
+// import HL_1 from "./hl-1.png";
+import HL_2 from "./hl-2.svg";
+import HL_3 from "./hl-3.svg";
+import HL_4 from "./hl-4.svg";
+import HL_5 from "./hl-5.svg";
+import HL_6 from "./hl-6.svg";
 const SCALE = 0.5;
 
 /**
@@ -21,54 +22,48 @@ export const puzzleId = "hand-letters";
  */
 
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
+  <div className="max-w-3xl text-center space-y-10">
     <p className="mb-4 italic">
       I'm on this really exciting movie shoot, but I've become so crazed that
       whenever I look at the clocks, I think they're trying to give me a
       message! I just wish I knew where I am heading next...
     </p>
+
+    <div className="grid grid-cols-2 space-y-10 items-center">
     <Image
       src={HL_1}
       alt=""
-      width={666 * SCALE}
-      height={454 * SCALE}
       className="mb-5"
     />
     <Image
       src={HL_2}
       alt=""
-      width={484 * SCALE}
-      height={366 * SCALE}
       className="mb-5"
     />
     <Image
       src={HL_3}
       alt=""
-      width={580 * SCALE}
-      height={388 * SCALE}
       className="mb-5"
     />
     <Image
       src={HL_4}
       alt=""
-      width={660 * SCALE}
-      height={524 * SCALE}
       className="mb-5"
     />
     <Image
       src={HL_5}
       alt=""
-      width={534 * SCALE}
-      height={258 * SCALE}
       className="mb-5"
     />
     <Image
       src={HL_6}
       alt=""
-      width={580 * SCALE}
-      height={692 * SCALE}
       className="mb-5"
     />
+
+    </div>
+
+    
   </div>
 );
 

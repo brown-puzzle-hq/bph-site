@@ -13,9 +13,10 @@ export const puzzleId = "walk-of-fame";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
-    This is a physical puzzle! You should have received it at kickoff. Please
-    visit HQ in Friedman 208 if you believe you are missing these supplies.
+  <div className="mx-auto mb-6 max-w-3xl text-center italic">
+        This is a physical puzzle! You should have received it at kickoff.
+        Please visit HQ in Friedman 208 if you believe you are missing these
+        supplies.
   </div>
 );
 

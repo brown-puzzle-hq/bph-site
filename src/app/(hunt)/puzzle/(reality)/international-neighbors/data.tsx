@@ -11,9 +11,9 @@ export const puzzleId = "international-neighbors";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="flex max-w-2xl flex-col items-center space-y-4">
-    <p className="text-center italic">
-      What’s my mate saying? (I’m a linguist)
+  <div className="flex max-w-3xl flex-col items-center space-y-4">
+    <p className="text-center italic pb-2.5">
+      What's my mate saying? (I'm a linguist)
     </p>
     <div className="grid grid-cols-[1fr_fit-content(200px)] gap-4">
       <div>Religion associated with reggae, for short</div>
@@ -49,7 +49,14 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Religion associated with reggae, for short \t _ _ _ _ _ (1, 4)
+Wider \t _ _ _ _ _ (1, 3)
+Christian leader of a congregation \t _ _ _ _ _ (5, 5)
+Partner of copier \t _ _ _ _ _ (2, 2)
+Leonardo da Vinci or Pablo Picasso, for two \t _ _ _ _ _ (4, 6)
+Volume 10 vis á vis volume 50 \t _ _ _ _ _ (1, 1)
+_ _ _ _ _ _
+1 2 3 4 5 6`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

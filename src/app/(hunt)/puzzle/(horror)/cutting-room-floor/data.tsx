@@ -12,13 +12,10 @@ export const puzzleId = "cutting-room-floor";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">HORROR</span> round.
-      </b>
-    </div>
-    <hr className="my-6 mb-6 border-t border-white" />
+    <div className="space-y-4 max-w-3xl text-center">
+        <div className="font-bold">
+          This is a metapuzzle. It uses feeders from the Horror round.</div>
+    
     <div className="mb-6 max-w-3xl">
       <i>
         The two plotlines of your movie have gotten all mixed up; there seems to
@@ -28,6 +25,7 @@ export const inPersonBody = (
     <div className="max-w-3xl text-center">
       <i>How should you put the movie back together?</i>
     </div>
+  </div>
   </div>
 );
 

@@ -16,7 +16,6 @@ export const puzzleId = "find-ben";
  */
 export const inPersonBody = (
   <div className="w-fit max-w-xl text-center">
-    <p className="mb-6 italic">What kind of place is behind Ben?</p>
     <iframe
       className="mb-4 aspect-video w-full"
       src="https://www.youtube-nocookie.com/embed/G04LbGyI9g8"
@@ -25,6 +24,9 @@ export const inPersonBody = (
       referrerPolicy="strict-origin-when-cross-origin"
       allowFullScreen
     />
+    <div className="pb-2.5 italic">
+        What kind of place is behind Ben?
+    </div>
     <Image src={BEN} alt="" className="mb-4" />
   </div>
 );
@@ -51,11 +53,10 @@ export const solutionBody = (
       <li>Find the original frame</li>
       <li>
         Reverse image search or watch the surrounding footage to determine that
-        the structure behind Ben is{" "}
-        <span className="bg-main-text">Odawara Castle</span>
+        the structure behind Ben is Odawara Castle
       </li>
       <li>
-        The answer is thus <span className="bg-main-text">CASTLE</span>
+        The answer is thus <b>CASTLE</b>
       </li>
     </ol>
     <p className="mb-4">

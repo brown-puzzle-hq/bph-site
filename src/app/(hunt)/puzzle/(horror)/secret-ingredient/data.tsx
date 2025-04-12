@@ -14,7 +14,10 @@ export const puzzleId = "secret-ingredient";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
+  <div className="max-w-3xl text-center space-y-4">
+    <div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 🌲 sequence.
+    </div>
     <Image alt="" src={SECRET_INGREDIENT}></Image>
   </div>
 );

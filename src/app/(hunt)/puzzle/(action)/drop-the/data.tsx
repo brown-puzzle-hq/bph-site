@@ -1,3 +1,6 @@
+import Image from "next/image";
+import DROP from "./drop-the.jpg";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -14,78 +17,14 @@ export const puzzleId = "drop-the";
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
     <div className="font-bold">
-      This is a metapuzzle. It uses feeders from the <u>ACTION</u> round.
+      This is a metapuzzle. It uses feeders from the Action round.
     </div>
     <div className="pb-2.5 italic">
       You're trying to adapt these characters -- better known by other names --
       into your movie, but people are butting heads. What do they need?
     </div>
-    <div className="mx-auto flex aspect-[4/3] w-full max-w-sm flex-col items-center pb-[1px]">
-      <div className="grid h-[16.666%] w-full grid-cols-8 ring-1 ring-white">
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          4
-        </div>
-        <div className="flex items-center justify-center border border-white">
-          5
-        </div>
-      </div>
-      <div className="grid h-[16.666%] w-[87.5%] grid-cols-7 ring-1 ring-white">
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          10
-        </div>
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          6
-        </div>
-        <div className="border border-white" />
-      </div>
-      <div className="grid h-[16.666%] w-3/4 grid-cols-6 ring-1 ring-white">
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          7
-        </div>
-        <div className="flex items-center justify-center border border-white">
-          8
-        </div>
-        <div className="border border-white" />
-      </div>
-      <div className="grid h-[16.666%] w-[62.5%] grid-cols-5 ring-1 ring-white">
-        <div className="flex items-center justify-center border border-white">
-          3
-        </div>
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          9
-        </div>
-      </div>
-      <div className="grid h-[16.666%] w-1/2 grid-cols-4 ring-1 ring-white">
-        <div className="border border-white" />
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          2
-        </div>
-        <div className="border border-white" />
-      </div>
-      <div className="grid h-[16.666%] w-[37.5%] grid-cols-3 ring-1 ring-white">
-        <div className="border border-white" />
-        <div className="flex items-center justify-center border border-white">
-          1
-        </div>
-        <div className="border border-white" />
-      </div>
+    <div className="items-center">
+      <Image src={DROP} alt="" className="rounded-lg"/>
     </div>
   </div>
 );
@@ -98,12 +37,7 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = (
-  <div className="max-w-3xl text-center">
-    {" "}
-    This solution does not exist yet. Nag the triplets.{" "}
-  </div>
-);
+export const solutionBody = null;
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

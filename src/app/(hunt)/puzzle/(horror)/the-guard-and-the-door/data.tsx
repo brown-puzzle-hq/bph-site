@@ -11,17 +11,28 @@ export const puzzleId = "the-guard-and-the-door";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div>
+    <div className="max-w-3xl space-y-4 text-center">
+<div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 💂 sequence.
+    </div>
+    <div className="pb-2.5 italic">
+    As you approach the end of Brown Puzzlehunt, you find in front of you The
+    Guard and The Door.
+    <br></br>The Guard tells you the following:
+    </div>
+</div>
   <div className="max-w-3xl space-y-4">
-    <p className="text-center">
+    {/* <p className="text-center">
       <b>
-        This is a sequence metapuzzle. It uses feeders from the 💂 sequence.
+        This is a sequence metapuzzle. It uses feeders from the  sequence.
       </b>
     </p>
     <p className="italic">
       As you approach the end of Brown Puzzlehunt, you find in front of you The
       Guard and The Door.
       <br></br>The Guard tells you the following:
-    </p>
+    </p> */}
     <p>
       “Upon observation, when viewing it all,
       <br></br>how many are spotted right there on the wall?
@@ -42,6 +53,7 @@ export const inPersonBody = (
       “When they both point, they will point right or wrong,
       <br></br>find how many are right, and you'll move right along.”
     </p>
+  </div>
   </div>
 );
 

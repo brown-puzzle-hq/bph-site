@@ -12,13 +12,15 @@ export const puzzleId = "six-degrees";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-4 max-w-3xl text-center">
+    <div className="space-y-4 max-w-3xl text-center">
       <b>
-        This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">REALITY</span> round.
+        This is a metapuzzle. It uses feeders from the Reality round.
       </b>
     </div>
-    <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl text-center italic">
+      This puzzle has intermediate answer confirmation.
+    </div>
+    <div className="mb-4 max-w-3xl text-center">
       <i>
         Your documentary is in trouble... your subjects are all paid actors! How
         can you fix your movie and save your leads' bacon?
@@ -110,7 +112,7 @@ export const solutionBody = (
                 "JUNGLE",
                 "2017",
                 "Yossi Ghinsberg",
-                "Daniel Radcliff",
+                "Daniel Radcliffe",
                 "2",
                 "A",
               ],
@@ -142,7 +144,25 @@ export const copyText = `Your documentary is in trouble... your subjects are all
  * Each key is a partial solution, and the value is the prompt to be displayed. Keys must
  * be in all caps, no spaces.
  */
-export const partialSolutions: Record<string, string> = {};
+export const partialSolutions: Record<string, string> = {
+  WHITAKER: "This is a lead!",
+  CHIKLIS: "This is a lead!",
+  FINNEY: "This is a lead!",
+  WAHLBERG: "This is a lead!",
+  PARK: "This is a lead!",
+  WONSANG: "This is a lead!",
+  WASHINGTON: "This is a lead!",
+  RADCLIFFE: "This is a lead!",
+  COLMAN: "This is a lead!",
+  FORESTWHITAKER: "This is a lead!",
+  MICHAELCHIKLIS: "This is a lead!",
+  ALBERTFINNEY: "This is a lead!",
+  MARKWAHLBERG: "This is a lead!",
+  PARKWONSANG: "This is a lead!",
+  KERRYWASHINGTON: "This is a lead!",
+  DANIELRADCLIFFE: "This is a lead!",
+  OLIVIACOLMAN: "This is a lead!",
+};
 
 /**
  * The `tasks` object is used for multi-part puzzles. When a certain answer is submitted,

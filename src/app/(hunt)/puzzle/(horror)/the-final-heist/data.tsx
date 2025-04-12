@@ -18,7 +18,7 @@ export const inPersonBody = (
     <div className="font-bold">
       This is a sequence metapuzzle. It uses feeders from the 🏦 sequence.
     </div>
-    <div className="italic">
+    <div className="pb-2.5 italic">
       You've made it to the final vault, but there's a problem: somebody's
       turned out the lights! fortunately, we've done some reconnaissance on your
       behalf. The floor plan for this vault is BLIND, and the room layout is as
