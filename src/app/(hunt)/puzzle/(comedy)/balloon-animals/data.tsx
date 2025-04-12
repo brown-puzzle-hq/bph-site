@@ -46,7 +46,7 @@ Your circus movie is pretty good, but it requires more mainstream
     </div>
         
       
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+      {/* <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         {ITEMS.map(({ name, src, desc }, index) => (
           <div className="space-y-4" key={index}>
             <p className="font-bold text-main-header">{name}</p>
@@ -54,8 +54,8 @@ Your circus movie is pretty good, but it requires more mainstream
             {desc}
           </div>
         ))}
-      </div>
-    </div>
+      </div>*/}
+    </div> 
   </div>
 );
 
