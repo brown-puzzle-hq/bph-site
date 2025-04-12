@@ -30,7 +30,7 @@ export const puzzleId = "chain-letters";
     </p> */
 const body = (<div>
   <div className="max-w-3xl space-y-4 text-center pb-2.5 italic"> 
-    The further a message travels, the harder it is to follow instructions.
+    The further a message travels, the harder it is to follow its instructions.
     </div>
     
     Download the puzzle{" "}
