@@ -41,12 +41,27 @@ export default async function Home() {
     with: {
       unlocks: {
         columns: { id: true },
+        with: {
+          team: {
+            columns: { role: true },
+          },
+        },
       },
       solves: {
         columns: { id: true },
+        with: {
+          team: {
+            columns: { role: true },
+          },
+        },
       },
       guesses: {
         columns: { id: true },
+        with: {
+          team: {
+            columns: { role: true },
+          },
+        },
       },
     },
   });
@@ -55,9 +70,12 @@ export default async function Home() {
     id: puzzle.id,
     name: puzzle.name,
     answer: puzzle.answer,
-    unlocks: INITIAL_PUZZLES.includes(puzzle.id) ? "-" : puzzle.unlocks.length,
-    guesses: puzzle.guesses.length,
-    solves: puzzle.solves.length,
+    unlocks: INITIAL_PUZZLES.includes(puzzle.id)
+      ? "-"
+      : puzzle.unlocks.filter((unlock) => unlock.team.role === "user").length,
+    guesses: puzzle.guesses.filter((guess) => guess.team.role === "user")
+      .length,
+    solves: puzzle.solves.filter((solve) => solve.team.role === "user").length,
     sequences: SEQUENCES.filter((seq) => seq.puzzles.includes(puzzle.id)),
   }));
 
