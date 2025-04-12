@@ -55,7 +55,7 @@ export const SEQUENCES: Sequence[] = [
     puzzles: [
       "youve-got-this-covered",
       "fractal-shanty",
-      "international-neighbors",
+      "international-neighbours",
       "fridge-magnets",
     ],
   },
@@ -292,10 +292,10 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "opening-sequences": ["a-fistful-of-cards-iii", "hand-letters"],
   "chain-letters": ["hand-letters", "heist-iii"],
-  "a-fistful-of-cards-iii": ["international-neighbors", "six-degrees"], // opening-sequences
-  "hand-letters": ["international-neighbors", "are-you-sure", "six-degrees"], // opening-sequences, chain-letters,
+  "a-fistful-of-cards-iii": ["international-neighbours", "six-degrees"], // opening-sequences
+  "hand-letters": ["international-neighbours", "are-you-sure", "six-degrees"], // opening-sequences, chain-letters,
   "heist-iii": ["are-you-sure"], // chain-letters
-  "international-neighbors": [
+  "international-neighbours": [
     "a-fistful-of-cards-iii",
     "hand-letters",
     "are-you-sure",
@@ -303,7 +303,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "genetic-counseling",
     "six-degrees",
   ],
-  "are-you-sure": ["international-neighbors", "hand-letters", "heist-iii"],
+  "are-you-sure": ["international-neighbours", "hand-letters", "heist-iii"],
   "six-degrees": [],
   "cutting-room-floor": [],
 
@@ -426,7 +426,7 @@ export const ROUNDS: Round[] = [
       "chain-letters",
       "hand-letters",
       "one-guard-screen",
-      "international-neighbors",
+      "international-neighbours",
       "a-fistful-of-cards-iii",
       "heist-iii",
     ],
