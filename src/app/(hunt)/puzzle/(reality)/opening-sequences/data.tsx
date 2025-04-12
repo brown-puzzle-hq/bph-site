@@ -1,5 +1,5 @@
 import Image from "next/image";
-import PUZZLE from "./OP_Puzzle_Body.jpg";
+import PUZZLE from "./Opening Sequences.svg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -17,8 +17,6 @@ export const inPersonBody = (
   <div className="max-w-3xl text-center">
     <Image
       src={PUZZLE}
-      width={500}
-      height={500}
       alt="chess tree (puzzle body) image"
     />
   </div>

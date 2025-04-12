@@ -11,38 +11,27 @@ export const puzzleId = "international-neighbors";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-2xl py-4">
-    <p className="p-4 italic">What’s my mate saying? (I’m a linguist)</p>
-    <table className="py-4">
-      <tbody>
-        <tr>
-          <td className="px-4">Religion associated with reggae, for short</td>
-          <td className="px-4">_ _ _ _ _ (1, 4)</td>
-        </tr>
-        <tr>
-          <td className="px-4">Wider</td>
-          <td className="px-4">_ _ _ _ _ (1, 3)</td>
-        </tr>
-        <tr>
-          <td className="px-4">Christian leader of a congregation</td>
-          <td className="px-4">_ _ _ _ _ (5, 5)</td>
-        </tr>
-        <tr>
-          <td className="px-4">Partner of copier</td>
-          <td className="px-4">_ _ _ _ _ (2, 2)</td>
-        </tr>
-        <tr>
-          <td className="px-4">Leonardo da Vinci or Pablo Picasso, for two</td>
-          <td className="px-4">_ _ _ _ _ (4, 6)</td>
-        </tr>
-        <tr>
-          <td className="px-4">Volume 10 vis á vis volume 50</td>
-          <td className="px-4">_ _ _ _ _ (1, 1)</td>
-        </tr>
-      </tbody>
-    </table>
-    <p className="px-4 pt-4">_ _ _ _ _ _ </p>
-    <p className="px-4">1 2 3 4 5 6</p>
+  <div className="flex max-w-2xl flex-col items-center space-y-4">
+    <p className="text-center italic">
+      What’s my mate saying? (I’m a linguist)
+    </p>
+    <div className="grid grid-cols-[1fr_fit-content(200px)] gap-4">
+      <div>Religion associated with reggae, for short</div>
+      <div>_ _ _ _ _ (1, 4)</div>
+      <div>Wider</div>
+      <div>_ _ _ _ _ (1, 3)</div>
+      <div>Christian leader of a congregation</div>
+      <div>_ _ _ _ _ (5, 5)</div>
+      <div>Partner of copier</div>
+      <div>_ _ _ _ _ (2, 2)</div>
+      <div>Leonardo da Vinci or Pablo Picasso, for two</div>
+      <div>_ _ _ _ _ (4, 6)</div>
+      <div>Volume 10 vis á vis volume 50</div>
+      <div>_ _ _ _ _ (1, 1)</div>
+    </div>
+    <div className="w-full">
+      _ _ _ _ _ _ <br />1 2 3 4 5 6
+    </div>
   </div>
 );
 

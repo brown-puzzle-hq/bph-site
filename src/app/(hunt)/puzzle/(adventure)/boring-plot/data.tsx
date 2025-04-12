@@ -96,14 +96,14 @@ export const inPersonBody = (
         )}
       </div>
       <p className="font-bold text-main-header">Digging Guide</p>
-      <div className="grid grid-cols-[repeat(26,1.5em)] grid-rows-[repeat(14,1.5em)] font-mono text-secondary-accent">
+      <div className="grid grid-cols-[repeat(26,1.5em)] grid-rows-[repeat(15,1.5em)] text-center font-mono leading-[18px] text-main-header">
         {DIGGING.flatMap((row, i) =>
           row.split("").map((cell, j) =>
             cell == "." ? (
               <p key={`${i}-${j}`} />
             ) : (
               <p
-                className="flex items-center justify-center rounded-md border border-main-bg bg-main-accent"
+                className="rounded-md border-[1.5px] border-[#4C3B2B] bg-[#72543A]"
                 key={`${i}-${j}`}
               >
                 {cell}
@@ -120,7 +120,7 @@ export const inPersonBody = (
               <p key={`${i}-${j}`} />
             ) : (
               <p
-                className="flex items-center justify-center rounded-md border border-main-bg bg-main-accent"
+                className="rounded-md border-[1.5px] border-[#4C3B2B] bg-[#72543A]"
                 key={`${i}-${j}`}
               >
                 {cell}

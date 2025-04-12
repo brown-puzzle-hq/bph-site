@@ -1,9 +1,9 @@
 const CHAIN = "BBRBGGGRRGBGRRGRGRG";
 
 const COLORS: Record<string, string> = {
-  B: "bg-[#4a86e8]",
-  R: "bg-[#cc0000]",
-  G: "bg-[#cccccc]",
+  B: "bg-[#4a86e8] border-[#4264A9]",
+  R: "bg-[#cc0000] border-[#8C271B]",
+  G: "bg-[#cccccc] border-[#8A8A8A]",
 };
 
 /**
@@ -19,71 +19,73 @@ export const puzzleId = "chain-letters";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="mb-6 max-w-3xl text-center">
+  <div className="max-w-xl space-y-4 text-center">
+    <p>
       <i>
         This is a physical puzzle! If your team has not already picked up a
         chain, please visit HQ in Friedman 208.
       </i>
-    </div>
-
-    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-      <i className="pb-4">Some people just can't follow simple instructions.</i>
-      <p>
-        <a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing">
-          <u>This is a link to download a JSON file.</u>
-        </a>
-      </p>
-    </div>
+    </p>
+    <p>
+      <i>Some people just can't follow simple instructions.</i>
+    </p>
+    <p>
+      <a
+        href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"
+        className="text-blue-200 hover:underline"
+      >
+        This is a link to download a JSON file.
+      </a>
+    </p>
   </div>
 );
 
 export const remoteBoxBody = (
-  <div>
-    <div className="mb-6 max-w-3xl text-center">
+  <div className="max-w-xl space-y-4 text-center">
+    <p>
       <i>
         This is a physical puzzle! You should use an object found in your box.
       </i>
-    </div>
-    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-      <i className="pb-4">Some people just can't follow simple instructions.</i>
-      <p>
-        <a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing">
-          <u>This is a link to download a JSON file.</u>
-        </a>
-      </p>
-    </div>
+    </p>
+    <p>
+      <i>Some people just can't follow simple instructions.</i>
+    </p>
+    <p>
+      <a
+        href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"
+        className="text-blue-200 hover:underline"
+      >
+        This is a link to download a JSON file.
+      </a>
+    </p>
   </div>
 );
 
 export const remoteBody = (
-  <div className="flex max-w-3xl flex-col items-center space-y-4">
-    <div className="mb-4 max-w-3xl">
-      <div className="mb-4">
-        <b>
-          This puzzle is a chain puzzle. In-person solvers and box purchasers
-          were given a wire with beads of the following colors, in order:
-        </b>
-      </div>
-      <div className="mb-4 flex">
-        {CHAIN.split("").map((cell, index) => (
-          <div
-            key={index}
-            className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-          />
-        ))}
-      </div>
-      <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-        <i className="pb-4">
-          Some people just can't follow simple instructions.
-        </i>
-        <p>
-          <a href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing">
-            <u>This is a link to download a JSON file.</u>
-          </a>
-        </p>
-      </div>
+  <div className="max-w-xl space-y-4 text-center">
+    <i>
+      This puzzle is a chain puzzle. In-person solvers and box purchasers were
+      given a wire with beads of the following colors, in order:
+    </i>
+    <div className="flex justify-center py-1.5">
+      {CHAIN.split("").map((cell, index) => (
+        <div
+          key={index}
+          className={`size-4 rounded-sm border-2 md:size-6 ${COLORS[cell]}`}
+        />
+      ))}
     </div>
+    <p>
+      <i>Some people just can't follow simple instructions.</i>
+    </p>
+    <p>
+      <a
+        href="https://drive.google.com/file/d/1WC3lR93-eT8h33FBVRAMNAYvxofSd4W4/view?usp=sharing"
+        className="text-blue-200 hover:underline"
+      >
+        This is a link to download a JSON file.
+      </a>
+    </p>
   </div>
 );
 

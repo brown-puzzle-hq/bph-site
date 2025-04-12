@@ -42,14 +42,14 @@ export const puzzleId = "a-fistful-of-cards-iv";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-6 max-w-3xl text-center">
+    <div className="mx-auto mb-6 max-w-3xl text-center">
       <i>
         This is a physical puzzle! You should have received it at kickoff.
         Please visit HQ in Friedman 208 if you believe you are missing these
         supplies.
       </i>
     </div>
-    <hr className="my-6 mb-6 border-t border-white" />
+    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
     <div className="mb-6 max-w-3xl">
       Howdy Pardner! Great job slinging dynamite so far - just one more task to
       go. If you want to complete it you'll need to use everything at your
@@ -175,7 +175,7 @@ export const remoteBoxBody = (
 
 export const remoteBody = (
   <div>
-    <div className="mb-6 max-w-3xl">
+    <div className="mb-6 w-[848px] text-center">
       Howdy Pardner! Great job slinging dynamite so far - just one more task to
       go. If you want to complete it you'll need to use everything at your
       disposal from the first three tasks. Unfortunately, the stash is shot

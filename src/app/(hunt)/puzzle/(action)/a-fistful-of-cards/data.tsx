@@ -27,14 +27,14 @@ export const puzzleId = "a-fistful-of-cards";
  */
 export const inPersonBody = (
   <div>
-    <div className="mb-6 max-w-3xl text-center">
+    <div className="mx-auto mb-6 max-w-3xl text-center">
       <i>
         This is a physical puzzle! You should have received it at kickoff.
         Please visit HQ in Friedman 208 if you believe you are missing these
         supplies.
       </i>
     </div>
-    <hr className="my-6 mb-6 border-t border-white" />
+    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
     <div className="mb-6 max-w-3xl text-center">
       <span className="underline">
         <b>Round 1</b>
@@ -116,13 +116,13 @@ export const remoteBoxBody = (
 
 export const remoteBody = (
   <div>
-    <div className="mb-6 w-full text-center">
+    <div className="mx-auto mb-6 w-full text-center">
       <span className="underline">
         <b>Round 1</b>
       </span>
       : Deal 14 damage.
     </div>
-    <hr className="my-6 mb-6 border-t border-white" />
+    <hr className="my-6 mb-6 border-t border-white w-[848px]" />
     <div className="mb-6 w-full text-center">
       <span className="underline">
         <b>Legal cards</b>

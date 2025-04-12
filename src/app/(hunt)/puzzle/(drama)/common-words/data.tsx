@@ -17,9 +17,6 @@ export const inPersonBody = (
       This is a physical puzzle! If your team has not already picked up a CD,
       please visit HQ in Friedman 208.
     </div>
-    <Link href="https://drive.google.com/file/d/1RNsmetSNW0eVz7BIHFpvX-hz0PiW2a7n/view?usp=sharing">
-      <span className="underline">[audio]</span>
-    </Link>
     <hr className="my-6 mb-6 border-t border-white" />
   </div>
 );
@@ -38,18 +35,11 @@ export const remoteBoxBody = (
 );
 
 export const remoteBody = (
-  <div>
-    <div className="mt-8 max-w-3xl text-center">
-      <Link href="https://drive.google.com/file/d/1RNsmetSNW0eVz7BIHFpvX-hz0PiW2a7n/view?usp=sharing">
-        <span className="underline">[audio]</span>
-      </Link>
-    </div>
-    <div className="flex justify-center pb-4">
-      <audio controls>
-        <source src="/api/puzzle/common-words" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+  <div className="flex justify-center py-4">
+    <audio controls className="w-96 max-w-full">
+      <source src="/api/puzzle/common-words" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
   </div>
 );
 

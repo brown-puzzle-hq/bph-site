@@ -9,7 +9,7 @@ export async function checkMoves(moves: Item[][], isSolved: boolean) {
     (await checkMovesSeeded(moves, true)) ||
     (await checkMovesSeeded(moves, false))
   ) {
-    if (!isSolved) handleGuess(puzzleId, "KELPIEMUTT");
+    if (!isSolved) await handleGuess(puzzleId, "KELPIEMUTT");
     return true;
   }
   return false;

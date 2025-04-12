@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, startTransition } from "react";
 import "@pixi/events";
 import { Stage, Sprite } from "@pixi/react";
 import type { EventMode } from "pixi.js";
@@ -20,6 +20,7 @@ import {
   DoorOpen,
   PanelLeft,
   PanelRight,
+  RefreshCw,
   Skull,
   Trophy,
   Undo2,
@@ -107,7 +108,7 @@ const AnimatedSprite: React.FC<AnimatedSpriteProps> = ({
       y={prevPosition.current.y}
       scale={scale}
       eventMode={eventMode}
-      hitArea={hitArea}
+      hitArea={hitArea ?? null}
       pointerdown={onPointerDown}
       pointerover={onPointerOver}
       pointerout={onPointerOut}
@@ -506,30 +507,33 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
   };
 
   const handleSubmission = async () => {
-    if (
-      correctDoor !== "uncollapsed" &&
-      locations[correctDoor] === locations["player"] &&
-      (await checkMoves(moves, isSolved))
-    ) {
-      setResult("Winning");
-    } else {
-      setLocations((prevLocations) => {
-        return { ...prevLocations, player: "dead" };
-      });
-      setResult("Losing");
-    }
+    setResult("Loading");
+    startTransition(async () => {
+      if (
+        correctDoor !== "uncollapsed" &&
+        locations[correctDoor] === locations["player"] &&
+        (await checkMoves(moves, isSolved))
+      ) {
+        setResult("Winning");
+      } else {
+        setLocations((prevLocations) => {
+          return { ...prevLocations, player: "dead" };
+        });
+        setResult("Losing");
+      }
+    });
   };
 
   return (
     <div>
       <div className="no-scrollbar flex max-w-[calc(100vw-32px)] overflow-auto">
         {/* Moves */}
-        <ScrollArea className="mr-4 hidden h-[600px] min-w-[13rem] rounded-md bg-footer-bg p-4 lg:block">
+        <ScrollArea className="mr-4 hidden h-[600px] min-w-[13rem] rounded-md bg-black/5 p-4 lg:block">
           <Table className="w-44">
             <TableHeader>
               <TableRow className="hover:bg-inherit">
                 <TableHead
-                  className="text-lg font-bold text-main-header"
+                  className="text-lg font-bold text-main-text"
                   colSpan={2}
                 >
                   <div className="flex justify-between">
@@ -574,7 +578,7 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
           <Stage
             width={WIDTH * SCALE}
             height={HEIGHT * SCALE}
-            className="rounded-md border-8 border-footer-bg"
+            className="rounded-md border-8 border-black/30"
             style={{ cursor }}
           >
             <Sprite
@@ -671,21 +675,23 @@ export default function Game({ isSolved }: { isSolved: boolean }) {
           {/* Result overlay */}
           {result && (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              {result === "Winning" ? (
-                <Trophy className="h-1/2 w-1/2" />
+              {result === "Loading" ? (
+                <RefreshCw className="size-1/2 animate-spin" />
+              ) : result === "Winning" ? (
+                <Trophy className="size-1/2" />
               ) : (
-                <Skull className="h-1/2 w-1/2" />
+                <Skull className="size-1/2" />
               )}
             </div>
           )}
         </div>
         {/* Deaths */}
-        <ScrollArea className="ml-4 hidden h-[600px] min-w-[13rem] rounded-md bg-footer-bg p-4 lg:block">
+        <ScrollArea className="ml-4 hidden h-[600px] min-w-[13rem] rounded-md bg-black/5 p-4 lg:block">
           <Table className="w-44">
             <TableHeader>
               <TableRow className="hover:bg-inherit">
                 <TableHead
-                  className="text-lg font-bold text-main-header"
+                  className="text-lg font-bold text-main-text"
                   colSpan={2}
                 >
                   Deaths

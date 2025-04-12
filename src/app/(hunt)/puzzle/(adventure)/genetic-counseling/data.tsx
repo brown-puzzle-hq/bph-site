@@ -36,14 +36,14 @@ const traits = [
 ];
 
 export const inPersonBody = (
-  <div className="max-w-4xl p-4">
+  <div className="max-w-4xl">
     <p className="pb-4">
       Your back-alley DNA testing company has really started to get off the
       ground, but your lack of programming skills means you're forced to chain
       together this report by hand. What can you tell about this person from
       their DNA? (13)
     </p>
-    <p className="pb-4">
+    <p className="pb-6">
       Use this{" "}
       <a
         href="/api/puzzle/genetic-counseling"
@@ -53,25 +53,25 @@ export const inPersonBody = (
       </a>
       .
     </p>
-    <table className="pb-4 text-black outline">
+    <table className="pb-4 leading-none text-[#EFEDEB] text-xs sm:text-base">
       <thead>
-        <tr className="bg-neutral-500 outline">
-          <th className="px-1 outline">Trait</th>
-          <th className="w-1/5 px-1 outline">rsID</th>
-          <th className="w-1/5 px-1 outline">Allele 1</th>
-          <th className="w-1/5 px-1 outline">Allele 2</th>
+        <tr className="bg-[#40271F] font-bold text-white">
+          <th className="p-2">Trait</th>
+          <th className="w-1/5 p-2">rsID</th>
+          <th className="w-1/5 p-2">Allele 1</th>
+          <th className="w-1/5 p-2">Allele 2</th>
         </tr>
       </thead>
       <tbody>
         {traits.map((trait, index) => (
           <tr
-            className={index % 2 ? "bg-neutral-300" : "bg-neutral-100"}
+            className={index % 2 ? "bg-[#6D4C42]" : "bg-[#7D6056]"}
             key={index}
           >
-            <td className="px-1 outline">{trait}</td>
-            <td className="px-1 outline"></td>
-            <td className="px-1 outline"></td>
-            <td className="px-1 outline"></td>
+            <td className="p-2 outline outline-[#5C382C]">{trait}</td>
+            <td className="p-2 outline outline-[#5C382C]"></td>
+            <td className="p-2 outline outline-[#5C382C]"></td>
+            <td className="p-2 outline outline-[#5C382C]"></td>
           </tr>
         ))}
       </tbody>

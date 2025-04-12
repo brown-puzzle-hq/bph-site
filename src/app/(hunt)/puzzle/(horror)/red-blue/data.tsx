@@ -1,9 +1,9 @@
 const CHAIN = "BBRBGGGRRGBGRRGRGRG";
 
 const COLORS: Record<string, string> = {
-  B: "bg-[#4a86e8]",
-  R: "bg-[#cc0000]",
-  G: "bg-[#cccccc]",
+  B: "bg-[#4a86e8] border-[#4264A9]",
+  R: "bg-[#cc0000] border-[#8C271B]",
+  G: "bg-[#cccccc] border-[#8A8A8A]",
 };
 
 /**
@@ -19,107 +19,102 @@ export const puzzleId = "red-blue";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="mb-6 max-w-3xl text-center">
+  <div className="max-w-xl space-y-4 text-center">
+    <p>
       <i>
         This is a physical puzzle! If your team has not already picked up a
         chain, please visit HQ in Friedman 208.
       </i>
-    </div>
-    <div className="mb-4 max-w-3xl text-center">
+    </p>
+    <p>
       <b>
         This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
       </b>
-    </div>
-    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-      <i className="p-4">
+    </p>
+    <p className="pb-2.5">
+      <i>
         Hey, isn't blue kinda negative? I think red better fits my positive
         personality!
       </i>
-
-      <div className="grid w-60 grid-cols-5 gap-0 pb-4">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className={`flex h-12 w-12 items-center ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} justify-center border ${
-              i === 4 ? "border-none" : ""
-            }`}
-          ></div>
-        ))}
-      </div>
+    </p>
+    <div className="mx-auto grid w-60 grid-cols-5 gap-0 pb-4">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={i}
+          className={`aspect-square ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} ${
+            i === 4 ? "" : "border-1 border border-white ring-1 ring-white"
+          }`}
+        />
+      ))}
     </div>
   </div>
 );
 
 export const remoteBoxBody = (
-  <div>
-    <div className="mb-6 max-w-3xl text-center">
+  <div className="max-w-xl space-y-4 text-center">
+    <p>
       <i>
         This is a physical puzzle! You should use an object found in your box.
       </i>
-    </div>
-    <div className="mb-4 max-w-3xl text-center">
+    </p>
+    <p>
       <b>
         This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
       </b>
-    </div>
-    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-      <i className="p-4">
+    </p>
+    <p className="pb-2.5">
+      <i>
         Hey, isn't blue kinda negative? I think red better fits my positive
         personality!
       </i>
-
-      <div className="grid w-60 grid-cols-5 gap-0 pb-4">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className={`flex h-12 w-12 items-center justify-center border ${
-              i === 4 ? "border-none" : ""
-            }`}
-          ></div>
-        ))}
-      </div>
+    </p>
+    <div className="mx-auto grid w-60 grid-cols-5 gap-0 pb-4">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={i}
+          className={`aspect-square ${
+            i === 4 ? "" : "border-1 border border-white ring-1 ring-white"
+          }`}
+        />
+      ))}
     </div>
   </div>
 );
 
 export const remoteBody = (
-  <div className="mb-4 max-w-3xl">
-    <div className="mb-4">
-      <p className="mb-4">
-        This puzzle is a chain puzzle. In-person solvers and box purchasers were
-        given a wire with beads of the following colors, in order:
-      </p>
-      <div className="flex">
-        {CHAIN.split("").map((cell, index) => (
-          <div
-            key={index}
-            className={`size-[1.5em] rounded-md border border-main-bg ${COLORS[cell]}`}
-          />
-        ))}
-      </div>
+  <div className="max-w-xl space-y-4 text-center">
+    <i>
+      This puzzle is a chain puzzle. In-person solvers and box purchasers were
+      given a wire with beads of the following colors, in order:
+    </i>
+    <div className="flex justify-center py-1.5">
+      {CHAIN.split("").map((cell, index) => (
+        <div
+          key={index}
+          className={`size-4 rounded-sm border-2 md:size-6 ${COLORS[cell]}`}
+        />
+      ))}
     </div>
-    <div className="mb-4 max-w-3xl text-center">
+    <p>
       <b>
         This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
       </b>
-    </div>
-    <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
-      <i className="p-4">
+    </p>
+    <p className="pb-2.5">
+      <i>
         Hey, isn't blue kinda negative? I think red better fits my positive
         personality!
       </i>
-
-      <div className="grid w-60 grid-cols-5 gap-0 pb-4">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className={`flex h-12 w-12 items-center ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} justify-center border ${
-              i === 4 ? "border-none" : ""
-            }`}
-          ></div>
-        ))}
-      </div>
+    </p>
+    <div className="mx-auto grid w-60 grid-cols-5 gap-0 pb-4">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={i}
+          className={`aspect-square ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} ${
+            i === 4 ? "" : "border-1 border border-white ring-1 ring-white"
+          }`}
+        />
+      ))}
     </div>
   </div>
 );

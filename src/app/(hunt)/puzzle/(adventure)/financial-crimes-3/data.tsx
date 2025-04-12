@@ -1,7 +1,6 @@
 import Image from "next/image";
 import IDS from "./Financial_Crimes_IDs.png";
 import RECEIPTS from "./Financial_Crimes_Receipts.png";
-export const SCALE = 0.15;
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -150,11 +149,10 @@ export const remoteBody = (
       In-person solvers and box purchasers received two documents along with the
       puzzle. You may need to print them out; they are the following two images:
     </div>
-    <div className="mb-6 flex space-x-6">
-      <Image src={IDS} alt="" width={2550 * SCALE} height={3300 * SCALE} />
-      <Image src={RECEIPTS} alt="" width={2550 * SCALE} height={3300 * SCALE} />
+    <div className="mb-6 flex w-full max-w-3xl flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0">
+      <Image className="w-full sm:w-1/2 sm:pr-3" src={IDS} alt="" />
+      <Image className="w-full sm:w-1/2 sm:pl-3" src={RECEIPTS} alt="" />
     </div>
-
     {body}
   </div>
 );

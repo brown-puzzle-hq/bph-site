@@ -1,3 +1,5 @@
+const DATA = "⬛,⬛,⬛,⬛,⬛,⬛,⬜,⬜,⬜,⬛,⬛,⬜,⬛,⬜,⬛,⬛,⬛,⬛,⬛,⬛";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -12,27 +14,22 @@ export const puzzleId = "the-final-heist";
  */
 
 export const inPersonBody = (
-  <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a sequence metapuzzle. It uses feeders from the 🏦 sequence.
-      </b>
+  <div className="flex max-w-3xl flex-col items-center space-y-4 text-center">
+    <div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 🏦 sequence.
     </div>
-    <div className="max-w-3xl text-center">
-      <p className="italic">
-        You've made it to the final vault, but there's a problem: somebody's
-        turned out the lights! fortunately, we've done some reconnaissance on
-        your behalf. The floor plan for this vault is BLIND, and the room layout
-        is as follows:
-      </p>
-      <p>
-        <br></br>⬛⬛⬛⬛⬛
-        <br></br>⬛⬜⬜⬜⬛
-        <br></br>⬛⬜⬛⬜⬛
-        <br></br>⬛⬛⬛⬛⬛
-      </p>
-      <iframe src="/api/puzzle/the-final-heist" width="750" height="600" />
+    <div className="italic">
+      You've made it to the final vault, but there's a problem: somebody's
+      turned out the lights! fortunately, we've done some reconnaissance on your
+      behalf. The floor plan for this vault is BLIND, and the room layout is as
+      follows:
     </div>
+    <div className="grid w-40 grid-cols-5 grid-rows-[repeat(4,32px)] overflow-clip rounded-md">
+      {DATA.split(",").map((cell, index) => (
+        <div key={index} className={cell === "⬛" ? "bg-black" : "bg-white"} />
+      ))}
+    </div>
+    <iframe src="/api/puzzle/the-final-heist" width="750" height="600" />
   </div>
 );
 

@@ -1,6 +1,6 @@
 "use server";
 import { Session } from "next-auth";
-import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
 import {
   puzzles,

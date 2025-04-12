@@ -24,8 +24,7 @@ export const inPersonBody = (
     <div className="max-w-2xl">
       <div className="flex justify-center pb-4">
         <iframe
-          width="560"
-          height="315"
+          className="aspect-video w-full"
           src="https://www.youtube-nocookie.com/embed/UrX1BOCMXqE"
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

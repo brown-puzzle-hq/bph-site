@@ -13,18 +13,19 @@ const INDEX1 = 4;
 const TTL = 100;
 const SPEED = 2;
 const DOORX = WIDTH / 4;
-const DOORY = (INDEX1 + 0.5) * HEIGHT/16;
+const DOORY = ((INDEX1 + 0.5) * HEIGHT) / 16;
 const DESTX = (WIDTH * 3) / 4;
 const DX0 =
-  (SPEED * (DOORX)) / Math.sqrt(Math.pow(DOORX, 2) + Math.pow((HEIGHT/2 - DOORY), 2));
-const DY0 = (DX0 * (HEIGHT/2 - DOORY)) / (DOORX);
+  (SPEED * DOORX) /
+  Math.sqrt(Math.pow(DOORX, 2) + Math.pow(HEIGHT / 2 - DOORY, 2));
+const DY0 = (DX0 * (HEIGHT / 2 - DOORY)) / DOORX;
 
 function randomIndex(): number {
   let u = 1 - Math.random();
   let v = Math.random();
   let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v); // Standard Normal (0,1)
 
-  let center = Math.random() < 0.5 ? INDEX1 : (15 - INDEX1);
+  let center = Math.random() < 0.5 ? INDEX1 : 15 - INDEX1;
 
   return Math.max(0, Math.min(15, Math.round(center + z * 2.25)));
 }
@@ -104,7 +105,7 @@ const EventComponent = ({
                 guard.destY = DOORY;
                 guard.letter = ANSWER.at(INDEX1)!;
               } else {
-                guard.destY = HEIGHT - DOORY
+                guard.destY = HEIGHT - DOORY;
                 guard.letter = ANSWER.at(15 - INDEX1)!;
               }
             }
@@ -195,7 +196,7 @@ export default function Game() {
           <Stage
             width={WIDTH}
             height={HEIGHT}
-            className="rounded-md border-8 border-footer-bg"
+            className="rounded-md border-8 border-black/30"
             options={{ backgroundColor: 0xffffff }}
           >
             <EventComponent
@@ -219,7 +220,7 @@ export default function Game() {
         </button>
         <input
           type="range"
-          className="w-48 [&::-webkit-slider-runnable-track]:rounded-xl [&::-webkit-slider-runnable-track]:bg-footer-bg [&::-webkit-slider-thumb]:hover:cursor-pointer"
+          className="w-48 accent-white [&::-webkit-slider-runnable-track]:rounded-xl [&::-webkit-slider-runnable-track]:bg-[#47576D] [&::-webkit-slider-thumb]:hover:cursor-pointer"
           defaultValue={1}
           min={1}
           max={30}

@@ -22,11 +22,10 @@ export const puzzleId = "the-snack-zone";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
-    <div className="mb-4 flex justify-center">
+  <div className="max-w-xl">
+    <div className="mb-4 flex">
       <iframe
-        width="560"
-        height="315"
+        className="aspect-video w-full"
         src="https://www.youtube-nocookie.com/embed/h3FAvml0EVU"
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -35,128 +34,45 @@ export const inPersonBody = (
       ></iframe>
     </div>
 
-    <div className="border-[2px] border-black bg-gray-500 px-8 py-12">
-      <div className="grid grid-cols-3 gap-[2px] bg-black p-[2px] shadow-lg">
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_A}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_B}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_C}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          AU$10.04
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          AU$10.02
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          €7.03
-        </div>
-
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_D}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_E}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_F}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          NZ$5.03
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          NZ$5.08
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          NZ$5.05
-        </div>
-
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_G}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_H}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="flex flex-col items-center justify-center bg-white text-white">
-          <Image
-            src={SNACK_I}
-            alt=""
-            width={1280}
-            height={721}
-            className="mb-4"
-            draggable="false"
-          />
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          NZ$5.04
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          ¥12.07
-        </div>
-        <div className="bg-black p-3 text-center font-['Courier_New','Courier',monospace] text-2xl font-bold text-white">
-          NZ$5.02
-        </div>
+    <div className="grid grid-cols-3 gap-2 rounded-md border-8 border-[#4A2D23] bg-[#4A2D23] text-center font-['Courier_New','Courier',monospace] text-2xl font-bold">
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_A} alt="" draggable="false" />
       </div>
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_B} alt="" draggable="false" />
+      </div>
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_C} alt="" draggable="false" />
+      </div>
+      <div className="rounded-sm bg-[#5C382C] p-3">AU$10.04</div>
+      <div className="rounded-sm bg-[#5C382C] p-3">AU$10.02</div>
+      <div className="rounded-sm bg-[#5C382C] p-3">€7.03</div>
+
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_D} alt="" draggable="false" />
+      </div>
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_E} alt="" draggable="false" />
+      </div>
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_F} alt="" draggable="false" />
+      </div>
+      <div className="rounded-sm bg-[#5C382C] p-3">NZ$5.03</div>
+      <div className="rounded-sm bg-[#5C382C] p-3">NZ$5.08</div>
+      <div className="rounded-sm bg-[#5C382C] p-3">NZ$5.05</div>
+
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_G} alt="" draggable="false" />
+      </div>
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_H} alt="" draggable="false" />
+      </div>
+      <div className="flex items-center rounded-sm bg-white p-1">
+        <Image src={SNACK_I} alt="" draggable="false" />
+      </div>
+      <div className="rounded-sm bg-[#5C382C] p-3">NZ$5.04</div>
+      <div className="rounded-sm bg-[#5C382C] p-3">¥12.07</div>
+      <div className="rounded-sm bg-[#5C382C] p-3">NZ$5.02</div>
     </div>
   </div>
 );
@@ -170,7 +86,7 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
+  <div className="max-w-3xl">
     <p className="mb-4 text-left">
       This puzzle is a reference to a recurring segment on Jet Lag: The Game
       known as{" "}
@@ -207,79 +123,79 @@ export const solutionBody = (
       there and internet sleuthing can ID the rest. Taking the letters indicated
       with an ‘O’ and ordering A-I produces a final answer of SAUVIGNON.
     </p>
-    <table className="mb-4 min-w-full table-auto border-collapse">
+    <table className="mb-4 min-w-full table-auto border-collapse text-left">
       <thead>
         <tr>
-          <th className="text-left">Letter</th>
-          <th className="text-left">Snack Name</th>
-          <th className="text-left">Season</th>
-          <th className="text-left">Episode</th>
-          <th className="text-left">Extracted letter</th>
+          <th>Letter</th>
+          <th>Snack Name</th>
+          <th>Season</th>
+          <th>Episode</th>
+          <th>Extracted letter</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td className="text-left">A</td>
-          <td className="text-left">Beef Sausage Rolls</td>
-          <td className="text-left">10</td>
-          <td className="text-left">4</td>
-          <td className="text-left">S</td>
+          <td>A</td>
+          <td>Beef Sausage Rolls</td>
+          <td>10</td>
+          <td>4</td>
+          <td>S</td>
         </tr>
         <tr>
-          <td className="text-left">B</td>
-          <td className="text-left">Tim Tam</td>
-          <td className="text-left">10</td>
-          <td className="text-left">2</td>
-          <td className="text-left">A</td>
+          <td>B</td>
+          <td>Tim Tam</td>
+          <td>10</td>
+          <td>2</td>
+          <td>A</td>
         </tr>
         <tr>
-          <td className="text-left">C</td>
-          <td className="text-left">Trolli Saure Gluhwurmchen</td>
-          <td className="text-left">7</td>
-          <td className="text-left">3</td>
-          <td className="text-left">U</td>
+          <td>C</td>
+          <td>Trolli Saure Gluhwurmchen</td>
+          <td>7</td>
+          <td>3</td>
+          <td>U</td>
         </tr>
         <tr>
-          <td className="text-left">D</td>
-          <td className="text-left">Burger Rings</td>
-          <td className="text-left">5</td>
-          <td className="text-left">3</td>
-          <td className="text-left">V</td>
+          <td>D</td>
+          <td>Burger Rings</td>
+          <td>5</td>
+          <td>3</td>
+          <td>V</td>
         </tr>
         <tr>
-          <td className="text-left">E</td>
-          <td className="text-left">Weet Bix</td>
-          <td className="text-left">5</td>
-          <td className="text-left">8</td>
-          <td className="text-left">I</td>
+          <td>E</td>
+          <td>Weet Bix</td>
+          <td>5</td>
+          <td>8</td>
+          <td>I</td>
         </tr>
         <tr>
-          <td className="text-left">F</td>
-          <td className="text-left">Baked Oaty Slices</td>
-          <td className="text-left">5</td>
-          <td className="text-left">5</td>
-          <td className="text-left">G</td>
+          <td>F</td>
+          <td>Baked Oaty Slices</td>
+          <td>5</td>
+          <td>5</td>
+          <td>G</td>
         </tr>
         <tr>
-          <td className="text-left">G</td>
-          <td className="text-left">Three Cheese Selection</td>
-          <td className="text-left">5</td>
-          <td className="text-left">4</td>
-          <td className="text-left">N</td>
+          <td>G</td>
+          <td>Three Cheese Selection</td>
+          <td>5</td>
+          <td>4</td>
+          <td>N</td>
         </tr>
         <tr>
-          <td className="text-left">H</td>
-          <td className="text-left">Puripuri Ebi Purio</td>
-          <td className="text-left">12</td>
-          <td className="text-left">7</td>
-          <td className="text-left">O</td>
+          <td>H</td>
+          <td>Puripuri Ebi Purio</td>
+          <td>12</td>
+          <td>7</td>
+          <td>O</td>
         </tr>
         <tr>
-          <td className="text-left">I</td>
-          <td className="text-left">Rashuns</td>
-          <td className="text-left">5</td>
-          <td className="text-left">2</td>
-          <td className="text-left">N</td>
+          <td>I</td>
+          <td>Rashuns</td>
+          <td>5</td>
+          <td>2</td>
+          <td>N</td>
         </tr>
       </tbody>
     </table>
@@ -325,4 +241,3 @@ export const tasks: Record<string, JSX.Element> = {};
 
 
  */
-

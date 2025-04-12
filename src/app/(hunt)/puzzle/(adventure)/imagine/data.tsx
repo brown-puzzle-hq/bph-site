@@ -19,12 +19,6 @@ export const inPersonBody = (
       please visit HQ in Friedman 208.
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
-    <div className="max-w-3xl pb-4 text-center">
-      <i>
-        The only inspiring thing here is how the internet came together to say
-        "no."
-      </i>
-    </div>
   </div>
 );
 
@@ -38,34 +32,15 @@ export const remoteBoxBody = (
       </i>
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
-    <div className="max-w-3xl pb-4 text-center">
-      <i>
-        The only inspiring thing here is how the internet came together to say
-        "no."
-      </i>
-    </div>
   </div>
 );
 
 export const remoteBody = (
-  <div>
-    <div className="max-w-3xl text-center">
-      <i>
-        The only inspiring thing here is how the internet came together to say
-        "no."
-      </i>
-    </div>
-    <div className="mt-8 max-w-3xl text-center">
-      <Link href="https://drive.google.com/file/d/1FqNlv4SPrGrmKTHUj0PpTBOUCIMO-Ynq/view?usp=sharing">
-        <span className="underline">[audio]</span>
-      </Link>
-    </div>
-    <div className="flex justify-center pb-4">
-      <audio controls>
-        <source src="/api/puzzle/imagine" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+  <div className="flex justify-center py-4">
+    <audio controls className="w-96 max-w-full">
+      <source src="/api/puzzle/imagine" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
   </div>
 );
 
@@ -233,8 +208,9 @@ export const tasks: Record<string, JSX.Element> = {
     <div>
       <div className="mb-6 max-w-3xl text-center">
         Oh...that thing you did was actually kind of insensitive...Make an
-        apology video and send it to brownpuzzlehq@gmail.com. Your apology
-        should include at least 4 of the following:
+        apology video and send it to brownpuzzlehq@gmail.com, making sure to
+        include "Taking Accountability" in the subject line. Your apology should
+        include at least 4 of the following:
       </div>
       <ul className="max-w-3xl list-disc pl-6">
         <li>Blow your nose loudly for 5 continuous seconds</li>

@@ -14,8 +14,7 @@ export const inPersonBody = (
   <div className="max-w-3xl text-center">
     <p className="mb-4 italic">This is an interactive puzzle.</p>
     <iframe
-      width="560"
-      height="315"
+      className="aspect-video w-[576px] max-w-full"
       src="https://www.youtube-nocookie.com/embed/k2KJdVept8Y"
       title="YouTube video player"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -33,8 +32,7 @@ export const remoteBody = (
       This puzzle is still being written... Submit WRECKING
     </p>
     <iframe
-      width="560"
-      height="315"
+      className="aspect-video w-[576px] max-w-full"
       src="https://www.youtube-nocookie.com/embed/k2KJdVept8Y"
       title="YouTube video player"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

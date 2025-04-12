@@ -14,64 +14,44 @@ export const puzzleId = "the-compact-disc";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
-      </b>
+  <div className="max-w-3xl space-y-4 text-center">
+    <div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
     </div>
-    <div className="mb-6 max-w-3xl text-center">
-      <i>
-        This is a physical puzzle! If your team has not already picked up a CD,
-        please visit HQ in Friedman 208.
-      </i>
+    <div className="italic">
+      This is a physical puzzle! If your team has not already picked up a CD,
+      please visit HQ in Friedman 208.
     </div>
-    <p className="p-4 italic">
+    <div className="italic">
       You take a minute (or several) to listen to your CD.
-    </p>
-    <div className="max-w-2xl p-4">
-      <div className="flex justify-center pb-4">
-        <Image src={Disc} alt="" width={500} height={500} />
-      </div>
     </div>
   </div>
 );
 
 export const remoteBoxBody = (
-  <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
-      </b>
+  <div className="max-w-3xl space-y-4 text-center">
+    <div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
     </div>
-    <div className="mb-6 max-w-3xl text-center">
-      <i>This is a physical puzzle! It uses an object found in your box.</i>
+    <div className="italic">
+      This is a physical puzzle! It uses an object found in your box.
     </div>
-    <p className="p-4 italic">
+    <div className="italic">
       You take a minute (or several) to listen to your CD.
-    </p>
-    <div className="max-w-2xl p-4">
-      <div className="flex justify-center pb-4">
-        <Image src={Disc} alt="" width={500} height={500} />
-      </div>
     </div>
   </div>
 );
 
 export const remoteBody = (
-  <div>
-    <div className="mb-4 max-w-3xl text-center">
-      <b>
-        This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
-      </b>
+  <div className="max-w-3xl space-y-4 text-center">
+    <div className="font-bold">
+      This is a sequence metapuzzle. It uses feeders from the 💿 sequence.
     </div>
-    <p className="p-4 italic">
+    <div className="italic">
       You take a minute (or several) to listen to your CD.
-    </p>
-    <div className="max-w-2xl p-4">
-      <div className="flex justify-center pb-4">
-        <Image src={Disc} alt="" width={500} height={500} />
-      </div>
+    </div>
+    <div className="flex justify-center pt-1.5">
+      <Image src={Disc} alt="" width={500} height={500} />
     </div>
   </div>
 );

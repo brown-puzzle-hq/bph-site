@@ -63,13 +63,15 @@ const puzzleClues = [
     ],
   },
   {
-    down: ["All women born after 1993, according to the Internet", 
-      "What one might do in hell", 
-      "Belonging to me and you"],
+    down: [
+      "All women born after 1993, according to the Internet",
+      "What one might do in hell",
+      "Belonging to me and you",
+    ],
     across: [
       "Casual fraternal address",
       "Acknowledgement of debt",
-      'Common data type',
+      "Common data type",
     ],
   },
   {
@@ -122,7 +124,7 @@ export const inPersonBody = (
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
       {puzzleClues.map((clues, index) => (
         <div key={index} className="w-full space-y-4">
-          <div className="mx-auto grid w-36 grid-cols-3 gap-0 border sm:mx-0">
+          <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 sm:mx-0">
             <div className="flex h-12 w-12 items-center justify-center border">
               1
             </div>

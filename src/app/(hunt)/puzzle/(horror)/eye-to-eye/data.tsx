@@ -1,5 +1,7 @@
-import Image from "next/image";
-import eye from "./eye.png";
+import { cn } from "~/lib/utils";
+
+const DATA =
+  "T, , , , 👁️, , , ,⬜, , , , , , 👁️, ,⬜,⬜, , , , , 👁️, , , ,⬜, , , , , , 👁️, , ,⬜,⬜, , , , 👁️, , , , ,⬜, , , , , 👁️, , ,⬜,⬜, , , , 👁️, , ,⬜,⬜";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -21,81 +23,14 @@ export const inPersonBody = (
       </b>
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
-    <div className="mb-4 max-w-3xl">
+    <div className="mb-4 max-w-3xl pb-1.5">
       <i>Only one of my eyes ever work... What do I need to fix my eyesight?</i>
     </div>
-
-    <div className="mx-auto grid w-fit grid-cols-9 gap-0 overflow-x-auto border-2 border-white">
-      {[
-        "T",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "",
-        "",
-        "⬜",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "⬜",
-        "⬜",
-        "",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "",
-        "",
-        "⬜",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "",
-        "⬜",
-        "⬜",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "",
-        "",
-        "",
-        "⬜",
-        "",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "",
-        "⬜",
-        "⬜",
-        "",
-        "",
-        "",
-        "👁️",
-        "",
-        "",
-        "⬜",
-        "⬜",
-      ].map((cell, index) => (
+    <div className="mx-auto grid w-full max-w-80 grid-cols-9 border text-center text-lg font-bold leading-8">
+      {DATA.split(",").map((cell, index) => (
         <div
           key={index}
-          className={`flex h-10 w-10 items-center justify-center border border-white text-lg font-bold ${
-            cell === "⬜" ? "bg-white" : "bg-transparent"
-          }`}
+          className={cn("aspect-square border", cell === "⬜" && "bg-white")}
         >
           {cell !== "⬜" && cell}
         </div>

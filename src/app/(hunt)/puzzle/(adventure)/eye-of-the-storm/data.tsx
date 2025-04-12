@@ -39,9 +39,9 @@ export const puzzleId = "eye-of-the-storm";
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
     <p>You spin it right round, I, right round like a... hurricane?</p>
-    <div className="mx-auto grid w-fit grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(13,1.5em)] border">
+    <div className="mx-auto grid w-fit grid-cols-[repeat(13,1.5em)] grid-rows-[repeat(13,1.5em)] border text-center leading-snug">
       {TEXT.split(" ").map((box, index) => (
-        <p className="flex items-center justify-center border" key={index}>
+        <p className="border" key={index}>
           {box}
         </p>
       ))}
@@ -68,13 +68,16 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-const LETTERS=TEXT.split(" ")
-const size = Math.sqrt(LETTERS.length)
-export const copyText = LETTERS.reduce((acc, val, i) => {
-  acc += val;
-  i % size === (size - 1) ? acc += "\n" : acc += "\t";
-  return acc
-}, "") + "\n" + NAMES.join("\n");
+const LETTERS = TEXT.split(" ");
+const size = Math.sqrt(LETTERS.length);
+export const copyText =
+  LETTERS.reduce((acc, val, i) => {
+    acc += val;
+    i % size === size - 1 ? (acc += "\n") : (acc += "\t");
+    return acc;
+  }, "") +
+  "\n" +
+  NAMES.join("\n");
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
