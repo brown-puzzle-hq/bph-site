@@ -12,7 +12,7 @@ import { extractEmails } from "~/lib/comms";
 export default function Page() {
   const [activeTab, setActiveTab] = useState("emails");
   const [query, setQuery] = useState(
-    "SELECT * FROM bph_site_team\nWHERE interaction_type = 'remote'\nAND wants_box = true;",
+    "SELECT * FROM bph_site_team\nWHERE id = 'admin123'\nAND interaction_type = 'remote'\nAND wants_box = true;",
   );
   const [result, setResult] = useState<any>(null);
 
@@ -48,7 +48,7 @@ export default function Page() {
 
   return (
     <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
-      <h1 className="text-2xl font-bold">SQL Query Executor</h1>
+      <h1 className="text-2xl font-bold">SQL Editor</h1>
       <p className="mb-4 text-gray-600">
         Enter an SQL query below to execute it against the database.
       </p>
