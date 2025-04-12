@@ -174,7 +174,6 @@ export default function Game() {
 
   if (width === null) return null;
 
-  // TODO: determine cutoff
   if (width < 960) {
     return (
       <div className="max-w-3xl text-center">

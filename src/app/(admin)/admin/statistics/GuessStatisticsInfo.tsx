@@ -35,7 +35,6 @@ export default async function GuessStatisticsInfo({
 
   return (
     <div className="-mt-6 flex grow flex-col items-center">
-      {/* TODO: this has built-in padding, ideally we remove padding from admin layout and manually add it to each page */}
       <DefaultHeader puzzleId={puzzleId} hasSolution={true} />
       <div className="grid w-full max-w-[1200px] grid-cols-1 gap-4 p-4 md:grid-cols-2">
         <Card className="border-0 shadow-none">

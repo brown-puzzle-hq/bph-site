@@ -331,15 +331,31 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
   // Checks
   const hasHint =
     (await getNumberOfHintsRemaining(teamId, role, interactionMode)) > 0;
-  const hasUnansweredHint = (await db.query.hints.findFirst({
+
+  if (!hasHint) {
+    return {
+      error: "No hints remaining.",
+    };
+  }
+
+  const unansweredHint = await db.query.hints.findFirst({
     columns: { id: true },
     where: and(eq(hints.teamId, teamId), eq(hints.status, "no_response")),
-  }))
-    ? true
-    : false;
+    with: {
+      puzzle: {
+        columns: { name: true },
+      },
+    },
+  });
 
-  if (hasHint && !hasUnansweredHint) {
-    const result = await db
+  if (unansweredHint) {
+    return {
+      error: `You have an outstanding hint on the puzzle ${unansweredHint.puzzle.name}.`,
+    };
+  }
+
+  const result = (
+    await db
       .insert(hints)
       .values({
         teamId: teamId,
@@ -348,15 +364,20 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
         requestTime: new Date(),
         status: "no_response",
       })
-      .returning({ id: hints.id });
+      .returning({ id: hints.id })
+  )?.[0];
 
-    if (result[0]) {
-      const hintMessage = `🙏 **Hint** [request](https://www.brownpuzzlehunt.com/admin/hints/${result[0].id}) by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
-      await sendBotMessage(hintMessage);
-    }
-
-    return result[0]?.id;
+  if (!result) {
+    return {
+      error:
+        "Please try again. If the problem persists, contact HQ or use the feedback form.",
+    };
   }
+
+  const hintMessage = `🙏 **Hint** [request](https://www.brownpuzzlehunt.com/admin/hints/${result.id}) by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}): ${hint} <@&1310029428864057504>`;
+  await sendBotMessage(hintMessage);
+
+  return { error: null, id: result.id };
 }
 
 /** Edits a hint */

@@ -106,11 +106,28 @@ export default function HuntHintThreads({
     setRequest("");
 
     startTransition(async () => {
-      const id = await insertHintRequest(puzzleId, message);
-      if (!id) {
+      const { error, id } = await insertHintRequest(puzzleId, message);
+      if (error) {
         // Revert optimistic update
         setOptimisticHints((prev) => prev.filter((hint) => hint.id !== 0));
-        setRequest(request);
+        if (
+          error ===
+          "Please try again. If the problem persists, contact HQ or use the feedback form."
+        ) {
+          toast({
+            variant: "destructive",
+            title: "Failed to request hint",
+            description: error,
+          });
+          setRequest(request);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Failed to request hint",
+            description: error + " Request copied to clipboard.",
+          });
+          if (request) navigator.clipboard.writeText(request);
+        }
       } else {
         // Update followUpId
         startTransition(() => {
@@ -119,7 +136,7 @@ export default function HuntHintThreads({
               hint.id === 0
                 ? {
                     ...hint,
-                    id,
+                    id: id!,
                   }
                 : hint,
             ),
