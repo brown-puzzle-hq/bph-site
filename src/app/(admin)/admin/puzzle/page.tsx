@@ -15,7 +15,6 @@ import {
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
 import { db } from "@/db/index";
-export const fetchCache = "force-no-store";
 
 const roundBgColor: Record<string, string> = {
   Action: "bg-red-100",
