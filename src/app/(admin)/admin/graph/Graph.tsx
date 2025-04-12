@@ -645,10 +645,10 @@ export default function Graph() {
               <table>
                 {deserializeMembers(searchedTeam.members).map(
                   (member, index) => (
-                    <tr className="w-full">
+                    <tr className="w-full align-top">
                       <td className="text-center">{index + 1}</td>
-                      <td className="break-all pl-2">{member.name}</td>
-                      <td className="break-all pl-2">{member.email}</td>
+                      <td className="break-words pl-2">{member.name}</td>
+                      <td className="break-words pl-2">{member.email}</td>
                     </tr>
                   ),
                 )}
@@ -819,9 +819,12 @@ export default function Graph() {
                   {searchedPuzzle.requestedHints
                     ?.sort((a, b) => a.id - b.id)
                     .map((hint) => (
-                      <div className="pb-1">
-                        <div className="flex justify-between space-x-2">
-                          <p id={`hint-${hint.id}`} className="break-all">
+                      <div>
+                        <div className="flex justify-between space-x-2 py-1">
+                          <p
+                            id={`hint-${hint.id}`}
+                            className="max-w-full break-words"
+                          >
                             {hint.request}
                           </p>
                           <div>
@@ -834,10 +837,11 @@ export default function Graph() {
                           </div>
                         </div>
                         {hint.response && (
-                          <p className="break-all rounded-md text-gray-500">
+                          <p className="max-w-full break-words rounded-md py-1 text-gray-500">
                             {">"} {hint.response}
                           </p>
                         )}
+                        <hr className="my-2 h-px border-0 bg-gray-300" />
                       </div>
                     ))}
                 </>
