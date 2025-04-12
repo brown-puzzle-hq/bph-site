@@ -20,37 +20,37 @@ export const puzzleId = "red-blue";
  */
 export const inPersonBody = (
   <div>
-  <div className="mx-auto mb-6 max-w-3xl text-center italic">
-        This is a physical puzzle! If your team has not already picked up a
-        chain, please visit HQ in Friedman 208.
+    <div className="mx-auto mb-6 max-w-3xl text-center italic">
+      This is a physical puzzle! If your team has not already picked up a chain,
+      please visit HQ in Friedman 208.
     </div>
-<hr className="my-6 mb-6 w-[848px] border-t border-white" />
-  <div className="space-y-4 text-center flex flex-col justify-center">
-    <p>
-      <b>
-        This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
-      </b>
-    </p>
-    <p className="pb-2.5">
-      <i>
-        Hey, isn't blue kinda negative? I think red better fits my positive
-        personality!
-      </i>
-    </p>
-    <div>The first bead in the chain is blue.</div>
+    <hr className="my-6 mb-6 w-full border-t border-white" />
+    <div className="space-y-4 text-center flex flex-col justify-center">
+      <p>
+        <b>
+          This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
+        </b>
+      </p>
+      <p className="pb-2.5">
+        <i>
+          Hey, isn't blue kinda negative? I think red better fits my positive
+          personality!
+        </i>
+      </p>
+      <div>The first bead in the chain is blue.</div>
     <div className="flex w-full">
     <div className="mx-auto w-10 gap-0 justify-center">
-      {Array.from({ length: 22 }).map((_, i) => (
-        <div
-          key={i}
-          className={`aspect-square ${(i == 4 || i == 10 || i == 16) ? "" : i >= 17 ? "bg-neutral-600" : "bg-neutral-400"} ${
-            (i == 4 || i == 10 || i == 16) ? "" : "border-1 border border-white ring-1 ring-white"
-          }`}
-        />
-      ))}
-      </div>
+        {Array.from({ length: 22 }).map((_, i) => (
+          <div
+            key={i}
+            className={`aspect-square ${(i == 4 || i == 10 || i == 16) ? "" : i >= 17 ? "bg-neutral-600" : "bg-neutral-400"} ${
+              (i == 4 || i == 10 || i == 16) ? "" : "border-1 border border-white ring-1 ring-white"
+            }`}
+          />
+        ))}
+        </div>
     </div>
-  </div>
+    </div>
   </div>
 );
 
