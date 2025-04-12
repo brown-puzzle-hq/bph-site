@@ -14,7 +14,8 @@ export const inPersonBody = (
   <div>
     <div className="max-w-3xl space-y-4 text-center">
 <div className="font-bold">
-      This is a sequence metapuzzle. It uses feeders from the 💂 sequence.
+      This is a sequence metapuzzle. It uses feeders from the 💂 sequence. <br></br>
+      (You may not have enough when you first see this puzzle—come back later!)
     </div>
     <div className="pb-2.5 italic">
     As you approach the end of Brown Puzzlehunt, you find in front of you The

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BEADS from "./beads.jpg";
+import BEADS from "./beads_diagram.svg";
 const CHAIN = "BBRBGGGRRGBGRRGRGRG";
 
 const COLORS: Record<string, string> = {

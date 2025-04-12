@@ -13,25 +13,23 @@ export const puzzleId = "international-neighbors";
 export const inPersonBody = (
   <div className="flex max-w-3xl flex-col items-center space-y-4">
     <p className="text-center italic pb-2.5">
-      What's my mate saying? (I'm a linguist)
+     You ask a friend for help with your linguistics assignment, but they pronounce things a little differently each time.
     </p>
-    <div className="grid grid-cols-[1fr_fit-content(200px)] gap-4">
-      <div>Religion associated with reggae, for short</div>
-      <div>_ _ _ _ _ (1, 4)</div>
-      <div>Wider</div>
-      <div>_ _ _ _ _ (1, 3)</div>
-      <div>Christian leader of a congregation</div>
-      <div>_ _ _ _ _ (5, 5)</div>
-      <div>Partner of copier</div>
-      <div>_ _ _ _ _ (2, 2)</div>
-      <div>Leonardo da Vinci or Pablo Picasso, for two</div>
-      <div>_ _ _ _ _ (4, 6)</div>
-      <div>Volume 10 vis á vis volume 50</div>
-      <div>_ _ _ _ _ (1, 1)</div>
+    <div className="grid grid-cols-1 gap-4">
+    <div><span className="bg-yellow-200 text-black">_</span> _ _ _ _</div>
+    <div><span className="bg-yellow-200 text-black">_</span> _ _ _ _</div>
+    <div>_ _ _ _ <span className="bg-yellow-200 text-black">_</span></div>
+    <div>_ <span className="bg-yellow-200 text-black">_</span> _ _ _</div>
+    <div>_ _ _ <span className="bg-yellow-200 text-black">_</span> _</div>
+    <div><span className="bg-yellow-200 text-black">_</span> _ _ _ _</div>
     </div>
-    <div className="w-full">
-      _ _ _ _ _ _ <br />1 2 3 4 5 6
-    </div>
+    <div></div>
+    <div className="border-4 border-white p-4">Someone who collapses</div>
+    <div className="border-4 border-white p-4">Partner of copier</div>
+    <div className="border-4 border-white p-4">Wider</div>
+    <div className="border-4 border-white p-4">Religion associated with reggae, for short</div>
+    <div className="border-4 border-white p-4">Christian leader of a congregation</div>
+    <div className="border-4 border-white p-4">Christian leader of a congregation</div>
   </div>
 );
 

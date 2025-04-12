@@ -11,29 +11,7 @@ export const puzzleId = "genetic-counseling";
  * and interactive puzzle components here.
  */
 
-const traits = [
-  "Coffee consumption",
-  "Warrior/Worrier personality",
-  "Nicotine Dependence Risk",
-  "Coronary heart disease risk",
-  "Norovirus resistance",
-  "Red Hair",
-  "Blonde Hair",
-  "Baldness",
-  "Photic Sneeze Reflex",
-  "Earwax type",
-  "Blue eyes",
-  "Sprinter/endurance runner (muscle type)",
-  "Bitter taster (phenylthiocarbamide)",
-  "Asian Flush",
-  "Type 2 Diabetes Risk (TCF7L2)",
-  "Type 2 Diabetes/Obesity Risk (FTO gene)",
-  "Lactose intolerance",
-  "Dyslexia risk",
-  "Cilantro taste",
-  "Peanut Allergy",
-  "Gunther Disease (Congenital Erythropoietic Porphyria)",
-];
+const traits = ['rs4630083', 'rs4680', 'rs12913832', 'rs17822931', 'rs1815739', 'rs1805007', 'rs671', 'rs11803731', 'rs7495174', 'rs7192', 'rs72921001', 'rs4778138', 'rs4988235'];
 
 export const inPersonBody = (
   <div className="max-w-4xl">
@@ -50,16 +28,20 @@ export const inPersonBody = (
         className="text-link hover:underline"
       >
         data sheet
+      </a> and this {" "}
+      <a
+        href="/api/puzzle/genetic-counseling-pdf"
+        className="text-link hover:underline"
+      >
+        company advertisement.
       </a>
-      .
     </p>
     <table className="pb-4 leading-none text-[#EFEDEB] text-xs sm:text-base">
       <thead>
         <tr className="bg-[#40271F] font-bold text-white">
-          <th className="p-2">Trait</th>
           <th className="w-1/5 p-2">rsID</th>
-          <th className="w-1/5 p-2">Allele 1</th>
-          <th className="w-1/5 p-2">Allele 2</th>
+          <th className="w-1/5 p-2">Chromosome</th>
+          <th className="w-3/5 p-2">Phenotype</th>
         </tr>
       </thead>
       <tbody>
@@ -69,7 +51,6 @@ export const inPersonBody = (
             key={index}
           >
             <td className="p-2 outline outline-[#5C382C]">{trait}</td>
-            <td className="p-2 outline outline-[#5C382C]"></td>
             <td className="p-2 outline outline-[#5C382C]"></td>
             <td className="p-2 outline outline-[#5C382C]"></td>
           </tr>

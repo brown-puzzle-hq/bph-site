@@ -17,6 +17,11 @@ export const inPersonBody = (
       This is a physical puzzle! If your team has not already picked up a CD
       or needs a place to play it, please visit HQ in Friedman 208.
     </div>
+    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
+    <div className="border-4 border-white p-4 h-32">
+    {/* _	_ _ _____ _____ _____ ______ ____ ____ ____ _'__ __ <br></br>
+    ____ ____ _____ ____ _____ ___ ___ ___ ______ __ _______ __ ____ ______ */}
+</div>
   </div>
 );
 

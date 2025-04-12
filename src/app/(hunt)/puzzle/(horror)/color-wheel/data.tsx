@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Image1 from "./media/image1.png";
-import Image2 from "./media/image2.png";
+import Image1 from "./media/color_wheel.svg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -32,10 +31,16 @@ export const inPersonBody = (
           allowFullScreen
         ></iframe>
       </div>
-      <p className="pb-4">
-        Your three tickets each entitle you to ride to stops on four trains, on
-        the following lines, in the following order:
-      </p>
+      <div className="pb-4">
+      In order to complete this challenge, Ben needs to visit all the required stops in order, from S to E. The only problem is that Sam is right behind him; so if he ever visits the station he was just at, he’ll get caught, and lose Jet Lag: The Game.
+      </div>
+      <div className="pb-4">
+Once, and once only, Ben can take a walking path between stations S and E (marked with the red dashed line.) 
+</div>
+<div className="pb-4">
+Each stop he travels costs a coin, whether he walks or takes the train.
+
+      </div>
       <div className="flex justify-center pb-4">
         <Image src={Image1} alt="" width={500} height={500} />
       </div>
@@ -45,10 +50,6 @@ export const inPersonBody = (
         travels in the other direction.
       </p>
       <p className="pb-4">Each stop that you travel costs a coin.</p>
-
-      <div className="flex justify-center pb-4">
-        <Image src={Image2} alt="" width={700} height={700} />
-      </div>
     </div>
   </div>
 );
