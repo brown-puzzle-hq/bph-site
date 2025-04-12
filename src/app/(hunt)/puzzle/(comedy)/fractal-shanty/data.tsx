@@ -16,44 +16,46 @@ export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
     <div className="w-full text-center italic">These sailors don't follow orders.</div>
     <Image className="mx-auto" src={FRACTAL} alt="" />
-    <div className="border-4 border-white p-4">
+    <div className="border-4 border-white p-4 space-y-6">
+    <div>
     In the port the seagulls flew right round the masts of sloops and barques<br></br>
     Molly stole one in the ruckus and she called it Karl Marx
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     It shattered into pieces, and the world went down in flame<br></br>
     An outlaw, a port, a philosopher - alright, they start the same.
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     Jimmy paced along the deck, looking right into the gale<br></br>
     "In my twenty years of living, I have never stabbed a whale!"
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     Jimmy was a leftie and forged his own harpoon<br></br>
     In trying out his strength, he chucked it at the moon
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     Little Jim was raised by sailors with a halyard in his hand<br></br>
     In his twenty years of living, he had never left for land
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     Molly had to stay afloat, but women couldn't be employed<br></br>
     So she sailed aboard a whaler as one pretty cabin boy<br></br>
     There she dallied with the second mate and got herself a son<br></br>
     Then made off to Mogadishu with some baleen and a gun.
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     Molly lost to Davy Jones and was left to rot in hell<br></br>
     She was fighting for this letter, but instead she took the L
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     Molly won the competition and became a paralegal <br></br>
     But without her righteous guidance, Marx had turned into an eagle
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     She was right a kleptomaniac and would steal her rival's bones<br></br>
     Then she was challenged to a duel by a mollusc - Davy Jones
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     The captain walked up on his wooden leg and answered, "It's no vacation - <br></br>
     where do you think you go when you're swallowed by a cetacean?"
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     The executioner was there, his gaze as cold as snow.<br></br>
     "Tell me, wench, will you ever repent?" Proud Molly shouted,
-    </div><div className="border-4 border-white p-4">
+    </div><div>
     The seagull helped her rob a bank, then take over the Dover shallows,<br></br>
     But her pyrotechnics and leftist ways had brought her to the gallows.
+    </div>
     </div>
   </div>
 );
