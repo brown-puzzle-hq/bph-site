@@ -77,9 +77,6 @@ export async function HuntHamburgerMenu() {
             : REMOTE.START_TIME
         }
       />
-      <p className="hidden text-center font-mono text-sm lg:block">
-        PUSHED BACK TO 1:30 PM
-      </p>
     </div>
   ) : undefined;
 
