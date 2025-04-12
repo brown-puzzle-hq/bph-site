@@ -246,14 +246,24 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // Message interaction channel about action meta solve and ping the lore role
   if (isCorrect && puzzleId == "drop-the") {
-    const actionInteractionMessage = `💥 **Action Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}) <@&1201541948880736378>`;
+    const query = await db.query.teams.findFirst({
+      columns: { solvingLocation: true },
+      where: eq(teams.id, teamId),
+    });
+
+    const actionInteractionMessage = `💥 **Action Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}). ${query ? `They are in ${query.solvingLocation}` : ""} <@&1201541948880736378>`;
     await sendBotMessage(actionInteractionMessage, "interaction");
   }
 
   // Message interaction channel about horror guard and ping the lore role
   if (isCorrect && puzzleId == "the-guard-and-the-door") {
-    const cerebralInteractionMessage = `👻 **Horror Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}) <@&1201541948880736378>`;
-    await sendBotMessage(cerebralInteractionMessage, "interaction");
+    const query = await db.query.teams.findFirst({
+      columns: { solvingLocation: true },
+      where: eq(teams.id, teamId),
+    });
+
+    const horrorInteractionMessage = `👻 **Horror Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId}). ${query ? `They are in ${query.solvingLocation}` : ""} <@&1201541948880736378>`;
+    await sendBotMessage(horrorInteractionMessage, "interaction");
   }
 
   // If the team has finished the hunt, message the finish channel and ping the lore role
