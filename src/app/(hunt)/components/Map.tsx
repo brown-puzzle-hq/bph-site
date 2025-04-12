@@ -54,7 +54,7 @@ const positions: Record<string, [number, number]> = {
   "heist-iii": [819, 515],
   "identify-the-piece": [385, 353],
   imagine: [275, 369],
-  "international-neighbors": [788, 434],
+  "international-neighbours": [788, 434],
   "like-clockwork": [565, 377],
   "m-guards-n-doors-and-k-choices": [368, 343],
   narcissism: [514, 281],

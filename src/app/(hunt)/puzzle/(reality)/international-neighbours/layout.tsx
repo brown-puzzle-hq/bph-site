@@ -2,7 +2,7 @@ import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "@/puzzle/components/DefaultHeader";
 
 export const metadata = {
-  title: "International Neighbors - Brown Puzzlehunt"
+  title: "International Neighbours - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({
