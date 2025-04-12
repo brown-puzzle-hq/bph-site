@@ -76,7 +76,12 @@ export const copyText = null; // Should be composed of the const variables up to
  * be in all caps, no spaces.
  */
 export const partialSolutions: Record<string, string> = {
-    
+    RAGETTI: "This is an answer to a riddle.",
+    HORATIUS: "This is an answer to a riddle.",
+    GIGAN: "This is an answer to a riddle.",
+    ODIN: "This is an answer to a riddle.",
+    PIRATE: "This is an answer to a riddle.",
+    HURRICANE: "This is an answer to a riddle.",
 };
 
 /**
