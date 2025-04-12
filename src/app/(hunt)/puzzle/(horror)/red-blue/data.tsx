@@ -25,7 +25,7 @@ export const inPersonBody = (
         chain, please visit HQ in Friedman 208.
     </div>
 <hr className="my-6 mb-6 w-[848px] border-t border-white" />
-  <div className="max-w-3xl space-y-4 text-center">
+  <div className="space-y-4 text-center flex flex-col justify-center">
     <p>
       <b>
         This is a sequence metapuzzle. It uses feeders from the ⛓️ sequence.
@@ -38,15 +38,17 @@ export const inPersonBody = (
       </i>
     </p>
     <div>The first bead in the chain is blue.</div>
-    <div className="mx-auto grid w-60 grid-cols-5 gap-0 pb-4">
-      {Array.from({ length: 20 }).map((_, i) => (
+    <div className="flex w-full">
+    <div className="mx-auto w-10 gap-0 justify-center">
+      {Array.from({ length: 22 }).map((_, i) => (
         <div
           key={i}
-          className={`aspect-square ${i == 4 ? "" : i >= 15 ? "bg-neutral-600" : "bg-neutral-400"} ${
-            i === 4 ? "" : "border-1 border border-white ring-1 ring-white"
+          className={`aspect-square ${(i == 4 || i == 10 || i == 16) ? "" : i >= 17 ? "bg-neutral-600" : "bg-neutral-400"} ${
+            (i == 4 || i == 10 || i == 16) ? "" : "border-1 border border-white ring-1 ring-white"
           }`}
         />
       ))}
+      </div>
     </div>
   </div>
   </div>
