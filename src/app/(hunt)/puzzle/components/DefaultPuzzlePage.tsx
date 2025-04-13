@@ -99,7 +99,9 @@ export default async function DefaultPuzzlePage({
 
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE -
-    previousGuesses.filter(({ guess }) => !(guess in tasks)).length;
+    previousGuesses.filter(
+      ({ guess }) => !(guess in tasks || guess in partialSolutions),
+    ).length;
   var refresh = false;
   if (typeof session.user.hasBox === "undefined") {
     const user = await db.query.teams.findFirst({

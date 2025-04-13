@@ -108,7 +108,7 @@ export default function PuzzleListPage({
         <div className={"col-start-1 row-start-1"}>{memoizedMap}</div>
       )}
 
-      {/* Table conent */}
+      {/* Table content */}
       <div
         className={cn(
           "z-10 col-start-1 row-start-1 hidden bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg",

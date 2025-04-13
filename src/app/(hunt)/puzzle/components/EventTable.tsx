@@ -73,8 +73,8 @@ export default function EventTable({
                 </TableCell>
                 <TableCell>
                   <div>
-                    <div className="my-1 flex items-center space-x-1 text-sm">
-                      <Calendar className="size-4" />{" "}
+                    <div className="my-1 flex items-center text-sm sm:space-x-1">
+                      <Calendar className="hidden size-4 sm:block" />{" "}
                       <p className="font-semibold">Time: {event.startTime}</p>
                     </div>
                     <p>{event.description}</p>

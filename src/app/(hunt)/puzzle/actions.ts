@@ -149,11 +149,13 @@ export async function handleGuess(puzzleId: string, guess: string) {
     () => null,
   );
   const tasks = module?.tasks ?? {};
+  const partialSolutions = module?.partialSolutions ?? {};
 
   // Check if the number of guesses is exceeded
   if (
-    puzzle.guesses.filter(({ guess }) => !(guess in tasks)).length >=
-    NUMBER_OF_GUESSES_PER_PUZZLE
+    puzzle.guesses.filter(
+      ({ guess }) => !(guess in tasks || guess in partialSolutions),
+    ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
     return { error: "You have no guesses left. Please contact HQ for help." };
@@ -242,7 +244,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
   }
 
   // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "𝔼 → ✓") : "✕"}]`;
+  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
   await sendBotMessage(guessMessage, "guess");
 
   // Message interaction channel about action meta solve and ping the lore role
