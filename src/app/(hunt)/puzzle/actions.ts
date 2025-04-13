@@ -363,7 +363,10 @@ export async function insertAnswerToken(eventId: string, guess: string) {
       eq(answerTokens.eventId, eventId),
     ),
   });
-  if (token) return { error: "Token already used!" };
+  if (token) {
+    revalidatePath(`/puzzle`);
+    return { error: "Token already used!" };
+  }
 
   // Check that the token is valid
   const event = await db.query.events.findFirst({
@@ -379,7 +382,7 @@ export async function insertAnswerToken(eventId: string, guess: string) {
     timestamp: currDate,
   });
 
-  revalidatePath(`/event/${eventId}`);
+  revalidatePath(`/puzzle`);
   return { error: null };
 }
 
