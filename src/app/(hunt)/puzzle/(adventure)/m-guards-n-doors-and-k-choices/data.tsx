@@ -14,9 +14,9 @@ export const puzzleId = "m-guards-n-doors-and-k-choices";
  */
 export const inPersonBody = (
   <div className="mx-auto max-w-3xl space-y-4 text-center items-center italic">
-    This is an interactive puzzle! Please send one person on your team to the
-    basement of Friedman at 2PM, 4PM, 6PM, 8PM, or 10PM on Saturday, and/or
-    10AM, 12PM, 2PM, 4PM, or 6PM on Sunday.
+    This is an interactive puzzle! Please send one person on your team to
+    Friedman 208 whenever you'd like to solve the puzzle! (Note: This
+    used to be scheduled every two hours but is now being run as called)
   </div>
 );
 
