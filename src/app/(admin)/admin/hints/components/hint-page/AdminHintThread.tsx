@@ -405,7 +405,7 @@ export default function AdminHintThread({
               <p className="pb-0.5 pt-1 font-bold">
                 {optimisticHint.team.displayName}
               </p>
-              <p>{optimisticHint.request}</p>
+              <p className="whitespace-pre-wrap">{optimisticHint.request}</p>
             </TableCell>
           </TableRow>
 
@@ -558,9 +558,9 @@ export default function AdminHintThread({
                     </div>
                   ) : (
                     // Displaying the response
-                    <div className="whitespace-pre-wrap">
-                      <p>{optimisticHint.response}</p>
-                    </div>
+                    <p className="whitespace-pre-wrap">
+                      {optimisticHint.response}
+                    </p>
                   )}
                 </div>
               </TableCell>

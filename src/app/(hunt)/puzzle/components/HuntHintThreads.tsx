@@ -471,7 +471,7 @@ export default function HuntHintThreads({
               </div>
 
               {/* Botton section with hint response */}
-              <div className="whitespace-pre-wrap">{hint.response}</div>
+              <p className="whitespace-pre-wrap">{hint.response}</p>
             </div>
           )}
 
