@@ -9,7 +9,7 @@ import GuessForm from "@/puzzle/components/GuessForm";
 import CopyButton from "@/puzzle/components/CopyButton";
 import TokenRefresher from "@/puzzle/components/TokenRefresher";
 import { canViewPuzzle } from "@/puzzle/actions";
-import { NUMBER_OF_GUESSES_PER_PUZZLE, REMOTE } from "~/hunt.config";
+import { NUMBER_OF_GUESSES_PER_PUZZLE, IN_PERSON, REMOTE } from "~/hunt.config";
 import { cn } from "~/lib/utils";
 
 export default async function DefaultPuzzlePage({
@@ -29,7 +29,7 @@ export default async function DefaultPuzzlePage({
   copyText: string | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
-  interactionMode?: string;
+  interactionMode?: string; // From the URL query
 }) {
   // Authentication
   const session = await auth();
@@ -116,7 +116,10 @@ export default async function DefaultPuzzlePage({
   // Otherwise, use the session interaction mode
   const actualInteractionMode =
     interactionMode &&
-    (session.user.role === "admin" || new Date() > REMOTE.END_TIME)
+    (session.user.role === "admin" ||
+      (session.user.interactionMode === "in-person" &&
+        new Date() > IN_PERSON.END_TIME) ||
+      new Date() > REMOTE.END_TIME)
       ? interactionMode
       : session.user.interactionMode === "in-person"
         ? "in-person"
