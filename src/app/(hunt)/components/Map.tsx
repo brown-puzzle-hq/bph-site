@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { Stage, Container, Sprite, useApp } from "@pixi/react";
-import { Round } from "@/hunt.config";
-import { ZoomIn, ZoomOut } from "lucide-react";
+import { Round, ROUNDS } from "@/hunt.config";
 import React from "react";
 import "@pixi/events";
 
@@ -18,8 +17,17 @@ const WIDTH = 1000;
 const HEIGHT = 1000;
 
 const scaleFactor: Record<string, number> = {
-  "hesit-ii": 0.2,
-  "hesit-iii": 0.001,
+  "heist-ii": 3,
+  "heist-iii": 0.5,
+  "the-final-heist": 0.5,
+  narcissism: 1.4,
+  "m-guards-n-doors-and-k-choices": 1.5,
+  "one-guard-screen": 1.5,
+  "ten-guards-ten-doors": 1.5,
+  "the-guard-and-the-door": 1.5,
+  "two-guards-river": 1.5,
+  "two-guards-two-doors": 1.5,
+  "a-fistful-of-cards-ii": 1.2,
 };
 
 // Record of puzzle positions on the map
@@ -97,6 +105,10 @@ const DraggableMap = React.forwardRef<
   const isDragging = useRef(false);
   const lastPosition = useRef({ x: 0, y: 0 });
   const scale = useRef(2);
+  const zoomAnimationId = useRef<number | null>(null);
+  const targetScale = useRef(2);
+  const targetX = useRef(initialX);
+  const targetY = useRef(initialY);
 
   // Forward the containerRef to the parent component through the ref
   useEffect(() => {
@@ -109,6 +121,51 @@ const DraggableMap = React.forwardRef<
     }
   }, [ref, containerRef.current]);
 
+  // Animation function for smooth zooming
+  const animateZoom = (timestamp: number) => {
+    if (!containerRef.current) {
+      zoomAnimationId.current = null;
+      return;
+    }
+
+    const container = containerRef.current;
+    const currentScale = container.scale.x;
+    const currentX = container.x;
+    const currentY = container.y;
+
+    // Calculate step based on difference (easing)
+    const scaleStep = (targetScale.current - currentScale) * 0.15;
+    const xStep = (targetX.current - currentX) * 0.15;
+    const yStep = (targetY.current - currentY) * 0.15;
+
+    const isComplete =
+      Math.abs(scaleStep) < 0.001 &&
+      Math.abs(xStep) < 0.5 &&
+      Math.abs(yStep) < 0.5;
+
+    if (isComplete) {
+      container.scale.set(targetScale.current);
+      container.x = targetX.current;
+      container.y = targetY.current;
+      zoomAnimationId.current = null;
+      return;
+    }
+
+    container.scale.set(currentScale + scaleStep);
+    container.x = currentX + xStep;
+    container.y = currentY + yStep;
+
+    zoomAnimationId.current = requestAnimationFrame(animateZoom);
+  };
+
+  // Start the animation loop if not already running
+  const startZoomAnimation = () => {
+    if (zoomAnimationId.current !== null) {
+      cancelAnimationFrame(zoomAnimationId.current);
+    }
+    zoomAnimationId.current = requestAnimationFrame(animateZoom);
+  };
+
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -119,6 +176,9 @@ const DraggableMap = React.forwardRef<
     container.y = initialY;
     container.scale.set(2);
     scale.current = 2;
+    targetScale.current = 2;
+    targetX.current = initialX;
+    targetY.current = initialY;
 
     const onDragStart = (event: PointerEvent) => {
       const mouseX = event.clientX;
@@ -127,6 +187,12 @@ const DraggableMap = React.forwardRef<
       if (container) {
         isDragging.current = true;
         lastPosition.current = { x: mouseX, y: mouseY };
+
+        // Cancel any ongoing zoom animation when starting to drag
+        if (zoomAnimationId.current !== null) {
+          cancelAnimationFrame(zoomAnimationId.current);
+          zoomAnimationId.current = null;
+        }
       }
     };
 
@@ -142,6 +208,10 @@ const DraggableMap = React.forwardRef<
 
         container.x += dx;
         container.y += dy;
+
+        // Update target position while dragging
+        targetX.current = container.x;
+        targetY.current = container.y;
 
         lastPosition.current = { x: mouseX, y: mouseY };
       }
@@ -163,6 +233,10 @@ const DraggableMap = React.forwardRef<
         Math.min(5, scale.current + zoomDirection * zoomFactor),
       );
 
+      // Store the new scale target
+      targetScale.current = newScale;
+      scale.current = newScale;
+
       // Get mouse position relative to the stage
       const rect = (app.view as HTMLCanvasElement).getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -170,17 +244,16 @@ const DraggableMap = React.forwardRef<
 
       // Calculate mouse position relative to container before scaling
       const pointBeforeScale = {
-        x: (x - container.x) / scale.current,
-        y: (y - container.y) / scale.current,
+        x: (x - container.x) / container.scale.x,
+        y: (y - container.y) / container.scale.y,
       };
 
-      // Update scale
-      container.scale.set(newScale);
-      scale.current = newScale;
-
       // Calculate the new position to keep mouse in same place
-      container.x = x - pointBeforeScale.x * newScale;
-      container.y = y - pointBeforeScale.y * newScale;
+      targetX.current = x - pointBeforeScale.x * newScale;
+      targetY.current = y - pointBeforeScale.y * newScale;
+
+      // Start the animation for smooth transition
+      startZoomAnimation();
     };
 
     // Configure container for interactions
@@ -201,6 +274,11 @@ const DraggableMap = React.forwardRef<
       canvasElement.removeEventListener("pointermove", onDragMove);
       canvasElement.removeEventListener("pointerup", onDragEnd);
       canvasElement.removeEventListener("pointerout", onDragEnd);
+
+      // Cancel any ongoing animation
+      if (zoomAnimationId.current !== null) {
+        cancelAnimationFrame(zoomAnimationId.current);
+      }
     };
   }, [app, initialX, initialY]);
 
@@ -272,43 +350,15 @@ export default function Map({
     };
   };
 
-  // Get available round names - moved outside of render to avoid recalculations every render
+  // Get available round names
   const availableRoundNames = availableRounds.map(({ name }) => name);
-
-  // Check if Reality round is available
-  const isRealityAvailable = availableRoundNames.includes("Reality");
-
-  // Define map layers configuration
-  const mapLayers = [
-    {
-      name: "Adventure",
-      isAvailable: availableRoundNames.includes("Adventure"),
-    },
-    {
-      name: "RealityUnder",
-      isAvailable: isRealityAvailable,
-    },
-    {
-      name: "Comedy",
-      isAvailable: availableRoundNames.includes("Comedy"),
-    },
-    {
-      name: "Drama",
-      isAvailable: availableRoundNames.includes("Drama"),
-    },
-    {
-      name: "Horror",
-      isAvailable: availableRoundNames.includes("Horror"),
-    },
-    {
-      name: "RealityOver",
-      isAvailable: isRealityAvailable,
-    },
-    {
-      name: "Action",
-      isAvailable: availableRoundNames.includes("Action"),
-    },
-  ];
+  const allRoundNames = ROUNDS.map(({ name }) => name);
+  const layoutFile =
+    "/map/layout/" +
+    allRoundNames
+      .map((name) => (availableRoundNames.includes(name) ? 1 : 0))
+      .join("") +
+    ".png";
 
   // Update stage size when container size changes
   useEffect(() => {
@@ -387,22 +437,6 @@ export default function Map({
     setSearchTerm("");
   };
 
-  const handleZoomIn = () => {
-    const canvasElement = document.querySelector("canvas");
-    if (canvasElement) {
-      const wheelEvent = new WheelEvent("wheel", { deltaY: -100 });
-      canvasElement.dispatchEvent(wheelEvent);
-    }
-  };
-
-  const handleZoomOut = () => {
-    const canvasElement = document.querySelector("canvas");
-    if (canvasElement) {
-      const wheelEvent = new WheelEvent("wheel", { deltaY: 100 });
-      canvasElement.dispatchEvent(wheelEvent);
-    }
-  };
-
   return (
     <div
       ref={containerRef}
@@ -465,22 +499,15 @@ export default function Map({
             initialX={calculateCentroid().x}
             initialY={calculateCentroid().y}
           >
-            {/* Map Layers */}
-            {mapLayers.map((layer) => (
-              <Container key={layer.name}>
-                <Sprite
-                  image={
-                    layer.isAvailable
-                      ? `/map/${layer.name}.png`
-                      : `/map/${layer.name}Gray.png`
-                  }
-                  width={WIDTH}
-                  height={HEIGHT}
-                  x={0}
-                  y={0}
-                />
-              </Container>
-            ))}
+            <Container>
+              <Sprite
+                image={layoutFile}
+                width={WIDTH}
+                height={HEIGHT}
+                x={0}
+                y={0}
+              />
+            </Container>
 
             {/* Puzzle sprites layer - always on top */}
             <Container>
@@ -489,7 +516,7 @@ export default function Map({
                 const isSolved = solvedPuzzles.some(
                   (sp) => sp.puzzleId === puzzle.id,
                 );
-                const spriteUrl = `map/sprites-outlined/${puzzle.id}.png`;
+                const spriteUrl = `/map/sprites-outlined/${puzzle.id}.png`;
 
                 return (
                   <Sprite
@@ -497,10 +524,10 @@ export default function Map({
                     image={spriteUrl}
                     x={position[0]}
                     y={position[1]}
-                    interactive
+                    eventMode="static"
                     cursor="pointer"
                     anchor={0.5}
-                    scale={scaleFactor[puzzle.id] || 0.075}
+                    scale={0.075 * (scaleFactor[puzzle.id] || 1)}
                     pointerdown={() => {
                       setCleanClick(true);
                     }}
@@ -519,21 +546,6 @@ export default function Map({
           </DraggableMap>
         </Stage>
       )}
-      {/* Zoom controls */}
-      <div className="absolute bottom-2 right-2 z-10 flex flex-col gap-2">
-        <button
-          onClick={handleZoomIn}
-          className="rounded-md bg-main-bg p-2 shadow-md hover:bg-[#554370]"
-        >
-          <ZoomIn />
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="rounded-md bg-main-bg p-2 shadow-md hover:bg-[#554370]"
-        >
-          <ZoomOut />
-        </button>
-      </div>
       {/* Tooltip for hovered puzzle */}
       {hoveredPuzzle && (
         <div
