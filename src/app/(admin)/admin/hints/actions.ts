@@ -300,6 +300,13 @@ export async function insertHintResponse(
     throw new Error("Not authorized");
   }
 
+  if (!response) {
+    return {
+      title: "Error responding to hint",
+      error: "Response is empty",
+    };
+  }
+
   // For a response to go through, the hint claimer must be the user and
   // the hint status must be no_response
   let user = session.user.id ? session.user.id : "";

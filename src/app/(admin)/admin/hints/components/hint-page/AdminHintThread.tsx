@@ -440,7 +440,10 @@ export default function AdminHintThread({
                   </div>
                 ) : optimisticHint.claimer.id === session?.user?.id ? (
                   <div className="flex space-x-2">
-                    <Button onClick={() => handleSubmitResponse(response)}>
+                    <Button
+                      onClick={() => handleSubmitResponse(response)}
+                      disabled={!response}
+                    >
                       Submit
                     </Button>
                     <Button
@@ -460,7 +463,7 @@ export default function AdminHintThread({
           )}
 
           {/* Hint response row */}
-          {optimisticHint.response && optimisticHint.claimer && (
+          {optimisticHint.response !== null && optimisticHint.claimer && (
             <TableRow className="border-0 hover:bg-inherit">
               <TableCell className="break-words px-0">
                 {/* Top section for claimer ID, the follow-up button, and the edit button */}
