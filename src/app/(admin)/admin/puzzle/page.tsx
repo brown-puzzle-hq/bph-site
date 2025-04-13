@@ -62,6 +62,14 @@ export default async function Home() {
           },
         },
       },
+      hints: {
+        columns: { id: true },
+        with: {
+          team: {
+            columns: { role: true },
+          },
+        },
+      },
     },
   });
 
@@ -75,6 +83,7 @@ export default async function Home() {
     guesses: puzzle.guesses.filter((guess) => guess.team.role === "user")
       .length,
     solves: puzzle.solves.filter((solve) => solve.team.role === "user").length,
+    hints: puzzle.hints.filter((hint) => hint.team.role === "user").length,
     sequences: SEQUENCES.filter((seq) => seq.puzzles.includes(puzzle.id)),
   }));
 
@@ -123,6 +132,7 @@ export default async function Home() {
               <TableHead className="w-fit py-0 text-center">Unlocks</TableHead>
               <TableHead className="w-fit py-0 text-center">Solves</TableHead>
               <TableHead className="w-fit py-0 text-center">Guesses</TableHead>
+              <TableHead className="w-fit py-0 text-center">Hints</TableHead>
               <TableHead className="w-fit py-0 text-center">
                 In-Person
               </TableHead>
@@ -182,6 +192,9 @@ export default async function Home() {
                     </TableCell>
                     <TableCell className="text-center">
                       {puzzle.guesses}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {puzzle.hints}
                     </TableCell>
                     <TableCell className="justify-center">
                       {puzzle.inPersonBody && (
