@@ -260,26 +260,33 @@ export const events = createTable("event", {
   description: text("description").notNull(),
 });
 
-export const answerTokens = createTable("answer_token", {
-  id: serial("id").primaryKey(),
-  teamId: varchar("team_id")
-    .notNull()
-    .references(() => teams.id, {
-      onDelete: "cascade",
+export const answerTokens = createTable(
+  "answer_token",
+  {
+    id: serial("id").primaryKey(),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, {
+        onDelete: "cascade",
+      }),
+    eventId: varchar("event_id")
+      .notNull()
+      .references(() => events.id, {
+        onDelete: "cascade",
+      }),
+    timestamp: timestamp("timestamp", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    // This is the puzzle that the token was used for
+    puzzleId: varchar("puzzle_id").references(() => puzzles.id, {
+      onDelete: "set null",
     }),
-  eventId: varchar("event_id")
-    .notNull()
-    .references(() => events.id, {
-      onDelete: "cascade",
-    }),
-  timestamp: timestamp("timestamp", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  // This is the puzzle that the token was used for
-  puzzleId: varchar("puzzle_id").references(() => puzzles.id, {
-    onDelete: "set null",
+  },
+  // TODO: enforce this later
+  (table) => ({
+    unique_decision: unique("unique_token").on(table.teamId, table.eventId),
   }),
-});
+);
 
 export const teamRelations = relations(teams, ({ many }) => ({
   unlocks: many(unlocks),

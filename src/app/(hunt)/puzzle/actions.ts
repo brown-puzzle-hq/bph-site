@@ -356,6 +356,15 @@ export async function insertAnswerToken(eventId: string, guess: string) {
   const teamId = session.user.id;
   const currDate = new Date();
 
+  // Check that the team has not already had a token
+  const token = await db.query.answerTokens.findFirst({
+    where: and(
+      eq(answerTokens.teamId, teamId),
+      eq(answerTokens.eventId, eventId),
+    ),
+  });
+  if (token) return { error: "Token already used!" };
+
   // Check that the token is valid
   const event = await db.query.events.findFirst({
     where: eq(events.id, eventId),
