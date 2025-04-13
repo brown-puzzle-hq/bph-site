@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { Stage, Container, Sprite, useApp } from "@pixi/react";
-import { Round, ROUNDS } from "@/hunt.config";
+import { Round } from "@/hunt.config";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import React from "react";
 import "@pixi/events";
@@ -12,6 +12,10 @@ type puzzleList = {
   name: string;
   answer: string;
 }[];
+
+// Map width and height (needed for proportions of map assets)
+const WIDTH = 1000;
+const HEIGHT = 1000;
 
 const scaleFactor: Record<string, number> = {
   "hesit-ii": 0.2,
@@ -82,7 +86,11 @@ const positions: Record<string, [number, number]> = {
 
 const DraggableMap = React.forwardRef<
   any,
-  { children: React.ReactNode; initialX?: number; initialY?: number }
+  {
+    children: React.ReactNode;
+    initialX?: number;
+    initialY?: number;
+  }
 >(({ children, initialX = 0, initialY = 0 }, ref) => {
   const app = useApp();
   const containerRef = useRef<any>(null);
@@ -149,9 +157,9 @@ const DraggableMap = React.forwardRef<
 
       // Calculate zoom direction
       const zoomDirection = event.deltaY < 0 ? 1 : -1;
-      const zoomFactor = 0.05;
+      const zoomFactor = 0.07;
       const newScale = Math.max(
-        1.5,
+        0.8,
         Math.min(5, scale.current + zoomDirection * zoomFactor),
       );
 
@@ -234,10 +242,6 @@ export default function Map({
   );
   const pixiContainerRef = useRef<any>(null);
 
-  // Map width and height (needed for proportions of map assets)
-  const WIDTH = 1000;
-  const HEIGHT = 1000;
-
   // Calculate initial map position based on available puzzles
   const calculateCentroid = () => {
     if (uniquePuzzles.length === 0) return { x: 0, y: 0 };
@@ -271,62 +275,40 @@ export default function Map({
   // Get available round names - moved outside of render to avoid recalculations every render
   const availableRoundNames = availableRounds.map(({ name }) => name);
 
-  // Create mapping of round name to image path - moved outside of render
-  const layouts = ROUNDS.reduce(
-    (acc, { name }) => {
-      // Skip Reality round since we'll handle it separately
-      if (name === "Reality") return acc;
-
-      acc[name] = availableRoundNames.includes(name)
-        ? `/map/${name}.png`
-        : `/map/${name}Gray.png`;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
-
   // Check if Reality round is available
   const isRealityAvailable = availableRoundNames.includes("Reality");
 
-  // Define layer order (from lowest to highest)
-  const layerOrder = ["Adventure", "Comedy", "Drama", "Horror", "Action"];
-
-  // Image loading error handling
-  const handleImageError = (roundName: string) => {
-    console.error(`Failed to load image for round: ${roundName}`);
-  };
-
-  // Function to check if an image exists
-  const checkImageExists = async (url: string): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = url;
-    });
-  };
-
-  // Validate image paths on mount
-  useEffect(() => {
-    const validateImages = async () => {
-      const rounds = [
-        "Adventure",
-        "Comedy",
-        "Drama",
-        "Horror",
-        "Action",
-        "RealityUnder",
-        "RealityOver",
-      ];
-
-      for (const round of rounds) {
-        const exists = await checkImageExists(`/map/${round}.png`);
-        if (!exists) console.error(`Image not found: /map/${round}.png`);
-      }
-    };
-
-    validateImages();
-  }, []);
+  // Define map layers configuration
+  const mapLayers = [
+    {
+      name: "Adventure",
+      isAvailable: availableRoundNames.includes("Adventure"),
+    },
+    {
+      name: "RealityUnder",
+      isAvailable: isRealityAvailable,
+    },
+    {
+      name: "Comedy",
+      isAvailable: availableRoundNames.includes("Comedy"),
+    },
+    {
+      name: "Drama",
+      isAvailable: availableRoundNames.includes("Drama"),
+    },
+    {
+      name: "Horror",
+      isAvailable: availableRoundNames.includes("Horror"),
+    },
+    {
+      name: "RealityOver",
+      isAvailable: isRealityAvailable,
+    },
+    {
+      name: "Action",
+      isAvailable: availableRoundNames.includes("Action"),
+    },
+  ];
 
   // Update stage size when container size changes
   useEffect(() => {
@@ -421,52 +403,6 @@ export default function Map({
     }
   };
 
-  // Add error handling for puzzle positions
-  useEffect(() => {
-    // Check for missing puzzle positions
-    availablePuzzles.forEach((puzzle) => {
-      if (!positions[puzzle.id]) {
-        console.warn(
-          `Missing position for puzzle: ${puzzle.id} (${puzzle.name})`,
-        );
-      }
-    });
-
-    // Check for duplicates in availablePuzzles
-    const puzzleIds = new Set<string>();
-    const duplicates = new Set<string>();
-
-    availablePuzzles.forEach((puzzle) => {
-      if (puzzleIds.has(puzzle.id)) {
-        duplicates.add(puzzle.id);
-      } else {
-        puzzleIds.add(puzzle.id);
-      }
-    });
-
-    if (duplicates.size > 0) {
-      console.error("Duplicate puzzle IDs found:", Array.from(duplicates));
-    }
-  }, [availablePuzzles]);
-
-  // Log information about duplicate puzzles on mount
-  useEffect(() => {
-    if (availablePuzzles.length !== uniquePuzzles.length) {
-      console.error(
-        `Found ${availablePuzzles.length - uniquePuzzles.length} duplicate puzzles in availablePuzzles`,
-      );
-    }
-
-    // Additional debugging for positions
-    uniquePuzzles.forEach((puzzle) => {
-      if (!positions[puzzle.id]) {
-        console.warn(
-          `Missing position for puzzle: ${puzzle.id} (${puzzle.name})`,
-        );
-      }
-    });
-  }, [availablePuzzles, uniquePuzzles]);
-
   return (
     <div
       ref={containerRef}
@@ -475,13 +411,13 @@ export default function Map({
       {/* Search bar */}
       <div className="absolute left-2 top-2 z-10 w-64">
         <div className="relative">
-          <div className="flex h-10 items-center rounded-md bg-main-bg shadow-md">
+          <div className="flex h-10 items-center rounded-md bg-footer-bg shadow-md">
             <input
               type="text"
               placeholder="Search puzzles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="ml-1 w-full rounded-md border-0 bg-transparent p-2 text-sm text-white placeholder:text-white/50 focus:outline-none"
+              className="ml-1 w-full rounded-md border-0 bg-transparent p-2 text-sm text-white placeholder:text-white/70 focus:outline-none"
             />
             {searchTerm && (
               <button
@@ -520,7 +456,7 @@ export default function Map({
           width={stageSize.width}
           height={stageSize.height}
           options={{
-            backgroundColor: 0xffffff,
+            backgroundAlpha: 0,
             resolution: window.devicePixelRatio || 1,
           }}
         >
@@ -529,129 +465,22 @@ export default function Map({
             initialX={calculateCentroid().x}
             initialY={calculateCentroid().y}
           >
-            {/* Base Layer */}
-            <Container>
-              <Sprite
-                image="/map/BlankLayout.png"
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("BlankLayout")}
-              />
-            </Container>
-
-            {/* Adventure Layer (lowest) */}
-            <Container>
-              <Sprite
-                image={
-                  availableRoundNames.includes("Adventure")
-                    ? "/map/Adventure.png"
-                    : "/map/AdventureGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("Adventure")}
-              />
-            </Container>
-
-            {/* RealityUnder Layer */}
-            <Container>
-              <Sprite
-                image={
-                  isRealityAvailable
-                    ? "/map/RealityUnder.png"
-                    : "/map/RealityUnderGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("RealityUnder")}
-              />
-            </Container>
-
-            {/* Comedy Layer */}
-            <Container>
-              <Sprite
-                image={
-                  availableRoundNames.includes("Comedy")
-                    ? "/map/Comedy.png"
-                    : "/map/ComedyGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("Comedy")}
-              />
-            </Container>
-
-            {/* Drama Layer */}
-            <Container>
-              <Sprite
-                image={
-                  availableRoundNames.includes("Drama")
-                    ? "/map/Drama.png"
-                    : "/map/DramaGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("Drama")}
-              />
-            </Container>
-
-            {/* Horror Layer */}
-            <Container>
-              <Sprite
-                image={
-                  availableRoundNames.includes("Horror")
-                    ? "/map/Horror.png"
-                    : "/map/HorrorGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("Horror")}
-              />
-            </Container>
-
-            {/* RealityOver Layer */}
-            <Container>
-              <Sprite
-                image={
-                  isRealityAvailable
-                    ? "/map/RealityOver.png"
-                    : "/map/RealityOverGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("RealityOver")}
-              />
-            </Container>
-
-            {/* Action Layer (highest) */}
-            <Container>
-              <Sprite
-                image={
-                  availableRoundNames.includes("Action")
-                    ? "/map/Action.png"
-                    : "/map/ActionGray.png"
-                }
-                width={WIDTH}
-                height={HEIGHT}
-                x={0}
-                y={0}
-                onError={() => handleImageError("Action")}
-              />
-            </Container>
+            {/* Map Layers */}
+            {mapLayers.map((layer) => (
+              <Container key={layer.name}>
+                <Sprite
+                  image={
+                    layer.isAvailable
+                      ? `/map/${layer.name}.png`
+                      : `/map/${layer.name}Gray.png`
+                  }
+                  width={WIDTH}
+                  height={HEIGHT}
+                  x={0}
+                  y={0}
+                />
+              </Container>
+            ))}
 
             {/* Puzzle sprites layer - always on top */}
             <Container>
@@ -683,11 +512,6 @@ export default function Map({
                     }}
                     pointerover={() => setHoveredPuzzle(puzzle.name)}
                     pointerout={() => setHoveredPuzzle(null)}
-                    onError={() =>
-                      console.error(
-                        `Failed to load puzzle sprite: ${puzzle.id}`,
-                      )
-                    }
                   />
                 );
               })}
