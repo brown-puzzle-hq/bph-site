@@ -14,7 +14,7 @@ import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import { FormattedTime } from "~/lib/time";
 
-export const revalidate = 300;
+export const fetchCache = "force-no-store";
 
 type LeaderboardItem = {
   id: string;
