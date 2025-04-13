@@ -15,6 +15,7 @@ export default function PostHuntDialog() {
           <Link
             href="/register"
             className="font-medium text-sky-200 hover:underline"
+            prefetch={false}
           >
             register
           </Link>{" "}
@@ -22,6 +23,7 @@ export default function PostHuntDialog() {
           <Link
             href="/login"
             className="font-medium text-sky-200 hover:underline"
+            prefetch={false}
           >
             log in
           </Link>

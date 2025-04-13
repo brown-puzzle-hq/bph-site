@@ -30,7 +30,11 @@ export default async function DefaultHintPage({
   if (!teamId) {
     return (
       <div>
-        <Link href="/login" className="text-link hover:underline">
+        <Link
+          href="/login"
+          className="text-link hover:underline"
+          prefetch={false}
+        >
           Login
         </Link>{" "}
         to see previous hints.

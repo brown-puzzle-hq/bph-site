@@ -304,6 +304,7 @@ export default function AdminHintThread({
               <Link
                 href={`/admin/graph?team=${hint.team.id}`}
                 className="hover:opacity-85"
+                prefetch={false}
               >
                 <Waypoints className="size-4" />
               </Link>
@@ -323,6 +324,7 @@ export default function AdminHintThread({
               <Link
                 href={`/puzzle/${hint.puzzle.id}/solution`}
                 className="hover:opacity-85"
+                prefetch={false}
               >
                 <KeyRound className="size-4" />
               </Link>
@@ -331,6 +333,7 @@ export default function AdminHintThread({
               <Link
                 href={`/admin/graph?puzzle=${hint.puzzle.id}`}
                 className="hover:opacity-85"
+                prefetch={false}
               >
                 <Waypoints className="size-4" />
               </Link>

@@ -50,7 +50,11 @@ export default async function Home() {
         <div className="mb-12 px-4 pt-6 text-center">
           <h1 className="mb-2">Puzzles</h1>
           <p>
-            <Link href="/login" className="text-link hover:underline">
+            <Link
+              href="/login"
+              className="text-link hover:underline"
+              prefetch={false}
+            >
               Login
             </Link>{" "}
             to access puzzles

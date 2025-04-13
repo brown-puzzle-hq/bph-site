@@ -11,7 +11,7 @@ export const IN_PERSON = {
   KICKOFF_DOOR_TIME: new Date("2025-04-12T15:30:00.000Z"),
   KICKOFF_TIME: new Date("2025-04-12T16:00:00.000Z"),
   START_TIME: new Date("2025-04-12T17:30:00.000Z"),
-  END_TIME: new Date("2025-04-13T23:00:00Z"),
+  END_TIME: new Date("2025-04-13T23:00:00.000Z"),
   WRAPUP_DOOR_TIME: new Date("2025-04-13T23:30:00.000Z"),
   WRAPUP_TIME: new Date("2025-04-14T00:00:00Z"),
 };
@@ -19,7 +19,7 @@ export const IN_PERSON = {
 export const REMOTE = {
   START_TIME: new Date("2025-04-19T16:00:00.000Z"),
   END_TIME: new Date("2025-04-25T16:00:00.000Z"),
-  WRAPUP_TIME: new Date("2025-04-26T17:00:00Z"),
+  WRAPUP_TIME: new Date("2025-04-26T17:00:00.000Z"),
 };
 
 export type Round = {
