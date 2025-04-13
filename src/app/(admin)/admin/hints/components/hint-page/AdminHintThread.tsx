@@ -410,7 +410,7 @@ export default function AdminHintThread({
           </TableRow>
 
           {/* New hint response row */}
-          {!optimisticHint.response && (
+          {optimisticHint.response === null && (
             <TableRow className="border-0 hover:bg-inherit">
               <TableCell className="break-words px-0">
                 <div className="flex items-center justify-between">
@@ -473,7 +473,7 @@ export default function AdminHintThread({
                   </p>
                   <div className="flex space-x-2">
                     {/* Follow-up button, only show if there are no follow ups */}
-                    {optimisticHint.response &&
+                    {optimisticHint.response !== null &&
                       optimisticHint.followUps.length === 0 && (
                         <div>
                           {newFollowUp?.hintId !== optimisticHint.id ? (
@@ -501,7 +501,7 @@ export default function AdminHintThread({
                       )}
 
                     {/* If the response was made by the current user, allow edits */}
-                    {optimisticHint.response &&
+                    {optimisticHint.response !== null &&
                       optimisticHint.claimer?.id === session?.user?.id && (
                         <div>
                           {edit?.id === optimisticHint.id &&
