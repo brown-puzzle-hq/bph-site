@@ -671,6 +671,8 @@ export default function Page() {
                 <br />
                 Phil Avilov (RISD '27)
                 <br />
+                Chloe Qiao ('27)
+                <br />
                 Chloe Johnson ('28)
                 <br />
               </p>
