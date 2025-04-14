@@ -11,15 +11,30 @@ export const puzzleId = "genetic-counseling";
  * and interactive puzzle components here.
  */
 
-const traits = ['rs4630083', 'rs4680', 'rs12913832', 'rs17822931', 'rs1815739', 'rs1805007', 'rs671', 'rs11803731', 'rs7495174', 'rs7192', 'rs72921001', 'rs4778138', 'rs4988235'];
+const traits = [
+  "rs4630083",
+  "rs4680",
+  "rs12913832",
+  "rs17822931",
+  "rs1815739",
+  "rs1805007",
+  "rs671",
+  "rs11803731",
+  "rs7495174",
+  "rs7192",
+  "rs72921001",
+  "rs4778138",
+  "rs4988235",
+];
 
 export const inPersonBody = (
-  <div className="max-w-4xl">
+  <div className="flex max-w-3xl flex-col">
     <div className="pb-4 italic">
-    Working as an unpaid film intern doesn't pay the bills, so you've 
-    recently picked up an extra job at a back-alley DNA testing company, 
-    SchmancestryDNA. As your first assignment, your manager has given you 
-    this report to fill out by hand… What can you tell about this person from their DNA?
+      Working as an unpaid film intern doesn't pay the bills, so you've recently
+      picked up an extra job at a back-alley DNA testing company,
+      SchmancestryDNA. As your first assignment, your manager has given you this
+      report to fill out by hand… What can you tell about this person from their
+      DNA?
     </div>
     <p className="pb-6">
       Use this{" "}
@@ -28,7 +43,8 @@ export const inPersonBody = (
         className="text-link hover:underline"
       >
         data sheet
-      </a> and this {" "}
+      </a>{" "}
+      and this{" "}
       <a
         href="/api/puzzle/genetic-counseling-pdf"
         className="text-link hover:underline"
@@ -36,7 +52,7 @@ export const inPersonBody = (
         company advertisement.
       </a>
     </p>
-    <table className="pb-4 leading-none text-[#EFEDEB] text-xs sm:text-base">
+    <table className="items-center pb-4 text-xs leading-none text-[#EFEDEB] sm:text-base">
       <thead>
         <tr className="bg-[#40271F] font-bold text-white">
           <th className="w-1/5 p-2">rsID</th>
