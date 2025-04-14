@@ -436,7 +436,7 @@ export default function Graph() {
           height={dimensions.height}
           cooldownTicks={50}
           autoPauseRedraw={false}
-          d3VelocityDecay={0.2}
+          d3VelocityDecay={0.1}
           // Visuals
           nodeRelSize={NODE_R}
           nodeLabel={() => ""} // Remove tooltip
