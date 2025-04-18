@@ -17,6 +17,8 @@ import {
 import { handleGuess } from "../actions";
 import { useTransition } from "react";
 import { toast } from "~/hooks/use-toast";
+import { NumberOfGuesses } from "./DefaultPuzzlePage";
+import { Infinity } from "lucide-react";
 
 function sanitizeAnswer(answer: any) {
   return typeof answer === "string"
@@ -36,7 +38,7 @@ const formSchema = z.object({
 
 type FormProps = {
   puzzleId: string;
-  numberOfGuessesLeft: number;
+  numberOfGuessesLeft: NumberOfGuesses;
   isSolved: boolean;
 };
 
@@ -115,11 +117,18 @@ export default function GuessForm({
                         : ""
                   }
                 >
-                  {isSolved
-                    ? "This puzzle has been solved."
-                    : numberOfGuessesLeft
-                      ? `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
-                      : "You have no guesses left. Please contact HQ for help."}
+                  {isSolved ? (
+                    "This puzzle has been solved."
+                  ) : numberOfGuessesLeft === "infinity" ? (
+                    <span className="flex items-center space-x-[3px]">
+                      <Infinity className="size-4 pt-[1px]" />
+                      <span>guesses left</span>
+                    </span>
+                  ) : numberOfGuessesLeft ? (
+                    `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
+                  ) : (
+                    "You have no guesses left. Please contact HQ for help."
+                  )}
                 </FormDescription>
                 <FormMessage className="text-error">{error}</FormMessage>
               </div>

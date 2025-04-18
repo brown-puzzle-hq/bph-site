@@ -143,6 +143,8 @@ export const solves = createTable(
   },
 );
 
+// TODO: (teamId, puzzleId) should be unique already
+// Can remove check from actions.ts
 export const guesses = createTable(
   "guess",
   {

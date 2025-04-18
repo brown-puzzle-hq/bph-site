@@ -146,6 +146,12 @@ export const SEQUENCES: Sequence[] = [
 /** GUESSES */
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
+export const PUZZLES_WITH_INFINITE_GUESSES = [
+  "eye-spy",
+  "identify-the-piece",
+  "six-degrees",
+];
+
 /** PUZZLE UNLOCK SYSTEM
  * WARNING: make sure that everything here is a valid puzzle ID.
  * You should really avoid changing anything here after the hunt starts

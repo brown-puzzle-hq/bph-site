@@ -9,8 +9,15 @@ import GuessForm from "@/puzzle/components/GuessForm";
 import CopyButton from "@/puzzle/components/CopyButton";
 import TokenRefresher from "@/puzzle/components/TokenRefresher";
 import { canViewPuzzle } from "@/puzzle/actions";
-import { NUMBER_OF_GUESSES_PER_PUZZLE, IN_PERSON, REMOTE } from "~/hunt.config";
+import {
+  NUMBER_OF_GUESSES_PER_PUZZLE,
+  IN_PERSON,
+  REMOTE,
+  PUZZLES_WITH_INFINITE_GUESSES,
+} from "~/hunt.config";
 import { cn } from "~/lib/utils";
+
+export type NumberOfGuesses = number | "infinity";
 
 export default async function DefaultPuzzlePage({
   puzzleId,
@@ -97,11 +104,17 @@ export default async function DefaultPuzzlePage({
     ),
   }));
 
-  const numberOfGuessesLeft =
-    NUMBER_OF_GUESSES_PER_PUZZLE -
-    previousGuesses.filter(
-      ({ guess }) => !(guess in tasks || guess in partialSolutions),
-    ).length;
+  // Get the number of guesses left
+  // If it is a puzzle with infinite guessses, set it to -1
+  const numberOfGuessesLeft: NumberOfGuesses =
+    PUZZLES_WITH_INFINITE_GUESSES.includes(puzzleId)
+      ? "infinity"
+      : NUMBER_OF_GUESSES_PER_PUZZLE -
+        previousGuesses.filter(
+          ({ guess }) => !(guess in tasks || guess in partialSolutions),
+        ).length;
+
+  // Refresh hasBox token
   var refresh = false;
   if (typeof session.user.hasBox === "undefined") {
     const user = await db.query.teams.findFirst({
