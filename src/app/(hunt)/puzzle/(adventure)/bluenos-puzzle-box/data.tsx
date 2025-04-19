@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import PUZZLEBOX from "./BluenosPuzzleBox.svg";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -30,10 +32,7 @@ export const inPersonBody = (
 );
 
 export const remoteBoxBody = (
-  <div className="max-w-3xl text-center">
-    <p className="mb-4">
-      This puzzle is still being written... Come back in a few minutes... (This is not a puzzle.)
-    </p>
+  <div className="max-w-3xl text-center items-center flex flex-col justify-center">
     <iframe
       className="aspect-video w-[576px] max-w-full"
       src="https://www.youtube-nocookie.com/embed/k2KJdVept8Y"
@@ -42,6 +41,7 @@ export const remoteBoxBody = (
       referrerPolicy="strict-origin-when-cross-origin"
       allowFullScreen
     ></iframe>
+    <Image src={PUZZLEBOX} alt="" />
   </div>
 );
 
