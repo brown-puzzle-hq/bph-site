@@ -531,10 +531,14 @@ export default function Map({
                     pointerdown={() => {
                       setCleanClick(true);
                     }}
-                    pointerup={() => {
+                    pointerup={(event) => {
                       if (cleanClick) {
                         setCleanClick(false);
-                        window.open(`puzzle/${puzzle.id}`, "_blank");
+                        if (event.metaKey || event.ctrlKey) {
+                          window.open(`puzzle/${puzzle.id}`, "_blank");
+                        } else {
+                          window.location.href = `puzzle/${puzzle.id}`;
+                        }
                       }
                     }}
                     pointerover={() => setHoveredPuzzle(puzzle.name)}

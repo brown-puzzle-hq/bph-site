@@ -1,12 +1,4 @@
 "use client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 import { Round, META_PUZZLES } from "~/hunt.config";
 
 type puzzleList = {
@@ -29,56 +21,43 @@ export default function PuzzleTable({
     <div>
       {availableRounds.map((round) => (
         <div key={round.name}>
-          <h1 className="m-4 text-center text-xl font-semibold">
+          <h2 className="m-4 text-center text-xl font-semibold">
             {round.name}
-          </h1>
-          <Table className="w-full table-fixed justify-center overflow-hidden rounded-md">
-            <TableHeader>
-              <TableRow className="hover:bg-inherit">
-                <TableHead className="text-secondary-text">Puzzle</TableHead>
-                <TableHead className="text-secondary-text">Answer</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {availablePuzzles
-                .filter((puzzle) => round.puzzles.includes(puzzle.id))
-                .sort((puzzleA, puzzleB) =>
-                  META_PUZZLES.includes(puzzleA.id)
-                    ? META_PUZZLES.includes(puzzleB.id)
-                      ? puzzleA.name.localeCompare(puzzleB.name)
-                      : -1
-                    : META_PUZZLES.includes(puzzleB.id)
-                      ? 1
-                      : puzzleA.name.localeCompare(puzzleB.name),
-                )
-                .map((puzzle) => (
-                  <TableRow
-                    onClick={() => {
-                      window.open(`/puzzle/${puzzle.id}`, "_blank");
-                    }}
-                    className="hover:cursor-pointer hover:bg-white hover:bg-opacity-10"
+          </h2>
+          <div className="w-full overflow-hidden rounded-md text-sm font-medium">
+            <div className="grid grid-cols-2 p-2">
+              <p className="text-secondary-text">Puzzle</p>
+              <p className="text-secondary-text">Answer</p>
+            </div>
+            {availablePuzzles
+              .filter((puzzle) => round.puzzles.includes(puzzle.id))
+              .sort((puzzleA, puzzleB) =>
+                META_PUZZLES.includes(puzzleA.id)
+                  ? META_PUZZLES.includes(puzzleB.id)
+                    ? puzzleA.name.localeCompare(puzzleB.name)
+                    : -1
+                  : META_PUZZLES.includes(puzzleB.id)
+                    ? 1
+                    : puzzleA.name.localeCompare(puzzleB.name),
+              )
+              .map((puzzle) => (
+                <>
+                  <hr className="w-full" />
+                  <a
+                    href={`/puzzle/${puzzle.id}`}
+                    className="grid grid-cols-2 p-2 transition-all hover:bg-white/5"
                     key={puzzle.id}
                   >
-                    <TableCell
-                      className={
-                        META_PUZZLES.includes(puzzle.id) ? "font-bold" : ""
-                      }
-                    >
-                      {puzzle.name.trim() ? puzzle.name : "\u200b"}
-                    </TableCell>
-                    <TableCell>
-                      {solvedPuzzles.some(
-                        (sp) => sp.puzzleId === puzzle.id,
-                      ) && (
-                        <p className="truncate text-ellipsis text-correct-guess">
-                          {puzzle.answer}
-                        </p>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+                    <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
+                    {solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id) && (
+                      <p className="truncate text-ellipsis text-correct-guess">
+                        {puzzle.answer}
+                      </p>
+                    )}
+                  </a>
+                </>
+              ))}
+          </div>
         </div>
       ))}
     </div>

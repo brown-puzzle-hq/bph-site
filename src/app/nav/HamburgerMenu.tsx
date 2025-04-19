@@ -45,7 +45,7 @@ export function HamburgerMenu({
     setOptimisticPath(href);
   };
   const elementClassName =
-    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 hover:bg-slate-400 bg-slate-400";
+    "cursor-pointer rounded-md bg-opacity-0 hover:bg-opacity-20 hover:bg-slate-400 bg-slate-400 transition-all";
   const linkClassName = (href: string | undefined) =>
     cn(
       elementClassName,
