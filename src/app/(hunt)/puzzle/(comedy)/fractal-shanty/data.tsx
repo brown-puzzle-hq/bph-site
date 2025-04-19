@@ -82,7 +82,7 @@ export const copyText = `In the port the seagulls flew right round the masts of 
 Molly stole one in the ruckus and she called it Karl Marx
 
 It shattered into pieces, and the world went down in flame
-A pirate, a port, a philosopher - alright, they start the same.
+An outlaw, a port, a philosopher - alright, they start the same.
 
 Jimmy paced along the deck, looking right into the gale
 "In my twenty years of living, I have never stabbed a whale!"
@@ -101,13 +101,13 @@ Then made off to Mogadishu with some baleen and a gun.
 Molly lost to Davy Jones and was left to rot in hell
 She was fighting for this letter, but instead she took the L
 
-Molly won the competition and became a paralegal 
+Molly won the competition and became a paralegal
 But without her righteous guidance, Marx had turned into an eagle
 
 She was right a kleptomaniac and would steal her rival's bones
-Then she was challenged to a duel by a mollusk - Davy Jones
+Then she was challenged to a duel by a mollusc - Davy Jones
 
-The captain walked up on his wooden leg and answered, "It's no vacation - 
+The captain walked up on his wooden leg and answered, "It's no vacation -
 where do you think you go when you're swallowed by a cetacean?"
 
 The executioner was there, his gaze as cold as snow.
