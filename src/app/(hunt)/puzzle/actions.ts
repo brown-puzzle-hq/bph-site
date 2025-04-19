@@ -250,7 +250,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
   await sendBotMessage(guessMessage, "guess");
 
   // Message interaction channel about action meta solve and ping the lore role
-  if (isCorrect && puzzleId == "drop-the") {
+  // Only if the guess is correct and it is the in-person hunt
+  if (isCorrect && puzzleId == "drop-the" && new Date() < IN_PERSON.END_TIME) {
     const query = await db.query.teams.findFirst({
       columns: { solvingLocation: true },
       where: eq(teams.id, teamId),
@@ -261,7 +262,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
   }
 
   // Message interaction channel about horror guard and ping the lore role
-  if (isCorrect && puzzleId == "the-guard-and-the-door") {
+  // Only if the guess is correct and it is the in-person hunt
+  if (
+    isCorrect &&
+    puzzleId == "the-guard-and-the-door" &&
+    new Date() < IN_PERSON.END_TIME
+  ) {
     const query = await db.query.teams.findFirst({
       columns: { solvingLocation: true },
       where: eq(teams.id, teamId),
