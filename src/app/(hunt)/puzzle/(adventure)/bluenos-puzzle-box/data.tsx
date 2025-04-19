@@ -29,12 +29,10 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
-
-export const remoteBody = (
+export const remoteBoxBody = (
   <div className="max-w-3xl text-center">
     <p className="mb-4">
-      This puzzle is still being written... Submit WRECKING
+      This puzzle is still being written... Come back in a few minutes... (This is not a puzzle.)
     </p>
     <iframe
       className="aspect-video w-[576px] max-w-full"
@@ -46,6 +44,8 @@ export const remoteBody = (
     ></iframe>
   </div>
 );
+
+export const remoteBody = remoteBoxBody;
 
 export const solutionBody = null;
 
