@@ -6,6 +6,7 @@ import {
   ArrowDown,
   Waypoints,
   Trophy,
+  Puzzle,
 } from "lucide-react";
 import { FormattedTime } from "~/lib/time";
 import { ActualInteractionMode } from "~/server/db/schema";
@@ -29,13 +30,29 @@ export const columns: ColumnDef<TeamTableRow>[] = [
       const rank: number = row.getValue("rank");
       return <p className="text-center">{rank ?? "-"}</p>;
     },
-    sortingFn: (rowA, rowB) => {
-      const rankA: number | null = rowA.getValue("rank");
-      const rankB: number | null = rowB.getValue("rank");
-      if (rankA === null && rankB === null) return 0;
-      if (rankA === null) return 1;
-      if (rankB === null) return -1;
-      return rankA - rankB;
+    sortingFn: (rowA, rowB, columnId) => {
+      const valA: number | null = rowA.getValue(columnId);
+      const valB: number | null = rowB.getValue(columnId);
+      if (valA === null && valB === null) return 0;
+      if (valA === null) return 1;
+      if (valB === null) return -1;
+      return valA - valB;
+    },
+  },
+  {
+    accessorKey: "solves",
+    header: () => <Puzzle className="mx-auto size-4" />,
+    cell: ({ row }) => {
+      const solves: number = row.getValue("solves");
+      return <p className="text-center">{solves > 0 ? solves : "-"}</p>;
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const valA: number | null = rowA.getValue(columnId);
+      const valB: number | null = rowB.getValue(columnId);
+      if (valA === null && valB === null) return 0;
+      if (valA === null) return 1;
+      if (valB === null) return -1;
+      return valB - valA;
     },
   },
   {
