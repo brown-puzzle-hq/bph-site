@@ -81,7 +81,7 @@ export const solutionBody = (
       <p className="mb-4">
         This clues to the puzzle “One Guard, Two Doors, and a Screen.” The Guard
         asks how many are spotted on the wall when viewing the entire puzzle
-        (i.e. the entire puzzle is in the user’s window), which is two, because
+        (i.e. the entire puzzle is in the user's window), which is two, because
         the guard can only hit two points on the wall when the entire puzzle is
         in frame.
       </p>
@@ -122,7 +122,7 @@ export const solutionBody = (
       <li className="mb-4 ml-8">
         “When they both point, they will point right or wrong,
         <br />
-        find how many are right, and you’ll move right along.”
+        find how many are right, and you'll move right along.”
       </li>
     </ol>
     <p className="mb-4">

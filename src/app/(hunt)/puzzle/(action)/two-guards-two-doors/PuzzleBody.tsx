@@ -458,7 +458,7 @@ export default function PuzzleBody({
 
       <div className="mb-5 max-w-3xl">
         You ask the question “If I asked the other guard to pick the door that
-        you’d pick if I asked you to pick the correct door, what door would they
+        you'd pick if I asked you to pick the correct door, what door would they
         pick?”{" "}
       </div>
 
@@ -573,7 +573,7 @@ export default function PuzzleBody({
 
       <div className="mb-5 max-w-3xl">
         You ask the question “If I asked the other guard to pick the door that
-        you’d pick if I asked you to pick the correct door, what door would they
+        you'd pick if I asked you to pick the correct door, what door would they
         pick?”{" "}
       </div>
 

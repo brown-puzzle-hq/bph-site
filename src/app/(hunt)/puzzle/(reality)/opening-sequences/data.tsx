@@ -73,14 +73,14 @@ export const solutionBody = (
     <p>
       Taking indices one obtains{" "}
       <span className="font-bold text-main-accent">PAWNTOF4</span> (4). This
-      move gives rise to the Bird’s Opening. Since the answer is 4 letters, we
+      move gives rise to the Bird's Opening. Since the answer is 4 letters, we
       get
       <span className="font-bold text-main-accent"> BIRD</span>.
     </p>
 
     <p className="italic text-gray-400">
       NOTE: The last opening could alternatively be “Four Knights Attack,” which
-      gives an F during indexing, but PAWNTOFF doesn’t make sense, so the puzzle
+      gives an F during indexing, but PAWNTOFF doesn't make sense, so the puzzle
       solver is expected to realize you are supposed to index the number 4
       instead.
     </p>

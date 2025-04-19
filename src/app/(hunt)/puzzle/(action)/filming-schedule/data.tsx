@@ -93,12 +93,12 @@ export const solutionBody = (
     </p>
     <p>
       To start, each indented item in the list refers to a book, with one word
-      in the title or author’s name missing. This missing word is the first in
+      in the title or author's name missing. This missing word is the first in
       the pair of words we need to find. They are as follows:
     </p>
     <ul className="ml-5 list-inside list-disc space-y-3">
       <li>
-        “The Halfblood’s <span className="font-semibold">HOARD</span>” by Devin
+        “The Halfblood's <span className="font-semibold">HOARD</span>” by Devin
         Hanson
       </li>
       <li>

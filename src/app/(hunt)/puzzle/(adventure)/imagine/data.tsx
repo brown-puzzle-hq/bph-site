@@ -215,7 +215,7 @@ export const tasks: Record<string, JSX.Element> = {
         <li>Feature a musical instrument (bonus points for ukuleles)</li>
         <li>Quote an iconic influencer apology video</li>
         <li>Include blatant product placement or an ad read</li>
-        <li>Use at least 5 different synonyms for the word ‘sorry’ </li>
+        <li>Use at least 5 different synonyms for the word ‘sorry’</li>
       </ul>
     </div>
   ),

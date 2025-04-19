@@ -22,7 +22,8 @@ export const puzzleId = "two-guards-two-doors";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
-export const inPersonBody = (<div>Make changes in ./PuzzleBody.tsx!!! (Line 107)</div>
+export const inPersonBody = (
+  <div>Make changes in ./PuzzleBody.tsx!!! (Line 107)</div>
 );
 
 /**

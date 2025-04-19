@@ -99,7 +99,7 @@ export const solutionBody = (
       </a>
       . This segment occurs when a player / combo of players (usually Ben and
       Adam) sample a local snack and offer their review. It is generally
-      accompanied by a cute little theme song and graphic which I’d kinda like
+      accompanied by a cute little theme song and graphic which I'd kinda like
       to splice into the video but that might be too obvious.
     </p>
     <p className="mb-4 text-left">
@@ -201,8 +201,8 @@ export const solutionBody = (
     </table>
     <p>
       ** Small inelegance that may or may not be an issue: Rashuns are listed as
-      the first snack on the wiki, but the show hasn’t officially been named
-      ‘The Snack Zone’ yet and the intro doesn’t play. Probably only diehards
+      the first snack on the wiki, but the show hasn't officially been named
+      ‘The Snack Zone’ yet and the intro doesn't play. Probably only diehards
       will care about this but just a note.
     </p>
   </div>

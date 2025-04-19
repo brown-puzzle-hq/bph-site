@@ -80,12 +80,12 @@ export const solutionBody = (
       <Link href="https://www.youtube.com/watch?v=98TQv5IAtY8">
         <span className="underline">this video.</span>
       </Link>{" "}
-      Using this logic of putting yourself in someone else’s shoes, who then
-      puts themselves in someone else’s shoes, and so on, eventually allows you
+      Using this logic of putting yourself in someone else's shoes, who then
+      puts themselves in someone else's shoes, and so on, eventually allows you
       to deduce whether you are able to leave or not by observing when everyone
       else chooses to leave or stay. Because no guard ever sees another move
       (even when they do move), they all eventually come to believe their door
-      must be closed and windowless (even if it’s not).
+      must be closed and windowless (even if it's not).
     </div>
 
     <div className="mb-6">
@@ -106,11 +106,11 @@ export const solutionBody = (
 
     <div className="mb-6">
       {" "}
-      You don’t know whether your door has a window or not. Because you do not
+      You don't know whether your door has a window or not. Because you do not
       want to leave before you are certain your door is windowless, assume your
       door has a window (in which case there would be 5 windowed doors and 5
       windowless doors. Then, put yourself in the shoes of guard (2), who
-      doesn’t know the state of their own door and would see 4 windowless doors
+      doesn't know the state of their own door and would see 4 windowless doors
       and 5 windowed doors.
     </div>
 
@@ -149,7 +149,7 @@ export const solutionBody = (
 
     <div className="mb-6">
       In this scenario, guard (6) would see no windowless doors. Therefore, the
-      only way for the announcer’s statement to be true is if their door is
+      only way for the announcer's statement to be true is if their door is
       windowless. This means that they would leave on day 1. Note that this is
       only true if all prior suppositions were correct.
     </div>

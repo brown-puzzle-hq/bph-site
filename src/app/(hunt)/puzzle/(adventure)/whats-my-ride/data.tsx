@@ -39,7 +39,7 @@ export const remoteBody = inPersonBody;
 export const solutionBody = (
   <div className="max-w-3xl">
     <p className="mb-4">
-      This puzzle is a family tree based on Greek myth. Specifically, Apollo’s
+      This puzzle is a family tree based on Greek myth. Specifically, Apollo's
       family tree. The solvers need to ID that this is 1) a family tree, 2)
       about Greek myth, 3) that Apollo is the ? in the middle, and 4) the 3
       emoji at the bottom and the title should direct them to answer{" "}
