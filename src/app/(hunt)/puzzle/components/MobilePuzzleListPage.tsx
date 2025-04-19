@@ -1,12 +1,9 @@
 "use client";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapIcon, Table } from "lucide-react";
 import PuzzleTable from "./PuzzleTable";
 import EventTable from "./EventTable";
-import { useState, useMemo } from "react";
-import { getCookie, setCookie } from "typescript-cookie";
 import { cn } from "~/lib/utils";
 import { Round } from "~/hunt.config";
+import { IN_PERSON } from "~/hunt.config";
 
 export type AvailablePuzzle = {
   unlockTime: Date | null;
@@ -34,22 +31,22 @@ type PuzzleListPageProps = {
   availablePuzzles: AvailablePuzzle[];
   solvedPuzzles: SolvedPuzzle[];
   availableRounds: Round[];
-  canSeeEvents: boolean;
   availableEvents: AvailableEvent[];
   finishedEvents: FinishedEvent[];
   hasEventInputBox: boolean;
   hasFinishedHunt: boolean;
+  isInPerson: boolean;
 };
 
 export default function PuzzleListPage({
   availablePuzzles,
   solvedPuzzles,
   availableRounds,
-  canSeeEvents,
   availableEvents,
   finishedEvents,
   hasEventInputBox,
   hasFinishedHunt,
+  isInPerson,
 }: PuzzleListPageProps) {
   return (
     <div className="grid min-h-[calc(100vh-56px-32px)]">
@@ -65,8 +62,10 @@ export default function PuzzleListPage({
           {hasFinishedHunt && (
             <div>
               <p className="text-base italic text-main-text">
-                Congratulations on completing BPH 2025! Please contact HQ at
-                brownpuzzlehq@gmail.com for runaround.
+                You won the Bloscar! Congratulations on completing BPH 2025!{" "}
+                {isInPerson && new Date() < IN_PERSON.END_TIME
+                  ? "Please contact HQ at brownpuzzlehq@gmail.com for runaround."
+                  : ""}
               </p>
             </div>
           )}
@@ -79,7 +78,7 @@ export default function PuzzleListPage({
           />
 
           {/* Event table */}
-          {canSeeEvents && (
+          {isInPerson && new Date() > IN_PERSON.START_TIME && (
             <>
               <h1 className="mb-2 mt-4">Events</h1>
               <EventTable

@@ -7,7 +7,7 @@ import { useState, useMemo } from "react";
 import { getCookie, setCookie } from "typescript-cookie";
 import { cn } from "~/lib/utils";
 import dynamic from "next/dynamic";
-import { Round } from "~/hunt.config";
+import { IN_PERSON, Round } from "~/hunt.config";
 
 const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
@@ -44,32 +44,35 @@ type PuzzleListPageProps = {
   availablePuzzles: AvailablePuzzle[];
   solvedPuzzles: SolvedPuzzle[];
   availableRounds: Round[];
-  canSeeEvents: boolean;
   availableEvents: AvailableEvent[];
   finishedEvents: FinishedEvent[];
   hasEventInputBox: boolean;
   hasFinishedHunt: boolean;
+  isInPerson: boolean;
 };
 
 export default function PuzzleListPage({
   availablePuzzles,
   solvedPuzzles,
   availableRounds,
-  canSeeEvents,
   availableEvents,
   finishedEvents,
   hasEventInputBox,
   hasFinishedHunt,
+  isInPerson,
 }: PuzzleListPageProps) {
   const [activeTab, setActiveTab] = useState(
     () => getCookie("puzzle_view") ?? "map",
   );
   const [needMap, setNeedMap] = useState(activeTab === "map");
 
-  // Will crash on mobile if not memoized
   const memoizedMap = useMemo(
     () => (
-      <Map availablePuzzles={availablePuzzles} solvedPuzzles={solvedPuzzles} availableRounds={availableRounds} />
+      <Map
+        availablePuzzles={availablePuzzles}
+        solvedPuzzles={solvedPuzzles}
+        availableRounds={availableRounds}
+      />
     ),
     [availablePuzzles, solvedPuzzles, availableRounds],
   );
@@ -121,8 +124,10 @@ export default function PuzzleListPage({
           {hasFinishedHunt && (
             <div>
               <p className="text-base italic text-main-text">
-                Congratulations on completing BPH 2025! Please contact HQ at
-                brownpuzzlehq@gmail.com for runaround.
+                You won the Bloscar! Congratulations on completing BPH 2025!{" "}
+                {isInPerson && new Date() < IN_PERSON.END_TIME
+                  ? "Please contact HQ at brownpuzzlehq@gmail.com for runaround."
+                  : ""}
               </p>
             </div>
           )}
@@ -135,7 +140,7 @@ export default function PuzzleListPage({
           />
 
           {/* Event table */}
-          {canSeeEvents && (
+          {isInPerson && new Date() > IN_PERSON.START_TIME && (
             <>
               <h1 className="mb-2 mt-4">Events</h1>
               <EventTable

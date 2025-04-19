@@ -38,9 +38,9 @@ export default async function Home() {
   var availablePuzzles: AvailablePuzzle[] = [];
   var solvedPuzzles: SolvedPuzzle[] = [];
   var hasFinishedHunt = false;
-  var canSeeEvents = false;
   var availableEvents: AvailableEvent[] = [];
   var finishedEvents: FinishedEvent[] = [];
+  const isInPerson = session?.user?.interactionMode === "in-person";
 
   // Not logged in
   if (!session?.user?.id) {
@@ -116,11 +116,6 @@ export default async function Home() {
       where: eq(solves.teamId, session.user.id),
     });
 
-    // Only in-person users can see events after the hunt starts
-    canSeeEvents =
-      session.user.interactionMode === "in-person" &&
-      currDate > IN_PERSON.START_TIME;
-
     // TODO: not a great way to order events
     availableEvents = await db.query.events.findMany({
       orderBy: (events, { asc }) => [asc(events.startTime)],
@@ -158,11 +153,11 @@ export default async function Home() {
         availablePuzzles={availablePuzzles}
         solvedPuzzles={solvedPuzzles}
         availableRounds={availableRounds}
-        canSeeEvents={canSeeEvents}
         availableEvents={availableEvents}
         finishedEvents={finishedEvents}
         hasEventInputBox={!!session?.user}
         hasFinishedHunt={hasFinishedHunt}
+        isInPerson={isInPerson}
       />
     );
   }
@@ -172,11 +167,11 @@ export default async function Home() {
       availablePuzzles={availablePuzzles}
       solvedPuzzles={solvedPuzzles}
       availableRounds={availableRounds}
-      canSeeEvents={canSeeEvents}
       availableEvents={availableEvents}
       finishedEvents={finishedEvents}
       hasEventInputBox={!!session?.user}
       hasFinishedHunt={hasFinishedHunt}
+      isInPerson={isInPerson}
     />
   );
 }
