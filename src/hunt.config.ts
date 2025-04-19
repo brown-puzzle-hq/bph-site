@@ -478,13 +478,22 @@ export const ROUNDS: Round[] = [
 export function getTotalHints(role: string, interactionMode: string) {
   const initialNumberOfHints =
     role == "admin" || role == "testsolver" ? 1e6 : 1;
-  const currentTime = new Date();
+
+  const huntStartTime =
+    interactionMode === "in-person" ? IN_PERSON.START_TIME : REMOTE.START_TIME;
+
+  const huntEndTime =
+    interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME;
+
   const timeDifference =
-    currentTime.getTime() -
-    (interactionMode === "in-person"
-      ? IN_PERSON.START_TIME.getTime()
-      : REMOTE.START_TIME.getTime()); // In milliseconds
-  const rate = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    Math.min(new Date().getTime(), huntEndTime.getTime()) -
+    huntStartTime.getTime();
+
+  const rate =
+    interactionMode === "in-person"
+      ? 3 * 60 * 60 * 1000 // 3 hours
+      : 6 * 60 * 60 * 1000; // 6 hours
+
   return initialNumberOfHints + Math.max(Math.floor(timeDifference / rate), 0);
 }
 
