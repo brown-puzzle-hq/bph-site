@@ -1,7 +1,14 @@
 import { auth } from "@/auth";
 import { db } from "~/server/db";
-import { eq, and } from "drizzle-orm";
-import { teams, puzzles, solves, guesses, errata } from "~/server/db/schema";
+import { eq, and, gt } from "drizzle-orm";
+import {
+  teams,
+  puzzles,
+  solves,
+  guesses,
+  errata,
+  unlocks,
+} from "~/server/db/schema";
 import { redirect } from "next/navigation";
 import GuessTable from "@/puzzle/components/GuessTable";
 import ErratumDialog from "@/puzzle/components/ErratumDialog";
@@ -14,6 +21,7 @@ import {
   IN_PERSON,
   REMOTE,
   PUZZLES_WITH_INFINITE_GUESSES,
+  INITIAL_PUZZLES,
 } from "~/hunt.config";
 import { cn } from "~/lib/utils";
 
@@ -77,7 +85,43 @@ export default async function DefaultPuzzlePage({
     columns: { answer: true },
   }))!.answer;
 
-  // Get errata if user is logged in
+  // Get errata if the errata timestamp is greater than the unlockTime.
+  // Here is how to think about the unlockTime:
+  // 1. If user is not logged in, unlockTime is now, and they will never see errata.
+  // 2. If user is admin, unlockTime is 0, and they will see all errata.
+  // 3. If user is team or testsolver, then:
+  //    a. If the puzzle can be unlocked, then use the unlock time
+  //    b. If the puzzle is an INITIAL_PUZZLE, then take MIN(teamCreateTime, huntStartTime)
+  var unlockTime;
+  if (!session.user) unlockTime = new Date();
+  else if (session.user.role === "admin") unlockTime = new Date(0);
+  else if (INITIAL_PUZZLES.includes(puzzleId)) {
+    const teamCreateTime =
+      (
+        await db.query.teams.findFirst({
+          where: eq(teams.id, session.user.id),
+          columns: { createTime: true },
+        })
+      )?.createTime ?? new Date();
+
+    const huntStartTime =
+      session.user?.interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME;
+
+    unlockTime = new Date(
+      Math.max(teamCreateTime.getTime(), huntStartTime.getTime()),
+    );
+  } else {
+    unlockTime = (await db.query.unlocks.findFirst({
+      where: and(
+        eq(unlocks.teamId, session.user.id),
+        eq(unlocks.puzzleId, puzzleId),
+      ),
+      columns: { unlockTime: true },
+    }))!.unlockTime;
+  }
+
   const errataList: {
     puzzleId: string;
     id: number;
@@ -85,7 +129,10 @@ export default async function DefaultPuzzlePage({
     description: string;
   }[] = (
     await db.query.errata.findMany({
-      where: eq(errata.puzzleId, puzzleId),
+      where: and(
+        eq(errata.puzzleId, puzzleId),
+        gt(errata.timestamp, unlockTime),
+      ),
     })
   ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
