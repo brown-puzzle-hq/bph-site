@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import PUZZLEBOX from "./BluenosPuzzleBox.svg";
+import PUZZLEBOX from "./BluenosPuzzleBox.png";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
