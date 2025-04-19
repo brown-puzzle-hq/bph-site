@@ -15,8 +15,8 @@ export const puzzleId = "imagine";
 export const inPersonBody = (
   <div>
     <div className="mx-auto mb-6 max-w-3xl text-center italic">
-      This is a physical puzzle! If your team has not already picked up a CD
-      or needs a place to play it, please visit HQ in Friedman 208.
+      This is a physical puzzle! If your team has not already picked up a CD or
+      needs a place to play it, please visit HQ in Friedman 208.
     </div>
   </div>
 );
@@ -24,15 +24,15 @@ export const inPersonBody = (
 export const remoteBoxBody = (
   <div>
     <div className="max-w-3xl text-center">
-        This is a physical puzzle! You should have received it in your box.
-        Contact brownpuzzlehq@gmail.com with any questions about your box or its
-        materials.
+      This is a physical puzzle! You should have received it in your box.
+      Contact brownpuzzlehq@gmail.com with any questions about your box or its
+      materials.
     </div>
   </div>
 );
 
 export const remoteBody = (
-  <div className="flex justify-center py-4">
+  <div className="flex justify-center pb-4">
     <audio controls className="w-96 max-w-full">
       <source src="/api/puzzle/imagine" type="audio/mpeg" />
       Your browser does not support the audio element.
@@ -202,7 +202,7 @@ export const partialSolutions: Record<string, string> = {};
 export const tasks: Record<string, JSX.Element> = {
   APOLOGIZE: (
     <div>
-      <div className="mb-6 max-w-3xl text-center">
+      <div className="mb-6 pt-1 max-w-3xl text-center">
         Oh...that thing you did was actually kind of insensitive...Make an
         apology video and send it to brownpuzzlehq@gmail.com, making sure to
         include "Taking Accountability" in the subject line. Your apology should

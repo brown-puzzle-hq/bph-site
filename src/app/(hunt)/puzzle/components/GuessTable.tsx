@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
 import { getCookie, setCookie } from "typescript-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function GuessTable({
   puzzleAnswer,
@@ -17,9 +17,10 @@ export default function GuessTable({
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
 }) {
-  const [hasHovered, setHasHovered] = useState(
-    () => getCookie("hasHovered") === "true",
-  );
+  const [hasHovered, setHasHovered] = useState(true);
+  useEffect(() => {
+    setHasHovered(getCookie("hasHovered") === "true");
+  }, []);
   return (
     <div>
       <Table className="mb-12 table-fixed md:table-auto">

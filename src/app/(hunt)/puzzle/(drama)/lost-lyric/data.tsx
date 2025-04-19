@@ -24,15 +24,15 @@ export const inPersonBody = (
 export const remoteBoxBody = (
   <div>
     <div className="max-w-3xl text-center">
-        This is a physical puzzle! You should have received it in your box.
-        Contact brownpuzzlehq@gmail.com with any questions about your box or its
-        materials.
+      This is a physical puzzle! You should have received it in your box.
+      Contact brownpuzzlehq@gmail.com with any questions about your box or its
+      materials.
     </div>
   </div>
 );
 
 export const remoteBody = (
-  <div className="flex justify-center py-4">
+  <div className="flex justify-center pb-4">
     <audio controls className="w-96 max-w-full">
       <source src="/api/puzzle/lost-lyric" type="audio/mpeg" />
       Your browser does not support the audio element.
