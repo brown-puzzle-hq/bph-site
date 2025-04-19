@@ -473,7 +473,7 @@ export default function Page() {
                 unlock more puzzles.
               </p>
               <p>
-                Each answer is a string of letters A-Z. Answers are not case- or
+                Each answer is a string of letters, typically A-Z. Answers are not case- or
                 space-sensitive.
               </p>
               <p>
