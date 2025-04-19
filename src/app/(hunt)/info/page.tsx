@@ -473,8 +473,8 @@ export default function Page() {
                 unlock more puzzles.
               </p>
               <p>
-                Each answer is a string of letters, typically A-Z. Answers are not case- or
-                space-sensitive.
+                Each answer is a string of letters, typically A-Z. Answers are
+                not case- or space-sensitive.
               </p>
               <p>
                 You have 20 total guesses for each puzzle. If you run out of
@@ -489,13 +489,14 @@ export default function Page() {
             <TOCSection sectionId={6} tocTitle="How do hints work?">
               <h2>How do hints work? </h2>
               <p>
-                When puzzles drop, teams will gain one hint request every three
-                hours, which you can use to ask for help on any puzzle. This can
-                be something like a nudge in the right direction (i.e. you give
-                us your progress on the puzzle and we will try to get you
+                You can use hint requests to ask for help on any puzzle. This
+                can be something like a nudge in the right direction (i.e. you
+                give us your progress on the puzzle and we will try to get you
                 unstuck) or an answer to a question (e.g. “Which answers to
                 these crossword clues are wrong?”). You can only have one open
-                hint request at a time.
+                hint request at a time. Teams will gain one hint request every 3
+                hours in the in-person event and one hint request every 6 hours
+                in the remote event.
               </p>
               <p>
                 If you are a beginner student team or a team with a strong
