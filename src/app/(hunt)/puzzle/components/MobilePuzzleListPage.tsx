@@ -71,11 +71,13 @@ export default function PuzzleListPage({
           )}
 
           {/* Puzzle table */}
-          <PuzzleTable
-            availableRounds={availableRounds}
-            availablePuzzles={availablePuzzles}
-            solvedPuzzles={solvedPuzzles}
-          />
+          <div className="w-full">
+            <PuzzleTable
+              availableRounds={availableRounds}
+              availablePuzzles={availablePuzzles}
+              solvedPuzzles={solvedPuzzles}
+            />
+          </div>
 
           {/* Event table */}
           {isInPerson && new Date() > IN_PERSON.START_TIME && (

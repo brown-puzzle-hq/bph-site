@@ -16,6 +16,19 @@ const chartColors = [
   "#e73f74",
   "#80ba5a",
   "#e68310",
+  "#008695",
+  "#cf1c90",
+  "#f97b72",
+  "#4b4b4b",
+  "#d4a6c8",
+  "#00a6aa",
+  "#b60058",
+  "#ffa600",
+  "#a2c865",
+  "#5a9bd5",
+  "#c85200",
+  "#d1c87f",
+  "#5f4690",
 ];
 
 interface GuessPieChartProps {
@@ -35,14 +48,14 @@ export default function GuessPieChart({ previousGuesses }: GuessPieChartProps) {
 
   const pieData = Object.entries(totalGuesses)
     .sort(([, valueA], [, valueB]) => (valueA > valueB ? -1 : 1))
-    .map(([key, value]) => ({ name: key, value }))
-    .slice(0, 7);
+    .map(([key, value]) => ({ name: key, value }));
+  // .slice(0, 7);
 
   const chartConfig = pieData.reduce(
     (config, pieSlice, index) => {
       config[pieSlice.name] = {
         label: pieSlice.name,
-        color: chartColors[index]!,
+        color: chartColors[index % chartColors.length]!,
       };
       return config;
     },

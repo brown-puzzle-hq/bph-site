@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { db } from "~/server/db";
 import { guesses, puzzles } from "~/server/db/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,9 +25,9 @@ export default async function GuessStatisticsInfo({
     redirect("/admin/puzzle");
   }
 
-  // Get previous guesses
   const previousGuesses = await db.query.guesses.findMany({
     where: eq(guesses.puzzleId, puzzleId),
+    orderBy: [desc(guesses.submitTime)],
     with: {
       team: { columns: { displayName: true } },
     },

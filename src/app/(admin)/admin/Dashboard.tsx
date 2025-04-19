@@ -116,7 +116,13 @@ export async function Dashboard() {
   /* Activity Table (chunk 4) */
   const data: Record<number, ActivityItem> = {};
   const startDate = IN_PERSON.START_TIME;
-  const endDate = REMOTE.END_TIME;
+  // Current time clamped between IN_PERSON.START_TIME and REMOTE.END_TIME
+  const endDate = new Date(
+    Math.min(
+      REMOTE.END_TIME.getTime(),
+      Math.max(IN_PERSON.START_TIME.getTime(), new Date().getTime()),
+    ),
+  );
 
   // Initialize the data object with all hours between startTime and endTime
   const totalHours =

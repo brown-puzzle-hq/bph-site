@@ -195,6 +195,11 @@ const DraggableMap = React.forwardRef<
       targetY.current = initialY;
 
       const onDragStart = (event: PointerEvent) => {
+        if (event.button !== 0) {
+          event.stopPropagation();
+          return;
+        }
+
         const mouseX = event.clientX;
         const mouseY = event.clientY;
 
@@ -701,6 +706,10 @@ export default function Map({
                     anchor={0.5}
                     scale={0.075 * (scaleFactor[puzzle.id] || 1)}
                     pointerdown={(event: FederatedPointerEvent) => {
+                      if (event.button !== 0) {
+                        event.stopPropagation();
+                        return;
+                      }
                       pointerDownPosition.current = {
                         x: event.global.x,
                         y: event.global.y,

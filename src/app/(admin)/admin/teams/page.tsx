@@ -93,9 +93,8 @@ const fetchRemoteUsers = async () =>
         desc(sql`filtered_solves`),
         asc(sql`last_solve_time`),
       )
-  ).map((team, i) => ({
+  ).map((team) => ({
     ...team,
-    rank: team.solves > 0 ? i + 1 : null,
     actualInteractionMode: (team.hasBox
       ? "remote-box"
       : "remote") as ActualInteractionMode,
@@ -132,8 +131,12 @@ export default async function Home() {
     fetchNonUsers(),
   ]);
 
-  const remoteBoxUsers = allRemoteUsers.filter((team) => team.hasBox);
-  const remoteUsers = allRemoteUsers.filter((team) => !team.hasBox);
+  const remoteBoxUsers = allRemoteUsers
+    .filter((team) => team.hasBox)
+    .map((team, i) => ({ ...team, rank: team.solves > 0 ? i + 1 : null }));
+  const remoteUsers = allRemoteUsers
+    .filter((team) => !team.hasBox)
+    .map((team, i) => ({ ...team, rank: team.solves > 0 ? i + 1 : null }));
 
   const data = [
     ...inPersonUsers,
