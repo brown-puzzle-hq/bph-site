@@ -1,6 +1,10 @@
+"use client";
+
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
+import { getCookie, setCookie } from "typescript-cookie";
+import { useState } from "react";
 
 export default function GuessTable({
   puzzleAnswer,
@@ -13,6 +17,9 @@ export default function GuessTable({
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
 }) {
+  const [hasHovered, setHasHovered] = useState(
+    () => getCookie("hasHovered") === "true",
+  );
   return (
     <div>
       <Table className="mb-12 table-fixed md:table-auto">
@@ -30,8 +37,16 @@ export default function GuessTable({
                   {guess.isCorrect ? (
                     <p className="font-medium text-correct-guess">CORRECT</p>
                   ) : partialSolutions[guess.guess] ? (
-                    <div className="group relative">
-                      <p className="font-medium text-partial-guess hover:cursor-help">
+                    <div
+                      className="group relative"
+                      onMouseOver={() => {
+                        setHasHovered(true);
+                        setCookie("hasHovered", "true");
+                      }}
+                    >
+                      <p
+                        className={`${!hasHovered && "animate-subtlePulse"} font-medium text-partial-guess hover:cursor-help`}
+                      >
                         PARTIAL
                       </p>
                       <span className="pointer-events-none absolute -bottom-7 left-1/2 z-10 w-max -translate-x-1/2 rounded bg-tooltip-bg px-2 py-1 text-xs font-medium text-main-text opacity-0 group-hover:opacity-100">
