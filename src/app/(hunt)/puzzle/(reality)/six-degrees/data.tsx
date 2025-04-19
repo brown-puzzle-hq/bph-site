@@ -137,7 +137,7 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `Your documentary is in trouble... your subjects are all paid actors! The release date is approaching. How can you fix your movie and save your leads' bacon?`;
+export const copyText = null;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
