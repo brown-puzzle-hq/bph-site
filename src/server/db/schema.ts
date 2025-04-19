@@ -30,6 +30,14 @@ export const interactionModeEnum = pgEnum("interaction_type", [
   "remote",
 ]);
 
+export const actualInteractionModeValues = [
+  "in-person",
+  "remote",
+  "remote-box",
+];
+
+export type ActualInteractionMode = "in-person" | "remote" | "remote-box";
+
 export const hintStatusEnum = pgEnum("status", [
   "no_response",
   "answered",

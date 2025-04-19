@@ -34,27 +34,31 @@ import {
 } from "@/components/ui/table";
 
 import { getCookie, setCookie } from "typescript-cookie";
-
-import { roleEnum, interactionModeEnum } from "~/server/db/schema";
-import { EditableFields, EditedTeam, updateTeam } from "../../actions";
+import {
+  type ActualInteractionMode,
+  actualInteractionModeValues,
+  roleEnum,
+} from "~/server/db/schema";
+import { type EditedTeam, type Role, updateTeam } from "../../actions";
 import { cn } from "~/lib/utils";
+import { Checkbox } from "~/components/ui/checkbox";
 
-const colorMap: Record<string, string> = {
-  user: "bg-sky-200 text-sky-900",
-  admin: "bg-emerald-200 text-emerald-900",
-  testsolver: "bg-violet-200 text-violet-900",
-  remote: "bg-lime-200 text-lime-900",
-  "in-person": "bg-orange-200 text-orange-900",
-  true: "bg-emerald-200 text-emerald-900",
-  false: "bg-red-200 text-red-900",
+export const clientEditableFieldKeys = ["role", "actualInteractionMode"];
+
+export type ClientEditableFields = {
+  role: Role;
+  actualInteractionMode: ActualInteractionMode;
 };
 
-export const editableFieldKeys = ["role", "interactionMode", "hasBox"];
+const fieldToOptions: Record<keyof ClientEditableFields, string[]> = {
+  role: roleEnum.enumValues,
+  actualInteractionMode: actualInteractionModeValues,
+};
 
-export type EditedRow = {
-  [K in keyof EditableFields]?: {
-    new: EditableFields[K];
-    old: EditableFields[K];
+export type ClientEditedRow = {
+  [K in keyof ClientEditableFields]?: {
+    new: ClientEditableFields[K];
+    old: ClientEditableFields[K];
   };
 };
 
@@ -63,14 +67,32 @@ interface TeamTableProps<TData, TValue> {
   data: TData[];
 }
 
+const colorMap: Record<string, string> = {
+  user: "bg-sky-200 text-sky-900",
+  admin: "bg-emerald-200 text-emerald-900",
+  testsolver: "bg-violet-200 text-violet-900",
+  remote: "bg-lime-200 text-lime-900",
+  "remote-box": "bg-yellow-200 text-yellow-900",
+  "in-person": "bg-orange-200 text-orange-900",
+};
+
 export function TeamTable<TData, TValue>({
   columns,
   data,
 }: TeamTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "createTime", desc: true },
+    { id: "rank", desc: false },
   ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+    {
+      id: "actualInteractionMode",
+      value: ["remote", "remote-box"],
+    },
+  ]);
+  const [interactionModeFilters, setInteractionModeFilters] = useState<
+    ActualInteractionMode[]
+  >(["remote", "remote-box"]);
+
   const [isCompact, setIsCompact] = useState(true);
   useEffect(() => {
     setIsCompact(getCookie("compact") !== "false");
@@ -95,39 +117,68 @@ export function TeamTable<TData, TValue>({
         pageIndex: 0,
         pageSize: pageSize,
       },
-      columnVisibility: {
-        responseTime: false,
-      },
       sorting: [
         {
-          id: "createTime",
-          desc: true,
+          id: "rank",
+          desc: false,
+        },
+      ],
+      columnFilters: [
+        {
+          id: "actualInteractionMode",
+          value: ["remote", "remote-box"],
         },
       ],
     },
     pageCount: Math.ceil(data.length / pageSize),
+    filterFns: {
+      interactionModeFilter: (
+        row,
+        id,
+        filterValue: ActualInteractionMode[],
+      ) => {
+        if (filterValue.length === 0) return true;
+        const mode = row.getValue(id) as ActualInteractionMode;
+        return filterValue.includes(mode);
+      },
+    },
   });
 
-  const [editedRows, setEditedRows] = useState<Record<string, EditedRow>>({});
+  const [editedRows, setEditedRows] = useState<Record<string, ClientEditedRow>>(
+    {},
+  );
 
-  function handleEditRow<F extends keyof EditableFields>(
+  useEffect(() => {
+    setEditedRows({});
+    if (interactionModeFilters.length === 0) {
+      setColumnFilters(
+        columnFilters.filter((filter) => filter.id !== "actualInteractionMode"),
+      );
+    } else {
+      setColumnFilters((prev) => {
+        const filtered = prev.filter(
+          (filter) => filter.id !== "actualInteractionMode",
+        );
+        return [
+          ...filtered,
+          {
+            id: "actualInteractionMode",
+            value: interactionModeFilters,
+          },
+        ];
+      });
+    }
+  }, [interactionModeFilters]);
+
+  function handleEditRow<F extends keyof ClientEditableFields>(
     teamId: string,
     field: F,
     cellValue: any,
   ) {
     setEditedRows((prev) => {
-      const options: any[] =
-        field === "role"
-          ? roleEnum.enumValues
-          : field === "interactionMode"
-            ? interactionModeEnum.enumValues
-            : field === "hasBox"
-              ? ["true", "false"]
-              : [];
-
       const prevEdits = prev[teamId] ?? {};
       const oldValue = prevEdits[field]?.old ?? cellValue;
-
+      const options = fieldToOptions[field];
       const prevIndex = options.indexOf(prevEdits[field]?.new ?? cellValue);
       const nextIndex = (prevIndex + 1) % options.length;
       const newValue = options[nextIndex];
@@ -164,14 +215,34 @@ export function TeamTable<TData, TValue>({
   }
 
   const handleSaveEdits = async () => {
-    const editedTeams: Record<string, EditedTeam> = Object.entries(
-      editedRows,
-    ).reduce((acc: Record<string, EditedTeam>, [teamId, fields]) => {
-      acc[teamId] = Object.fromEntries(
-        Object.entries(fields).map(([key, value]) => [key, value.new]),
-      ) as EditedTeam;
-      return acc;
-    }, {});
+    const editedTeams: Record<string, EditedTeam> = {};
+    for (const teamId in editedRows) {
+      for (const field in editedRows[teamId]) {
+        const editedField =
+          editedRows[teamId][field as keyof ClientEditableFields];
+        if (!editedField) continue;
+
+        const { new: newValue } = editedField;
+
+        if (field === "actualInteractionMode") {
+          editedTeams[teamId] = {
+            ...editedTeams[teamId],
+            interactionMode:
+              newValue === "remote-box" || newValue === "remote"
+                ? "remote"
+                : "in-person",
+            hasBox: newValue === "remote-box",
+          };
+          continue;
+        }
+
+        editedTeams[teamId] = {
+          ...editedTeams[teamId],
+          [field]: newValue,
+        };
+      }
+    }
+
     await updateTeam(editedTeams);
     // TODO: avoid flash some other way
     setTimeout(() => setEditedRows({}), 30);
@@ -181,7 +252,8 @@ export function TeamTable<TData, TValue>({
     <>
       <div className="w-screen px-4 xl:px-12">
         {/* Controls */}
-        <div className="flex items-center justify-between space-x-2 pb-2 text-neutral-500">
+        <div className="grid w-full grid-cols-2 pb-2 text-neutral-500 sm:grid-cols-3">
+          {/* Filter teams */}
           <div className="flex items-center space-x-2">
             <Filter className="size-5" />
             <input
@@ -193,7 +265,50 @@ export function TeamTable<TData, TValue>({
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          {/* Filter by interactionMode */}
+          <div className="mx-auto hidden items-center space-x-2 text-nowrap text-sm font-medium sm:flex">
+            <p>In Person</p>
+            <Checkbox
+              checked={interactionModeFilters.includes("in-person")}
+              onCheckedChange={(checked) => {
+                setInteractionModeFilters((prev) =>
+                  checked
+                    ? [...prev, "in-person"]
+                    : prev.filter((mode) => mode !== "in-person"),
+                );
+              }}
+              className="border-[1.5px] border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
+            />
+
+            <p>Remote</p>
+            <Checkbox
+              checked={interactionModeFilters.includes("remote")}
+              onCheckedChange={(checked) => {
+                setInteractionModeFilters((prev) =>
+                  checked
+                    ? [...prev, "remote"]
+                    : prev.filter((mode) => mode !== "remote"),
+                );
+              }}
+              className="border-[1.5px] border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
+            />
+
+            <p>Remote Box</p>
+            <Checkbox
+              checked={interactionModeFilters.includes("remote-box")}
+              onCheckedChange={(checked) => {
+                setInteractionModeFilters((prev) =>
+                  checked
+                    ? [...prev, "remote-box"]
+                    : prev.filter((mode) => mode !== "remote-box"),
+                );
+              }}
+              className="border-[1.5px] border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
+            />
+          </div>
+
+          {/* Pagination */}
+          <div className="ml-auto flex items-center space-x-2">
             <button
               className="hover:opacity-70"
               onClick={() => {
@@ -271,8 +386,8 @@ export function TeamTable<TData, TValue>({
                       const cellValue = String(cell.getValue());
 
                       // Check whether column is editable
-                      if (editableFieldKeys.includes(columnId)) {
-                        const field = columnId as keyof EditableFields;
+                      if (clientEditableFieldKeys.includes(columnId)) {
+                        const field = columnId as keyof ClientEditableFields;
                         const currValue = String(
                           editedRows[teamId]?.[field]?.new ?? cellValue,
                         );

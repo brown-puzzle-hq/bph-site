@@ -7,11 +7,11 @@ import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
 
 export type Role = (typeof roleEnum.enumValues)[number];
-export type Mode = (typeof interactionModeEnum.enumValues)[number];
+export type InteractionMode = (typeof interactionModeEnum.enumValues)[number];
 
 export type EditableFields = {
   role: Role;
-  interactionMode: Mode;
+  interactionMode: InteractionMode;
   hasBox: boolean;
 };
 

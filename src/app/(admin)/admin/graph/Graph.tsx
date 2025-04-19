@@ -834,7 +834,6 @@ export default function Graph() {
                               href={`/admin/hints/${hint.id}`}
                               prefetch={false}
                               className="text-blue-500 hover:underline"
-                              prefetch={false}
                             >
                               [{hint.id}]
                             </Link>{" "}

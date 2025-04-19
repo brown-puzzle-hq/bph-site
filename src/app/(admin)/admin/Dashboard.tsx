@@ -306,7 +306,7 @@ export async function Dashboard() {
               <CardTitle>Hint Leaderboard</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
-              <ScrollArea className="lg:max-h-[75vh]">
+              <ScrollArea className="no-scrollbar lg:max-h-[75vh]">
                 {hintLeaderboard.map((user, index) => (
                   <div className="mb-2 flex items-center gap-4" key={user.id}>
                     <Avatar className="flex h-9 w-9">
