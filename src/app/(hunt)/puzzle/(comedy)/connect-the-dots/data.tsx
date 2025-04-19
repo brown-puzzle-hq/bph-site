@@ -39,7 +39,9 @@ export const copyText = null;
  * Each key is a partial solution, and the value is the prompt to be displayed. Keys must
  * be in all caps, no spaces.
  */
-export const partialSolutions: Record<string, string> = {};
+export const partialSolutions: Record<string, string> = {
+  SHAPE: "Keep going!"
+};
 
 /**
  * The `tasks` object is used for multi-part puzzles. When a certain answer is submitted,

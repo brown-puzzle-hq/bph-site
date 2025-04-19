@@ -267,290 +267,296 @@ export default function RemoteBody({ run }: { run: Row[] }) {
   }, [pendingConfirmation, toast]);
 
   return (
-    <div className="mb-2 flex space-x-8">
-      {/* List of states of the puzzles */}
-      <div className="ml-4 flex flex-col items-center space-y-4 text-main-text">
-        <h2 className="text-xl font-semibold text-main-header">Timeline</h2>
-        <div className="relative space-y-0.5 border-s-2 border-main-header">
-          {currRun.map((row) => (
-            <div className="ms-4" key={`${row.scenario}-${row.decisionType}`}>
-              {row.decisionType === "door" && (
-                <div>
-                  <Dot />
-                  <div className="group relative w-fit">
-                    <button
-                      onClick={() =>
-                        handlePreviousScenarioClick(row.scenario, "initial")
-                      }
-                      className={cn(
-                        "mb-0.5 w-[84px] rounded-md font-semibold",
-                        row.scenario !== state.scenario && "opacity-60",
-                      )}
-                    >
-                      Scenario {row.scenario}
-                    </button>
-                    <Marker
-                      variant="scenario"
-                      selected={
-                        state.scenario === row.scenario &&
-                        state.step === "initial"
-                      }
-                    />
+    <div>
+      <div className="mb-6 max-w-3xl text-center">
+        Warning! This puzzle contains choices that your team will not be able to change for a certain time period.
+        </div>
+        <hr className="my-6 mb-6 w-full border-t border-white" />
+      <div className="mb-2 flex space-x-8">
+        {/* List of states of the puzzles */}
+        <div className="ml-4 flex flex-col items-center space-y-4 text-main-text">
+          <h2 className="text-xl font-semibold text-main-header">Timeline</h2>
+          <div className="relative space-y-0.5 border-s-2 border-main-header">
+            {currRun.map((row) => (
+              <div className="ms-4" key={`${row.scenario}-${row.decisionType}`}>
+                {row.decisionType === "door" && (
+                  <div>
+                    <Dot />
+                    <div className="group relative w-fit">
+                      <button
+                        onClick={() =>
+                          handlePreviousScenarioClick(row.scenario, "initial")
+                        }
+                        className={cn(
+                          "mb-0.5 w-[84px] rounded-md font-semibold",
+                          row.scenario !== state.scenario && "opacity-60",
+                        )}
+                      >
+                        Scenario {row.scenario}
+                      </button>
+                      <Marker
+                        variant="scenario"
+                        selected={
+                          state.scenario === row.scenario &&
+                          state.step === "initial"
+                        }
+                      />
+                    </div>
                   </div>
+                )}
+                <div className="group relative ml-2 w-fit">
+                  <button
+                    onClick={() =>
+                      handlePreviousScenarioClick(row.scenario, row.decision)
+                    }
+                    className={cn(
+                      "rounded-md",
+                      row.scenario !== state.scenario && "opacity-60",
+                    )}
+                  >
+                    {stateDisplay(currRun, row)}
+                  </button>
+                  <Marker
+                    variant="normal"
+                    selected={
+                      state.scenario === row.scenario &&
+                      state.step === row.decision
+                    }
+                  />
                 </div>
-              )}
-              <div className="group relative ml-2 w-fit">
-                <button
-                  onClick={() =>
-                    handlePreviousScenarioClick(row.scenario, row.decision)
-                  }
-                  className={cn(
-                    "rounded-md",
-                    row.scenario !== state.scenario && "opacity-60",
-                  )}
-                >
-                  {stateDisplay(currRun, row)}
-                </button>
-                <Marker
-                  variant="normal"
-                  selected={
-                    state.scenario === row.scenario &&
-                    state.step === row.decision
-                  }
-                />
               </div>
-            </div>
-          ))}
-          {(() => {
-            const lastRow = getLastRow(currRun);
-            if (
-              !lastRow ||
-              (lastRow?.decisionType === "final" && lastRow.scenario < 4)
-            ) {
-              return (
-                <div className="ms-4">
-                  <Dot />
-                  <div className="group relative w-fit">
-                    <button
-                      onClick={() =>
-                        handlePreviousScenarioClick(
-                          (lastRow?.scenario ?? 0) + 1,
-                          "initial",
-                        )
-                      }
-                      className={cn(
-                        "mb-0.5 w-[84px] rounded-md font-semibold",
-                        (lastRow?.scenario ?? 0) + 1 !== state.scenario &&
-                          "opacity-60",
-                      )}
-                    >
-                      Scenario {(lastRow?.scenario ?? 0) + 1}
-                    </button>
-                    <Marker
-                      variant="scenario"
-                      selected={
-                        state.scenario === (lastRow?.scenario ?? 0) + 1 &&
-                        state.step === "initial"
-                      }
-                    />
+            ))}
+            {(() => {
+              const lastRow = getLastRow(currRun);
+              if (
+                !lastRow ||
+                (lastRow?.decisionType === "final" && lastRow.scenario < 4)
+              ) {
+                return (
+                  <div className="ms-4">
+                    <Dot />
+                    <div className="group relative w-fit">
+                      <button
+                        onClick={() =>
+                          handlePreviousScenarioClick(
+                            (lastRow?.scenario ?? 0) + 1,
+                            "initial",
+                          )
+                        }
+                        className={cn(
+                          "mb-0.5 w-[84px] rounded-md font-semibold",
+                          (lastRow?.scenario ?? 0) + 1 !== state.scenario &&
+                            "opacity-60",
+                        )}
+                      >
+                        Scenario {(lastRow?.scenario ?? 0) + 1}
+                      </button>
+                      <Marker
+                        variant="scenario"
+                        selected={
+                          state.scenario === (lastRow?.scenario ?? 0) + 1 &&
+                          state.step === "initial"
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            }
+                );
+              }
+            })()}
+          </div>
+          {cooldown &&
+            getLastRow(currRun)?.scenario === 4 &&
+            getLastRow(currRun)?.decisionType === "final" && (
+              <Countdown
+                targetDate={cooldown}
+                callBack={() => {
+                  setRun([]);
+                  setState((prevState) => ({
+                    run: prevState.run + 1,
+                    scenario: 1,
+                    step: "initial",
+                  }));
+                }}
+              />
+            )}
+        </div>
+
+        <div className="border-l-2 border-main-header"></div>
+
+        <div className="flex flex-col items-center space-y-8">
+          {/* Video */}
+          <div>
+            <iframe
+              className="rounded-md"
+              width="560"
+              height="315"
+              src={`https://www.youtube-nocookie.com/embed/${videos[state.scenario]![state.step]}`}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </div>
+
+          {/* Door 1, Door 2, and Door 3 buttons */}
+          {(() => {
+            if (state.step !== "initial") return null;
+
+            const prevDecision = currRun.find(
+              (row) =>
+                row.scenario === state.scenario && row.decisionType === "door",
+            );
+
+            return (
+              <div className="flex space-x-8">
+                {["door_1", "door_2", "door_3"].map((decision) => (
+                  <button
+                    key={decision}
+                    disabled={
+                      !!prevDecision && prevDecision.decision !== decision
+                    }
+                    onClick={(e) =>
+                      prevDecision
+                        ? handlePreviousScenarioClick(
+                            state.scenario,
+                            decision as Step,
+                          )
+                        : handleDecisionClick(decision as MNKDecision, "door", e)
+                    }
+                    className={cn(
+                      "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
+                      pendingConfirmation?.decision === decision &&
+                        pendingConfirmation.decisionType === "door" &&
+                        "animate-subtlePulse enabled:hover:animate-none enabled:hover:opacity-80",
+                    )}
+                  >
+                    <Image
+                      src={DOOR}
+                      width={166}
+                      alt=""
+                      className="col-start-1 row-start-1"
+                    />
+                    <p className="col-start-1 row-start-1 mt-[60px] text-4xl font-bold text-[#44413D]">
+                      {decision.slice(-1)}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
+
+          {/* Switch and Stay buttons */}
+          {(() => {
+            if (!["door_1", "door_2", "door_3"].includes(state.step)) return null;
+
+            const doorDecision = currRun.find(
+              (row) =>
+                row.scenario === state.scenario && row.decisionType === "door",
+            );
+            const stayDoor = doorDecision?.decision;
+            const switchDoor =
+              doorDecision?.decision === "door_2" ? "door_1" : "door_2";
+
+            const prevDecision = currRun.find(
+              (row) =>
+                row.scenario === state.scenario && row.decisionType === "final",
+            );
+
+            return (
+              <div className="flex space-x-8">
+                {["door_1", "door_2", "door_3"].map((decision) => (
+                  <button
+                    key={decision}
+                    disabled={
+                      (!!prevDecision &&
+                        prevDecision.decision !==
+                          (decision === stayDoor ? "stay" : "switch")) ||
+                      (decision !== stayDoor && decision !== switchDoor)
+                    }
+                    onClick={(e) =>
+                      prevDecision
+                        ? handlePreviousScenarioClick(
+                            state.scenario,
+                            (decision === stayDoor ? "stay" : "switch") as Step,
+                          )
+                        : handleDecisionClick(
+                            (decision === stayDoor
+                              ? "stay"
+                              : "switch") as MNKDecision,
+                            "final",
+                            e,
+                          )
+                    }
+                    className={cn(
+                      "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
+                      decision !== stayDoor && decision !== switchDoor
+                        ? "disabled:opacity-50"
+                        : pendingConfirmation?.decision ===
+                            (decision === stayDoor ? "stay" : "switch") &&
+                            pendingConfirmation.decisionType === "final" &&
+                            "animate-subtlePulse enabled:hover:animate-none enabled:hover:opacity-80",
+                    )}
+                  >
+                    <Image
+                      src={DOOR}
+                      width={166}
+                      alt=""
+                      className="col-start-1 row-start-1"
+                    />
+                    <p className="col-start-1 row-start-1 mt-[60px] text-4xl font-bold text-[#44413D]">
+                      {decision.slice(-1)}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
+
+          {/* Next Scenario button */}
+          {(() => {
+            if (!["stay", "switch"].includes(state.step)) return null;
+
+            const doorDecision = currRun.find(
+              (row) =>
+                row.scenario === state.scenario && row.decisionType === "door",
+            );
+
+            const switchDecision = currRun.find(
+              (row) =>
+                row.scenario === state.scenario && row.decisionType === "final",
+            );
+
+            const finalDecision =
+              switchDecision?.decision === "switch"
+                ? doorDecision?.decision === "door_2"
+                  ? "door_1"
+                  : "door_2"
+                : doorDecision?.decision;
+
+            return (
+              <div className="flex space-x-8">
+                {["door_1", "door_2", "door_3"].map((decision) => (
+                  <button
+                    key={decision}
+                    disabled={decision !== finalDecision}
+                    onClick={handleNextScenarioClick}
+                    className="grid hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Image
+                      src={DOOR}
+                      width={166}
+                      alt=""
+                      className="col-start-1 row-start-1"
+                    />
+                    <p className="col-start-1 row-start-1 mt-[60px] text-4xl font-bold text-[#44413D]">
+                      {finalDecision === decision ? "✓" : decision.slice(-1)}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            );
           })()}
         </div>
-        {cooldown &&
-          getLastRow(currRun)?.scenario === 4 &&
-          getLastRow(currRun)?.decisionType === "final" && (
-            <Countdown
-              targetDate={cooldown}
-              callBack={() => {
-                setRun([]);
-                setState((prevState) => ({
-                  run: prevState.run + 1,
-                  scenario: 1,
-                  step: "initial",
-                }));
-              }}
-            />
-          )}
-      </div>
-
-      <div className="border-l-2 border-main-header"></div>
-
-      <div className="flex flex-col items-center space-y-8">
-        {/* Video */}
-        <div>
-          <iframe
-            className="rounded-md"
-            width="560"
-            height="315"
-            src={`https://www.youtube-nocookie.com/embed/${videos[state.scenario]![state.step]}`}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
-        </div>
-
-        {/* Door 1, Door 2, and Door 3 buttons */}
-        {(() => {
-          if (state.step !== "initial") return null;
-
-          const prevDecision = currRun.find(
-            (row) =>
-              row.scenario === state.scenario && row.decisionType === "door",
-          );
-
-          return (
-            <div className="flex space-x-8">
-              {["door_1", "door_2", "door_3"].map((decision) => (
-                <button
-                  key={decision}
-                  disabled={
-                    !!prevDecision && prevDecision.decision !== decision
-                  }
-                  onClick={(e) =>
-                    prevDecision
-                      ? handlePreviousScenarioClick(
-                          state.scenario,
-                          decision as Step,
-                        )
-                      : handleDecisionClick(decision as MNKDecision, "door", e)
-                  }
-                  className={cn(
-                    "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
-                    pendingConfirmation?.decision === decision &&
-                      pendingConfirmation.decisionType === "door" &&
-                      "animate-subtlePulse enabled:hover:animate-none enabled:hover:opacity-80",
-                  )}
-                >
-                  <Image
-                    src={DOOR}
-                    width={166}
-                    alt=""
-                    className="col-start-1 row-start-1"
-                  />
-                  <p className="col-start-1 row-start-1 mt-[60px] text-4xl font-bold text-[#44413D]">
-                    {decision.slice(-1)}
-                  </p>
-                </button>
-              ))}
-            </div>
-          );
-        })()}
-
-        {/* Switch and Stay buttons */}
-        {(() => {
-          if (!["door_1", "door_2", "door_3"].includes(state.step)) return null;
-
-          const doorDecision = currRun.find(
-            (row) =>
-              row.scenario === state.scenario && row.decisionType === "door",
-          );
-          const stayDoor = doorDecision?.decision;
-          const switchDoor =
-            doorDecision?.decision === "door_2" ? "door_1" : "door_2";
-
-          const prevDecision = currRun.find(
-            (row) =>
-              row.scenario === state.scenario && row.decisionType === "final",
-          );
-
-          return (
-            <div className="flex space-x-8">
-              {["door_1", "door_2", "door_3"].map((decision) => (
-                <button
-                  key={decision}
-                  disabled={
-                    (!!prevDecision &&
-                      prevDecision.decision !==
-                        (decision === stayDoor ? "stay" : "switch")) ||
-                    (decision !== stayDoor && decision !== switchDoor)
-                  }
-                  onClick={(e) =>
-                    prevDecision
-                      ? handlePreviousScenarioClick(
-                          state.scenario,
-                          (decision === stayDoor ? "stay" : "switch") as Step,
-                        )
-                      : handleDecisionClick(
-                          (decision === stayDoor
-                            ? "stay"
-                            : "switch") as MNKDecision,
-                          "final",
-                          e,
-                        )
-                  }
-                  className={cn(
-                    "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
-                    decision !== stayDoor && decision !== switchDoor
-                      ? "disabled:opacity-50"
-                      : pendingConfirmation?.decision ===
-                          (decision === stayDoor ? "stay" : "switch") &&
-                          pendingConfirmation.decisionType === "final" &&
-                          "animate-subtlePulse enabled:hover:animate-none enabled:hover:opacity-80",
-                  )}
-                >
-                  <Image
-                    src={DOOR}
-                    width={166}
-                    alt=""
-                    className="col-start-1 row-start-1"
-                  />
-                  <p className="col-start-1 row-start-1 mt-[60px] text-4xl font-bold text-[#44413D]">
-                    {decision.slice(-1)}
-                  </p>
-                </button>
-              ))}
-            </div>
-          );
-        })()}
-
-        {/* Next Scenario button */}
-        {(() => {
-          if (!["stay", "switch"].includes(state.step)) return null;
-
-          const doorDecision = currRun.find(
-            (row) =>
-              row.scenario === state.scenario && row.decisionType === "door",
-          );
-
-          const switchDecision = currRun.find(
-            (row) =>
-              row.scenario === state.scenario && row.decisionType === "final",
-          );
-
-          const finalDecision =
-            switchDecision?.decision === "switch"
-              ? doorDecision?.decision === "door_2"
-                ? "door_1"
-                : "door_2"
-              : doorDecision?.decision;
-
-          return (
-            <div className="flex space-x-8">
-              {["door_1", "door_2", "door_3"].map((decision) => (
-                <button
-                  key={decision}
-                  disabled={decision !== finalDecision}
-                  onClick={handleNextScenarioClick}
-                  className="grid hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Image
-                    src={DOOR}
-                    width={166}
-                    alt=""
-                    className="col-start-1 row-start-1"
-                  />
-                  <p className="col-start-1 row-start-1 mt-[60px] text-4xl font-bold text-[#44413D]">
-                    {finalDecision === decision ? "✓" : decision.slice(-1)}
-                  </p>
-                </button>
-              ))}
-            </div>
-          );
-        })()}
       </div>
     </div>
   );

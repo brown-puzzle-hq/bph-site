@@ -114,17 +114,108 @@ const puzzleClues = [
 
 export const inPersonBody = (
   <div className="max-w-4xl py-4">
-    <p className="pb-8">
+    {/* <p className="pb-8">
       Rivers are three letters long and may either flow horizontally,
       vertically, or diagonally in strict alphabetical order. Horizontal and
       diagonal rivers are read left-to-right, and vertical rivers are read
       top-to-bottom. Any such triple of letters has a river flowing through it.
-    </p>
+    </p> */}
+    <div className="mb-6 text-center font-bold">Examples (and non-examples):</div>
+    <div className="grid grid-cols-1 items-center justify-center gap-8 md:grid-cols-3">
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="absolute translate-y-[72px] border-t w-full" />
+      </div>
 
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          J
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="absolute translate-x-[120px] border-l h-full" />
+      </div>
+
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">A</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">B</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">C</div>
+        <div className="absolute translate-x-[72px] -translate-y-[28px] border-l h-[200px] -rotate-45" />
+      </div>
+
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">Z</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">Y</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">X</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="absolute translate-x-[72px] -translate-y-[28px] border-l h-[200px] rotate-45" />
+      </div>
+
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">E</div>
+        <div className="flex h-12 w-12 items-center justify-center border">G</div>
+        <div className="flex h-12 w-12 items-center justify-center border">G</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+      </div>
+
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">C</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">O</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+        <div className="flex h-12 w-12 items-center justify-center border">D</div>
+        <div className="flex h-12 w-12 items-center justify-center border"></div>
+      </div>
+    </div>
+    <hr className="my-6 mb-6 w-full border-t border-white" />
+
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
       {puzzleClues.map((clues, index) => (
         <div key={index} className="w-full space-y-4">
-          <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 sm:mx-0">
+          <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
             <div className="flex h-12 w-12 items-center justify-center border">
               1
             </div>

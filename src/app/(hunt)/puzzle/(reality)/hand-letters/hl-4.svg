@@ -7,8 +7,31 @@
    viewBox="0 0 101.1562 88.7043"
    version="1.1"
    id="svg1"
+   sodipodi:docname="hl-4.svg"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.84899288"
+     inkscape:cx="-50.648246"
+     inkscape:cy="199.05938"
+     inkscape:window-width="1104"
+     inkscape:window-height="649"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g25" />
   <defs
      id="defs1" />
   <g
@@ -228,7 +251,7 @@
          id="tspan20"
          style="font-weight:normal;font-size:6.88112px;fill:#1a1a1a;stroke-width:0"
          x="38.464058"
-         y="98.918892">Dhaka</tspan></text>
+         y="98.918892">Bishkek</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:6.88112px;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ff0000;stroke:#000000;stroke-width:0;stroke-dasharray:none"

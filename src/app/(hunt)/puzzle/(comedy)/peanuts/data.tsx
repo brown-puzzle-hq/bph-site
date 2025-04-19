@@ -17,10 +17,20 @@ export const inPersonBody = (
   <div className="mx-auto mb-6 max-w-3xl text-center italic">
     This is a physical puzzle! You should have received it at kickoff. Please
     visit HQ in Friedman 208 if you believe you are missing these supplies.
-</div>
+  </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div className="max-w-xl space-y-4 text-center">
+    <p>
+      <i>
+        This is a physical puzzle! You should use objects found in your box.
+        Contact brownpuzzlehq@gmail.com with any questions about your box or its
+        materials.
+      </i>
+    </p>
+  </div>
+);
 
 export const remoteBody = (
   <div className="max-w-3xl text-center">
@@ -42,7 +52,8 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `ANP	ATP	5. CHA	DER [3]	DST	EBR
+export const boxCopyText = null; 
+export const remoteCopyText = `ANP	ATP	5. CHA	DER [3]	DST	EBR
 ELT [5]	8. FRA	7. GRE	INA	KIN [7]	11. LIN
 LT [6]	9. LUC	LYB	MIN	N [7]	NG [11]
 NKL	NPE	OCK [7]	OPY [5]	OWN [10]	PEN [6]

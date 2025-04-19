@@ -61,24 +61,27 @@ Your circus movie is pretty good, but it requires more mainstream
 
 export const remoteBoxBody = (
   <div>
-    <div className="mb-6 max-w-3xl text-center">
+    <div className="mb-4 max-w-3xl text-center">
       <i>
         This is a physical puzzle! You should use an object found in your box.
+        Contact brownpuzzlehq@gmail.com with any questions about your box or its
+        materials.
       </i>
     </div>
+    <hr className="my-6 mb-6 w-full border-t border-white" />
     <div className="mb-4 max-w-3xl text-center">
       <b>
-        This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">COMEDY</span> round.
+        This is a metapuzzle. It uses feeders from the Comedy round.
       </b>
     </div>
     <div className="max-w-3xl space-y-4 text-center">
-      <p>
-        Your circus movie is pretty good, but it requires more mainstream
+    <div className="pb-2.5 italic">
+Your circus movie is pretty good, but it requires more mainstream
         appeal.
-      </p>
-      <p>What do you need?</p>
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <br></br>
+        What do you need?
+    </div>
+      {/* <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         {ITEMS.map(({ name, src, desc }, index) => (
           <div className="space-y-4" key={index}>
             <p className="font-bold text-main-header">{name}</p>
@@ -86,7 +89,8 @@ export const remoteBoxBody = (
             {desc}
           </div>
         ))}
-      </div>
+      </div> */}
+      <div className="font-bold">Erratum: The order of the two things to be careful with for the Dog should be switched.</div>
     </div>
   </div>
 );
@@ -95,19 +99,19 @@ export const remoteBody = (
   <div>
     <div className="mb-4 max-w-3xl text-center">
       <b>
-        This is a metapuzzle. It uses feeders from the{" "}
-        <span className="underline">COMEDY</span> round.
+        This is a metapuzzle. It uses feeders from the Comedy round.
       </b>
     </div>
     <div className="max-w-3xl space-y-4 text-center">
-      <p>
-        Your circus movie is pretty good, but it requires more mainstream
+    <div className="pb-2.5 italic">
+Your circus movie is pretty good, but it requires more mainstream
         appeal.
-      </p>
-      <p>What do you need?</p>
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <br></br>
+        What do you need?
+    </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 border-4 border-white">
         {ITEMS.map(({ name, src, desc }, index) => (
-          <div className="space-y-4" key={index}>
+          <div className="space-y-4 p-4 border-4 border-white" key={index}>
             <p className="font-bold text-main-header">{name}</p>
             <Image src={src} alt="" className="rounded-lg" />
             {desc}

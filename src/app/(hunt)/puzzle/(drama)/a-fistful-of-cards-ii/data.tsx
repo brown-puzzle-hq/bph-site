@@ -72,8 +72,8 @@ export const remoteBoxBody = (
   <div>
     <div className="max-w-3xl text-center">
       <i>
-        This is a physical puzzle! You should have received it in your Box.
-        Contact brownpuzzlehq@gmail.com with any questions about your Box or its
+        This is a physical puzzle! You should have received it in your box.
+        Contact brownpuzzlehq@gmail.com with any questions about your box or its
         materials.
       </i>
     </div>

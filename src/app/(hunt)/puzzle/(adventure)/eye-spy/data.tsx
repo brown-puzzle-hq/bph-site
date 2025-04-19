@@ -56,7 +56,7 @@ Where am I from? Where am I in?"<br></br>
 
 export const remoteBoxBody = inPersonBody;
 
-export const remoteBody = null;
+export const remoteBody = inPersonBody;
 
 /**
  * The `solutionBody` renders in the solution page.

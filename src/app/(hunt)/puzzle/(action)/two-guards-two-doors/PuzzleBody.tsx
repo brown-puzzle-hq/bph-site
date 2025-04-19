@@ -106,6 +106,10 @@ export default function PuzzleBody({
   return (
     <div>
       {/* DOORS SET 1 */}
+      <div className="mb-6 max-w-3xl text-center">
+      Warning! This puzzle contains choices that your team will not be able to change for a certain time period.
+      </div>
+      <hr className="my-6 mb-6 w-full border-t border-white" />
       <div className="mb-5 max-w-3xl">
         As you approach the beginning of Brown Puzzlehunt, you find in front of
         you two doors. One door leads to the beginning of the Puzzlehunt; the

@@ -6,7 +6,6 @@ import HL_3 from "./hl-3.svg";
 import HL_4 from "./hl-4.svg";
 import HL_5 from "./hl-5.svg";
 import HL_6 from "./hl-6.svg";
-const SCALE = 0.5;
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -100,12 +99,7 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `Providence\tPonta Delgata
-Hanoi\tRome
-Tehran\tTokyo
-New Delhi\tDhaka\tLondon
-Helsinki
-Adelaide\tBrisbane\tVladivostok`;
+export const copyText = null;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import WMR from "./WMR_Puzzle_Body.jpg";
+// import WMR from "./WMR_Puzzle_Body.jpg";
+import WMR from "./whats-my-ride.png";
 import SOLUTION from "./WMR_Solution.jpg";
 
 /**
@@ -15,14 +16,15 @@ export const puzzleId = "whats-my-ride";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center">
+  <div className="max-w-3xl text-center items-center">
     <Image
       src={WMR}
-      width={500}
-      height={500}
-      alt="family tree (puzzle body) image"
+      // width={500}
+      // height={500}
+      alt=""
+      className="pb-4"
     />
-    <p className="text-lg">3️⃣</p>
+    <p className="text-4xl">3️⃣</p>
   </div>
 );
 

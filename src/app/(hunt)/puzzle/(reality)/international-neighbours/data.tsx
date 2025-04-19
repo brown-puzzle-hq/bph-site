@@ -62,11 +62,11 @@ export const solutionBody = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `Someone who collapses \t
-Partner of copier \t
-Wider \t
-Religion associated with reggae, for short \t
-Christian leader of a congregation \t
+export const copyText = `Someone who collapses
+Partner of copier
+Wider
+Religion associated with reggae, for short
+Christian leader of a congregation
 Leonardo da Vinci or Pablo Picasso, for two
 `;
 

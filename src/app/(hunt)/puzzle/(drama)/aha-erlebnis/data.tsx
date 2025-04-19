@@ -11,7 +11,7 @@ export const puzzleId = "aha-erlebnis";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
+  <div className="text-center items-center">
     <div className="space-y-4 max-w-3xl text-center">
       <div className="font-bold">
         This is a metapuzzle. It uses feeders from the{" "}
@@ -24,10 +24,10 @@ export const inPersonBody = (
       </div>
     </div>
 
-    <div className="flex flex-col space-y-4 p-6 text-white">
+    <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">😍:</div>
-        <div className="mt-8 flex gap-4">
+        <div className="font-bold text-4xl">😍</div>
+        <div className="mt-4 flex gap-4 justify-center">
           {[
             "",
             "",
@@ -55,10 +55,10 @@ export const inPersonBody = (
       </div>
     </div>
 
-    <div className="flex flex-col space-y-4 p-6 text-white">
+    <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">🥱:</div>
-        <div className="mt-8 flex gap-4">
+        <div className="font-bold text-4xl">🥱</div>
+        <div className="mt-4 flex gap-4 justify-center">
           {[
             "3",
             "",
@@ -88,10 +88,10 @@ export const inPersonBody = (
       </div>
     </div>
 
-    <div className="flex flex-col space-y-4 p-6 text-white">
+    <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">🤕:</div>
-        <div className="mt-8 flex gap-4">
+        <div className="font-bold text-4xl">🤕</div>
+        <div className="mt-4 flex gap-4 justify-center">
           {["", "", "6", "", "", "", "5", "", "", "", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -104,10 +104,10 @@ export const inPersonBody = (
       </div>
     </div>
 
-    <div className="flex flex-col space-y-4 p-6 text-white">
+    <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">😱:</div>
-        <div className="mt-8 flex gap-4">
+        <div className="font-bold text-4xl">😱</div>
+        <div className="mt-4 flex gap-4 justify-center">
           {["", "9", "", "", "", "", "", "", "", "", "7", "", "", "", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -120,10 +120,10 @@ export const inPersonBody = (
       </div>
     </div>
 
-    <div className="flex flex-col space-y-4 p-6 text-white">
+    <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">😶:</div>
-        <div className="mt-8 flex gap-4">
+        <div className="font-bold text-4xl">😶</div>
+        <div className="mt-4 flex gap-4 justify-center">
           {["", "10", "", "", "", "", "", "", "", "", "8", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -136,10 +136,10 @@ export const inPersonBody = (
       </div>
     </div>
 
-    <div className="flex flex-col space-y-4 p-6 text-white">
+    <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">🙂:</div>
-        <div className="mt-8 flex gap-4">
+        <div className="font-bold text-4xl">🙂</div>
+        <div className="mt-4 flex gap-4 justify-center">
           {["", "", "", "", "", "", "", "11", "", "", "", "", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -172,7 +172,50 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null; //come back later
+export const copyText = `<table>
+  <tr>
+    <td>
+    <b>This is a metapuzzle. It uses feeders from the Drama round.</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <i>The emotions of the characters just aren't connecting with audiences. How can you make this German film more accessible?</i>
+    </td>
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+    <td>😍</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td>
+  </tr><tr>
+    <td></td> <td></td> <td></td> <td>1</td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td>2</td> <td></td> <td></td> <td></td> <td></td>
+  </tr>
+  <tr>
+    <td>🥱</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td>
+  </tr><tr>
+    <td></td> <td>3</td> <td></td> <td>4</td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
+  </tr>
+  <tr>
+    <td>🤕</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td>
+  </tr><tr>
+    <td></td> <td></td> <td></td> <td>6</td> <td></td> <td></td> <td></td> <td>5</td> <td></td> <td></td> <td></td> <td></td>
+  </tr>
+  <tr>
+    <td>😱</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td>
+  </tr><tr>
+    <td></td> <td></td> <td>9</td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td>7</td> <td></td> <td></td> <td></td> <td></td>
+  </tr>
+  <tr>
+    <td>😶</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td>
+  </tr><tr>
+    <td></td> <td></td> <td>10</td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td>8</td> <td></td>
+  </tr>
+  <tr>
+    <td>🙂</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td> <td>_</td>
+  </tr><tr>
+    <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td>11</td> <td></td> <td></td> <td></td> <td></td> <td></td>
+  </tr>
+</table>`; //come back later
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

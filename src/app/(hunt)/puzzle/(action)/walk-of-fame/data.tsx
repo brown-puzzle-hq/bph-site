@@ -22,8 +22,8 @@ export const inPersonBody = (
 
 export const remoteBoxBody = (
   <div className="max-w-3xl text-center">
-    This is a physical puzzle! You should have received it in your Box. Contact
-    brownpuzzlehq@gmail.com with any questions about your Box or its materials.
+    This is a physical puzzle! You should have received it in your box. Contact
+    brownpuzzlehq@gmail.com with any questions about your box or its materials.
   </div>
 );
 
@@ -71,7 +71,23 @@ export const solutionBody = (
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `<table>
+    <tr>
+        <td>=IMAGE("https://www.brownpuzzlehunt.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FWalk%20of%20Fame%20(1).2baccab3.png&w=640&q=75")</td>
+    </tr>
+    <tr>
+        <td>=IMAGE("https://www.brownpuzzlehunt.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FWalk%20of%20Fame%20(2).8a2de31c.png&w=640&q=75")</td>
+    </tr>
+    <tr>
+        <td>=IMAGE("https://www.brownpuzzlehunt.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FWalk%20of%20Fame%20(3).c8e2df2e.png&w=640&q=75")</td>
+    </tr>
+    <tr>
+        <td>=IMAGE("https://www.brownpuzzlehunt.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FWalk%20of%20Fame%20(4).a37638c0.png&w=640&q=75")</td>
+    </tr>
+    <tr>
+        <td>=IMAGE("https://www.brownpuzzlehunt.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FWalk%20of%20Fame%20(5).f78ca136.png&w=640&q=75")</td>
+    </tr>
+</table>`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

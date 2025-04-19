@@ -36,7 +36,7 @@ const STACK = [" 4.9", " 12.1", " 9.4", " 11.2", " 13", " 8.5"];
 
 const COLORS: Record<string, string> = {
   ".": "bg-[#ad805f]",
-  G: "bg-blue-200 border-b-2 border-[#38761d]",
+  G: "bg-blue-200 border-b-8 border-[#38761d]",
   D: "bg-[#785236] border border-[#785236]",
   S: "bg-blue-200",
 };

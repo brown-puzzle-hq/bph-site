@@ -26,24 +26,26 @@ export const inPersonBody = (
 );
 
 export const remoteBoxBody = (
-  <div>
+  <div className="space-y-4">
     <div className="max-w-3xl text-center">
       <i>
-        This is a physical puzzle! You should have received it in your Box.
-        Contact brownpuzzlehq@gmail.com with any questions about your Box or its
+        This is a physical puzzle! You should have received it in your box.
+        Contact brownpuzzlehq@gmail.com with any questions about your box or its
         materials.
       </i>
     </div>
     <hr className="my-6 mb-6 border-t border-white" />
+    <div className="border-4 border-white p-4 h-32"></div>
   </div>
 );
 
 export const remoteBody = (
-  <div className="flex justify-center py-4">
+  <div className="flex flex-col justify-center py-4 text-center max-w-3xl space-y-4">
     <audio controls className="w-96 max-w-full">
       <source src="/api/puzzle/youve-got-this-covered" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
+    <div className="border-4 border-white p-4 h-32"></div>
   </div>
 );
 

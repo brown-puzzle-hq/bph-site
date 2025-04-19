@@ -22,7 +22,8 @@ export const inPersonBody = (
     <i>
       NOTE: This puzzle is intended to proceed in levels, where you can look at
       the next clue when you correctly answer the current clue. The answer to
-      the last clue is the answer to the entire puzzle.
+      the last clue is the answer to the entire puzzle. Submit the answer to the
+      example level to get started.
     </i>
     <p className="font-bold">Example</p>
     <Image src={IMG1} alt="" />

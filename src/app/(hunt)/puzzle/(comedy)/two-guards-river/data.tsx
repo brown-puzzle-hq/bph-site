@@ -24,7 +24,7 @@ export function inPersonBody(isSolved: boolean) {
       <p className="mx-auto max-w-3xl">
         There is a wolf guard and a goat guard. The guards are
         indistinguishable. There are two doors: one will let you through to
-        [Drama], and the other will end your puzzlehunt journey. The doors are
+        the next round, and the other will end your puzzlehunt journey. The doors are
         also indistinguishable. If you leave the wolf guard with the correct
         door unattended, the wolf will eat it. If you leave the goat guard with
         the incorrect door, the goat will eat it as well. If you leave the wolf

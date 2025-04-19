@@ -39,6 +39,8 @@ export const remoteBoxBody = (
     </div>
     <div className="italic">
       This is a physical puzzle! It uses an object found in your box.
+      Contact brownpuzzlehq@gmail.com with any questions about your box or its
+      materials.
     </div>
     <div className="italic">
       You take a minute (or several) to listen to your CD.

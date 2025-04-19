@@ -32,11 +32,15 @@ export const inPersonBody = (
         ></iframe>
       </div>
       <div className="pb-4">
-      In order to complete this challenge, Ben needs to visit all the required stops in order, from S to E. The only problem is that Sam is right behind him; so if he ever visits the station he was just at, he’ll get caught, and lose Jet Lag: The Game.
+      In order to complete this challenge, Ben needs to visit all the required stops in order, from S to E. The only problem is that Sam is right behind him; so if he ever visits the station he was just at, he'll get caught, and lose Jet Lag: The Game.
       </div>
       <div className="pb-4">
 Once, and once only, Ben can take a walking path between stations S and E (marked with the red dashed line.) 
 </div>
+<p className="pb-4">
+        He can choose to get on trains travelling in either direction along the
+        line.
+      </p>
 <div className="pb-4">
 Each stop he travels costs a coin, whether he walks or takes the train.
 
@@ -44,12 +48,7 @@ Each stop he travels costs a coin, whether he walks or takes the train.
       <div className="flex justify-center pb-4">
         <Image src={Image1} alt="" width={500} height={500} />
       </div>
-      <p className="pb-4">
-        You can choose to get on trains travelling in either direction along the
-        line. When a train reaches the end of the line, it turns around and
-        travels in the other direction.
-      </p>
-      <p className="pb-4">Each stop that you travel costs a coin.</p>
+
     </div>
   </div>
 );

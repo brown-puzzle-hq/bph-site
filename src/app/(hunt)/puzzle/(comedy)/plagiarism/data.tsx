@@ -31,9 +31,20 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
+export const remoteBoxBody = (
+  <div>
+    <div className="max-w-2xl p-4">
+      <p>We were too lazy to write our own puzzle, so we stole a 
+        puzzle from the CMU Spring 2025 Puzzlehunt. 
+        (Yes, the one that happened last week.)</p>
+      <br></br>
+      <p><a href="https://puzzlehunt.club.cc.cmu.edu/puzzle/28001/view/">
+      <u>You can view their puzzle here.</u></a></p>
+    </div>
+  </div>
+);
 
-export const remoteBody = inPersonBody;
+export const remoteBody = remoteBoxBody;
 
 /**
  * The `solutionBody` renders in the solution page.

@@ -105,7 +105,7 @@ Molly won the competition and became a paralegal
 But without her righteous guidance, Marx had turned into an eagle
 
 She was right a kleptomaniac and would steal her rival's bones
-Then she was challenged to a duel by a mollusc - Davy Jones
+Then she was challenged to a duel by a mollusk - Davy Jones
 
 The captain walked up on his wooden leg and answered, "It's no vacation - 
 where do you think you go when you're swallowed by a cetacean?"

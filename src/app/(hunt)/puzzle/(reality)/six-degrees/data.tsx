@@ -145,23 +145,14 @@ export const copyText = `Your documentary is in trouble... your subjects are all
  * be in all caps, no spaces.
  */
 export const partialSolutions: Record<string, string> = {
-  WHITAKER: "This is a lead!",
-  CHIKLIS: "This is a lead!",
-  FINNEY: "This is a lead!",
-  WAHLBERG: "This is a lead!",
-  PARK: "This is a lead!",
-  WONSANG: "This is a lead!",
-  WASHINGTON: "This is a lead!",
-  RADCLIFFE: "This is a lead!",
-  COLMAN: "This is a lead!",
-  FORESTWHITAKER: "This is a lead!",
-  MICHAELCHIKLIS: "This is a lead!",
-  ALBERTFINNEY: "This is a lead!",
-  MARKWAHLBERG: "This is a lead!",
-  PARKWONSANG: "This is a lead!",
-  KERRYWASHINGTON: "This is a lead!",
-  DANIELRADCLIFFE: "This is a lead!",
-  OLIVIACOLMAN: "This is a lead!",
+  FORESTWHITAKER: "This is a lead actor! Keep going!",
+  MICHAELCHIKLIS: "This is a lead actor! Keep going!",
+  ALBERTFINNEY: "This is a lead actor! Keep going!",
+  MARKWAHLBERG: "This is a lead actor! Keep going!",
+  PARKWONSANG: "This is a lead actor! Keep going!",
+  KERRYWASHINGTON: "This is a lead actor! Keep going!",
+  DANIELRADCLIFFE: "This is a lead actor! Keep going!",
+  OLIVIACOLMAN: "This is a lead actor! Keep going!",
 };
 
 /**
