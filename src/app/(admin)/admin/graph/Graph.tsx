@@ -130,7 +130,8 @@ export default function Graph() {
   };
 
   const handleSearchTeam = async () => {
-    const res = await getSearchedTeam(teamQuery);
+    const cleanedQuery = teamQuery.replace(/[^\w]/g, "").toLowerCase();
+    const res = await getSearchedTeam(cleanedQuery);
     if ("error" in res) {
       const input = document.querySelector(
         "input[name='teamQuery']",
@@ -142,6 +143,7 @@ export default function Graph() {
       return;
     }
     if ("solves" in res && "unlocks" in res) {
+      setTeamQuery(res.id);
       setSearchedTeam(res);
       setTeamSidebar(true);
 
@@ -830,6 +832,7 @@ export default function Graph() {
                           <div>
                             <Link
                               href={`/admin/hints/${hint.id}`}
+                              prefetch={false}
                               className="text-blue-500 hover:underline"
                               prefetch={false}
                             >

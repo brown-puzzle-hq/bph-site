@@ -1,7 +1,14 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { teams } from "~/server/db/schema";
-import { ChevronsUpDown, ArrowUp, ArrowDown, Check, X } from "lucide-react";
+import {
+  ChevronsUpDown,
+  ArrowUp,
+  ArrowDown,
+  Check,
+  X,
+  Waypoints,
+} from "lucide-react";
 import { FormattedTime } from "~/lib/time";
 
 // Define the columns for the table using TanStack
@@ -21,12 +28,18 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="w-44 truncate">
+      <div className="flex w-[200px] items-center space-x-1">
         <a
-          className="text-blue-500 hover:underline"
-          href={`/admin/graph?team=${row.getValue("id")}`}
+          className="truncate text-blue-500 hover:underline"
+          href={`/teams/${row.getValue("id")}`}
         >
           {row.getValue("id")}
+        </a>
+        <a
+          href={`/admin/graph?team=${row.getValue("id")}`}
+          className="hover:opacity-85"
+        >
+          <Waypoints className="size-4 text-orange-500" />
         </a>
       </div>
     ),
