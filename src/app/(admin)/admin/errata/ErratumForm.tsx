@@ -1,12 +1,10 @@
 "use client";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "~/hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
-import ErratumDialog from "~/app/(hunt)/puzzle/components/ErratumDialog";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import {
   Form,
@@ -38,10 +36,6 @@ const formSchema = z.object({
 });
 
 export default function ErratumForm({ puzzleList, errataList }: FormProps) {
-  const [puzzleErrata, setPuzzleErrata] = useState<
-    (typeof errata.$inferSelect)[]
-  >([]);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,9 +59,6 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
         timestamp: new Date(),
       };
       errataList.push(newErrata);
-      setPuzzleErrata(
-        errataList.filter((errata) => errata.puzzleId === data.puzzleId),
-      );
       toast({
         description: "Erratum submitted for " + data.puzzleId + ".",
         action: (
@@ -99,9 +90,6 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                   {...field}
                   onValueChange={(e) => {
                     field.onChange(e);
-                    setPuzzleErrata(
-                      errataList.filter((errata) => errata.puzzleId === e),
-                    );
                   }}
                   value={field.value}
                 >
@@ -123,9 +111,6 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
             </FormItem>
           )}
         />
-        <div className="w-full">
-          <ErratumDialog errataList={puzzleErrata} />
-        </div>
         <FormField
           control={form.control}
           name="description"
