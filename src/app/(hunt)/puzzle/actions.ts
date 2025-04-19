@@ -277,9 +277,10 @@ export async function handleGuess(puzzleId: string, guess: string) {
     await sendBotMessage(horrorInteractionMessage, "interaction");
   }
 
-  // If the team has finished the hunt, message the finish channel and ping the lore role
+  // If the team has finished the hunt, message the finish channel
+  // Only ping the HQ role if it is the in-person hunt
   if (hasFinishedHunt) {
-    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) <@&900958940475559969>`;
+    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) ${new Date() < IN_PERSON.END_TIME ? "<@&900958940475559969>" : ""}`;
     await sendBotMessage(finishMessage, "interaction");
   }
 
