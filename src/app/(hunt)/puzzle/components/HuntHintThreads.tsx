@@ -374,7 +374,7 @@ export default function HuntHintThreads({
           Submit
         </button>
       </div>
-      <hr className="mb-3.5 px-3" />
+      {optimisticHints.length !== 0 && <hr className="mb-3.5 px-3" />}
       {optimisticHints.map((hint) => (
         <Fragment key={`${hint.id}`}>
           {/* Hint request row */}
