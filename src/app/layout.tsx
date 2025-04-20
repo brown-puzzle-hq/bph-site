@@ -3,7 +3,6 @@ import { Providers } from "~/app/nav/providers";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { CommandPalette } from "./CommandPalette";
-import { Analytics } from "@vercel/analytics/react";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -21,7 +20,6 @@ export default async function RootLayout({
       <Providers session={session}>
         <CommandPalette />
         {children}
-        <Analytics />
       </Providers>
     </html>
   );
