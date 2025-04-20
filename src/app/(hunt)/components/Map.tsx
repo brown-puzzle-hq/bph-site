@@ -722,6 +722,7 @@ export default function Map({
 
     // Clear search if needed
     if (clearSearch) {
+      setIsSearchFocused(false)
       setSearchTerm("");
     }
   };
