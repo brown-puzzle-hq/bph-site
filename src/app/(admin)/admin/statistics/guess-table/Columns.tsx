@@ -39,7 +39,7 @@ export const columns: ColumnDef<
     header: () => "Guess Time",
     cell: ({ row }) => {
       const time = row.getValue("submitTime");
-      return <div className="w-24 font-medium">{formatTime(time)}</div>;
+      return <div className="w-28 font-medium">{formatTime(time)}</div>;
     },
   },
 ];
