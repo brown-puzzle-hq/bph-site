@@ -111,10 +111,6 @@ export const unlocks = createTable(
   // TODO: change this idx to the primaryKey of the table later
   (table) => {
     return {
-      team_and_puzzle_idx: index("unlocks_team_puzzle_idx").on(
-        table.teamId,
-        table.puzzleId,
-      ),
       unique_team_and_puzzle: unique("team_and_puzzle").on(
         table.teamId,
         table.puzzleId,
@@ -143,7 +139,7 @@ export const solves = createTable(
   // TODO: change this idx to the primaryKey of the table later
   (table) => {
     return {
-      team_and_puzzle_idx: index("solves_team_puzzle_idx").on(
+      unique_team_and_puzzle: unique("team_and_puzzle").on(
         table.teamId,
         table.puzzleId,
       ),
@@ -171,9 +167,10 @@ export const guesses = createTable(
   },
   (table) => {
     return {
-      team_and_puzzle_idx: index("guesses_team_and_puzzle_idx").on(
+      unique_team_puzzle_guess: unique("team_puzzle_guess").on(
         table.teamId,
         table.puzzleId,
+        table.guess,
       ),
     };
   },
