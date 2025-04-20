@@ -921,6 +921,7 @@ export default function Map({
                       (dims[1] * 0.075 * (scaleFactor[puzzle.puzzleId] || 1)) /
                         2
                     }
+                    eventMode="none"
                     anchor={0.5}
                     scale={0.175}
                   />
