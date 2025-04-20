@@ -767,6 +767,7 @@ export default function Map({
               placeholder="Search puzzles (⇧⌘F)"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onMouseMove={() => setHoveredPuzzle(null)}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
               onKeyDown={(e) => {
@@ -815,6 +816,7 @@ export default function Map({
         {/* Reset view button */}
         <button
           onClick={resetView}
+          onMouseMove={() => setHoveredPuzzle(null)}
           className="rounded-md bg-footer-bg p-2 hover:bg-[#352349]"
         >
           <ScanSearch />

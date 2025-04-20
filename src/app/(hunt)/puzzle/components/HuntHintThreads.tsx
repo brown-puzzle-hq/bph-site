@@ -3,7 +3,14 @@ import { useState, useEffect, Fragment, startTransition } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
-import { Check, ChevronDown, CornerUpLeft, Pencil, X } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  CornerUpLeft,
+  Pencil,
+  RefreshCcw,
+  X,
+} from "lucide-react";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import {
   editMessage,
@@ -13,6 +20,7 @@ import {
 } from "../actions";
 import { toast } from "~/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { hintStatusEnum } from "~/server/db/schema";
 
 type TableProps = {
   previousHints: PreviousHints;
@@ -28,6 +36,7 @@ type PreviousHints = {
   id: number;
   request: string;
   response: string | null;
+  status: (typeof hintStatusEnum.enumValues)[number];
   team: {
     id: string;
     displayName: string;
@@ -99,6 +108,7 @@ export default function HuntHintThreads({
         claimer: null,
         request,
         response: null,
+        status: "no_response",
         requestTime: new Date(),
         followUps: [],
       },
@@ -444,7 +454,12 @@ export default function HuntHintThreads({
             <div className="group break-words rounded-md px-3 py-2 hover:bg-black/5">
               <div className="relative flex justify-between">
                 {/* Top section for claimer ID, the follow-up button, and the edit button */}
-                <b>Admin</b>
+                <div className="flex items-center">
+                  <b>Admin</b>
+                  {hint.status === "refunded" && (
+                    <RefreshCcw className="h-[13px] stroke-[3.5]" />
+                  )}
+                </div>
                 {/* Follow-up button, only show if collapsed */}
                 {(!hint.followUps.length ||
                   hiddenFollowUps.includes(hint.id)) &&

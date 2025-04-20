@@ -55,6 +55,7 @@ export default async function DefaultHintPage({
       request: true,
       response: true,
       requestTime: true,
+      status: true,
     },
     with: {
       team: { columns: { id: true, displayName: true, members: true } },
