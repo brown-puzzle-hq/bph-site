@@ -92,68 +92,58 @@ export function GuessTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="flex overflow-auto rounded-md">
-        <div className="w-full overflow-y-auto">
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-white">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow
-                  key={`header-${headerGroup.id}`}
-                  className="hover:bg-inherit"
+      <Table className="w-full rounded-md">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow
+              key={`header-${headerGroup.id}`}
+              className="hover:bg-inherit"
+            >
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  onClick={() =>
+                    header.column.toggleSorting(
+                      header.column.getIsSorted() === "asc",
+                    )
+                  }
+                  className="w-1/2"
                 >
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      onClick={() =>
-                        header.column.toggleSorting(
-                          header.column.getIsSorted() === "asc",
-                        )
-                      }
-                      className="w-1/2"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
               ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className="border-0 hover:bg-inherit"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+                className="border-0 hover:bg-inherit"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }

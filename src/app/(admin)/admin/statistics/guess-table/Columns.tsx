@@ -25,6 +25,9 @@ export const columns: ColumnDef<
     accessorKey: "teamDisplayName",
     header: () => "Team",
     accessorFn: (row) => row.team!.displayName,
+    cell: ({ row }) => (
+      <div className="text-nowrap">{row.getValue("teamDisplayName")}</div>
+    ),
   },
   {
     accessorKey: "guess",

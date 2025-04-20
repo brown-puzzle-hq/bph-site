@@ -34,7 +34,7 @@ export default async function GuessStatisticsInfo({
   });
 
   return (
-    <div className="-mt-6 flex grow flex-col items-center">
+    <div className="-mt-6 flex grow flex-col items-center mb-16">
       <DefaultHeader puzzleId={puzzleId} hasSolution={true} />
       <div className="grid w-full max-w-[1200px] grid-cols-1 gap-4 p-4 md:grid-cols-2">
         <Card className="border-0 shadow-none">

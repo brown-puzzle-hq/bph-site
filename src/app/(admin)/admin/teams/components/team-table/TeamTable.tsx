@@ -97,7 +97,7 @@ export function TeamTable<TData, TValue>({
   useEffect(() => {
     setIsCompact(getCookie("compact") !== "false");
   }, []);
-  const pageSize = 100;
+  const pageSize = 1000;
 
   const table = useReactTable({
     data,

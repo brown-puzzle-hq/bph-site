@@ -50,7 +50,7 @@ export function HintTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([
     { id: "claimer", desc: true },
   ]);
-  const pageSize = 100;
+  const pageSize = 1000;
 
   const [isCompact, setIsCompact] = useState(true);
   useEffect(() => {
