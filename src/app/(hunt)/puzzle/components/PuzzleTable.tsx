@@ -41,12 +41,11 @@ export default function PuzzleTable({
                     : puzzleA.name.localeCompare(puzzleB.name),
               )
               .map((puzzle) => (
-                <>
+                <div key={puzzle.id}>
                   <hr className="w-full" />
                   <a
                     href={`/puzzle/${puzzle.id}`}
                     className="grid grid-cols-2 p-2 transition-all hover:bg-white/5"
-                    key={puzzle.id}
                   >
                     <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
                     {solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id) && (
@@ -55,7 +54,7 @@ export default function PuzzleTable({
                       </p>
                     )}
                   </a>
-                </>
+                </div>
               ))}
           </div>
         </div>

@@ -267,7 +267,14 @@ export function TeamTable<TData, TValue>({
 
           {/* Filter by interactionMode */}
           <div className="mx-auto hidden items-center space-x-2 text-nowrap text-sm font-medium sm:flex">
-            <p>In Person</p>
+            <p
+              className={cn(
+                !interactionModeFilters.includes("in-person") &&
+                  "text-[#BBBBBB]",
+              )}
+            >
+              In Person
+            </p>
             <Checkbox
               checked={interactionModeFilters.includes("in-person")}
               onCheckedChange={(checked) => {
@@ -277,10 +284,17 @@ export function TeamTable<TData, TValue>({
                     : prev.filter((mode) => mode !== "in-person"),
                 );
               }}
-              className="border-[1.5px] border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
+              className="border-[1.5px] border-[#BBBBBB] shadow-none data-[state=checked]:border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
             />
 
-            <p>Remote</p>
+            <p
+              className={cn(
+                !interactionModeFilters.includes("remote") &&
+                  "text-[#BBBBBB]",
+              )}
+            >
+              Remote
+            </p>
             <Checkbox
               checked={interactionModeFilters.includes("remote")}
               onCheckedChange={(checked) => {
@@ -290,10 +304,17 @@ export function TeamTable<TData, TValue>({
                     : prev.filter((mode) => mode !== "remote"),
                 );
               }}
-              className="border-[1.5px] border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
+              className="border-[1.5px] border-[#BBBBBB] shadow-none data-[state=checked]:border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
             />
 
-            <p>Remote Box</p>
+            <p
+              className={cn(
+                !interactionModeFilters.includes("remote-box") &&
+                  "text-[#BBBBBB]",
+              )}
+            >
+              Remote Box
+            </p>
             <Checkbox
               checked={interactionModeFilters.includes("remote-box")}
               onCheckedChange={(checked) => {
@@ -303,7 +324,7 @@ export function TeamTable<TData, TValue>({
                     : prev.filter((mode) => mode !== "remote-box"),
                 );
               }}
-              className="border-[1.5px] border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
+              className="border-[1.5px] border-[#BBBBBB] shadow-none data-[state=checked]:border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
             />
           </div>
 

@@ -58,7 +58,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <div className="flex w-[200px] items-center space-x-2">
+      <div className="flex w-[200px] items-center space-x-0.5">
         <p>ID</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="size-4" />
@@ -90,7 +90,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
   {
     accessorKey: "displayName",
     header: ({ column }) => (
-      <div className="flex w-[36em] items-center space-x-2">
+      <div className="flex w-[36em] items-center space-x-0.5">
         <p>Display Name</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="size-4" />
@@ -108,7 +108,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
   {
     accessorKey: "role",
     header: ({ column }) => (
-      <div className="flex w-20 items-center space-x-2">
+      <div className="flex w-20 items-center space-x-0.5">
         <p>Role</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="size-4" />
@@ -123,7 +123,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
   {
     accessorKey: "actualInteractionMode",
     header: ({ column }) => (
-      <div className="flex w-20 items-center space-x-2">
+      <div className="flex w-20 items-center space-x-0.5">
         <p>Mode</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="size-4" />
@@ -140,7 +140,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
   {
     accessorKey: "createTime",
     header: ({ column }) => (
-      <div className="flex w-36 items-center space-x-2">
+      <div className="flex w-36 items-center space-x-0.5">
         <p>Create Time</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="size-4" />
@@ -159,7 +159,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
   {
     accessorKey: "finishTime",
     header: ({ column }) => (
-      <div className="flex w-36 items-center space-x-2">
+      <div className="flex w-36 items-center space-x-0.5">
         <p>Finish Time</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="size-4" />

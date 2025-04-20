@@ -310,8 +310,18 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
   "opening-sequences": ["a-fistful-of-cards-iii", "hand-letters"],
   "chain-letters": ["hand-letters", "heist-iii"],
-  "a-fistful-of-cards-iii": ["international-neighbours", "six-degrees", "opening-sequences"],
-  "hand-letters": ["international-neighbours", "are-you-sure", "six-degrees", "opening-sequences", "chain-letters"],
+  "a-fistful-of-cards-iii": [
+    "international-neighbours",
+    "six-degrees",
+    "opening-sequences",
+  ],
+  "hand-letters": [
+    "international-neighbours",
+    "are-you-sure",
+    "six-degrees",
+    "opening-sequences",
+    "chain-letters",
+  ],
   "heist-iii": ["are-you-sure", "chain-letters"],
   "international-neighbours": [
     "a-fistful-of-cards-iii",
