@@ -33,6 +33,7 @@ export default function Landing() {
       <motion.img
         className="absolute bottom-[calc(max(57vw,64.125vh))] left-[calc(min(29vw,50vw-23.33vh))] w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
         src="/home/Spotlight.png"
+        initial={{ rotate: 20 }}
         animate={{
           rotate: [20, -20],
         }}
@@ -46,6 +47,7 @@ export default function Landing() {
       <motion.img
         className="absolute bottom-[calc(max(57vw,64.125vh))] right-[calc(min(29vw,50vw-23.33vh))] w-[calc(max(7vw,7.77vh))] origin-bottom opacity-80"
         src="/home/Spotlight.png"
+        initial={{ rotate: -20 }}
         animate={{
           rotate: [-20, 20],
         }}
