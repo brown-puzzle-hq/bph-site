@@ -40,7 +40,8 @@ export const copyText = null;
  * be in all caps, no spaces.
  */
 export const partialSolutions: Record<string, string> = {
-  SHAPE: "Keep going!"
+  SHAPE: "Keep going!",
+  SHAPES: "Keep going!"
 };
 
 /**
