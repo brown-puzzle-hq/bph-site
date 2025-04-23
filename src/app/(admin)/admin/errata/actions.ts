@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { errata } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
-import { unlocks, puzzles } from "@/db/schema";
+import { unlocks, puzzles, solves } from "@/db/schema";
 import { sendEmail, extractEmails } from "~/lib/comms";
 import { INITIAL_PUZZLES } from "~/hunt.config";
 import { ErratumEmailTemplate } from "~/lib/email-template";
@@ -33,27 +33,39 @@ export async function insertErratum(puzzleId: string, description: string) {
     timestamp: new Date(),
   });
 
-  let emails: string[] = [];
-
-  if (INITIAL_PUZZLES.includes(puzzleId)) {
-    emails = (
-      await db.query.teams.findMany({
-        columns: { members: true },
-      })
-    ).flatMap((team) => extractEmails(team.members));
-  } else {
-    emails = (
-      await db.query.unlocks.findMany({
-        columns: {},
-        where: eq(unlocks.puzzleId, puzzleId),
-        with: {
-          team: {
-            columns: { members: true },
+  const unlockedTeams = INITIAL_PUZZLES.includes(puzzleId)
+    ? await db.query.teams.findMany({ columns: { id: true, members: true } })
+    : (
+        await db.query.unlocks.findMany({
+          columns: {},
+          where: eq(unlocks.puzzleId, puzzleId),
+          with: {
+            team: {
+              columns: { id: true, members: true },
+            },
           },
-        },
-      })
-    ).flatMap((team) => extractEmails(team.team.members));
-  }
+        })
+      ).map((u) => u.team);
+
+  const solvedTeams = await db.query.solves.findMany({
+    columns: {},
+    where: eq(solves.puzzleId, puzzleId),
+    with: {
+      team: {
+        columns: { id: true },
+      },
+    },
+  });
+
+  const solvedTeamIds = new Set(solvedTeams.map((s) => s.team.id));
+
+  const activeTeams = unlockedTeams.filter(
+    (team) => !solvedTeamIds.has(team.id),
+  );
+
+  const emails: string[] = activeTeams.flatMap((team) =>
+    extractEmails(team.members),
+  );
 
   sendEmail(
     ["brownpuzzlehq@gmail.com"],

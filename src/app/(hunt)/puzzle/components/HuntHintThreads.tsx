@@ -383,6 +383,25 @@ export default function HuntHintThreads({
         >
           Submit
         </button>
+        {(() => {
+          const now = new Date();
+          const hour = new Date(
+            now.toLocaleString("en-US", { timeZone: "America/New_York" }),
+          ).getHours();
+          return (
+            now <
+              (session?.user?.interactionMode === "in-person"
+                ? IN_PERSON.END_TIME
+                : REMOTE.END_TIME) &&
+            hour >= 0 &&
+            hour < 9
+          );
+        })() && (
+          <p className="mt-2 text-white/70">
+            <span className="font-semibold">Writers' Strike:</span> hint answers
+            will be delayed until 9 AM EST.
+          </p>
+        )}
       </div>
       {optimisticHints.length !== 0 && <hr className="mb-3.5 px-3" />}
       {optimisticHints.map((hint) => (
