@@ -97,7 +97,7 @@ export const inPersonBody = (
       <li>The first card you play must be Granted Dynamite.</li>
       <li>You must stash 12 cards from your hand during the game.</li>
       <li>Cards in the stash can be ignored once placed there.</li>
-      <li>Cards in the Town slide to the left (as in the discard pile).</li>
+      <li>Cards in the town slide to the left (as in the discard pile).</li>
     </ul>
   </div>
 );
@@ -161,7 +161,7 @@ export const remoteBoxBody = (
       <li>The first card you play must be Granted Dynamite.</li>
       <li>You must stash 12 cards from your hand during the game.</li>
       <li>Cards in the stash can be ignored once placed there.</li>
-      <li>Cards in the Town slide to the left (as in the discard pile).</li>
+      <li>Cards in the town slide to the left (as in the discard pile).</li>
     </ul>
   </div>
 );
@@ -217,7 +217,7 @@ export const remoteBody = (
           <li>The first card you play must be Granted Dynamite.</li>
           <li>You must stash 12 cards from your hand during the game.</li>
           <li>Cards in the stash can be ignored once placed there.</li>
-          <li>Cards in the Town slide to the left (as in the discard pile).</li>
+          <li>Cards in the town slide to the left (as in the discard pile).</li>
         </ul>
       </div>
     </div>
