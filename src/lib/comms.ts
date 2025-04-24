@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import axios from "axios";
 import { ReactNode } from "react";
+import { ensureError } from "./utils";
 
 export function extractEmails(memberString: string): string[] {
   return JSON.parse(memberString)
@@ -73,7 +74,12 @@ export async function sendEmail(
       react,
     });
     return { success: true, response };
-  } catch (error: any) {
+  } catch (e) {
+    const error = ensureError(e);
+    await sendBotMessage(
+      `✉️ Email send failed: ${error.message} <@689833230739964006> <@473709815261036554>`,
+      "dev",
+    );
     return { success: false, error: error.message };
   }
 }
