@@ -52,7 +52,7 @@ export const inPersonBody = (
     </p>
     <p>
       “When they both point, they will point right or wrong,
-      <br></br>find how many are right, and you'll move right along.”
+      <br></br>find how many are 'right', and you'll move right along.”
     </p>
   </div>
   </div>

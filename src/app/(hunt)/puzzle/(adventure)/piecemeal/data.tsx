@@ -231,7 +231,7 @@ export const inPersonBody = (
         <div className="flex h-12 w-12 items-center justify-center border"></div>
         <div className="flex h-12 w-12 items-center justify-center border"></div>
         <div className="flex h-12 w-12 items-center justify-center border">
-          D
+          G
         </div>
         <div className="flex h-12 w-12 items-center justify-center border"></div>
       </div>
