@@ -24,7 +24,20 @@ export default async function Page({
 }) {
   const session = await auth();
   const teamId = session?.user?.id;
-  if (!teamId) redirect("/login");
+  if (!teamId) {
+    return (
+      <DefaultPuzzlePage
+        puzzleId={data.puzzleId}
+        inPersonBody={<PuzzleBody loggedIn={false} />}
+        remoteBoxBody={<PuzzleBody loggedIn={false} />}
+        remoteBody={<PuzzleBody loggedIn={false} />}
+        copyText={data.copyText}
+        partialSolutions={data.partialSolutions}
+        tasks={data.tasks}
+        interactionMode={searchParams?.interactionMode}
+      />
+    );
+  }
 
   const decisions = await db
     .select()
@@ -49,9 +62,11 @@ export default async function Page({
   return (
     <DefaultPuzzlePage
       puzzleId={data.puzzleId}
-      inPersonBody={<PuzzleBody decisionsMap={currDecisions} />}
-      remoteBoxBody={<PuzzleBody decisionsMap={currDecisions} />}
-      remoteBody={<PuzzleBody decisionsMap={currDecisions} />}
+      inPersonBody={<PuzzleBody decisionsMap={currDecisions} loggedIn={true} />}
+      remoteBoxBody={
+        <PuzzleBody decisionsMap={currDecisions} loggedIn={true} />
+      }
+      remoteBody={<PuzzleBody decisionsMap={currDecisions} loggedIn={true} />}
       copyText={data.copyText}
       partialSolutions={data.partialSolutions}
       tasks={data.tasks}

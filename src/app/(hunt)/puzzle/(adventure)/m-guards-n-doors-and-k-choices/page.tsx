@@ -6,7 +6,6 @@ import { and, eq, sql } from "drizzle-orm";
 import { mnk } from "~/server/db/schema";
 import { auth } from "~/server/auth/auth";
 import RemoteBody from "./RemoteBody";
-import { redirect } from "next/navigation";
 
 export default async function Page({
   searchParams,
@@ -15,7 +14,21 @@ export default async function Page({
 }) {
   const session = await auth();
   const teamId = session?.user?.id;
-  if (!teamId) redirect("/login");
+
+  if (!teamId) {
+    return (
+      <DefaultPuzzlePage
+        puzzleId={data.puzzleId}
+        inPersonBody={data.inPersonBody}
+        remoteBoxBody={<RemoteBody loggedIn={false} />}
+        remoteBody={<RemoteBody loggedIn={false} />}
+        copyText={data.copyText}
+        partialSolutions={data.partialSolutions}
+        tasks={data.tasks}
+        interactionMode={searchParams?.interactionMode}
+      />
+    );
+  }
 
   const lastRun = await db
     .select()
@@ -30,13 +43,12 @@ export default async function Page({
       ),
     );
 
-  // TODO: doesn't work if not logged in
   return (
     <DefaultPuzzlePage
       puzzleId={data.puzzleId}
       inPersonBody={data.inPersonBody}
-      remoteBoxBody={<RemoteBody run={lastRun} />}
-      remoteBody={<RemoteBody run={lastRun} />}
+      remoteBoxBody={<RemoteBody run={lastRun} loggedIn={true} />}
+      remoteBody={<RemoteBody run={lastRun} loggedIn={true} />}
       copyText={data.copyText}
       partialSolutions={data.partialSolutions}
       tasks={data.tasks}

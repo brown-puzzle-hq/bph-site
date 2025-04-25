@@ -1,6 +1,5 @@
 "use client";
-import { InferSelectModel } from "drizzle-orm";
-import { mnk, MNKDecision, MNKDecisionType } from "~/server/db/schema";
+import { MNKDecision, MNKDecisionType } from "~/server/db/schema";
 import { useState, useEffect } from "react";
 import { insertMNKDecision } from "./actions";
 import { useToast } from "~/hooks/use-toast";
@@ -10,7 +9,13 @@ import Image from "next/image";
 import DOOR from "./door.svg";
 import { cn } from "~/lib/utils";
 
-type Row = InferSelectModel<typeof mnk>;
+type Row = {
+  run: number;
+  scenario: number;
+  decision: "door_1" | "door_2" | "door_3" | "stay" | "switch";
+  decisionType: "door" | "final";
+  time: Date;
+};
 
 type Step = "initial" | "door_1" | "door_2" | "door_3" | "switch" | "stay";
 
@@ -159,13 +164,18 @@ const getStateFromRow = (row: Row | null): State => {
   };
 };
 
-export default function RemoteBody({ run }: { run: Row[] }) {
+type RemoteBodyProps =
+  | { loggedIn: true; run: Row[] }
+  | { loggedIn: false; run?: undefined };
+
+export default function RemoteBody({ run, loggedIn }: RemoteBodyProps) {
   const { toast } = useToast();
 
   // Keep track of the current run
   // Initialize the current state of the puzzle
-  const [currRun, setRun] = useState<Row[]>(run);
-  const lastRow = getLastRow(run);
+  const initialRun = loggedIn ? run : [];
+  const [currRun, setRun] = useState<Row[]>(initialRun);
+  const lastRow = getLastRow(initialRun);
   const currState = getStateFromRow(lastRow);
   const [state, setState] = useState<State>(currState);
   const [pendingConfirmation, setPendingConfirmation] = useState<{
@@ -182,6 +192,47 @@ export default function RemoteBody({ run }: { run: Row[] }) {
     }
   }, [lastRow]);
 
+  // Helper function to insert a decision
+  const insertDecision = async (
+    decision: MNKDecision,
+    decisionType: MNKDecisionType,
+  ) => {
+    // If not logged in, just check the state
+    if (!loggedIn) {
+      const newRow = {
+        run: state.run,
+        scenario: state.scenario,
+        decision,
+        decisionType,
+        time: new Date(),
+      };
+
+      // Check cooldown
+      const lastFinalDecision = currRun.find(
+        (row) => row.decisionType === "final" && row.scenario == 4,
+      );
+      if (
+        lastFinalDecision &&
+        Date.now() < lastFinalDecision.time.getTime() + coolDownTime
+      )
+        return {
+          error:
+            "You must wait 30 minutes before playing the interaction again.",
+        };
+      return { error: null, row: newRow, lastRun: null };
+    }
+
+    // If logged in, check the database
+    const result = await insertMNKDecision(
+      state.run,
+      state.scenario,
+      decision,
+      decisionType,
+    );
+
+    return result;
+  };
+
   const handleDecisionClick = async (
     decision: MNKDecision,
     decisionType: MNKDecisionType,
@@ -195,13 +246,8 @@ export default function RemoteBody({ run }: { run: Row[] }) {
       pendingConfirmation.decision === decision &&
       pendingConfirmation.decisionType === decisionType
     ) {
-      const result = await insertMNKDecision(
-        state.run,
-        state.scenario,
-        decision,
-        decisionType,
-      );
       setPendingConfirmation(null);
+      const result = await insertDecision(decision, decisionType);
 
       // If error, toast and
       // Try to update the state with the last run
@@ -269,9 +315,10 @@ export default function RemoteBody({ run }: { run: Row[] }) {
   return (
     <div>
       <div className="mb-6 max-w-3xl text-center">
-        Warning! This puzzle contains choices that your team will not be able to change for a certain time period.
-        </div>
-        <hr className="my-6 mb-6 w-full border-t border-white" />
+        Warning! This puzzle contains choices that your team will not be able to
+        change for a certain time period.
+      </div>
+      <hr className="my-6 mb-6 w-full border-t border-white" />
       <div className="mb-2 flex space-x-8">
         {/* List of states of the puzzles */}
         <div className="ml-4 flex flex-col items-center space-y-4 text-main-text">
@@ -421,7 +468,11 @@ export default function RemoteBody({ run }: { run: Row[] }) {
                             state.scenario,
                             decision as Step,
                           )
-                        : handleDecisionClick(decision as MNKDecision, "door", e)
+                        : handleDecisionClick(
+                            decision as MNKDecision,
+                            "door",
+                            e,
+                          )
                     }
                     className={cn(
                       "grid enabled:hover:opacity-90 disabled:cursor-not-allowed",
@@ -447,7 +498,8 @@ export default function RemoteBody({ run }: { run: Row[] }) {
 
           {/* Switch and Stay buttons */}
           {(() => {
-            if (!["door_1", "door_2", "door_3"].includes(state.step)) return null;
+            if (!["door_1", "door_2", "door_3"].includes(state.step))
+              return null;
 
             const doorDecision = currRun.find(
               (row) =>

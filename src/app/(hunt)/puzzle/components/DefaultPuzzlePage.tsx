@@ -58,13 +58,15 @@ export default async function DefaultPuzzlePage({
   }
 
   // If user is not logged in, show puzzle without errata or guesses
-  // TODO: which version should we show?
   if (!session?.user?.id) {
     return (
-      <div className="w-full px-4">
-        <div className="flex items-start justify-center space-x-2">
-          <div className="w-fit">{inPersonBody}</div>
-          {copyText && <CopyButton copyText={copyText} />}
+      <div className="mb-8 w-full px-4">
+        <div className="no-scrollbar overflow-auto">
+          <div className="mx-auto flex w-fit items-start justify-center space-x-2">
+            {copyText && <div className="min-w-6" />}
+            <div className="w-fit">{remoteBody}</div>
+            {copyText && <CopyButton copyText={copyText} />}
+          </div>
         </div>
 
         {Object.keys(tasks).map((task) => {

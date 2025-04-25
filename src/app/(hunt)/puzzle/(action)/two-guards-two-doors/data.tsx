@@ -1,15 +1,3 @@
-import Image from "next/image";
-import DoorImage from "./media/door.png";
-import GImage from "./media/g.png";
-import SImage from "./media/s.png";
-import TImage from "./media/t.png";
-import IImage from "./media/i.png";
-import MImage from "./media/m.png";
-import EImage from "./media/e.png";
-import RImage from "./media/r.png";
-import NImage from "./media/n.png";
-import HandImage from "./media/pointer.png";
-
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.

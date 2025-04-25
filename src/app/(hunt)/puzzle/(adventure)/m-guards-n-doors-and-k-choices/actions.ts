@@ -49,8 +49,6 @@ export async function insertMNKDecision(
         time: new Date(),
       })
       .returning({
-        id: mnk.id,
-        teamId: mnk.teamId,
         run: mnk.run,
         scenario: mnk.scenario,
         decision: mnk.decision,

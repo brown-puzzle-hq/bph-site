@@ -1,4 +1,13 @@
 import * as data from "./data";
+import { auth } from "@/auth";
+import { db } from "~/server/db";
+import { eq, and } from "drizzle-orm";
+import { solves, guesses, errata } from "~/server/db/schema";
+import { redirect } from "next/navigation";
+import GuessTable from "~/app/(hunt)/puzzle/components/GuessTable";
+import ErratumDialog from "@/puzzle/components/ErratumDialog";
+import { canViewPuzzle } from "@/puzzle/actions";
+import CopyButton from "@/puzzle/components/CopyButton";
 
 export default async function Page() {
   return (
@@ -11,16 +20,6 @@ export default async function Page() {
     />
   );
 }
-
-import { auth } from "@/auth";
-import { db } from "~/server/db";
-import { eq, and } from "drizzle-orm";
-import { solves, guesses, errata } from "~/server/db/schema";
-import { redirect } from "next/navigation";
-import GuessTable from "~/app/(hunt)/puzzle/components/GuessTable";
-import ErratumDialog from "@/puzzle/components/ErratumDialog";
-import { canViewPuzzle } from "@/puzzle/actions";
-import CopyButton from "@/puzzle/components/CopyButton";
 
 async function DefaultPuzzlePage({
   puzzleId,
@@ -49,10 +48,13 @@ async function DefaultPuzzlePage({
   // If user is not logged in, show puzzle without errata or guesses
   if (!session?.user?.id) {
     return (
-      <div className="w-full px-4">
-        <div className="flex items-start justify-center space-x-2">
-          <div className="w-fit">{inPersonBody(true)}</div>
-          {copyText && <CopyButton copyText={copyText} />}
+      <div className="mb-8 w-full px-4">
+        <div className="no-scrollbar overflow-auto">
+          <div className="mx-auto flex w-fit items-start justify-center space-x-2">
+            {copyText && <div className="min-w-6" />}
+            <div className="w-fit">{inPersonBody(true)}</div>
+            {copyText && <CopyButton copyText={copyText} />}
+          </div>
         </div>
 
         {Object.keys(tasks).map((task) => {
@@ -107,6 +109,7 @@ async function DefaultPuzzlePage({
 
       <div className="no-scrollbar overflow-auto">
         <div className="mx-auto flex w-fit items-start justify-center space-x-2">
+          {copyText && <div className="min-w-6" />}
           <div className="w-fit">{puzzleBody(isSolved)}</div>
           {copyText && <CopyButton copyText={copyText} />}
         </div>

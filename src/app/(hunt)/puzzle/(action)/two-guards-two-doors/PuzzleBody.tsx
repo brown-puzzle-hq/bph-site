@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "~/lib/utils";
 import { useState, useEffect, startTransition } from "react";
 import { useToast } from "~/hooks/use-toast";
-
 import Image from "next/image";
 import DoorImage from "./media/door.png";
 import GImage from "./media/g.png";
@@ -15,23 +15,32 @@ import NImage from "./media/n.png";
 import HandImage from "./media/pointer.png";
 import { TGTDDecision } from "~/server/db/schema";
 import { DecisionMap, DecisionMapKey } from "./page";
-import { insertTGTDDecision } from "./actions";
 import Countdown from "./Countdown";
-import { cn } from "~/lib/utils";
-
+import { insertTGTDDecision } from "./actions";
 const coolDownTime = 10 * 60 * 1000; // 10 minutes
+
+type PuzzleBodyProps =
+  | { loggedIn: true; decisionsMap: DecisionMap }
+  | { loggedIn: false; decisionsMap?: undefined };
 
 export default function PuzzleBody({
   decisionsMap,
-}: {
-  decisionsMap: DecisionMap;
-}) {
+  loggedIn,
+}: PuzzleBodyProps) {
   const { toast } = useToast();
-  const [currDecisions, setCurrDecisions] = useState<DecisionMap>(decisionsMap);
+
+  // Set the initital state of the decisions
+  const initialDecision: DecisionMap = loggedIn
+    ? decisionsMap
+    : { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+  const [currDecisions, setCurrDecisions] =
+    useState<DecisionMap>(initialDecision);
+
   const [pendingConfirmation, setPendingConfirmation] = useState<{
     door: DecisionMapKey;
     decision: TGTDDecision;
   } | null>(null);
+
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleDoorClick = async (
@@ -61,7 +70,29 @@ export default function PuzzleBody({
       }));
       setPendingConfirmation(null);
 
-      // Try to insert the decision
+      // If not logged in, check the state
+      if (!loggedIn) {
+        if (
+          currDecisions[door] &&
+          currDecisions[door].time.getTime() + coolDownTime >
+            new Date().getTime()
+        ) {
+          toast({
+            title: "Error",
+            description:
+              "You must wait 10 minutes before playing the interaction again.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        setCurrDecisions((prev) => ({
+          ...prev,
+          [door]: { time: new Date(), decision },
+        }));
+      }
+
+      // If logged in, check the database
       startTransition(async () => {
         const result = await insertTGTDDecision(door, decision);
 
@@ -107,7 +138,8 @@ export default function PuzzleBody({
     <div>
       {/* DOORS SET 1 */}
       <div className="mb-6 max-w-3xl text-center">
-      Warning! This puzzle contains choices that your team will not be able to change for a certain time period.
+        Warning! This puzzle contains choices that your team will not be able to
+        change for a certain time period.
       </div>
       <hr className="my-6 mb-6 w-full border-t border-white" />
       <div className="mb-5 max-w-3xl">
