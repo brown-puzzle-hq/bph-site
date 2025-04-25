@@ -24,8 +24,20 @@ import {
   INITIAL_PUZZLES,
 } from "~/hunt.config";
 import { cn } from "~/lib/utils";
+import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 
 export type NumberOfGuesses = number | "infinity";
+
+type DefaultPuzzlePageProps = {
+  puzzleId: string;
+  inPersonBody: React.ReactNode;
+  remoteBoxBody: React.ReactNode;
+  remoteBody: React.ReactNode;
+  copyText: string | null;
+  partialSolutions: Record<string, string>;
+  tasks: Record<string, React.ReactNode>;
+  interactionMode?: string;
+};
 
 export default async function DefaultPuzzlePage({
   puzzleId,
@@ -36,16 +48,7 @@ export default async function DefaultPuzzlePage({
   partialSolutions,
   tasks,
   interactionMode,
-}: {
-  puzzleId: string;
-  inPersonBody: React.ReactNode;
-  remoteBoxBody: React.ReactNode;
-  remoteBody: React.ReactNode;
-  copyText: string | null;
-  partialSolutions: Record<string, string>;
-  tasks: Record<string, React.ReactNode>;
-  interactionMode?: string; // From the URL query
-}) {
+}: DefaultPuzzlePageProps) {
   // Authentication
   const session = await auth();
   switch (await canViewPuzzle(puzzleId, session)) {
@@ -57,35 +60,27 @@ export default async function DefaultPuzzlePage({
       redirect("/puzzle");
   }
 
-  // If user is not logged in, show puzzle without errata or guesses
-  if (!session?.user?.id) {
-    return (
-      <div className="mb-8 w-full px-4">
-        <div className="no-scrollbar overflow-auto">
-          <div className="mx-auto flex w-fit items-start justify-center space-x-2">
-            {copyText && <div className="min-w-6" />}
-            <div className="w-fit">{remoteBody}</div>
-            {copyText && <CopyButton copyText={copyText} />}
-          </div>
-        </div>
-
-        {Object.keys(tasks).map((task) => {
-          return (
-            <div key={task}>
-              <hr className="mx-auto my-6 max-w-3xl" />
-              <div className="mx-auto w-fit">{tasks[task]}</div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
   // Puzzle answer
   const puzzleAnswer = (await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
     columns: { answer: true },
   }))!.answer;
+
+  // If user is not logged in, show puzzle without errata or guesses
+  if (!session?.user?.id) {
+    return (
+      <DefaultPostHuntPuzzlePage
+        puzzleAnswer={puzzleAnswer}
+        inPersonBody={inPersonBody}
+        remoteBoxBody={remoteBoxBody}
+        remoteBody={remoteBody}
+        copyText={copyText}
+        partialSolutions={partialSolutions}
+        tasks={tasks}
+        interactionMode={interactionMode}
+      />
+    );
+  }
 
   // Get errata if the errata timestamp is greater than the unlockTime.
   // Here is how to think about the unlockTime:

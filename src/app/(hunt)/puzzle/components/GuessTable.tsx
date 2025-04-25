@@ -1,7 +1,13 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { guesses } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
 import Partial from "./Partial";
+
+export type Guess = {
+  id: number;
+  guess: string;
+  isCorrect: boolean;
+  submitTime: Date;
+};
 
 export default function GuessTable({
   puzzleAnswer,
@@ -10,7 +16,7 @@ export default function GuessTable({
   tasks,
 }: {
   puzzleAnswer: string;
-  previousGuesses: (typeof guesses.$inferSelect)[];
+  previousGuesses: Guess[];
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
 }) {
