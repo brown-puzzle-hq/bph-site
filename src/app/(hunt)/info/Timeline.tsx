@@ -19,7 +19,7 @@ export default function Timeline({ timeline }: { timeline: TimelineItem[] }) {
             <p>
               <strong>{title}</strong>
             </p>
-            <p className="text-main-accent">{description}</p>
+            <p className="text-main-text/75">{description}</p>
           </div>
         ))}
       </div>
