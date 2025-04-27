@@ -722,7 +722,7 @@ export default function Map({
 
     // Clear search if needed
     if (clearSearch) {
-      setIsSearchFocused(false)
+      setIsSearchFocused(false);
       setSearchTerm("");
     }
   };
@@ -891,32 +891,35 @@ export default function Map({
               })}
             </Container>
 
-            {/* Solved check layer */}
+            {/* Marker layer */}
             <Container>
-              {solvedPuzzles.map((puzzle) => {
-                const position = positions[puzzle.puzzleId] ?? [180, 500];
-                const dims = customOffset[puzzle.puzzleId] ??
-                  dimensions[puzzle.puzzleId] ?? [0, 0];
+              {uniquePuzzles.map((puzzle) => {
+                const isSolved = solvedPuzzles.some(
+                  ({ puzzleId }) => puzzle.id === puzzleId,
+                );
+                const position = positions[puzzle.id] ?? [180, 500];
+                const dims = customOffset[puzzle.id] ??
+                  dimensions[puzzle.id] ?? [0, 0];
 
                 return (
                   <Sprite
-                    key={puzzle.puzzleId}
+                    key={puzzle.id}
                     image={
-                      META_PUZZLES.includes(puzzle.puzzleId)
-                        ? "/map/star.svg"
-                        : "/map/circle-check.svg"
+                      isSolved
+                        ? META_PUZZLES.includes(puzzle.id)
+                          ? "/map/star.svg"
+                          : "/map/circle-check.svg"
+                        : "/map/circle-help.svg"
                     }
                     x={
                       position[0] -
                       2 +
-                      (dims[0] * 0.075 * (scaleFactor[puzzle.puzzleId] || 1)) /
-                        2
+                      (dims[0] * 0.075 * (scaleFactor[puzzle.id] || 1)) / 2
                     }
                     y={
                       position[1] -
                       2 +
-                      (dims[1] * 0.075 * (scaleFactor[puzzle.puzzleId] || 1)) /
-                        2
+                      (dims[1] * 0.075 * (scaleFactor[puzzle.id] || 1)) / 2
                     }
                     eventMode="none"
                     anchor={0.5}
