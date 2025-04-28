@@ -13,6 +13,7 @@ import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import { FormattedTime } from "~/lib/time";
+import { Lock } from "lucide-react";
 
 export const revalidate = 300;
 
@@ -146,6 +147,7 @@ export default async function Home() {
 
   const remoteBoxTeams = allRemoteTeams.filter((team) => team.hasBox);
   const remoteTeams = allRemoteTeams.filter((team) => !team.hasBox);
+  const now = new Date();
 
   return (
     <div className="mx-auto mb-12 max-w-2xl px-4 pt-6">
@@ -157,6 +159,9 @@ export default async function Home() {
             value="in-person"
           >
             In-Person
+            {now > IN_PERSON.END_TIME && (
+              <Lock className="h-[13px] stroke-[3.5]" />
+            )}
           </TabsTrigger>
           <TabsTrigger
             className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
@@ -164,12 +169,18 @@ export default async function Home() {
           >
             <span className="sm:hidden">Has Box</span>
             <span className="hidden sm:block">Remote (Box)</span>
+            {now > REMOTE.END_TIME && (
+              <Lock className="h-[13px] stroke-[3.5]" />
+            )}
           </TabsTrigger>
           <TabsTrigger
             className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
             value="remote"
           >
             Remote
+            {now > REMOTE.END_TIME && (
+              <Lock className="h-[13px] stroke-[3.5]" />
+            )}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="in-person">
