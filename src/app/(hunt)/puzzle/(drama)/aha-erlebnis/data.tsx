@@ -11,23 +11,22 @@ export const puzzleId = "aha-erlebnis";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="text-center items-center">
-    <div className="space-y-4 max-w-3xl text-center">
+  <div className="items-center text-center">
+    <div className="max-w-3xl space-y-4 text-center">
       <div className="font-bold">
-        This is a metapuzzle. It uses feeders from the{" "}
-        Drama round.
+        This is a metapuzzle. It uses feeders from the Drama round.
       </div>
-    
+
       <div className="pb-2.5 italic">
-          The emotions of the characters just aren't connecting with audiences.
-          How can you make this German film more accessible?
+        The emotions of the characters just aren't connecting with audiences.
+        How can you make this German film more accessible?
       </div>
     </div>
 
     <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">😍</div>
-        <div className="mt-4 flex gap-4 justify-center">
+        <div className="text-4xl font-bold">😍</div>
+        <div className="mt-4 flex justify-center gap-4">
           {[
             "",
             "",
@@ -57,8 +56,8 @@ export const inPersonBody = (
 
     <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">🥱</div>
-        <div className="mt-4 flex gap-4 justify-center">
+        <div className="text-4xl font-bold">🥱</div>
+        <div className="mt-4 flex justify-center gap-4">
           {[
             "3",
             "",
@@ -90,8 +89,8 @@ export const inPersonBody = (
 
     <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">🤕</div>
-        <div className="mt-4 flex gap-4 justify-center">
+        <div className="text-4xl font-bold">🤕</div>
+        <div className="mt-4 flex justify-center gap-4">
           {["", "", "6", "", "", "", "5", "", "", "", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -106,8 +105,8 @@ export const inPersonBody = (
 
     <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">😱</div>
-        <div className="mt-4 flex gap-4 justify-center">
+        <div className="text-4xl font-bold">😱</div>
+        <div className="mt-4 flex justify-center gap-4">
           {["", "9", "", "", "", "", "", "", "", "", "7", "", "", "", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -122,8 +121,8 @@ export const inPersonBody = (
 
     <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">😶</div>
-        <div className="mt-4 flex gap-4 justify-center">
+        <div className="text-4xl font-bold">😶</div>
+        <div className="mt-4 flex justify-center gap-4">
           {["", "10", "", "", "", "", "", "", "", "", "8", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -138,8 +137,8 @@ export const inPersonBody = (
 
     <div className="flex flex-col p-6 text-white">
       <div>
-        <div className="font-bold text-4xl">🙂</div>
-        <div className="mt-4 flex gap-4 justify-center">
+        <div className="text-4xl font-bold">🙂</div>
+        <div className="mt-4 flex justify-center gap-4">
           {["", "", "", "", "", "", "", "11", "", "", "", "", ""].map(
             (value, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -163,10 +162,119 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
-    This puzzle does not have a solution. Go nag Arnav.{" "}
+  <div className="max-w-3xl space-y-4">
+    <div>All six feeders for this meta are:</div>
+    <ul className="list list-inside">
+      <li>ABYSS</li>
+      <li>CLOSED-DOOR</li>
+      <li>DAMAGE</li>
+      <li>SPRING</li>
+      <li>SUNDAY</li>
+      <li>WORLD</li>
+    </ul>
+    <div>
+      The puzzle page presents solvers with enumerations and six different
+      emotions. There are also six feeders! Interesting…
+    </div>
+    <div>
+      The flavor text points to something German-related. Solvers should realize
+      that pairing a feeder with one of the six emotions produces a German word
+      that consists of a compound word between the two words. The average person
+      may be most familiar with the concept of Schadenfreude, or the “pleasure
+      derived by someone from another person's misfortune.” The feeders and
+      emotions can then be combined to generate words fitting the given
+      enumerations.
+    </div>
+    <div className="flex flex-col items-center text-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="w-1/4 p-2 outline outline-white">Feeder</th>
+            <th className="w-1/4 p-2 outline outline-white">Emotion</th>
+            <th className="w-1/4 p-2 outline outline-white">German word</th>
+            <th className="w-1/4 p-2 outline outline-white">Definition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">ABYSS</td>
+            <td className="p-2 outline outline-white">ATTRACTION</td>
+            <td className="p-2 outline outline-white">ABGRUNDANZIEHUNG</td>
+            <td className="p-2 outline outline-white">
+              That strange compulsion to look over the edge of a cliff.
+            </td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">SPRING</td>
+            <td className="p-2 outline outline-white">TIREDNESS</td>
+            <td className="p-2 outline outline-white">FRÜHJAHRSMÜDIGKEIT</td>
+            <td className="p-2 outline outline-white">
+              Long-lasting state of reduced performance and lethargy that many
+              people experience in spring.
+            </td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">WORLD</td>
+            <td className="p-2 outline outline-white">PAIN</td>
+            <td className="p-2 outline outline-white">WELTSCHMERZ</td>
+            <td className="p-2 outline outline-white">
+              Feeling of melancholy and pessimism that comes from being aware of
+              the contrast between the way things are and the way you wish they
+              were.
+            </td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">CLOSED-DOOR</td>
+            <td className="p-2 outline outline-white">PANIC</td>
+            <td className="p-2 outline outline-white">TORSCHLUSSPANIK</td>
+            <td className="p-2 outline outline-white">
+              Sense of urgency that comes with age, as you realize that time is
+              running out to do everything you want to do in life.
+            </td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">SUNDAY</td>
+            <td className="p-2 outline outline-white">EMPTINESS</td>
+            <td className="p-2 outline outline-white">SONTAGSLEERE*</td>
+            <td className="p-2 outline outline-white">
+              Emptiness and boredom that comes on Sundays, when the weekend is
+              almost over and you're left with the feeling that there's nothing
+              to look forward to.
+            </td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">DAMAGE</td>
+            <td className="p-2 outline outline-white">HAPPINESS</td>
+            <td className="p-2 outline outline-white">SCHADENFREUDE</td>
+            <td className="p-2 outline outline-white">
+              Pleasure derived by someone from another person's misfortune.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Filling these words into the blanks and extracting the numbered letters
+      gets the final answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        GEFÜHL PROOF.
+      </span>
+      Don't forget the umlaut!
+    </div>
+    <div>
+      *Note: We were given feedback from native speakers that SONTAGSLEERE
+      should really be spelled SONNTAGSLEERE, although many (apparently unreliable)
+      English resources spelled it incorrectly. These sources also oversold
+      the commonness of this word and ABGRUNDANZIEHUNG. Our apologies to German
+      speakers for these errors!
+    </div>
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = null;
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

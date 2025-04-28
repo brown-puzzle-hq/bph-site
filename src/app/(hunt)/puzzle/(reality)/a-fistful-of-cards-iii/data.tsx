@@ -30,9 +30,8 @@ export const puzzleId = "a-fistful-of-cards-iii";
 export const inPersonBody = (
   <div>
     <div className="mx-auto mb-6 max-w-3xl text-center italic">
-        This is a physical puzzle! You should have received it at kickoff.
-        Please visit HQ in Friedman 208 if you believe you are missing these
-        supplies.
+      This is a physical puzzle! You should have received it at kickoff. Please
+      visit HQ in Friedman 208 if you believe you are missing these supplies.
     </div>
     <hr className="my-6 mb-6 w-full border-t border-white" />
     <div className="mb-6 max-w-3xl text-center">
@@ -119,7 +118,7 @@ export const remoteBody = (
       </span>
       : Deal 36 damage.
     </div>
-    <hr className="my-6 mb-6 border-t border-white w-[848px]" />
+    <hr className="my-6 mb-6 w-[848px] border-t border-white" />
     <div className="mb-6 w-full text-center">
       <span className="underline">
         <b>Legal cards</b>
@@ -198,10 +197,165 @@ export const remoteBody = (
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
-    This puzzle does not have a solution. Go nag Jeremy.{" "}
+  <div className="max-w-3xl space-y-4">
+    <div>
+      In the A Fistful for Cards sequence, solvers play a physical card game
+      with the goal of dealing a given amount of damage each puzzle.
+    </div>
+    <div>
+      Each round yields a unique organization of cards on the playmat when the
+      correct sequence is found. To extract the answer, index into the name of
+      each card using the number of bullet holes on the space in the playmat.
+      For instance, if "Example Card" ends up in slot one of The Stash (which
+      has one bullet hole), we will take the first letter of the card name and
+      end up with E.
+    </div>
+    <div>In order to get to 36 damage, take the following actions:</div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Action</th>
+            <th className="p-2 outline outline-white">💰</th>
+            <th className="p-2 outline outline-white">🧨</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Flood of Cash, gaining +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">0</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Recycling Waste, paying 1 💰 to return Floor of Cash to your
+              hand.
+            </td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">0</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Flood of Cash, gaining +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">0</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Flip Moral Hazard and Glory and Gold for +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">0</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Gathering Dynamite, paying 1 💰 to get +6 🧨, since there are
+              exactly 2 cards in the discard pile: Flood of Cash and Recycling
+              Waste.
+            </td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">6</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Resell, flipping 3 cards (Flood of Cash, Recycling Waste, and
+              Gathering Dynamite) to get a net of +2 💰 (after paying 1 💰 to
+              play Resell and gaining 1 💰 each from 3 flipped cards).
+            </td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">6</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Raze, paying 6 💰 and defusing 6 🧨 to deal 6^2 = 36 damage.
+            </td>
+            <td className="p-2 outline outline-white">0</td>
+            <td className="p-2 outline outline-white">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      After flipping the cards in the Stash over and sorting them
+      alphabetically, we have the following cards in each zone:
+    </div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Zone</th>
+            <th className="p-2 outline outline-white">Cards</th>
+            <th className="p-2 outline outline-white">Bullet Holes</th>
+            <th className="p-2 outline outline-white">Extracted Letters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">The Stash</td>
+            <td className="p-2 outline outline-white">
+              Flood of Cash
+              <br />
+              Gathering Dynamite
+              <br />
+              Glory and Gold
+              <br />
+              Moral Hazard
+              <br />
+              Recycling Waste
+            </td>
+            <td className="p-2 outline outline-white">
+              1
+              <br />
+              7
+              <br />
+              1
+              <br />
+              6
+              <br />
+              13
+            </td>
+            <td className="p-2 outline outline-white">
+              F
+              <br />
+              I
+              <br />
+              G
+              <br />
+              H
+              <br />T
+            </td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">The Town</td>
+            <td className="p-2 outline outline-white">-</td>
+            <td className="p-2 outline outline-white">-</td>
+            <td className="p-2 outline outline-white">-</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Discard Pile</td>
+            <td className="p-2 outline outline-white">Resell<br/>Raze</td>
+            <td className="p-2 outline outline-white">4<br/>1</td>
+            <td className="p-2 outline outline-white">E<br/>R</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Reading off the extracted letters in order gives our answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        FIGHTER.
+      </span>
+    </div>
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Jeremy Fleming";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

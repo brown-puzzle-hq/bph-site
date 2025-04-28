@@ -1,5 +1,7 @@
 import Image from "next/image";
 import DOTS from "./connect_the_dots.svg";
+import SHAPES from "./shapes.svg";
+import SOL from "./solution.svg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -27,7 +29,40 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>The clues on the left give ARI, BIG, CAN, IND, LEO, and ORION'S.</div>
+    <div>
+      And the clues on the right give US, ES, CER, DIPPER, MINOR, and BELT.
+    </div>
+    <div>
+      If we pair these up by which connections form constellations, we get
+      ARIES, BIG DIPPER, CANCER, INDUS, LEO MINOR, and ORION'S BELT. Drawing the
+      lines between each pair gives us:
+    </div>
+    <Image className="mx-auto" src={SHAPES} alt="" />
+    <div>
+      Reading the letters interescted from each connection (going top-to-bottom
+      on the left column) spells SHAPES, a partial answer directing us to form
+      the constellations' shapes, using both black dots corresponding to each
+      constellation. A completed drawing is shown here:
+    </div>
+    <Image src={SOL} alt="" />
+    <div>
+      Again, reading the letters from each constellation, going top-to-bottom on
+      the left column and taking the letters within each constellation in
+      top-down order, we obtain our answer,{" "}
+    <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+      MICROGRAVITY.
+    </span>
+    </div>
+  </div>
+);
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Malcolm Certain and Thomas Gordon";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
@@ -41,7 +76,7 @@ export const copyText = null;
  */
 export const partialSolutions: Record<string, string> = {
   SHAPE: "Keep going!",
-  SHAPES: "Keep going!"
+  SHAPES: "Keep going!",
 };
 
 /**

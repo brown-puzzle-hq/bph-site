@@ -43,9 +43,8 @@ export const puzzleId = "a-fistful-of-cards-iv";
 export const inPersonBody = (
   <div>
     <div className="mx-auto mb-6 max-w-3xl text-center italic">
-        This is a physical puzzle! You should have received it at kickoff.
-        Please visit HQ in Friedman 208 if you believe you are missing these
-        supplies.
+      This is a physical puzzle! You should have received it at kickoff. Please
+      visit HQ in Friedman 208 if you believe you are missing these supplies.
     </div>
     <hr className="my-6 mb-6 w-full border-t border-white" />
     <div className="mb-6 max-w-3xl">
@@ -331,10 +330,238 @@ export const remoteBody = (
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
-    This puzzle does not have a solution. Go nag Jeremy.{" "}
+  <div className="max-w-3xl space-y-4">
+    <div>
+      In the A Fistful for Cards sequence, solvers play a physical card game
+      with the goal of dealing a given amount of damage each puzzle.
+    </div>
+    <div>
+      Each round yields a unique organization of cards on the playmat when the
+      correct sequence is found. To extract the answer, index into the name of
+      each card using the number of bullet holes on the space in the playmat.
+      For instance, if "Example Card" ends up in slot one of The Stash (which
+      has one bullet hole), we will take the first letter of the card name and
+      end up with E.
+    </div>
+    <div>
+      There are three main ideas required to solve this puzzle in the sequence:
+    </div>
+    <ol className="list-inside list-decimal">
+      <li>
+        Moral Hazard is the best way to rack up dynamite. This requires a bunch
+        of cards to be played to work, though. Luckily...
+      </li>
+      <li>
+        You can loop Recycling Waste, Make New Again, and Flood of Cash to play
+        a bunch of cards. This requires a lot of money, though. Luckily...
+      </li>
+      <li>
+        Glory and Gold can double the money from the 12 stashes required during
+        this round to create 24 💰.
+      </li>
+    </ol>
+    <div>
+      After these three ideas are identified, a little bit (but hopefully not
+      too much!) of finagling needs to be done to get to the requisite number of
+      damage.
+    </div>
+    <div>
+      In order to get to 864,691,128,455,135,235 damage, take the following
+      actions:
+    </div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Action</th>
+            <th className="p-2 outline outline-white">💰</th>
+            <th className="p-2 outline outline-white">🧨</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Granted Dynamite, gaining +3 🧨.
+            </td>
+            <td className="p-2 outline outline-white">0</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Flood of Cash, gaining +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Recycling Waste, paying 1 💰 to return Flood of Cash to your
+              hand.
+            </td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Flood of Cash, gaining +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Glory and Gold, paying 3 💰.
+            </td>
+            <td className="p-2 outline outline-white">0</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Flip over all cards but Granted Dynamite, Moral Hazard, Make New
+              Again, Recycling Waste, Flood of Cash, and Glory and Gold,
+              flipping a total of 12 cards for +24 💰.
+            </td>
+            <td className="p-2 outline outline-white">24</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Moral Hazard, paying 4 💰. Glory and Gold is discarded.
+            </td>
+            <td className="p-2 outline outline-white">20</td>
+            <td className="p-2 outline outline-white">3</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Make New Again, paying 2 💰 to return Recycling Waste and
+              Flood of Cash to hand.
+            </td>
+            <td className="p-2 outline outline-white">18</td>
+            <td className="p-2 outline outline-white">3⋅2 = 6</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Flood of Cash, gaining +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">20</td>
+            <td className="p-2 outline outline-white">3⋅2² = 12</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Recycling Waste, paying 1 💰 to return Make New Again to
+              hand.
+            </td>
+            <td className="p-2 outline outline-white">20</td>
+            <td className="p-2 outline outline-white">3⋅2³ = 24</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Repeat the previous three steps seventeen more times. Each loop
+              costs a net 1 💰 and has three cards played (doubling the 🧨 three
+              times).
+            </td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">3⋅2⁵⁴</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Make New Again, paying 2 💰 to return Recycling Waste and
+              Flood of Cash to hand.
+            </td>
+            <td className="p-2 outline outline-white">0</td>
+            <td className="p-2 outline outline-white">3⋅2⁵⁵</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Flood of Cash, gaining +2 💰.
+            </td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">3⋅2⁵⁶</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Recycling Waste, paying 1 💰 to return Granted Dynamite to
+              hand.
+            </td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">3⋅2⁵⁷</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Play Granted Dynamite, gaining +3 🧨.
+            </td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">
+              3⋅2⁵⁸ + 3 = 864,691,128,455,135,235
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      We have the following cards in each zone (ignoring The Stash for this
+      round as instructed):
+    </div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Zone</th>
+            <th className="p-2 outline outline-white">Cards</th>
+            <th className="p-2 outline outline-white">Bullet Holes</th>
+            <th className="p-2 outline outline-white">Extracted Letters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">The Town</td>
+            <td className="p-2 outline outline-white">Moral Hazard</td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">A</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Discard Pile</td>
+            <td className="p-2 outline outline-white">
+              Glory and Gold
+              <br />
+              Make New Again
+              <br />
+              Flood of Cash
+              <br />
+              Recycling Waste
+              <br />
+              Granted Dynamite
+            </td>
+            <td className="p-2 outline outline-white">
+              4<br />
+              1<br />
+              2<br />
+              14
+              <br />5
+            </td>
+            <td className="p-2 outline outline-white">
+              R<br />
+              M<br />
+              L<br />
+              E<br />T
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Reading off the extracted letters in order gives our answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        ARMLET.
+      </span>
+    </div>
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Jeremy Fleming";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

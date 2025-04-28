@@ -17,10 +17,10 @@ export const puzzleId = "ten-guards-ten-doors";
 export const inPersonBody = (
   <div>
     <div className="mb-5 max-w-3xl">
-      You are a guard and are standing in a large circle with ten doors and
-      nine other guards, with each of you standing in front of a door and facing
-      the center such that you can see every door but your own. Going through
-      your door will lead to the next area of the puzzle hunt, but if any guard
+      You are a guard and are standing in a large circle with ten doors and nine
+      other guards, with each of you standing in front of a door and facing the
+      center such that you can see every door but your own. Going through your
+      door will lead to the next area of the puzzle hunt, but if any guard
       attempts to go through a door that has a window, a hungry pigeon behind it
       will eat the door first, preventing them from progressing. However, if a
       door does not have a window, the guard can go through the door before the
@@ -69,13 +69,8 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl">
-    <div className="text-center">
-      Answer: <span className="bg-main-text hover:bg-inherit">CLOSED DOOR</span>
-      .
-    </div>
-
-    <div className="mb-6 mt-8 max-w-3xl">
+  <div className="max-w-3xl space-y-4">
+    <div className="mt-8 max-w-3xl">
       This puzzle is based on using the logic explained in{" "}
       <Link href="https://www.youtube.com/watch?v=98TQv5IAtY8">
         <span className="underline">this video.</span>
@@ -88,7 +83,7 @@ export const solutionBody = (
       must be closed and windowless (even if it's not).
     </div>
 
-    <div className="mb-6">
+    <div>
       To solve this puzzle, we will break up the guards into groups: you, guards
       with windowless doors, and guards with windowed doors. For the clarity of
       the solution, designate numbers for each guard: you (1), guards with
@@ -98,23 +93,21 @@ export const solutionBody = (
       guards of each category.
     </div>
 
-    <div className="mb-6">
-      <span className="underline">
-        <b>You (Guard (1)):</b>
-      </span>
+    <div>
+      <b>You (Guard 1):</b>
     </div>
 
-    <div className="mb-6">
+    <div>
       {" "}
       You don't know whether your door has a window or not. Because you do not
       want to leave before you are certain your door is windowless, assume your
-      door has a window (in which case there would be 5 windowed doors and 5
+      door has a window, in which case there would be 5 windowed doors and 5
       windowless doors. Then, put yourself in the shoes of guard (2), who
       doesn't know the state of their own door and would see 4 windowless doors
       and 5 windowed doors.
     </div>
 
-    <div className="mb-6">
+    <div>
       {" "}
       Based on present information, guard (2) does not have enough information
       to determine the state of their door. Therefore, they will suppose that
@@ -123,7 +116,7 @@ export const solutionBody = (
       guard (3), who would see 3 windowless doors and 6 windowed doors.
     </div>
 
-    <div className="mb-6">
+    <div>
       Based on present information, guard (3) also does not have enough
       information to determine the state of their door. Therefore, they will
       suppose that their door has a window, in which case there would be 7 doors
@@ -131,7 +124,7 @@ export const solutionBody = (
       shoes of guard (4), who would see 2 windowless doors and 7 windowed doors.
     </div>
 
-    <div className="mb-6">
+    <div>
       Based on present information, guard (4) also does not have enough
       information to determine the state of their door. Therefore, they will
       suppose that their door has a window, in which case there would be 8 doors
@@ -139,7 +132,7 @@ export const solutionBody = (
       shoes of guard (5), who would see 1 windowless door and 8 windowed doors.
     </div>
 
-    <div className="mb-6">
+    <div>
       Based on present information, guard (5) also does not have enough
       information to determine the state of their door. Therefore, they will
       suppose that their door has a window, in which case there would be 9 doors
@@ -147,70 +140,66 @@ export const solutionBody = (
       shoes of guard (6), who would see 0 windowless doors and 9 windowed doors.
     </div>
 
-    <div className="mb-6">
+    <div>
       In this scenario, guard (6) would see no windowless doors. Therefore, the
       only way for the announcer's statement to be true is if their door is
       windowless. This means that they would leave on day 1. Note that this is
       only true if all prior suppositions were correct.
     </div>
 
-    <div className="mb-6">
+    <div>
       Because guard (5) does not observe guard (6) leave on day 1, guard (5)
       realizes that their supposition must be wrong, and thus their door must
       also be windowless. Therefore, if all suppositions prior to guard (5) were
       correct, guards (5-6) would leave on day 2.
     </div>
 
-    <div className="mb-6">
+    <div>
       Because guard (4) does not observe guards (5-6) leave on day 1, guard (4)
       realizes that their supposition must be wrong, and thus their door must
       also be windowless. Therefore, if all suppositions prior to guard (4) were
       correct, guards (4-6) would leave on day 3.
     </div>
 
-    <div className="mb-6">
+    <div>
       Because guard (3) does not observe guards (4-6) leave on day 1, guard (3)
       realizes that their supposition must be wrong, and thus their door must
       also be windowless. Therefore, if all suppositions prior to guard (3) were
       correct, guards (3-6) would leave on day 4.
     </div>
 
-    <div className="mb-6">
+    <div>
       Because guard (2) does not observe guards (3-6) leave on day 1, guard (2)
       realizes that their supposition must be wrong, and thus their door must
       also be windowless. Therefore, if all suppositions prior to guard (2) were
       correct, guards (2-6) would leave on day 5.
     </div>
 
-    <div className="mb-6">
+    <div>
       Because you do not observe guards (2-6) leave on day 1, you realize that
       your supposition must be wrong, and thus your door must also be
       windowless. Therefore, you and guards (2-6) all leave on day 6.
     </div>
 
-    <div className="mb-6">
+    <div>
       Because you have worked out that your door is windowless, and you are not
       hallucinating, you know that each other guard will see your door as
       windowless.
     </div>
 
-    <div className="mb-6">
-      <span className="underline">
-        <b>Guards (2-6) (guards with windowless doors):</b>
-      </span>
+    <div>
+      <b>Guards (2-6) (guards with windowless doors):</b>
     </div>
 
-    <div className="mb-6">
+    <div>
       By the logic above, guards (2-6) would all leave with you on day 6.
     </div>
 
-    <div className="mb-6">
-      <span className="underline">
-        <b>Guards (7-10) (guards with windowed doors):</b>
-      </span>
+    <div>
+      <b>Guards (7-10) (guards with windowed doors):</b>
     </div>
 
-    <div className="mb-6">
+    <div>
       Each of these guards would use the same logic as above, however they begin
       by seeing one more windowless door and one less windowed door (since their
       door is windowed instead of windowless, and they cannot see their own
@@ -218,58 +207,98 @@ export const solutionBody = (
       windowless, and they would all leave on day 7.
     </div>
 
-    <div className="mb-6">
-      <span className="underline">
-        <b>Answer Extraction:</b>
-      </span>
+    <div>
+      <b>Answer Extraction:</b>
     </div>
 
-    <div className="mb-6">
+    <div>
       By the above logic, guards with windowless doors will leave on day 6, and
       guards with windowed doors will attempt to leave on day 7.
     </div>
 
-    <div className="mb-6">
-      The given words, starting with your door and going clockwise, are:
+    <div>
+      We index into the given words by the day each guard leaves, starting with
+      your door and going clockwise, giving:
     </div>
 
-    <ul className="list-none">
-      <li>DIRECTOR (windowless)</li>
-      <li>POPULAR (windowless)</li>
-      <li>LOCATION (windowed)</li>
-      <li>DECISION (windowless)</li>
-      <li>MOVEMENT (windowed)</li>
-      <li>KNOWLEDGE (windowed)</li>
-      <li>BROADCAST (windowless)</li>
-      <li>DEVELOPED (windowed)</li>
-      <li>EPISODES (windowless)</li>
-      <li>RECORDED (windowless)</li>
-    </ul>
-
-    <div className="mb-6">
-      Based on which day the corresponding guard will leave, index that number
-      into each word:
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Door Word</th>
+            <th className="p-2 outline outline-white">Day Left</th>
+            <th className="p-2 outline outline-white">Extracted Letter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">CHARACTER</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">C</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">TRANSLATED</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">L</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">LOCATION</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">RELEASED</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">S</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">PRODUCER</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">E</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">SUCCEEDED</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">D</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">RECORDING</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">D</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">DIRECTOR</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">PLATFORMS</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">PERFORMER</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">R</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <ul className="list-none">
-      <li>CHARACTER (6) → C</li>
-      <li>TRANSLATED (6) → L</li>
-      <li>LOCATION (7) → O</li>
-      <li>RELEASED (6) → S</li>
-      <li>PRODUCER (7) → E</li>
-      <li>SUCCEEDED (7) → D</li>
-      <li>RECORDING (6) → D</li>
-      <li>DIRECTOR (7) → O</li>
-      <li>PLATFORMS (6) → O</li>
-      <li>PERFORMER (6) → R</li>
-    </ul>
 
     <div className="mt-6">
-      This is the solution:{" "}
-      <span className="bg-main-text hover:bg-inherit">CLOSED DOOR</span>.
+      Reading the extracted letters in order gives our answer:{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        CLOSED-DOOR
+      </span>
+      .
     </div>
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Nate Chinman, Nicholas Cressman, and Jack de Haan";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

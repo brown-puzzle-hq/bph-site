@@ -23,7 +23,57 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      The Heist sequence is a set of Sokoban puzzles, where placing any objects
+      on all of the buttons of a certain color or shining a laser of the certain
+      color into its corresponding laser will open the door of that color.
+      Mirrors reflect lasers as shown, and boxes can block lasers. Touching a
+      laser will cause the robber to die, forcing a restart.
+    </div>
+    <div>To solve this puzzle, follow the following instructions:</div>
+    <ol className="list-inside list-decimal">
+      <li>Move to the next room on the right.</li>
+      <li>
+        Block the green laser with the mirror and move the mirror over until the
+        beam goes into the green receptacle.
+      </li>
+      <li>Move down to the next room.</li>
+      <li>
+        Move the mirror so that the orange laser is reflected into the orange
+        receptacle.
+      </li>
+      <li>
+        Go down into the next room, and move blocks from the left hallway onto
+        the blue tiles.
+      </li>
+      <li>Place the third block where the the blue door used to be.</li>
+      <li>
+        Take the two blocks from the blue tiles and place them behind the block
+        that is blocking the door.
+      </li>
+      <li>
+        Push all the blocks through the door, going through the door yourself.
+      </li>
+      <li>Place the blocks on the grey tiles.</li>
+      <li>Walk to the exit on the left.</li>
+    </ol>
+    <div>
+      After reaching the end, the robber finds a sticky note, revealing that
+      they missed the money, but did receive the floor plan, which is the
+      answer:{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        WIRED.
+      </span>
+    </div>
+  </div>
+);
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Malcolm Certain";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
@@ -37,7 +87,7 @@ export const copyText = null;
  * be in all caps, no spaces.
  */
 export const partialSolutions: Record<string, string> = {
-  FLOORPLANWIRED: "Just the floor plan, please."
+  FLOORPLANWIRED: "Just the floor plan, please.",
 };
 
 /**

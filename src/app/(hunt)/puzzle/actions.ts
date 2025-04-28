@@ -99,7 +99,6 @@ export async function canViewSolution(
   if (!session?.user?.id) return "not_authenticated";
   if (session.user.role == "admin") return "success";
   else return "not_authorized";
-
   // // If the hunt has ended, anyone can view solutions
   // if (new Date() > REMOTE.END_TIME) return "success";
   // // If the hunt has not ended, users must be signed-in

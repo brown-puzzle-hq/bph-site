@@ -54,10 +54,67 @@ export const remoteBody = (
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
-    This solution is sorta written but like...fill this in later :)
+  <div className="max-w-3xl space-y-4">
+    <div>Transcribing all of the words said, we obtain the following list:</div>
+    <ul className="list-inside list-disc">
+      <li>A</li>
+      <li>A</li>
+      <li>A</li>
+      <li>Comes</li>
+      <li>Birth</li>
+      <li>Eight</li>
+      <li>Follow</li>
+      <li>Good</li>
+      <li>Hard</li>
+      <li>Here</li>
+      <li>I'll</li>
+      <li>In</li>
+      <li>King</li>
+      <li>Life</li>
+      <li>Night</li>
+      <li>Said</li>
+      <li>Shine</li>
+      <li>The</li>
+      <li>The</li>
+      <li>The</li>
+      <li>Things</li>
+      <li>To</li>
+      <li>Tripper</li>
+      <li>We</li>
+      <li>Week</li>
+      <li>Yester</li>
+    </ul>
+    <div>
+      We notice that we can combine these to form the titles of Beatles songs,
+      with some parts missing:
+    </div>
+    <ul className="list-inside list-disc">
+      <li>A DAY in the Life</li>
+      <li>A Hard DAY's Night</li>
+      <li>BirthDAY</li>
+      <li>DAY Tripper</li>
+      <li>Eight DAYS a Week</li>
+      <li>Good DAY SUNshine</li>
+      <li>Here Comes the SUN</li>
+      <li>I'll Follow the SUN</li>
+      <li>SUN King</li>
+      <li>Things We Said ToDAY</li>
+      <li>YesterDAY</li>
+    </ul>
+    <div>
+      Taking the two missing parts of pieces and combining them, we obtain our
+      answer:{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        SUNDAY.
+      </span>
+    </div>
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Audrey Feigin";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

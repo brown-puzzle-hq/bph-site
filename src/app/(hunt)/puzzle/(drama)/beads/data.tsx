@@ -22,9 +22,9 @@ export const puzzleId = "beads";
  */
 export const inPersonBody = (
   <div className="mx-auto mb-6 max-w-3xl text-center italic">
-        This is a physical puzzle! If your team has not already picked up a
-        chain, please visit HQ in Friedman 208.
-        <hr className="my-6 mb-6 w-full border-t border-white" />
+    This is a physical puzzle! If your team has not already picked up a chain,
+    please visit HQ in Friedman 208.
+    <hr className="my-6 mb-6 w-full border-t border-white" />
     <p>
       <i>You've had me bending double from your curses!</i>
     </p>
@@ -74,7 +74,23 @@ export const remoteBody = (
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      For each row, taking the chain and making all the bends pictured results
+      in the overall chain taking the shape of a letter. These letters, when
+      read in order, spell the answer:{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        ABYSS.
+      </span>
+    </div>
+  </div>
+);
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Phil Avilov";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

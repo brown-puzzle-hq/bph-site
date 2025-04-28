@@ -24,9 +24,7 @@ export const inPersonBody = (
       referrerPolicy="strict-origin-when-cross-origin"
       allowFullScreen
     />
-    <div className="pb-2.5 italic">
-        What kind of place is behind Ben?
-    </div>
+    <div className="pb-2.5 italic">What kind of place is behind Ben?</div>
     <Image src={BEN} alt="" className="mb-4" />
   </div>
 );
@@ -40,23 +38,29 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl">
-    <p className="mb-4">Isn't it obvious? Find Ben!</p>
-    <p>Intended solve path is as follows:</p>
-    <ol className="mb-4 ml-8 list-decimal">
-      <li>Figure out who this man is</li>
-      <li>Figure out what Jet Lag: The Game is</li>
+  <div className="max-w-3xl space-y-4">
+    <p>Isn't it obvious? Find Ben!</p>
+    <p>The intended solve path is as follows:</p>
+    <ol className="ml-8 list-decimal">
+      <li>Figure out who this man is.</li>
+      <li>Figure out what Jet Lag: The Game is.</li>
       <li>
         Look up the challenge listed in the top right corner to find the season
-        and episode where this screenshot is taken from
+        and episode where this screenshot is taken from.
       </li>
-      <li>Find the original frame</li>
+      <li>Find the original frame.</li>
       <li>
         Reverse image search or watch the surrounding footage to determine that
-        the structure behind Ben is Odawara Castle
+        the structure behind Ben is{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          Odawara Castle.
+        </span>
       </li>
       <li>
-        The answer is thus <b>CASTLE</b>
+        The answer is thus{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          CASTLE.
+        </span>
       </li>
     </ol>
     <p className="mb-4">
@@ -71,6 +75,11 @@ export const solutionBody = (
     />
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Thomas Gordon";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

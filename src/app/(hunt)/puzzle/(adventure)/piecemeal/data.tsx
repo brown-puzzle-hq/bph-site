@@ -299,6 +299,11 @@ export const remoteBody = inPersonBody;
 export const solutionBody = null;
 
 /**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = null;
+
+/**
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */

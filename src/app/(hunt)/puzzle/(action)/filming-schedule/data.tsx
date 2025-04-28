@@ -12,9 +12,9 @@ export const puzzleId = "filming-schedule";
  */
 export const inPersonBody = (
   <div className="mx-auto max-w-3xl space-y-4 text-center">
-        <div className="pb-2.5 italic">
-        It's really hard to register and coordinate my Brown University courses
-        for this semester with this filming schedule.
+    <div className="pb-2.5 italic">
+      It's really hard to register and coordinate my Brown University courses
+      for this semester with this filming schedule.
     </div>
     <ol className="list-inside list-decimal space-y-3 text-left">
       <li>
@@ -82,14 +82,10 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl space-y-3 text-left">
-    <p className="space-y-3 text-lg font-semibold">
-      This puzzle is about pairs of words that have one letter differing between
-      them.
-    </p>
+  <div className="max-w-3xl space-y-4 text-left">
     <p>
-      Solving the puzzle involves identifying these pairs of words, finding the
-      letter, and putting those letters together.
+      Solving the puzzle involves identifying these pairs of words differing by
+      one letter, finding the letter, and putting those letters together.
     </p>
     <p>
       To start, each indented item in the list refers to a book, with one word
@@ -126,17 +122,63 @@ export const solutionBody = (
       History of School Desegregation.” Since "hoard" is in the book title, the
       matching word must be "Board."
     </p>
-    <p>
-      Now we have some letters that are in the book words but not in the class
-      titles, and some letters that are in the class titles and not in the book
-      words. Use the letters that are in the class titles, not the book words.
-    </p>
-    <p className="text-lg font-semibold">
-      These letters spell out <span className="text-main-accent">BANNER</span>,
-      the answer to the puzzle.
-    </p>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Book word</th>
+            <th className="p-2 outline outline-white">Course title word</th>
+            <th className="p-2 outline outline-white">New letter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">HOARD</td>
+            <td className="p-2 outline outline-white">BOARD</td>
+            <td className="p-2 outline outline-white">B</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">WHET</td>
+            <td className="p-2 outline outline-white">WHAT</td>
+            <td className="p-2 outline outline-white">A</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">VIRGIL</td>
+            <td className="p-2 outline outline-white">VIRGIN</td>
+            <td className="p-2 outline outline-white">N</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">HOVEL</td>
+            <td className="p-2 outline outline-white">NOVEL</td>
+            <td className="p-2 outline outline-white">N</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">RACK</td>
+            <td className="p-2 outline outline-white">RACE</td>
+            <td className="p-2 outline outline-white">E</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">DECENT</td>
+            <td className="p-2 outline outline-white">RECENT</td>
+            <td className="p-2 outline outline-white">R</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      The new letters in the course titles spell out our answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        BANNER.
+      </span>
+    </div>
   </div>
 );
+
+/**
+ * The `authors` string renders below the `solutionBody`.
+ */
+export const authors = "Noah Elbaum";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
