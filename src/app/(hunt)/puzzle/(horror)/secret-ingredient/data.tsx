@@ -14,7 +14,7 @@ export const puzzleId = "secret-ingredient";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center space-y-4">
+  <div className="max-w-3xl space-y-4 text-center">
     <div className="font-bold">
       This is a sequence metapuzzle. It uses feeders from the 🌲 sequence.
     </div>
@@ -37,19 +37,23 @@ export const solutionBody = (
         This puzzle is about the mobile game Little Alchemy (the first one, NOT
         Little Alchemy 2). That game is about combining elements to create new
         elements. You start with Earth, Air, Water, and Fire, and create from
-        there by combining two elements at a time.{" "}
+        there by combining two elements at a time.
       </div>
       <div>
         For this puzzle, you follow along with the combinations laid out in the
         tree. Each junction is an element created by combining the two above it,
-        leading back to the four basic elements. The blue boxes are labelled
-        with the names of other puzzles, and for those you “plug in” the answer
-        to those puzzles (bird for opening sequences and sun for whats my ride).
+        leading back to the four basic elements. The blue nodes are labelled
+        with the names of other puzzles, and for those, you plug in the answer
+        to those puzzles (BIRD for Opening Sequences and SUN for What's My
+        Ride).
       </div>
       <div>
-        Once you complete the trees, you should get at the blue boxes at the
-        bottom “egg” and “plant.” Concatenating those words gives EGGPLANT, the
-        puzzle's answer.
+        Once you complete the trees, you should get EGG and PLANT for the bottom
+        two blue boxes. Concatenating those words gives{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          EGGPLANT,
+        </span>{" "}
+        the puzzle's answer.
       </div>
     </div>
   </div>
@@ -58,7 +62,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Noah Elbaum";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

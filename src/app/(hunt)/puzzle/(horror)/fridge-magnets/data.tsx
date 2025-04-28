@@ -1,6 +1,6 @@
 import Image from "next/image";
 import fridge from "./fridge_magnets.svg";
-import box from "./fm_box.svg"
+import box from "./fm_box.svg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -21,11 +21,11 @@ export const inPersonBody = (
         This is a sequence metapuzzle. It uses feeders from the 🧩 sequence.
       </b>
     </div>
-    <div className="flex text-center justify-center">
-      <Image src={fridge} alt="" className=""/>
+    <div className="flex justify-center text-center">
+      <Image src={fridge} alt="" className="" />
     </div>
-    <div className="border-4 border-white p-4 space-y-6">
-    <Image src={box} alt="" className=""/>
+    <div className="space-y-6 border-4 border-white p-4">
+      <Image src={box} alt="" className="" />
     </div>
   </div>
 );
@@ -39,27 +39,26 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl">
-    <div className="mb-6 text-center">
-      Answer: <span className="bg-main-text hover:bg-inherit">DIAPER</span>.
-    </div>
-    <div className="mb-6 max-w-3xl">
-      The feeders can be broken down into fragments (SUN)(DAY), (MIN)(NOW)(S),
-      and (FA)(V)(OUR)(ITE) and arranged to form the answers, leaving some
+  <div className="max-w-3xl space-y-4">
+    <div>
+      The feeders can be broken down into fragments [SUN][DAY], [MIN][NOW][S],
+      and [FA][V][OUR][ITE] and arranged to form the answers, leaving some
       blanks. Here are the complete answers (which are clued by the emojis):
     </div>
-    <ul className="mb-6 list-none">
-      <li>(DI)(SUN)(ITE)</li>
-      <li>(MIN)(E)</li>
-      <li>(FA)(R)</li>
-      <li>(S)(NOW)(DAY)</li>
-      <li>(V)(AP)(OUR)</li>
+    <ul className="list-disc list-none">
+      <li>[DI][SUN][ITE]</li>
+      <li>[MIN][E]</li>
+      <li>[FA][R]</li>
+      <li>[S][NOW][DAY]</li>
+      <li>[V][AP][OUR]</li>
     </ul>
 
-    <div className="mb-6">
-      To complete all of the answers, we needed to add these fragments: (DI),
-      (E), (R), (AP). Anagramming these fragments gives{" "}
-      <span className="bg-main-text hover:bg-inherit">DIAPER</span>.
+    <div>
+      To complete all of the answers, we needed to add these fragments: [DI],
+      [E], [R], [AP]. Anagramming these fragments gives{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        DIAPER.
+      </span>
     </div>
   </div>
 );
@@ -67,7 +66,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Philip Yao, Thomas Gordon";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

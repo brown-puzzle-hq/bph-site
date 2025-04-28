@@ -2,6 +2,7 @@ import { cn } from "~/lib/utils";
 
 const DATA =
   "T, , , , 👁️, , , ,⬜, , , , , , 👁️, ,⬜,⬜, , , , , 👁️, , , ,⬜, , , , , , 👁️, , ,⬜,⬜, , , , 👁️, , , , ,⬜, , , , , 👁️, , ,⬜,⬜, , , , 👁️, , ,⬜,⬜";
+const SOL_DATA =  "T,R,O,P,👁️,C,A,L,⬜,T,A,X,P,A,👁️,D,⬜,⬜,V,A,M,P,👁️,R,E,S,⬜,S,E,C,U,R,👁️,T,Y,⬜,⬜,N,A,T,👁️,O,N,A,L,⬜,M,A,R,T,👁️,A,L,⬜,⬜,A,R,T,👁️,S,T,⬜,⬜";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -47,15 +48,42 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
-    This solution does not exist yet. Go nag Arnav + Thomas.
+  <div className="max-w-3xl space-y-4">
+
+    <div>
+      Upon looking at the grid, we can see that the words of the feeders each fit in one row of the grid such that the eye l-eye-nes up with an I in the word. Filling the grid yields (green highlight added):
+    </div>
+  
+  <div className="mx-auto grid w-full max-w-80 grid-cols-9 border text-center text-lg font-bold leading-8">
+  {SOL_DATA.split(",").map((cell, index) => {
+    const col = index % 9;
+    const isGreen = col === 4 || col === 5;; 
+    return (
+      <div
+        key={index}
+        className={cn(
+          "aspect-square border",
+          cell === "⬜" && "bg-white",
+          isGreen && "bg-green-400"
+        )}
+      >
+        {cell !== "⬜" && cell}
+      </div>
+    );
+  })}
+</div>
+<div>
+  Looking at the letters that fill the missing eye in the pair of eyes in each row, we can visually read off the answer: <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          CARROTS
+        </span>
+</div>
   </div>
 );
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Arnav Singhal, Thomas Gordon";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

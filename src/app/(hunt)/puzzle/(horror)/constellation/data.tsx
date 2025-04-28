@@ -3,6 +3,7 @@
 import Image from "next/image";
 import CONS1 from "./Constellation1.svg";
 import CONS2 from "./Constellation2.svg";
+import constolution from "./constolution.png"
 const SCALE = 0.5;
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -50,12 +51,35 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody  = <div className="max-w-3xl space-y-4">
+  <div>
+    Constellation consists of three mini-puzzles, each mechanically based off of one of its feeder puzzles. The diagram at the top gives you three “feeder” answers, each of which feed into two of the mini puzzles and pop out a letter. The answer to the puzzle is what you get when you put all the letters in the order indicated.
+  </div>
+  <div>
+    The first mini-puzzle is based on Walk of Fame and takes CAPITOL RECORDS LOGO and BOWTIE as its inputs. CAPITOL RECORDS LOGO and BOWTIE are both unique Hollywood walk of fame star arts, denoting CAPITOL RECORDS and CHEVROLET SUBURBAN respectively. Taking the third letter of both yields _EP____.
+  </div>
+  <div>
+    The second mini-puzzle is based on What’s My Ride? and takes BOWTIE and PLEIADES as its inputs. BOWTIE and PLEIADES both appear on the logos of two different “rides” (car brands): CHEVROLET and SUBARU respectively. Taking the penultimate letter of both yields ____ER.
+  </div>
+  <div> 
+    The third mini-puzzle is based on Connect the Dots and takes CAPITOL RECORDS LOGO and PLEIADES as its inputs. Both the CAPITOL RECORDS LOGO and PLEIADES (the constellation) contain star patterns. If you connect the stars like in Connect the Dots, you get K__L__. Putting all three sets of letters together yields{" "} 
+    <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          KEPLER.
+        </span>
+  </div>
+  <div className="flex flex-col items-center space-y-2 mt-8">
+      <Image src={constolution} width={500} height={500} alt="" />
+  </div>
+  <div className="mt-4 text-center text-base text-white">
+      The pattern in Connect the Dots. CAPITOL RECORDS LOGO goes across, PLEIADES is everything else.
+    </div>
+
+</div>;
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Thomas Gordon, Malcolm Certain";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

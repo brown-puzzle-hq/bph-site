@@ -56,12 +56,74 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      This puzzle is a word ladder but instead of a letter off they're a sound off
+      because the answers are all spelled in IPA with one symbol changing
+      between each. It's also British pronunciation.
+    </div>
+    <div>
+      So the blanks should be filled in this order, with the green symbol being
+      indexed from the highlighted space.
+    </div>
+    <div className="text-xl">
+      <span className="font-bold text-green-400">ɹ</span>
+      <span>ɑ</span>
+      <span>s</span>
+      <span>t</span>
+      <span>ə</span>→<span className="font-bold text-green-400">v</span>
+      <span>ɑ</span>
+      <span>s</span>
+      <span>t</span>
+      <span>ə</span>→<span>p</span>
+      <span>ɑ</span>
+      <span>s</span>
+      <span>t</span>
+      <span className="font-bold text-green-400">ə</span>→<span>p</span>
+      <span className="font-bold text-green-400">eɪ</span>
+      <span>s</span>
+      <span>t</span>
+      <span>ə</span>→<span>p</span>
+      <span>eɪ</span>
+      <span>n</span>
+      <span className="font-bold text-green-400">t</span>
+      <span>ə</span>→<span className="font-bold text-green-400">f</span>
+      <span>eɪ</span>
+      <span>n</span>
+      <span>t</span>
+      <span>ə</span>
+    </div>
+    <div>
+      (<span className="font-bold text-green-400">eɪ</span> is a diphthong so it
+      counts as one symbol)
+    </div>
+    <div>Written in english:</div>
+    <div className="text-xl">
+      Rasta → Vaster → Pastor → Paster → Painter → Fainter
+    </div>
+    <div>(remember it's British pronunciation!)</div>
+    <div>
+      The clues are meant to help people guess the words. They are arranged in
+      the order that the indexed symbols should be arranged (so the f from the
+      IPA spelling of fainter will go first because that clue is first, then the
+      eɪ from paster because that clue is second, etc.)
+    </div>
+    <div>
+      Then using the highlighted symbol and ordering them based on the clues,
+      you should get: f eɪ v ɹ ə t, aka the British pronunciation of favorite,
+      which they would spell {" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        FAVOURITE.
+      </span>
+    </div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Chloe Johnson";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

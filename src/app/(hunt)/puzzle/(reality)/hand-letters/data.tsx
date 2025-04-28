@@ -21,48 +21,21 @@ export const puzzleId = "hand-letters";
  */
 
 export const inPersonBody = (
-  <div className="max-w-3xl text-center space-y-10">
+  <div className="max-w-3xl space-y-10 text-center">
     <p className="mb-4 italic">
       I'm on this really exciting movie shoot, but I've become so crazed that
       whenever I look at the clocks, I think they're trying to give me a
       message! I just wish I knew where I am heading next...
     </p>
 
-    <div className="grid grid-cols-2 space-y-10 items-center">
-    <Image
-      src={HL_1}
-      alt=""
-      className="mb-5"
-    />
-    <Image
-      src={HL_2}
-      alt=""
-      className="mb-5"
-    />
-    <Image
-      src={HL_3}
-      alt=""
-      className="mb-5"
-    />
-    <Image
-      src={HL_4}
-      alt=""
-      className="mb-5"
-    />
-    <Image
-      src={HL_5}
-      alt=""
-      className="mb-5"
-    />
-    <Image
-      src={HL_6}
-      alt=""
-      className="mb-5"
-    />
-
+    <div className="grid grid-cols-2 items-center space-y-10">
+      <Image src={HL_1} alt="" className="mb-5" />
+      <Image src={HL_2} alt="" className="mb-5" />
+      <Image src={HL_3} alt="" className="mb-5" />
+      <Image src={HL_4} alt="" className="mb-5" />
+      <Image src={HL_5} alt="" className="mb-5" />
+      <Image src={HL_6} alt="" className="mb-5" />
     </div>
-
-    
   </div>
 );
 
@@ -90,7 +63,10 @@ export const solutionBody = (
       passes are arranged. Looking at the clock hands (just hour and minute, no
       second hands) reveals the vague shape of a letter spelled out by each
       formation. Putting these letters together, one gets the answer to the
-      puzzle: JUNGLE.
+      puzzle:{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        JUNGLE.
+      </span>
     </p>
   </div>
 );
@@ -98,7 +74,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Noah Elbaum";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
