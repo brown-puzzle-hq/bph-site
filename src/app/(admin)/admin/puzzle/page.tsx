@@ -133,7 +133,7 @@ export default async function Home() {
               <TableHead className="w-fit py-0 text-center">Solves</TableHead>
               <TableHead className="w-fit py-0 text-center">Guesses</TableHead>
               <TableHead className="w-fit py-0 text-center">Hints</TableHead>
-              <TableHead className="w-fit py-0 text-center text-nowrap">
+              <TableHead className="w-fit text-nowrap py-0 text-center">
                 In-Person
               </TableHead>
               <TableHead className="w-fit py-0 text-center">Box</TableHead>
@@ -240,8 +240,8 @@ export default async function Home() {
                     </TableCell>
                     <TableCell className="justify-center">
                       <div className="flex justify-center">
-                        <a href={`/admin/statistics/${puzzle.id}`}>
-                          <ChartColumn className="text-black-500 size-5 hover:opacity-60" />
+                        <a href={`/puzzle/${puzzle.id}/stats`}>
+                          <ChartColumn className="text-black-500 size-5 text-lime-600 hover:opacity-60" />
                         </a>
                       </div>
                     </TableCell>

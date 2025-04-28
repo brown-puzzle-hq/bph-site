@@ -783,7 +783,7 @@ export default function Graph() {
               </p>
               <p>
                 <Link
-                  href={`/admin/statistics/${searchedPuzzle.puzzleId}`}
+                  href={`/puzzle/${searchedPuzzle.puzzleId}/stats`}
                   prefetch={false}
                   rel="noopener noreferrer"
                   target="_blank"

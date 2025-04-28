@@ -37,7 +37,7 @@ export default async function DefaultHintPage({
         >
           Login
         </Link>{" "}
-        to see previous hints.
+        to see hints.
       </div>
     );
   }

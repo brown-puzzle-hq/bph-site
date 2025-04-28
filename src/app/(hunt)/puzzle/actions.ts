@@ -35,6 +35,11 @@ import {
 import { ensureError } from "~/lib/utils";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+// TODO: the canView functions should return a more specific type.
+// They also do not need to be async functions, so we can put them in
+// a different file
+
 export type viewStatus = "success" | "not_authenticated" | "not_authorized";
 
 /** Checks whether the user can view the puzzle.
@@ -88,6 +93,12 @@ export async function canViewPuzzle(
   return "not_authorized";
 }
 
+/** Only users who are logged in can view hints. */
+export async function canViewHint(session: Session | null) {
+  if (!session?.user?.id) return "not_authenticated";
+  else return "success";
+}
+
 /** Checks whether the user can view the solution.
  *  Does not check whether the solution actually exists.
  * Returns a viewStatus string.
@@ -99,8 +110,8 @@ export async function canViewSolution(
   if (!session?.user?.id) return "not_authenticated";
   if (session.user.role == "admin") return "success";
   else return "not_authorized";
-  // // If the hunt has ended, anyone can view solutions
-  // if (new Date() > REMOTE.END_TIME) return "success";
+  // // If wrapup has released, anyone can view solutions
+  // if (new Date() > REMOTE.WRAPUP_TIME) return "success";
   // // If the hunt has not ended, users must be signed-in
   // if (!session?.user?.id) return "not_authenticated";
   // // Admin can always view the solution
@@ -115,6 +126,16 @@ export async function canViewSolution(
   // });
   //
   // return solved ? "success" : "not_authorized";
+}
+
+export async function canViewStats(
+  session: Session | null,
+): Promise<viewStatus> {
+  // If the hunt has ended, anyone can view stats
+  if (new Date() > REMOTE.WRAPUP_TIME) return "success";
+  // Admin can always view stats
+  if (session?.user?.role == "admin") return "success";
+  return "not_authorized";
 }
 
 /** Handles a guess for a puzzle. May call handleSolve.
