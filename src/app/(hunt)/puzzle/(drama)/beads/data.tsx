@@ -80,9 +80,8 @@ export const solutionBody = (
       For each row, taking the chain and making all the bends pictured results
       in the overall chain taking the shape of a letter. These letters, when
       read in order, spell the answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        ABYSS.
-      </span>
+      <span className="font-bold text-main-accent">
+        ABYSS</span>.
     </div>
   </div>
 );

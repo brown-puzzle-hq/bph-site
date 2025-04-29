@@ -856,9 +856,8 @@ export const solutionBody = (
       </div>
     </div>
     <div>Drawing the lines for each grid forms a letter. Reading the letters left-to-right, top-to-bottom, we obtain our answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        TEXT ALIGN.
-      </span></div>
+      <span className="font-bold text-main-accent">
+        TEXT ALIGN</span>.</div>
   </div>
 );
 

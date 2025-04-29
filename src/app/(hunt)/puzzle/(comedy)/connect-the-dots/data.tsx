@@ -52,9 +52,8 @@ export const solutionBody = (
       Again, reading the letters from each constellation, going top-to-bottom on
       the left column and taking the letters within each constellation in
       top-down order, we obtain our answer,{" "}
-    <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-      MICROGRAVITY.
-    </span>
+    <span className="font-bold text-main-accent">
+      MICROGRAVITY</span>.
     </div>
   </div>
 );

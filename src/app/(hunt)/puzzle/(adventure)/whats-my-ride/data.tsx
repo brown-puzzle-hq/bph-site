@@ -48,9 +48,8 @@ export const solutionBody = (
       The box with a question mark corresponds to APOLLO. Answering the question
       from the title, What's My Ride?, according to the enumeration of 3
       provided at the bottom of the puzzle, gives us our answer of{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        SUN.
-      </span>
+      <span className="font-bold text-main-accent">
+        SUN</span>.
     </div>
   </div>
 );

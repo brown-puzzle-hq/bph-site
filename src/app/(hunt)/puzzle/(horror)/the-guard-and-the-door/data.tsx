@@ -225,9 +225,8 @@ export const solutionBody = (
         </p>
       </li>
     </ol>
-    <p className="mb-4">Thus, the solution is <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          APPLE.
-        </span></p>
+    <p className="mb-4">Thus, the solution is <span className="font-bold text-main-accent">
+          APPLE</span>.</p>
   </div>
 );
 

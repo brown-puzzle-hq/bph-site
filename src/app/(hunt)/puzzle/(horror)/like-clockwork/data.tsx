@@ -93,9 +93,8 @@ export const solutionBody = <div className="max-w-3xl space-y-4">
       </table>
     </div>
     <div>
-      The missing gear has the answer, <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          FENNEL.
-        </span>
+      The missing gear has the answer, <span className="font-bold text-main-accent">
+          FENNEL</span>.
     </div>
 </div>;
 

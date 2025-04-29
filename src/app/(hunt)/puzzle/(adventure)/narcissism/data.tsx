@@ -43,9 +43,8 @@ export const solutionBody = (
     <div>
       The shapes are each Great Lakes that are rotated and have a reflection.
       The missing Great Lake,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        LAKE SUPERIOR,
-      </span>{" "}
+      <span className="font-bold text-main-accent">
+        LAKE SUPERIOR</span>,{" "}
       is the answer.
     </div>
   </div>

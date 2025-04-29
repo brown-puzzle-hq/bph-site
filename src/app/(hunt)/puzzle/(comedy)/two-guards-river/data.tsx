@@ -88,6 +88,9 @@ export const solutionBody = (
         there.
       </li>
     </ol>
+    <div>
+      After the correct door is entered, the puzzle is automatically solved.
+    </div>
   </div>
 );
 

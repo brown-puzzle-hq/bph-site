@@ -113,9 +113,8 @@ export const solutionBody = (
       Then using the highlighted symbol and ordering them based on the clues,
       you should get: f eɪ v ɹ ə t, aka the British pronunciation of favorite,
       which they would spell {" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        FAVOURITE.
-      </span>
+      <span className="font-bold text-main-accent">
+        FAVOURITE</span>.
     </div>
   </div>
 );

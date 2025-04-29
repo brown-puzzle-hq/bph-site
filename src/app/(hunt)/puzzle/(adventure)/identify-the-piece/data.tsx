@@ -50,29 +50,25 @@ export const solutionBody = (
       <li>
         This is Beethoven's 5th Symphony, but the last motif is missing, making
         it an{" "}
-        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          UNFINISHED SYMPHONY.
-        </span>
+        <span className="font-bold text-main-accent">
+          UNFINISHED SYMPHONY</span>.
       </li>
       <li>
         This is a Chopin Etude, but the time signature is in the mathematical
         constant pi, giving{" "}
-        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          TRANSCENDENTAL ETUDES.
-        </span>
+        <span className="font-bold text-main-accent">
+          TRANSCENDENTAL ETUDES</span>.
       </li>
       <li>
         This is Strauss's Blue Danube Waltz (which is Valse in French), but the
         bassline is entirely the solfège note la, making it{" "}
-        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          LA VALSE.
-        </span>
+        <span className="font-bold text-main-accent">
+          LA VALSE</span>.
       </li>
       <li>
         This is Bohemian Rhapsody on the alto clef, making it{" "}
-        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          ALTO RHAPSODY,
-        </span>{" "}
+        <span className="font-bold text-main-accent">
+          ALTO RHAPSODY</span>,{" "}
         which is the answer to this puzzle.
       </li>
     </ol>

@@ -162,16 +162,14 @@ export const solutionBody = (
 
     <div className="mb-5 max-w-3xl">
       This extraction spells out the intermediate answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        APOLOGIZE.
-      </span>
+      <span className="text-main-accent">
+        APOLOGIZE</span>.
     </div>
     <div className="mb-5 max-w-3xl">
       From there, this is a judge puzzle! Emailed submissions meeting the stated
       criteria will be given the answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        INDIANA JONES AND THE LAST CRUSADE.
-      </span>
+      <span className="font-bold text-main-accent">
+        INDIANA JONES AND THE LAST CRUSADE</span>.
     </div>
   </div>
 );

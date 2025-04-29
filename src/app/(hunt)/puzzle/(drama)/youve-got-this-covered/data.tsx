@@ -104,9 +104,8 @@ export const solutionBody = (
     <div>
       Taking the two missing parts of pieces and combining them, we obtain our
       answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        SUNDAY.
-      </span>
+      <span className="font-bold text-main-accent">
+        SUNDAY</span>.
     </div>
   </div>
 );

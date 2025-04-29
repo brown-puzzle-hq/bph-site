@@ -123,9 +123,8 @@ export const solutionBody = (
     </div>
     <div>
       Reading the extracted letters left-to-right, we obtain our final answer of{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        MINNOWS.
-      </span>
+      <span className="font-bold text-main-accent">
+        MINNOWS</span>.
     </div>
   </div>
 );

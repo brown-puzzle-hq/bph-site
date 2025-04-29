@@ -168,9 +168,8 @@ export const solutionBody = (
 
     <div>
       The new letters in the course titles spell out our answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        BANNER.
-      </span>
+      <span className="font-bold text-main-accent">
+        BANNER</span>.
     </div>
   </div>
 );

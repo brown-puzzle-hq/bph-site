@@ -287,7 +287,7 @@ export const solutionBody = (
 
     <div className="mt-6">
       Reading the extracted letters in order gives our answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+      <span className="font-bold text-main-accent">
         CLOSED-DOOR
       </span>
       .

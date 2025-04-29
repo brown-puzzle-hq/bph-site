@@ -186,9 +186,8 @@ export const solutionBody = (
     </div>
     <div>
       Reading the extracted letters in order gives{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        MARTIAL ARTIST,
-      </span>{" "}
+      <span className="font-bold text-main-accent">
+        MARTIAL ARTIST</span>,{" "}
       which is the answer.
     </div>
   </div>

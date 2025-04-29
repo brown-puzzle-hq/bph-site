@@ -149,9 +149,8 @@ export const solutionBody = (
 
     <div>
       Reading the extracted letters in order gives us our answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        GATES.
-      </span>
+      <span className="font-bold text-main-accent">
+        GATES</span>.
     </div>
   </div>
 );

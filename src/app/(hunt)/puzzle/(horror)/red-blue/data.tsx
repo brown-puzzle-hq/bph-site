@@ -182,7 +182,7 @@ export const solutionBody = (
     </div>
     <div>
       These letters spell our answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+      <span className="font-bold text-main-accent">
         DUKU
       </span>
       .

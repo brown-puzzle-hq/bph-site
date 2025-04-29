@@ -111,7 +111,7 @@ export const solutionBody = (
     </ol>
     <div>
       After reaching the end, the robber finally finds their money and retires, having successfully{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+      <span className="font-bold text-main-accent">
         PALMED
       </span>{" "}
       the money.

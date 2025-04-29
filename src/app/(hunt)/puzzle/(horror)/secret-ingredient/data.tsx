@@ -50,9 +50,8 @@ export const solutionBody = (
       <div>
         Once you complete the trees, you should get EGG and PLANT for the bottom
         two blue boxes. Concatenating those words gives{" "}
-        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          EGGPLANT,
-        </span>{" "}
+        <span className="font-bold text-main-accent">
+          EGGPLANT</span>,{" "}
         the puzzle's answer.
       </div>
     </div>

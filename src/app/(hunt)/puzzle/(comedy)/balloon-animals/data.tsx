@@ -299,9 +299,8 @@ export const solutionBody = (
     </div>
     <div>
       Reading off these letters in order gives our final answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        MORE POP MUSIC.
-      </span>
+      <span className="font-bold text-main-accent">
+        MORE POP MUSIC</span>.
     </div>
   </div>
 );

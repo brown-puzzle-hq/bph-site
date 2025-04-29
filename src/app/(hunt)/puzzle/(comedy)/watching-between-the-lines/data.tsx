@@ -542,9 +542,8 @@ export const solutionBody = (
     <div>
       The extracted message says to combine word 6 of line 1982 of Othello and
       word 4 of line 0330 from Hamlet, giving a final answer of{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        POPPYSEED.
-      </span>
+      <span className="font-bold text-main-accent">
+        POPPYSEED</span>.
     </div>
   </div>
 );

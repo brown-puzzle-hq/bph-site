@@ -142,9 +142,8 @@ export const solutionBody = (
     </div>
     <div>
       This gives us our parasitic answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        VAMPIRES.
-      </span>
+      <span className="font-bold text-main-accent">
+        VAMPIRES</span>.
     </div>
   </div>
 );

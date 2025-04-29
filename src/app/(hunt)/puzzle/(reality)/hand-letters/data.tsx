@@ -64,9 +64,8 @@ export const solutionBody = (
       second hands) reveals the vague shape of a letter spelled out by each
       formation. Putting these letters together, one gets the answer to the
       puzzle:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        JUNGLE.
-      </span>
+      <span className="font-bold text-main-accent">
+        JUNGLE</span>.
     </p>
   </div>
 );

@@ -193,7 +193,7 @@ export const solutionBody = (
       What now? We watch the scenes in each order! Each ordering spells out a
       different word down the diagonal: PUPPET, KILLER, KRAMER, in that order.
       Surely this must be directing us to assemble the movie like a{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+      <span className="font-bold text-main-accent">
         JIGSAW
       </span>
       , which is our answer!

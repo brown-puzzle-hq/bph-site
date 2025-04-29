@@ -157,9 +157,8 @@ export const solutionBody = (
     </div>
     <div>
       This spells the answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        PROTOHUMANS.
-      </span>
+      <span className="font-bold text-main-accent">
+        PROTOHUMANS</span>.
     </div>
   </div>
 );

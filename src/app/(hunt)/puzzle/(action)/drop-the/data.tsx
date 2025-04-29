@@ -122,9 +122,8 @@ export const solutionBody = (
     <div>
       Ordering the highlighted letters by the numbers they were given with, we
       obtain our final answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        ALTERED EGO.
-      </span>
+      <span className="font-bold text-main-accent">
+        ALTERED EGO</span>.
     </div>
   </div>
 );
@@ -132,7 +131,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Nate Chinman, Nicholas Cressman, and Jack de Haan";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

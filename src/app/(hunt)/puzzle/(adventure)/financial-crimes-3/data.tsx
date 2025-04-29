@@ -217,9 +217,8 @@ export const solutionBody = (
       Lining up the receipts of the fraudulent purchases and the IDs of the
       purchasers, we extract the word on the ID that lines up the fraudulent
       item. This gives us{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        PRIVATE EQUITY FIRM,
-      </span>{" "}
+      <span className="font-bold text-main-accent">
+        PRIVATE EQUITY FIRM</span>,{" "}
       which is the answer.
     </div>
   </div>

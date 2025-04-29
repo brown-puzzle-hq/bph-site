@@ -139,9 +139,8 @@ export const solutionBody = (
     </ul>
     <div>
       Reading off the first letters of these first names, we get our answer:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        TROPICAL.
-      </span>
+      <span className="font-bold text-main-accent">
+        TROPICAL</span>.
     </div>
   </div>
 );

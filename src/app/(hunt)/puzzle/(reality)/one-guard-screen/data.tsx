@@ -51,9 +51,8 @@ export const solutionBody = (
       wall in this alternating pattern. By letting the simulation run enough
       times (speeding it up can be helpful), the guard will eventually reveal,
       from top to bottom, the letters{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        NATIONAL SECURITY,
-      </span>{" "}
+      <span className="font-bold text-main-accent">
+        NATIONAL SECURITY</span>,{" "}
       which is the answer.
     </div>
   </div>

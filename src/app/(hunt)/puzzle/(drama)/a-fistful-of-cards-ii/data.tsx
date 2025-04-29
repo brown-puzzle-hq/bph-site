@@ -345,9 +345,8 @@ export const solutionBody = (
     </div>
     <div>
       Reading off the extracted letters in order gives our answer,{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        DAMAGE.
-      </span>
+      <span className="font-bold text-main-accent">
+        DAMAGE</span>.
     </div>
   </div>
 );

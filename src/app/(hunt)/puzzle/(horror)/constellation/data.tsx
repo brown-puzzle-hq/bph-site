@@ -63,9 +63,8 @@ export const solutionBody  = <div className="max-w-3xl space-y-4">
   </div>
   <div> 
     The third mini-puzzle is based on Connect the Dots and takes CAPITOL RECORDS LOGO and PLEIADES as its inputs. Both the CAPITOL RECORDS LOGO and PLEIADES (the constellation) contain star patterns. If you connect the stars like in Connect the Dots, you get K__L__. Putting all three sets of letters together yields{" "} 
-    <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-          KEPLER.
-        </span>
+    <span className="font-bold text-main-accent">
+          KEPLER</span>.
   </div>
   <div className="flex flex-col items-center space-y-2 mt-8">
       <Image src={constolution} width={500} height={500} alt="" />

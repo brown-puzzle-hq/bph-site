@@ -48,9 +48,8 @@ export const solutionBody = (
     notes based on the solfege, then index into the word based on the beat (so
     if a note is the 18th beat in the measure, they extract the 18th letter),
     solvers will get CYANOCOCCUS NINE. CYANOCOCCUS is the scientific name for{" "}
-    <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-      BLUEBERRY,
-    </span>{" "}
+    <span className="font-bold text-main-accent">
+      BLUEBERRY</span>,{" "}
     which is the answer to the puzzle.
   </div>
 );

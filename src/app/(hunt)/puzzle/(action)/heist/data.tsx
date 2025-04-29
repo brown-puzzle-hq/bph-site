@@ -56,7 +56,7 @@ export const solutionBody = (
     <div>
       After reaching the end, the robber finds a sticky note, revealing that they
       missed the money, but did receive the floor plan, which is the answer: {" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">BROWN.</span>
+      <span className="font-bold text-main-accent">BROWN.</span>
     </div>
   </div>
 );

@@ -99,9 +99,8 @@ export const solutionBody = (
       lyrics in each category share a season (although Category 4 does not turn
       out to be fall!). Category 1 is Fall, Category 2 is Winter, and Category 4
       is Summer, leaving Category 3 to be{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        SPRING,
-      </span>{" "}
+      <span className="font-bold text-main-accent">
+        SPRING</span>,{" "}
       which is our answer.
     </div>
   </div>

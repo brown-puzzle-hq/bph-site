@@ -290,9 +290,8 @@ export const solutionBody = (
     </div>
     <div>
       This extracts what we need to fix this movie:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        EXTRA ACTION.
-      </span>
+      <span className="font-bold text-main-accent">
+        EXTRA ACTION</span>.
     </div>
   </div>
 );
@@ -300,7 +299,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Thomas Gordon, Chloe Qiao, Alex Wang, and Philip Yao";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

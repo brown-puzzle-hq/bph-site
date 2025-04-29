@@ -42,8 +42,7 @@ export const solutionBody = (
     <div className="font-bold">Scenario 1:</div>
     <div>
       <span className="underline">
-        Suppose the announcer is telling the truth.
-      </span>
+        Suppose the announcer is telling the truth</span>.
       <br />
       There are two liars and one truth-teller, and your goal is to pick the
       truth-teller. Picking a door arbitrarily gives you a 33% chance of picking
@@ -80,8 +79,7 @@ export const solutionBody = (
     </div>
     <div>
       <span className="underline">
-        Suppose both announcers is telling the truth.
-      </span>
+        Suppose both announcers is telling the truth</span>.
       <br />
       Because you want the guard behind your door to say that the announcer is a
       liar, your goal is to pick a lying guard. By announcer 2, either exactly
@@ -133,8 +131,7 @@ export const solutionBody = (
     </div>
     <div>
       <span className="underline">
-        Suppose Announcer 1 is a truth-teller and Announcer 2 is a liar.
-      </span>
+        Suppose Announcer 1 is a truth-teller and Announcer 2 is a liar</span>.
       <br />
       Because you want your guard to have a different truth-telling nature from
       Announcer 2, you are looking for a truth-telling guard. By Announcer 2
@@ -148,8 +145,7 @@ export const solutionBody = (
     </div>
     <div>
       <span className="underline">
-        Suppose Announcer 1 is a liar and Announcer 2 is a truth-teller.
-      </span>
+        Suppose Announcer 1 is a liar and Announcer 2 is a truth-teller</span>.
       <br />
       Because you want your guard to have the same truth-telling nature as
       Announcer 2, you are looking for a lying guard. Announcer 2 tells you that
@@ -174,8 +170,7 @@ export const solutionBody = (
     </div>
     <div>
       <span className="underline">
-        Suppose Announcers 1 and 3 are truth-tellers and Announcer 2 is a liar.
-      </span>
+        Suppose Announcers 1 and 3 are truth-tellers and Announcer 2 is a liar</span>.
       <br />
       By Announcer 1 telling the truth, you are looking for a guard who says at
       least two announcers are truth-tellers, and thus you are looking for a
@@ -195,8 +190,7 @@ export const solutionBody = (
     </div>
     <div>
       <span className="underline">
-        Suppose Announcers 1 and 3 are liars and Announcer 2 is a truth-teller.
-      </span>
+        Suppose Announcers 1 and 3 are liars and Announcer 2 is a truth-teller</span>.
       <br />
       By Announcer 1 lying, you are looking for a guard who says less than two
       announcers are truth-tellers, and thus you are looking for a truth-telling
@@ -233,9 +227,8 @@ export const solutionBody = (
     <div>
       After making all of the correct choices, solvers are given the following
       letters in order:{" "}
-      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
-        PUNCTILIO,
-      </span>{" "}
+      <span className="font-bold text-main-accent">
+        PUNCTILIO</span>,{" "}
       which is our answer.
     </div>
   </div>
