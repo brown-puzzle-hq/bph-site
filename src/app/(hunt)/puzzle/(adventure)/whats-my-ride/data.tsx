@@ -1,7 +1,7 @@
 import Image from "next/image";
 // import WMR from "./WMR_Puzzle_Body.jpg";
 import WMR from "./whats-my-ride.png";
-import SOLUTION from "./WMR_Solution.jpg";
+import SOLUTION from "./whats-my-ride-solution.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -16,7 +16,7 @@ export const puzzleId = "whats-my-ride";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl text-center items-center">
+  <div className="max-w-3xl items-center text-center">
     <Image
       src={WMR}
       // width={500}
@@ -37,32 +37,28 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl">
-    <p className="mb-4">
-      This puzzle is a family tree based on Greek myth. Specifically, Apollo's
-      family tree. The solvers need to ID that this is 1) a family tree, 2)
-      about Greek myth, 3) that Apollo is the ? in the middle, and 4) the 3
-      emoji at the bottom and the title should direct them to answer{" "}
-      <span className="text-main-accent">SUN</span>. If they are guessing
-      SUNCHARIOT or CHARIOT instead, just clue them to check the emoji at the
-      bottom of the page. Attached is a rough version of the family tree with
-      all the names written in instead of the emojis to help if they seem to be
-      hung up on one or another.
-    </p>
-    <Image
-      src={SOLUTION}
-      width={500}
-      height={500}
-      alt="solution image"
-      className="mx-auto"
-    />
+  <div className="max-w-3xl space-y-4">
+    <div>
+      The puzzle depicts a family tree. Specifically, a family tree of Greek
+      mythology. Emojis in boxes clue which Greek god goes in the given square.
+      A filled-in family tree is shown here:
+    </div>
+    <Image src={SOLUTION} alt="solution image" />
+    <div>
+      The box with a question mark corresponds to APOLLO. Answering the question
+      from the title, What's My Ride?, according to the enumeration of 3
+      provided at the bottom of the puzzle, gives us our answer of{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        SUN.
+      </span>
+    </div>
   </div>
 );
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Erin Finn";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

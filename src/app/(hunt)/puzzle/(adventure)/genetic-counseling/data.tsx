@@ -27,6 +27,70 @@ const traits = [
   "rs4988235",
 ];
 
+const alleles = [
+  "AA",
+  "GG",
+  "AA",
+  "CC",
+  "CC",
+  "TT",
+  "AA",
+  "AA",
+  "AA",
+  "TT",
+  "AA",
+  "AA",
+  "CC",
+];
+
+const chromosomes = [
+  "1",
+  "2",
+  "2",
+  "3",
+  "4",
+  "15",
+  "7",
+  "4",
+  "4",
+  "6",
+  "2",
+  "8",
+  "7",
+];
+
+const phenotypes = [
+  "Musician",
+  "Warrior",
+  "Brown eyes",
+  "Wet earwax",
+  "Sprinter",
+  "Flaming locks of auburn hair",
+  "Asian flusher",
+  "Straight hair",
+  "Azure orbs",
+  "Peanut allergy",
+  "Cilantro taster",
+  "Freckles",
+  "Also eats dairy but with pain",
+];
+
+const letters = [
+  "M",
+  "A",
+  "R",
+  "T",
+  "I",
+  "A",
+  "L",
+  "A",
+  "R",
+  "T",
+  "I",
+  "S",
+  "T",
+];
+
 export const inPersonBody = (
   <div className="flex max-w-3xl flex-col">
     <div className="pb-4 italic">
@@ -84,12 +148,56 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      Each given rsID can be found in the data sheet, where the single
+      nucleotide polymorphism (SNP) alleles and the chromosome can be found. By
+      researching the actual SNP, such as by using SNPedia, the given genotypes
+      can be associated with phenotypes. Specific names for these phenotypes can
+      be found in the company advertisement, and the chromosome number is used
+      to index into this phenotype:
+    </div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">rsID</th>
+            <th className="p-2 outline outline-white">Alleles</th>
+            <th className="p-2 outline outline-white">Chromosome</th>
+            <th className="p-2 outline outline-white">Phenotype</th>
+            <th className="p-2 outline outline-white">Extracted Letter</th>
+          </tr>
+        </thead>
+        <tbody>
+          {traits.map((trait, index) => (
+            <tr key={index}>
+              <td className="p-2 outline outline-white">{trait}</td>
+              <td className="p-2 outline outline-white">{alleles[index]}</td>
+              <td className="p-2 outline outline-white">
+                {chromosomes[index]}
+              </td>
+              <td className="p-2 outline outline-white">{phenotypes[index]}</td>
+              <td className="p-2 outline outline-white">{letters[index]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Reading the extracted letters in order gives{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        MARTIAL ARTIST,
+      </span>{" "}
+      which is the answer.
+    </div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Kaylee Gallagher";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

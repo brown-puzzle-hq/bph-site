@@ -109,12 +109,173 @@ export const remoteBody = (
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      The puzzle is in the form of a .json file that encodes a graph of messages
+      being to people. The structure can be analyzed online with a json viewer
+      of some kind, or simply programmatically.
+    </div>
+    <div>
+      The overall structure is three trees of messages, where most of the time
+      the letter is sent to either two people or zero. Sometimes, however,
+      people send the letter to exactly one person. This letter will instruct
+      the recipient to send the message to far more than 2 people.
+    </div>
+    <div>
+      Reading the first letter of every sentence of the message spells ASCII, so
+      we can decode the number of people that they were instructed to send the
+      letter to with ASCII.
+    </div>
+    <div>
+      Each of the special letters is at a unique depth in the tree. By sorting
+      the letters by depth, and then placing the letters in the order of the
+      chain, we get the following results:
+    </div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Color</th>
+            <th className="p-2 outline outline-white">Depth order</th>
+            <th className="p-2 outline outline-white">ASCII Number</th>
+            <th className="p-2 outline outline-white">Character</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">Blue</td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">87</td>
+            <td className="p-2 outline outline-white">W</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Blue</td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">79</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">84</td>
+            <td className="p-2 outline outline-white">T</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Blue</td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">84</td>
+            <td className="p-2 outline outline-white">T</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">1</td>
+            <td className="p-2 outline outline-white">87</td>
+            <td className="p-2 outline outline-white">W</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">69</td>
+            <td className="p-2 outline outline-white">E</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">76</td>
+            <td className="p-2 outline outline-white">L</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">70</td>
+            <td className="p-2 outline outline-white">F</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">84</td>
+            <td className="p-2 outline outline-white">T</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">72</td>
+            <td className="p-2 outline outline-white">H</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Blue</td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">66</td>
+            <td className="p-2 outline outline-white">B</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">79</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">79</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">75</td>
+            <td className="p-2 outline outline-white">K</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">40</td>
+            <td className="p-2 outline outline-white">(</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">6</td>
+            <td className="p-2 outline outline-white">57</td>
+            <td className="p-2 outline outline-white">9</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">44</td>
+            <td className="p-2 outline outline-white">,</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Red</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">53</td>
+            <td className="p-2 outline outline-white">5</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">White</td>
+            <td className="p-2 outline outline-white">8</td>
+            <td className="p-2 outline outline-white">41</td>
+            <td className="p-2 outline outline-white">)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Reading the characters in the right order gives the clue phrase WOT
+      TWELFTH BOOK (9, 5), and the twelfth book of the Wheel of Time series
+      (without the leading "The" to fit the enumeration) is{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        GATHERING STORM
+      </span>
+      .
+    </div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Malcolm Certain and Arnav Singhal";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

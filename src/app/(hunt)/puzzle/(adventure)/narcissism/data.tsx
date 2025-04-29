@@ -18,8 +18,8 @@ export const puzzleId = "narcissism";
  */
 export const inPersonBody = (
   <div className="max-w-3xl space-y-4 text-center">
-        <div className="pb-2.5 italic">
-        Your therapist asks if you feel that something's missing.
+    <div className="pb-2.5 italic">
+      Your therapist asks if you feel that something's missing.
     </div>
     <div className="grid grid-cols-1 gap-8 p-4 sm:grid-cols-2">
       <Image src={IMG1} className="rounded-lg" alt="" />
@@ -38,12 +38,23 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      The shapes are each Great Lakes that are rotated and have a reflection.
+      The missing Great Lake,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        LAKE SUPERIOR,
+      </span>{" "}
+      is the answer.
+    </div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Chloe Johnson";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

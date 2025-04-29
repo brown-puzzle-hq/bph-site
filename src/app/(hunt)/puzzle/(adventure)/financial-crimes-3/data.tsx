@@ -125,24 +125,25 @@ export const body = (
 
 export const inPersonBody = (
   <div className="mx-auto mb-6 max-w-3xl text-center">
-      This is a physical puzzle! Please send someone from your team to Friedman
-      208 to pick it up.
+    This is a physical puzzle! Please send someone from your team to Friedman
+    208 to pick it up.
   </div>
 );
 
 export const remoteBoxBody = (
   <div className="mx-auto mb-6 max-w-3xl text-center">
-      This is a physical puzzle! You should have received some documents in your
-      box. Contact brownpuzzlehq@gmail.com with any questions about your box or its materials.
+    This is a physical puzzle! You should have received some documents in your
+    box. Contact brownpuzzlehq@gmail.com with any questions about your box or
+    its materials.
   </div>
 );
 
 export const remoteBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
-      In-person solvers and box purchasers were given two documents along with the
-      puzzle. You may need to print them and cut along black lines; they are the
-      following two images:
+      In-person solvers and box purchasers were given two documents along with
+      the puzzle. You may need to print them and cut along black lines; they are
+      the following two images:
     </div>
     <div className="mb-6 flex w-full max-w-3xl flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0">
       <Image className="w-full sm:w-1/2 sm:pr-3" src={IDS} alt="" />
@@ -157,12 +158,77 @@ export const remoteBody = (
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      The interviews provided give logical hints on matching each person with
+      their purchases. The statements, in order, give the following information:
+    </div>
+    <ol className="list-inside list-decimal">
+      <li>
+        Either the director or the writer purchased the filming equipment.
+      </li>
+      <li>The caterer purchased the kitchen equipment.</li>
+      <li>
+        The food was not purchased by the director, writer, lead, or stunt
+        double.
+      </li>
+      <li>
+        The historical accuracy consultant did not purchase the reference books.
+      </li>
+      <li>The intern purchased the coffee.</li>
+      <li>
+        Either the historical accuracy consultant or the writer purchased the
+        reference books.
+      </li>
+      <li>Either the lead or the stunt double purchased the rodents.</li>
+      <li>The historical accuracy consultant did not purchase the food.</li>
+      <li>
+        The plane tickets were purchased by the writer, director, or lead.
+      </li>
+    </ol>
+    This gives the following map:
+    <ol className="list-inside list-decimal">
+      <li>The director purchased the filming equipment.</li>
+      <li>The caterer purchased the kitchen equipment.</li>
+      <li>The security chief purchased the food.</li>
+      <li>The writer purchased the reference books.</li>
+      <li>The intern purchased the coffee.</li>
+      <li>The stunt double purchased the rodents.</li>
+      <li>The historical accuracy consulted purchased the costumes.</li>
+      <li>The lead purchased the plane tickets.</li>
+    </ol>
+    <div>
+      The interviews also specify some incongruities, which clue the fraudulent
+      purchases. in particular, they are the following:
+    </div>
+    <ol className="list-inside list-decimal">
+      <li>
+        The act in Central Europe got axed, meaning the Flight to Hungary is
+        fraudulent.
+      </li>
+      <li>North Dakota Williams was bald, meaning the Wigs are fraudulent.</li>
+      <li>
+        North Dakota Williams did not eat beef, meaning the Hamburgers were
+        fraudulent.
+      </li>
+    </ol>
+    <div>
+      Lining up the receipts of the fraudulent purchases and the IDs of the
+      purchasers, we extract the word on the ID that lines up the fraudulent
+      item. This gives us{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        PRIVATE EQUITY FIRM,
+      </span>{" "}
+      which is the answer.
+    </div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Malcolm Certain";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

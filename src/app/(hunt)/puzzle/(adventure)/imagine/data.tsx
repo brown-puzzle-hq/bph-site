@@ -45,15 +45,8 @@ export const remoteBody = (
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl">
-    <div className="mb-5 text-center">
-      Answer:{" "}
-      <span className="bg-main-text hover:bg-inherit">
-        INDIANA JONES AND THE LAST CRUSADE
-      </span>
-      .
-    </div>
-    <div className="mb-4 max-w-3xl">
+  <div className="max-w-3xl space-y-4">
+    <div>
       This puzzle is a reference to{" "}
       <Link href="https://www.youtube.com/watch?v=omEDLKS5pbY">
         <span className="underline">this pandemic celebrity cringe video</span>
@@ -76,7 +69,7 @@ export const solutionBody = (
       </ul>
     </div>
 
-    <div className="mb-4 mt-4">
+    <div>
       After realizing the premise of the video, solvers should be able to match
       each clip to its singer. Each clip is followed by a spliced together
       number also composed of clips from the original video. By adding these
@@ -85,7 +78,7 @@ export const solutionBody = (
     </div>
 
     <div className="mx-auto w-fit overflow-x-auto p-4">
-      <table className="border border-white">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
         <tbody>
           <tr>
             <td className="border border-white p-2">
@@ -169,15 +162,16 @@ export const solutionBody = (
 
     <div className="mb-5 max-w-3xl">
       This extraction spells out the intermediate answer,{" "}
-      <span className="bg-main-text hover:bg-inherit">APOLOGIZE</span>.
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        APOLOGIZE.
+      </span>
     </div>
     <div className="mb-5 max-w-3xl">
       From there, this is a judge puzzle! Emailed submissions meeting the stated
       criteria will be given the answer,{" "}
-      <span className="bg-main-text hover:bg-inherit">
-        INDIANA JONES AND THE LAST CRUSADE
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        INDIANA JONES AND THE LAST CRUSADE.
       </span>
-      .
     </div>
   </div>
 );
@@ -185,7 +179,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Megan Carlson";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
@@ -207,7 +201,7 @@ export const partialSolutions: Record<string, string> = {};
 export const tasks: Record<string, JSX.Element> = {
   APOLOGIZE: (
     <div>
-      <div className="mb-6 pt-1 max-w-3xl text-center">
+      <div className="mb-6 max-w-3xl pt-1 text-center">
         Oh...that thing you did was actually kind of insensitive...Make an
         apology video and send it to brownpuzzlehq@gmail.com, making sure to
         include "Taking Accountability" in the subject line. Your apology should

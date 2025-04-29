@@ -39,12 +39,50 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      All of the riddles are the names of famous musical works of the form
+      [Adjective] + [Song Form]. The song form is another famous work of that
+      type, and the adjective is made by altering the score to make a pun.
+    </div>
+    <ol className="list-inside list-decimal">
+      <li>
+        This is Beethoven's 5th Symphony, but the last motif is missing, making
+        it an{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          UNFINISHED SYMPHONY.
+        </span>
+      </li>
+      <li>
+        This is a Chopin Etude, but the time signature is in the mathematical
+        constant pi, giving{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          TRANSCENDENTAL ETUDES.
+        </span>
+      </li>
+      <li>
+        This is Strauss's Blue Danube Waltz (which is Valse in French), but the
+        bassline is entirely the solfège note la, making it{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          LA VALSE.
+        </span>
+      </li>
+      <li>
+        This is Bohemian Rhapsody on the alto clef, making it{" "}
+        <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+          ALTO RHAPSODY,
+        </span>{" "}
+        which is the answer to this puzzle.
+      </li>
+    </ol>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Philip Yao";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

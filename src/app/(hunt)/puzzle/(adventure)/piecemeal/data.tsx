@@ -296,12 +296,576 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>First, we solve all of the grids:</div>
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          G
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          G
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          U
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          M
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          S
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          D
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          C
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          H
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          S
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          V
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          U
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          S
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          H
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          W
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          P
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          D
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          D
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          G
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          L
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          N
+        </div>
+      </div>
+      <div className="mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          C
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          H
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          M
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          P
+        </div>
+      </div>
+    </div>
+    <div>
+      After solving all of the grids, as instructed, we draw lines through any 3
+      collinear letters in alphabetically increasing, when read left-to-right
+      and then top-to-bottom. This gives us:
+    </div>
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          G
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="absolute w-full translate-y-[22px] border-t-4" />
+        <div className="absolute h-full translate-x-[70px] border-l-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          G
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          U
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          M
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          S
+        </div>
+        <div className="absolute w-full translate-y-[22px] border-t-4" />
+        <div className="absolute w-full translate-y-[70px] border-t-4" />
+        <div className="absolute w-full translate-y-[118px] border-t-4" />
+        <div className="absolute h-full translate-x-[22px] border-l-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          D
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          C
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="absolute h-[200px] -translate-y-[28px] translate-x-[70px] -rotate-45 border-l-4" />
+        <div className="absolute h-[200px] -translate-y-[28px] translate-x-[70px] rotate-45 border-l-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          H
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          S
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          V
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="absolute w-full translate-y-[22px] border-t-4" />
+        <div className="absolute h-full translate-x-[70px] border-l-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          U
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          S
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="absolute h-full translate-x-[22px] border-l-4" />
+        <div className="absolute h-[200px] -translate-y-[28px] translate-x-[70px] -rotate-45 border-l-4" />
+        <div className="absolute w-full translate-y-[70px] border-t-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          H
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          W
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          P
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="absolute h-full translate-x-[22px] border-l-4" />
+        <div className="absolute w-full translate-y-[118px] border-t-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          T
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          D
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          D
+        </div>
+        <div className="absolute h-full translate-x-[70px] border-l-4" />
+        <div className="absolute w-full translate-y-[118px] border-t-4" />
+        <div className="absolute w-full translate-y-[22px] border-t-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          G
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          L
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          B
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          I
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          N
+        </div>
+        <div className="absolute h-[200px] -translate-y-[28px] translate-x-[70px] -rotate-45 border-l-4" />
+        <div className="absolute w-full translate-y-[22px] border-t-4" />
+        <div className="absolute w-full translate-y-[118px] border-t-4" />
+        <div className="absolute h-full translate-x-[118px] border-l-4" />
+      </div>
+      <div className="relative mx-auto grid w-36 grid-cols-3 gap-0 outline outline-1 md:mx-0">
+        <div className="flex h-12 w-12 items-center justify-center border">
+          C
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          H
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          A
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          R
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          O
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          M
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          Y
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          E
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center border">
+          P
+        </div>
+        <div className="absolute h-[200px] -translate-y-[28px] translate-x-[70px] -rotate-45 border-l-4" />
+        <div className="absolute h-full translate-x-[118px] border-l-4" />
+        <div className="absolute h-full translate-x-[22px] border-l-4" />
+      </div>
+    </div>
+    <div>Drawing the lines for each grid forms a letter. Reading the letters left-to-right, top-to-bottom, we obtain our answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        TEXT ALIGN.
+      </span></div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Aren Guralp";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

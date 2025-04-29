@@ -86,8 +86,8 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl">
-    <p className="mb-4 text-left">
+  <div className="max-w-3xl space-y-4">
+    <p>
       This puzzle is a reference to a recurring segment on Jet Lag: The Game
       known as{" "}
       <a
@@ -99,119 +99,115 @@ export const solutionBody = (
       </a>
       . This segment occurs when a player / combo of players (usually Ben and
       Adam) sample a local snack and offer their review. It is generally
-      accompanied by a cute little theme song and graphic which I'd kinda like
-      to splice into the video but that might be too obvious.
+      accompanied by the cute little theme song and graphic seen in the video.
     </p>
-    <p className="mb-4 text-left">
+    <p>
       At this point, solvers should know who Ben Doyle is and understand what
       Jet Lag is. Between the video and the puzzle title, they should find the
-      term ‘the snack zone’ suspicious and look it up to figure out what exactly
-      that term means.{" "}
+      term ‘The Snack Zone’ suspicious and look it up to figure out what exactly
+      that term means.
     </p>
-    <p className="mb-4 text-left">
+    <p>
       After briefly looking into the Snack Zone and perhaps perusing the wiki,
       it should become clear that the snacks in the vending machine have all
       made appearances on episodes of the snack zone. This is further confirmed
       by the ‘prices’, which contain currencies of the country where the episode
       was filmed as well as the season and episode of the segment represented as
-      dollars and cents respectively. Prices are given chronologically.{" "}
+      dollars and cents respectively.
     </p>
-    <p className="mb-4 text-left">
+    <p>
       This should help to ID the snacks, but solvers may also need to watch the
       clips of specific snacks to confirm packaging matches. Some packaging is
       easier to find than others online, but the wiki should get most of the way
-      there and internet sleuthing can ID the rest. Taking the letters indicated
-      with an ‘O’ and ordering A-I produces a final answer of SAUVIGNON.
+      there and internet sleuthing can ID the rest. The packaging shown has
+      letters redacted with X's, and each snack has a single letter marked with
+      an O instead. Extracting this letter, we get:
     </p>
-    <table className="mb-4 min-w-full table-auto border-collapse text-left">
-      <thead>
-        <tr>
-          <th>Letter</th>
-          <th>Snack Name</th>
-          <th>Season</th>
-          <th>Episode</th>
-          <th>Extracted letter</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>A</td>
-          <td>Beef Sausage Rolls</td>
-          <td>10</td>
-          <td>4</td>
-          <td>S</td>
-        </tr>
-        <tr>
-          <td>B</td>
-          <td>Tim Tam</td>
-          <td>10</td>
-          <td>2</td>
-          <td>A</td>
-        </tr>
-        <tr>
-          <td>C</td>
-          <td>Trolli Saure Gluhwurmchen</td>
-          <td>7</td>
-          <td>3</td>
-          <td>U</td>
-        </tr>
-        <tr>
-          <td>D</td>
-          <td>Burger Rings</td>
-          <td>5</td>
-          <td>3</td>
-          <td>V</td>
-        </tr>
-        <tr>
-          <td>E</td>
-          <td>Weet Bix</td>
-          <td>5</td>
-          <td>8</td>
-          <td>I</td>
-        </tr>
-        <tr>
-          <td>F</td>
-          <td>Baked Oaty Slices</td>
-          <td>5</td>
-          <td>5</td>
-          <td>G</td>
-        </tr>
-        <tr>
-          <td>G</td>
-          <td>Three Cheese Selection</td>
-          <td>5</td>
-          <td>4</td>
-          <td>N</td>
-        </tr>
-        <tr>
-          <td>H</td>
-          <td>Puripuri Ebi Purio</td>
-          <td>12</td>
-          <td>7</td>
-          <td>O</td>
-        </tr>
-        <tr>
-          <td>I</td>
-          <td>Rashuns</td>
-          <td>5</td>
-          <td>2</td>
-          <td>N</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>
-      ** Small inelegance that may or may not be an issue: Rashuns are listed as
-      the first snack on the wiki, but the show hasn't officially been named
-      ‘The Snack Zone’ yet and the intro doesn't play. Probably only diehards
-      will care about this but just a note.
-    </p>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr>
+            <th className="p-2 outline outline-white">Snack Name</th>
+            <th className="p-2 outline outline-white">Season</th>
+            <th className="p-2 outline outline-white">Episode</th>
+            <th className="p-2 outline outline-white">Extracted letter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">Beef Sausage Rolls</td>
+            <td className="p-2 outline outline-white">10</td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">S</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Tim Tam</td>
+            <td className="p-2 outline outline-white">10</td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">A</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Trolli Saure Gluhwurmchen
+            </td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">U</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Burger Rings</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">3</td>
+            <td className="p-2 outline outline-white">V</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Weet Bix</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">8</td>
+            <td className="p-2 outline outline-white">I</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Baked Oaty Slices</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">G</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">
+              Three Cheese Selection
+            </td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">4</td>
+            <td className="p-2 outline outline-white">N</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Puripuri Ebi Purio</td>
+            <td className="p-2 outline outline-white">12</td>
+            <td className="p-2 outline outline-white">7</td>
+            <td className="p-2 outline outline-white">O</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">Rashuns</td>
+            <td className="p-2 outline outline-white">5</td>
+            <td className="p-2 outline outline-white">2</td>
+            <td className="p-2 outline outline-white">N</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Reading the extracted letters in the given order gives us our answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        SAUVIGNON.
+      </span>
+    </div>
   </div>
 );
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Megan Carlson";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

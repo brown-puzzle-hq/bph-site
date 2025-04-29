@@ -118,12 +118,82 @@ export const remoteBody = (
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+export const solutionBody = (
+  <div className="max-w-3xl space-y-4">
+    <div>
+      We begin by placing the two feeders into the squares, placing GATHERING
+      STORM before ABYSS as clued by the different colors.
+    </div>
+    <div>
+      Then, we add the positive letters (those on red beads) and subtract the
+      negative letters (those on blue beads) in each chunk to get a letter:
+    </div>
+    <div className="flex flex-col items-center">
+      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+        <thead>
+          <tr className="font-bold text-white">
+            <th className="p-2 outline outline-white">Chunk 1</th>
+            <th className="p-2 outline outline-white">Chunk 2</th>
+            <th className="p-2 outline outline-white">Chunk 3</th>
+            <th className="p-2 outline outline-white">Chunk 4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="p-2 outline outline-white">-G (-7)</td>
+            <td className="p-2 outline outline-white">+N (+14)</td>
+            <td className="p-2 outline outline-white">-T (-19)</td>
+            <td className="p-2 outline outline-white">+B (+2)</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">-A (-1)</td>
+            <td className="p-2 outline outline-white">+G (+7)</td>
+            <td className="p-2 outline outline-white">+R (+18)</td>
+            <td className="p-2 outline outline-white">+S (+19)</td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">+T (+20)</td>
+            <td className="p-2 outline outline-white"></td>
+            <td className="p-2 outline outline-white">+M (+13)</td>
+            <td className="p-2 outline outline-white"></td>
+          </tr>
+          <tr>
+            <td className="p-2 outline outline-white">-H (-8)</td>
+            <td className="p-2 outline outline-white"></td>
+            <td className="p-2 outline outline-white"></td>
+            <td className="p-2 outline outline-white"></td>
+          </tr>
+          <tr>
+            <td className="border-t-8 border-white p-2 outline outline-white">
+              D (4)
+            </td>
+            <td className="border-t-8 border-white p-2 outline outline-white">
+              U (21)
+            </td>
+            <td className="border-t-8 border-white p-2 outline outline-white">
+              K (11)
+            </td>
+            <td className="border-t-8 border-white p-2 outline outline-white">
+              U (21)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      These letters spell our answer,{" "}
+      <span className="bg-main-text py-0.5 transition-all duration-300 hover:bg-inherit">
+        DUKU
+      </span>
+      .
+    </div>
+  </div>
+);
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Chloe Qiao";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
