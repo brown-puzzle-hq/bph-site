@@ -39,6 +39,13 @@ export const solutionBody = (
       from one board state to the other. No number indicates one move.
     </p>
 
+    <p>
+      Solvers should use the names dictated by the Lichess opening explorer, which
+      is the most comprehensive source on the matter. Other sources may give slightly 
+      different names for the other openings, but will also fail to name all of them. 
+      Lichess is the only canonical source here.
+    </p>
+
     <p className="space-y-4">
       The names of the positions with indices are (top to bottom):
     </p>
@@ -71,18 +78,18 @@ export const solutionBody = (
     </ul>
 
     <p>
-      Taking indices one obtains{" "}
-      <span className="font-bold text-main-accent">PAWNTOF4</span> (4). This
-      move gives rise to the Bird's Opening. Since the answer is 4 letters, we
-      get
-      <span className="font-bold text-main-accent"> BIRD</span>.
+      The last opening could alternatively be “Four Knights Attack,” which
+      gives an F during indexing, but PAWNTOFF doesn't make sense. The puzzle
+      solver is expected to realize that they need to index the number 4
+      instead.
     </p>
 
-    <p className="italic text-gray-400">
-      NOTE: The last opening could alternatively be “Four Knights Attack,” which
-      gives an F during indexing, but PAWNTOFF doesn't make sense, so the puzzle
-      solver is expected to realize you are supposed to index the number 4
-      instead.
+    <p>
+      Extracting using the indices, one obtains{" "}
+      <span className="font-bold text-main-accent">PAWNTOF4</span> (4). This
+      move gives rise to the Bird's Opening. Since the answer is 4 letters, we
+      get{" "}
+      <span className="font-bold text-main-accent">BIRD</span>.
     </p>
   </div>
 );
@@ -90,7 +97,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Philip Yao";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

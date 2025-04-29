@@ -12,10 +12,8 @@ export const puzzleId = "six-degrees";
  */
 export const inPersonBody = (
   <div>
-    <div className="space-y-4 max-w-3xl text-center">
-      <b>
-        This is a metapuzzle. It uses feeders from the Reality round.
-      </b>
+    <div className="max-w-3xl space-y-4 text-center">
+      <b>This is a metapuzzle. It uses feeders from the Reality round.</b>
     </div>
     <div className="mb-4 max-w-3xl text-center italic">
       This puzzle has intermediate answer confirmation.
@@ -38,17 +36,20 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 export const solutionBody = (
-  <div className="max-w-3xl text-center">
+  <div className="max-w-3xl">
     <div className="mx-auto max-w-3xl space-y-6">
       <p>
-        This whole puzzle is based on the idea of biopics. This should be clued
-        by combining documentary and the focus on a lead actor in the flavor
-        text. All of the answers in the round are the names of a biopic. Once
-        they find the movies, they should look at who the main actor is and
-        their Kevin Bacon number. They should then index into the lead actor
-        name and organize by release date (from earliest to most recent), and it
-        should extract to <strong>FILMREAL</strong>. Refer to the table below to
-        check if their data is correct.
+        This whole puzzle is based on biopics! All of the answers in the round
+        are the names of a biopic. Solvers might clue into this from the
+        reference to both 'documentary' and 'lead actor' in the flavortext.
+      </p>
+      <p>
+        Once they find each of the movies, they should look at who the main
+        actor is and find their Kevin Bacon number (as clued by the title). They
+        should then index into the lead actor name and organize by release date
+        (from earliest to most recent). This tells us what they need to do to
+        fix their movie; they need to{" "}
+        <span className="font-bold text-main-accent">FILM REAL</span>.
       </p>
 
       {/* Table */}
@@ -136,7 +137,8 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors =
+  "Megan Carlson, Malcolm Certain, Erin Finn, Kaylee Gallagher, and Eric Wu";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
