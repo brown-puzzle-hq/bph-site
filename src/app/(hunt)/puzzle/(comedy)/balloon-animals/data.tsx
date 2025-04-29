@@ -308,7 +308,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Phil Avilov, Noah Elbaum, Thomas Gordon, and Gabriel Nelkin";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
