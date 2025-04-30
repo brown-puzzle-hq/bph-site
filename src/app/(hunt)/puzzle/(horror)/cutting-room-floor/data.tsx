@@ -204,7 +204,7 @@ export const solutionBody = (
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = "Aren Guralp and Chloe Johnson";
+export const authors = "Aren Guralp, Thomas Gordon, and Chloe Johnson";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

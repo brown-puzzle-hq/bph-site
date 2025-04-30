@@ -78,7 +78,7 @@ export const solutionBody  = <div className="max-w-3xl space-y-4">
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = "Thomas Gordon, Malcolm Certain";
+export const authors = "Thomas Gordon and Malcolm Certain";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
