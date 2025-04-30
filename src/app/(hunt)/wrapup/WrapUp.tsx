@@ -1438,7 +1438,7 @@ export default function WrapUp() {
                 </li>
                 <li>"A Partial Known" (Drama): could only write in haikus</li>
                 <li>
-                  "French General TNT" (Comedy): could not reference cliors
+                  "French General TNT" (Comedy): could not reference colors
                 </li>
                 <li>
                   "North Dakota Williams and the Unfinished Script" (Adventure):
