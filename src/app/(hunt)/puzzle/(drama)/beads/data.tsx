@@ -1,5 +1,9 @@
 import Image from "next/image";
 import BEADS from "./beads_diagram.svg";
+import A from "./a.svg";
+import B from "./b.svg";
+import Y from "./y.svg";
+import S from "./s.svg";
 const CHAIN = "BBRBGGGRRGBGRRGRGRG";
 
 const COLORS: Record<string, string> = {
@@ -78,10 +82,22 @@ export const solutionBody = (
   <div className="max-w-3xl space-y-4">
     <div>
       For each row, taking the chain and making all the bends pictured results
-      in the overall chain taking the shape of a letter. These letters, when
-      read in order, spell the answer:{" "}
-      <span className="font-bold text-main-accent">
-        ABYSS</span>.
+      in the overall chain taking the shape of a letter:
+    </div>
+    <div className="items-center justify-center space-y-4">
+      <div className="grid grid-cols-3">
+        <Image src={A} height={200} alt="beads" />
+        <Image src={B} height={200} alt="beads" />
+        <Image src={Y} height={200} alt="beads" />
+      </div>
+      <div className="grid grid-cols-2">
+        <Image src={S} height={300} alt="beads" />
+        <Image src={S} height={300} alt="beads" />
+      </div>
+    </div>
+    <div>
+      These letters, when read in order, spell the answer:{" "}
+      <span className="font-bold text-main-accent">ABYSS</span>.
     </div>
   </div>
 );

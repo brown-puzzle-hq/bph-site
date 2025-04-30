@@ -47,7 +47,7 @@ export const solutionBody = (
       label (a fruit/vegetable), and the pairings can be found from the map:
     </div>
     <div className="flex flex-col items-center">
-      <table className="items-center border border-white pb-4 text-xs leading-none sm:text-base">
+      <table className="items-center pb-4 text-xs leading-none sm:text-base">
         <thead>
           <tr className="font-bold text-white">
             <th className="p-2 outline outline-white">Labels</th>
