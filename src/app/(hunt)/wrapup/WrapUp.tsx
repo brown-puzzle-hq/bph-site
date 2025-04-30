@@ -1052,11 +1052,12 @@ export default function WrapUp() {
               </p>
 
               <p>
-                Instead of having a body_template field, we chose to have a
-                different puzzle folder for every puzzle. Most static puzzles
-                stuck with the DefaultPuzzlePage component, which automatically
-                handled errata, puzzle body, guesses, partial solutions, and
-                tasks. Some interactive puzzles had custom logic.
+                For example, instead of having a body_template field, we chose
+                to have a different puzzle folder for every puzzle. Most static
+                puzzles stuck with the DefaultPuzzlePage component, which
+                automatically handled errata, puzzle body, guesses, partial
+                solutions, and tasks. Other puzzles which did not need all of
+                those functions contained custom logic instead.
               </p>
 
               <p>
