@@ -128,7 +128,7 @@ export function TableOfContents() {
   }, [parentOfActiveSection]);
 
   // Organize sections into hierarchy
-  const topLevelSections = sections.filter((s) => !s.parentId);
+  const topLevelSections = sections.filter((s) => s.parentId === undefined);
   const subsectionsMap: Record<number, Section[]> = {};
   sections.forEach((s) => {
     if (s.parentId != null) {
