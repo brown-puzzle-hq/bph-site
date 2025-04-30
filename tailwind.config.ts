@@ -62,7 +62,10 @@ export default {
             h2: {
               color: theme("colors.amber[300]"),
               fontWeight: "semibold",
-              opacity: "0.8",
+              opacity: "0.9",
+            },
+            h3: {
+              opacity: "0.9",
             },
           },
         },
