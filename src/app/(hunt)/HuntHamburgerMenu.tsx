@@ -6,6 +6,7 @@ import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 export async function HuntHamburgerMenu() {
   const session = await auth();
+  const now = new Date();
 
   const leftMenuItems: MenuItem[] = [
     {
@@ -32,12 +33,22 @@ export async function HuntHamburgerMenu() {
 
   const rightMenuItems: MenuItem[] = [];
 
-  if (session?.user?.id) {
+  if (now > REMOTE.WRAPUP_TIME) {
     leftMenuItems.push({
-      title: "Feedback",
-      href: "/feedback",
+      title: "Wrapup",
+      href: "/wrapup",
       type: "link",
     });
+  }
+
+  if (session?.user?.id) {
+    if (now < REMOTE.WRAPUP_TIME) {
+      leftMenuItems.push({
+        title: "Feedback",
+        href: "/feedback",
+        type: "link",
+      });
+    }
 
     rightMenuItems.push({
       title: "Profile",

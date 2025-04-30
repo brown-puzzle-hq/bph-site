@@ -13,6 +13,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+        rammetto: ['"Rammetto One"', "cursive"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -44,12 +45,38 @@ export default {
         error: colors.red[400],
       },
       typography: ({ theme }: { theme: any }) => ({
+        wrapup: {
+          css: {
+            "--tw-prose-body": theme("colors.main-text"),
+            "--tw-prose-headings": theme("colors.main-header"),
+            "--tw-prose-links": theme("colors.link"),
+            "--tw-prose-bold": theme("colors.main-header"),
+            "--tw-prose-captions": theme("colors.main-text"),
+            figcaption: {
+              fontStyle: "italic",
+              textAlign: "center",
+            },
+            h1: {
+              color: theme("colors.amber[300]"),
+            },
+            h2: {
+              color: theme("colors.amber[300]"),
+              fontWeight: "semibold",
+              opacity: "0.8",
+            },
+          },
+        },
         info: {
           css: {
             "--tw-prose-body": theme("colors.main-text"),
             "--tw-prose-headings": theme("colors.main-header"),
             "--tw-prose-links": theme("colors.link"),
             "--tw-prose-bold": theme("colors.main-header"),
+            "--tw-prose-captions": theme("colors.main-text"),
+            figcaption: {
+              fontStyle: "italic",
+              textAlign: "center",
+            },
           },
         },
         "custom-colors": {

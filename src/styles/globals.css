@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Righteous&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,11 +8,11 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-    /* font-family: Arial, sans-serif; */
+    font-family: "Figtree", sans-serif;
   }
   h1 {
     @apply text-2xl font-bold; /* Adjust these values as needed */
-    font-family: 'Rammetto One';
+    font-family: "Rammetto One";
   }
 }
 
