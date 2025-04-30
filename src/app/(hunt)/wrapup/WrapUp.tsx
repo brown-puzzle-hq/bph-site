@@ -1421,7 +1421,7 @@ export default function WrapUp() {
               <ul>
                 <li>"Excellentman" (Action): could not use adjectives</li>
                 <li>
-                  "Biliogy of an Autumn" (Reality): could only use one-syllable
+                  "Biology of an Autumn" (Reality): could only use one-syllable
                   words
                 </li>
                 <li>"A Partial Known" (Drama): could only write in haikus</li>
@@ -1892,7 +1892,7 @@ export default function WrapUp() {
                     <li>
                       Mucinex
                       <ul>
-                        <li>#mucuss</li>
+                        <li>#mucussy</li>
                       </ul>
                     </li>
                     <li>Hello fresh</li>
