@@ -840,12 +840,13 @@ export default function WrapUp() {
                 hunt. Near the end of March, we wrote a short README on editing
                 the site, gave it to the technical-but-not-tech puzzle-writing
                 staff, and had them commit to branches. They did an amazing job!
-                In the end, over half of the 57 puzzles were postprodded by
-                puzzle writers. Since there were only two people focused
-                primarily on tech and many, many small tweaks to puzzles leading
-                up to the hunt, this worked out well. It gave us time to polish
-                the UI for the map and interactive guards puzzles. (Shoutout to
-                Arnav for postprodding and finalizing the other puzzles.)
+                In the end, over half of the 57 puzzles and all of the solutions
+                were postprodded by puzzle-writers. Since there were only two
+                people focused primarily on tech and many, many small tweaks to
+                puzzles leading up to the hunt, this worked out well. It gave us
+                time to polish the UI for the map and interactive guards
+                puzzles. (Shoutout to Arnav for postprodding and finalizing the
+                other puzzles.)
               </p>
 
               <p>
@@ -928,34 +929,50 @@ export default function WrapUp() {
                 some teams:
               </p>
 
-              <p>
-                One of the remote teams, yukii, caught that puzzle answers were
-                leaked in the source code. This was because we accidentally made
-                one of the server components into a client component after the
-                in-person hunt. We patched that around an hour into the hunt.
-                This is still a vulnerability in some of our interactive
-                puzzles, so looking at source code is not the intended solution.
-                We should have put more constraints on our databases. Many race
-                condition bugs came out of creating the solves and events table
-                this semester. Before we reverted the issue, 1 team used an
-                answer token on a meta puzzle, 1 team submitted and used an
-                answer token twice, and 3 teams (temporarily) had an extra solve
-                on the leaderboard. The map took a lot of memory. We were
-                already concerned about this, and eventually decided to remove
-                the map from the mobile puzzle page during the in-person hunt.
-              </p>
+              <ul>
+                <li>
+                  One of the remote teams, yukii, caught that puzzle answers
+                  were leaked in the source code. This was because we
+                  accidentally made one of the server components into a client
+                  component after the in-person hunt. We patched that around an
+                  hour into the hunt. This is still a vulnerability in some of
+                  our interactive puzzles, so looking at source code is not the
+                  intended solution.
+                </li>
+                <li>
+                  We should have put more constraints on our databases. Many
+                  race condition bugs came out of creating the solves and events
+                  table this semester. Before we reverted the issue, 1 team used
+                  an answer token on a meta puzzle, 1 team submitted and used an
+                  answer token twice, and 3 teams (temporarily) had an extra
+                  solve on the leaderboard.
+                </li>
+                <li>
+                  The map took a lot of memory. We were already concerned about
+                  this, and eventually decided to remove the map from the mobile
+                  puzzle page during the in-person hunt.
+                </li>
+              </ul>
             </TOCSection>
 
             <TOCSection sectionId={17} tocTitle="Admin Tooling" parentId={11}>
               <h3>Admin Tooling</h3>
 
-              <p>Warning: gushing about tables and graphs.</p>
+              <p>
+                <i>Warning: gushing about tables and graphs.</i>
+              </p>
 
               <p>
                 Most puzzlehunt sites use Django, and Django has an automatic
                 admin interface. This is very convenient, but we don't regret
                 stepping away from Django and creating our own admin tools.
               </p>
+
+              <img
+                className="rounded-md"
+                src="/wrapup/images/image2.png"
+                alt=""
+              />
 
               <p>
                 First was keeping track of a team's progress. Because of the
@@ -973,11 +990,6 @@ export default function WrapUp() {
               <img
                 className="rounded-md"
                 src="/wrapup/images/image52.png"
-                alt=""
-              />
-              <img
-                className="rounded-md"
-                src="/wrapup/images/image2.png"
                 alt=""
               />
 
