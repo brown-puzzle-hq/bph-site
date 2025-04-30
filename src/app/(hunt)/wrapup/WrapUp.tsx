@@ -1045,7 +1045,7 @@ export default function WrapUp() {
                 This, in addition to our large structure, meant that my main
                 goal was to have each puzzle cleanly tested at least once,
                 rather than the perfection I would prefer. Depending on how you
-                count, only 5-6 of our 57 (??) puzzles did not have this clean
+                count, only 5-6 of our 57 puzzles did not have this clean
                 testsolve, and 2 of them (having been written the night before
                 hunt) did not get a twice-over by me. While these numbers are
                 definitely unideal, none of these puzzles ended up being the
@@ -1073,8 +1073,14 @@ export default function WrapUp() {
                 much closer to the real deal. Both teams found a lot of
                 inelegancies and inconveniences that got fixed afterwards. (You
                 have NES to thank for the white boxes in the middle of rooms and
-                the sound effects in the final Heist puzzle, among other
-                things!)
+                the sound effects in{" "}
+                <a
+                  href="/puzzle/the-final-heist"
+                  className="text-link no-underline hover:underline"
+                >
+                  The Final Heist
+                </a>{" "}
+                puzzle, among other things!)
               </p>
 
               <p>
@@ -1103,7 +1109,7 @@ export default function WrapUp() {
                 cerebral, comedy, drama, and reality. Cerebral got renamed to
                 horror, and animation... Well, the team assigned to write the
                 animation meta ended up writing a meta about digging, so this
-                became the digging round! (renamed to adventure :( )
+                became the digging round! (Renamed to adventure :( )
               </p>
             </TOCSection>
 
@@ -1278,18 +1284,18 @@ export default function WrapUp() {
             >
               <h3>Auditioning for a Role</h3>
 
-              <img
-                src="/wrapup/images/image65.jpg"
-                alt=""
-                className="rounded-md"
-              />
-
               <p>
                 <i>
                   Please send 1 intern with a natural flair for performance and
                   quick adaptability. Composure and resourcefulness are vital.
                 </i>
               </p>
+
+              <img
+                src="/wrapup/images/image65.jpg"
+                alt=""
+                className="rounded-md"
+              />
 
               <p>
                 This event involved 4-5 interns getting different scripts
@@ -1608,8 +1614,15 @@ export default function WrapUp() {
                 classic idea of distinguishing between a liar and a truth-teller
                 via strategic questions and logic, and these puzzles would
                 gatekeep each round. This quickly devolved into a plethora of
-                shenanigans: from Two Guards, Two Doors, we soon increased the
-                number of guards, doors, and other things!
+                shenanigans: from{" "}
+                <a
+                  href="/puzzle/two-guards-two-doors"
+                  className="text-link no-underline hover:underline"
+                >
+                  Two Guards, Two Doors
+                </a>
+                , we soon increased the number of guards, doors, and other
+                things!
               </p>
 
               <figure>
@@ -1714,8 +1727,8 @@ export default function WrapUp() {
 
               <p>
                 Thanks to the puzzlehunters who asked, but we will not be
-                selling versions of these (unless you are willing to pay us over
-                $150...? in which case let's talk)
+                selling versions of these. (Unless you are willing to pay us
+                over $150...? In which case let's talk.)
               </p>
             </TOCSection>
 
@@ -1765,9 +1778,16 @@ export default function WrapUp() {
               <h3>Heist Sequence</h3>
               <p>
                 The Heist sequence was a series of mini-video games and the
-                brainchild of one Malcolm Certain. While The Final Heist was
-                intentionally kinda evil, we hope some of the more perseverant
-                among you enjoyed a unique take on what a meta can be.
+                brainchild of one Malcolm Certain. While{" "}
+                <a
+                  href="/puzzle/the-final-heist"
+                  className="text-link no-underline hover:underline"
+                >
+                  The Final Heist
+                </a>{" "}
+                was intentionally kinda evil, we hope some of the more
+                perseverant among you enjoyed a unique take on what a meta can
+                be.
               </p>
             </TOCSection>
 
@@ -1810,10 +1830,16 @@ export default function WrapUp() {
               <i>By Megan Carlson</i>
 
               <p>
-                The idea for a packing peanuts puzzle came from the
-                quintessential question: how can we justify the rental of a
-                popcorn machine with our club funding? The brilliant answer:
-                serve packing peanuts disguised as popcorn!
+                The idea for a packing{" "}
+                <a
+                  href="/puzzle/peanuts"
+                  className="text-link no-underline hover:underline"
+                >
+                  peanuts
+                </a>{" "}
+                puzzle came from the quintessential question: how can we justify
+                the rental of a popcorn machine with our club funding? The
+                brilliant answer: serve packing peanuts disguised as popcorn!
               </p>
 
               <div className="grid grid-cols-2 gap-4">
@@ -1870,7 +1896,13 @@ export default function WrapUp() {
               <i>By Megan Carlson</i>
 
               <p>
-                Imagine was our only submission-based puzzle of the hunt. After
+                <a
+                  href="/puzzle/imagine"
+                  className="text-link no-underline hover:underline"
+                >
+                  Imagine
+                </a>{" "}
+                was our only submission-based puzzle of the hunt. After
                 completing a short puzzle about everyone's favorite out-of-touch{" "}
                 <a
                   href="https://www.youtube.com/watch?v=omEDLKS5pbY"
@@ -1946,12 +1978,18 @@ export default function WrapUp() {
               <i>By Thomas Gordon</i>
 
               <p>
-                This puzzle idea was borne out of a scheduling necessity. Due to
-                our greedy two-weekend strategy, we accidentally booked out both
-                weekends that CMU could feasibly run (oops). In the interest of
-                making sure that the majority of teams could do both hunts, the
-                two teams agreed to run CMU on Brown's in-person weekend,
-                freeing up the online audience for both hunts.
+                <a
+                  href="/puzzle/plagiarism"
+                  className="text-link no-underline hover:underline"
+                >
+                  Plagiarism
+                </a>{" "}
+                was borne out of a scheduling necessity. Due to our greedy
+                two-weekend strategy, we accidentally booked out both weekends
+                that CMU could feasibly run (oops). In the interest of making
+                sure that the majority of teams could do both hunts, the two
+                teams agreed to run CMU on Brown's in-person weekend, freeing up
+                the online audience for both hunts.
               </p>
 
               <p>
