@@ -27,7 +27,7 @@ export const inPersonBody = (
     </i>
     <p className="font-bold">Example</p>
     <Image src={IMG1} alt="" />
-    <p>(6,5) {"->"} LITTLE FUGUE</p>
+    <p>(6,5) {"→"} LITTLE FUGUE</p>
   </div>
 );
 

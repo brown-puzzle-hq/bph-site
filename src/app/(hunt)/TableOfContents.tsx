@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { motion, useScroll } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 
 export type Section = {
   id: number;
@@ -74,6 +74,7 @@ export const TOCSection = ({
     target: container,
     offset: ["start center", "end center"],
   });
+
   scrollYProgress.on("change", (value: number) => {
     if (value > 0 && value < 1) {
       setActiveSection(sectionId);
@@ -95,28 +96,36 @@ export const TOCSection = ({
 
 export function TableOfContents() {
   const { sections, activeSection } = useContext(TOCContext);
-  const [delayedActiveSection, setDelayedActiveSection] = useState<
-    number | null
-  >(null);
+
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [stableParentSection, setStableParentSection] = useState<number | null>(
+    null,
+  );
+
+  // Get parent of active section
+  const getParentOfActiveSection = (): number | null => {
+    if (activeSection === -1) return null;
+    const activeSubsection = sections.find((s) => s.id === activeSection);
+    return activeSubsection?.parentId ?? activeSubsection?.id ?? null;
+  };
+
+  const parentOfActiveSection = getParentOfActiveSection();
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
 
-    const handleScroll = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        // Trigger your logic AFTER scroll ends
-        setDelayedActiveSection(activeSection);
-      }, 100); // wait 100ms after last scroll event
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    if (parentOfActiveSection !== stableParentSection) {
+      setStableParentSection(null);
+      scrollTimeout.current = setTimeout(
+        () => setStableParentSection(parentOfActiveSection),
+        200,
+      );
+    }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      clearTimeout(timeoutId);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     };
-  }, [activeSection]);
+  }, [parentOfActiveSection]);
 
   // Organize sections into hierarchy
   const topLevelSections = sections.filter((s) => !s.parentId);
@@ -135,36 +144,45 @@ export function TableOfContents() {
       {topLevelSections.map(({ id, title }) => (
         <div key={id} className="flex flex-col">
           <span
-            className={`mr-8 cursor-pointer transition-colors duration-200 hover:text-main-text ${activeSection === id ? "text-main-text" : "text-main-text/50"}`}
-            onClick={() => {
-              setDelayedActiveSection(id);
-              setTimeout(
-                () =>
-                  document
-                    .getElementById(`section-${id}`)
-                    ?.scrollIntoView({ behavior: "smooth" }),
-                100,
-              );
-            }}
+            className={`mr-8 cursor-pointer transition-colors duration-200 hover:text-main-text ${parentOfActiveSection === id ? "text-main-text" : "text-main-text/50"}`}
+            onClick={() =>
+              document
+                .getElementById(`section-${id}`)
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           >
             {title}
           </span>
 
           {/* Render subsections if any */}
-          {activeSection === id &&
-            subsectionsMap[id]?.map((sub) => (
-              <span
-                key={sub.id}
-                className={`ml-4 mr-8 cursor-pointer text-sm transition-colors duration-200 hover:text-main-text ${activeSection === sub.id ? "text-main-text" : "text-main-text/50"}`}
-                onClick={() =>
-                  document
-                    .getElementById(`section-${sub.id}`)
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
+          <AnimatePresence mode="wait">
+            {stableParentSection === id && (
+              <motion.div
+                className="flex flex-col"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                {sub.title}
-              </span>
-            ))}
+                {subsectionsMap[id]?.map((sub, i) => (
+                  <motion.span
+                    key={sub.id}
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 * i }}
+                    className={`ml-4 mr-8 cursor-pointer text-sm transition-colors duration-200 hover:text-main-text ${activeSection === sub.id ? "text-main-text" : "text-main-text/50"}`}
+                    onClick={() =>
+                      document
+                        .getElementById(`section-${sub.id}`)
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                  >
+                    {sub.title}
+                  </motion.span>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ))}
     </motion.div>

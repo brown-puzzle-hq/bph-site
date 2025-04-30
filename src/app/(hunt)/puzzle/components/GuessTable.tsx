@@ -30,7 +30,7 @@ export default function GuessTable({
               <TableRow key={guess.id} className="hover:bg-inherit">
                 <TableCell className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap sm:max-w-lg">
                   {guess.isCorrect && guess.guess !== puzzleAnswer
-                    ? `${guess.guess} -> ${puzzleAnswer}`
+                    ? `${guess.guess} → ${puzzleAnswer}`
                     : guess.guess}
                 </TableCell>
                 <TableCell className="w-24 text-center">
