@@ -1,5 +1,6 @@
 "use client";
 
+import { SquareArrowOutUpRight } from "lucide-react";
 import {
   TOCContext,
   useTOCContextValues,
@@ -16,8 +17,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+
+import { cn } from "~/lib/utils";
+
 export default function WrapUp() {
   const values = useTOCContextValues();
+  const [activeTab, setActiveTab] = useState("in-person");
   return (
     <TOCContext.Provider value={values}>
       <div className="flex px-4">
@@ -121,6 +128,72 @@ export default function WrapUp() {
                 </TableRow>
               </TableBody>
             </Table>
+
+            <h3>Solve Graphs (Finishers)</h3>
+            <Tabs
+              defaultValue="in-person"
+              onValueChange={(value) => setActiveTab(value)}
+              className="mb-6 mt-4 w-full"
+            >
+              <TabsList className="grid grid-cols-3 space-x-1 bg-black/50 text-[#6c518e]">
+                <TabsTrigger
+                  className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
+                  value="in-person"
+                >
+                  In-Person
+                </TabsTrigger>
+                <TabsTrigger
+                  className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
+                  value="remote-box"
+                >
+                  <span className="sm:hidden">Has Box</span>
+                  <span className="hidden sm:block">Remote (Box)</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
+                  value="remote"
+                >
+                  Remote
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <div className="relative aspect-video w-full rounded-md bg-white">
+              <embed
+                type="text/html"
+                src="/wrapup/in-person-solves.html"
+                className={cn(
+                  "absolute h-full w-full",
+                  activeTab !== "in-person" && "-z-10 opacity-0",
+                )}
+              />
+
+              <embed
+                type="text/html"
+                src="/wrapup/remote-box-solves.html"
+                className={cn(
+                  "absolute h-full w-full",
+                  activeTab !== "remote-box" && "-z-10 opacity-0",
+                )}
+              />
+
+              <embed
+                type="text/html"
+                src="/wrapup/remote-solves.html"
+                className={cn(
+                  "absolute h-full w-full",
+                  activeTab !== "remote" && "-z-10 opacity-0",
+                )}
+              />
+              <a
+                href={`/wrapup/${activeTab}-solves.html`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute right-2 top-2 rounded-md bg-black/70 p-1 text-main-text hover:bg-black/90"
+              >
+                <SquareArrowOutUpRight />
+              </a>
+            </div>
 
             <TOCSection sectionId={0} tocTitle="Timeline & Logistics" isFirst>
               <h2>Timeline & Logistics</h2>
