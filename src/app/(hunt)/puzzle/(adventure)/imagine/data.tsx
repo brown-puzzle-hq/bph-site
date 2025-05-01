@@ -61,7 +61,6 @@ export const solutionBody = (
       <ul className="max-w-3xl list-disc pl-6">
         <li>Title of the puzzle</li>
         <li>Variety of voices throughout the clips</li>
-        <li>The flavor is the top comment on the original video</li>
         <li>
           Any search along the lines of 'imagine singing video' will produce
           clear results to either the original video or its Wikipedia page.
