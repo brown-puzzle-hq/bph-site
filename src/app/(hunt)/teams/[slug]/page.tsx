@@ -1,9 +1,9 @@
-import { ProfileForm } from "../team-page/ProfileForm";
+import ProfileForm from "./ProfileForm";
+import Toast from "./Toast";
 import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
 import { teams } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import Toast from "../team-page/Toast";
 import { redirect } from "next/navigation";
 
 export default async function Page({

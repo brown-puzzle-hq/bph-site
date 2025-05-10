@@ -1,8 +1,8 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "The Compact Disc - Brown Puzzlehunt"
+  title: "The Compact Disc - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

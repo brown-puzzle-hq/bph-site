@@ -17,15 +17,18 @@ import {
   SolvedPuzzle,
   AvailableEvent,
   FinishedEvent,
-} from "./components/PuzzleListPage";
+} from "./components/puzzle-list/PuzzleListPage";
 import { headers } from "next/headers";
 
-const PuzzleListPage = dynamic(() => import("./components/PuzzleListPage"), {
-  ssr: false,
-});
+const PuzzleListPage = dynamic(
+  () => import("./components/puzzle-list/PuzzleListPage"),
+  {
+    ssr: false,
+  },
+);
 
 const MobilePuzzleListPage = dynamic(
-  () => import("./components/MobilePuzzleListPage"),
+  () => import("./components/puzzle-list/MobilePuzzleListPage"),
   {
     ssr: false,
   },

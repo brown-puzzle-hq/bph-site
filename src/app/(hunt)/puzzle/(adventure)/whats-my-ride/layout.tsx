@@ -1,8 +1,8 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "What's My Ride? - Brown Puzzlehunt"
+  title: "What's My Ride? - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

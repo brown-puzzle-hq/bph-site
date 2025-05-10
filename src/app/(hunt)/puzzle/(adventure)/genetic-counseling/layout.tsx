@@ -1,8 +1,8 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "Genetic Counseling - Brown Puzzlehunt"
+  title: "Genetic Counseling - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

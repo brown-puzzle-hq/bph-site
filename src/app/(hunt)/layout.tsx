@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
 import { HuntHamburgerMenu } from "./HuntHamburgerMenu";
-import { HuntTopNavSpacer } from "../nav/HuntTopNavSpacer";
+import { HuntTopNavSpacer } from "@/components/nav/HuntTopNavSpacer";
 
 export default async function RootLayout({
   children,

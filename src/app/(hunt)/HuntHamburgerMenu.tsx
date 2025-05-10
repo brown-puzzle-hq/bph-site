@@ -1,7 +1,7 @@
 import { auth } from "~/server/auth/auth";
-import { LogoutButton } from "../nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "../nav/HamburgerMenu";
-import Countdown from "./Countdown";
+import { LogoutButton } from "@/components/nav/LogoutButton";
+import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
+import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 export async function HuntHamburgerMenu() {

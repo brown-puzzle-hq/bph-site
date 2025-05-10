@@ -1,4 +1,4 @@
-import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
+import DefaultPuzzlePage from "~/app/(hunt)/puzzle/components/puzzle/DefaultPuzzlePage";
 import * as data from "./data";
 
 export default async function Page({

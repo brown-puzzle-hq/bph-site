@@ -1,8 +1,9 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "Two Guards, Two Doors, a Boat, a River, and a Cabbage - Brown Puzzlehunt"
+  title:
+    "Two Guards, Two Doors, a Boat, a River, and a Cabbage - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

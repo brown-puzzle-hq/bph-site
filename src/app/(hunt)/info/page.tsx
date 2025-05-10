@@ -6,7 +6,7 @@ import {
   useTOCContextValues,
   TOCSection,
   TableOfContents,
-} from "../TableOfContents";
+} from "@/components/toc/TableOfContents";
 import Timeline from "./Timeline";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 

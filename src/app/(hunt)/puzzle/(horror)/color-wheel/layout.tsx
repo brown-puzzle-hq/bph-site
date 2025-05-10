@@ -1,5 +1,5 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
   title: "Color Wheel - Brown Puzzlehunt",

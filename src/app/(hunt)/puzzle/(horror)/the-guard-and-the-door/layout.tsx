@@ -1,8 +1,8 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "The Guard and The Door - Brown Puzzlehunt"
+  title: "The Guard and The Door - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

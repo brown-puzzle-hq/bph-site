@@ -1,4 +1,4 @@
-import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
+import DefaultPuzzlePage from "@/puzzle/components/puzzle/DefaultPuzzlePage";
 import * as data from "./data";
 
 import { db } from "~/server/db";

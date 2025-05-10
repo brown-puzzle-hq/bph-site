@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
-import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
+import DefaultPuzzlePage from "@/puzzle/components/puzzle/DefaultPuzzlePage";
 import * as data from "./data";
 
 export default async function Page({

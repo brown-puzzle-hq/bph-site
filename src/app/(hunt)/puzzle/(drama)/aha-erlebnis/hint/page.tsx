@@ -1,4 +1,4 @@
-import DefaultHintPage from "@/puzzle/components/DefaultHintPage";
+import DefaultHintPage from "@/puzzle/components/hint/DefaultHintPage";
 import { puzzleId } from "../data";
 
 export default async function Page() {

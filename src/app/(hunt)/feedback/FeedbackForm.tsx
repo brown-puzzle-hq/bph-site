@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/card";
 import { FormattedTime } from "~/lib/time";
 
+// TODO: calls an admin component in hunt page
+// Refactor this
+
 import {
   Form,
   FormControl,
@@ -22,7 +25,8 @@ import {
   FormField,
   FormItem,
 } from "@/components/ui/form";
-import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
+import FeedbackDialog from "~/app/admin/feedback/FeedbackDialog";
+
 import { insertFeedback } from "./actions";
 
 export const feedbackFormSchema = z.object({

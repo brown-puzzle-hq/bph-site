@@ -1,8 +1,8 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "Aha Erlebnis - Brown Puzzlehunt"
+  title: "Aha Erlebnis - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({

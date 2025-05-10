@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
-import DefaultPuzzlePage from "@/puzzle/components/DefaultPuzzlePage";
+import DefaultPuzzlePage from "~/app/(hunt)/puzzle/components/puzzle/DefaultPuzzlePage";
 import * as data from "./data";
 
 export default async function Page({
@@ -9,7 +9,7 @@ export default async function Page({
   searchParams?: { [key: string]: string | undefined };
 }) {
   const session = await auth();
-  const interactionMode = searchParams?.interactionMode
+  const interactionMode = searchParams?.interactionMode;
   const actualInteractionMode =
     interactionMode &&
     (session?.user?.role === "admin" ||
@@ -28,7 +28,11 @@ export default async function Page({
       inPersonBody={data.inPersonBody}
       remoteBoxBody={data.remoteBoxBody}
       remoteBody={data.remoteBody}
-      copyText={actualInteractionMode === "remote" ? data.remoteCopyText : data.boxCopyText}
+      copyText={
+        actualInteractionMode === "remote"
+          ? data.remoteCopyText
+          : data.boxCopyText
+      }
       partialSolutions={data.partialSolutions}
       tasks={data.tasks}
       interactionMode={interactionMode}

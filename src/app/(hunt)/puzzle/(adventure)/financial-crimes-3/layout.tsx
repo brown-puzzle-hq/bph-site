@@ -1,8 +1,9 @@
 import { puzzleId, solutionBody } from "./data";
-import DefaultHeader from "@/puzzle/components/DefaultHeader";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "Partaking in a Nontrivial Amount of Fraud, Embezzlement, and Other Financial Crimes 3 - Brown Puzzlehunt"
+  title:
+    "Partaking in a Nontrivial Amount of Fraud, Embezzlement, and Other Financial Crimes 3 - Brown Puzzlehunt",
 };
 
 export default async function RootLayout({
