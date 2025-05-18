@@ -12,7 +12,6 @@ export type InteractionMode = (typeof interactionModeEnum.enumValues)[number];
 export type EditableFields = {
   role: Role;
   interactionMode: InteractionMode;
-  hasBox: boolean;
 };
 
 export type EditedTeam = {

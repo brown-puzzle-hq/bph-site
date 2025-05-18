@@ -20,7 +20,6 @@ export const revalidate = 300;
 type LeaderboardItem = {
   id: string;
   displayName: string;
-  hasBox: boolean;
   finishTime: Date | null;
   solves: number;
   lastSolveTime: Date | null;
@@ -74,7 +73,6 @@ export default async function Home() {
     .select({
       id: teams.id,
       displayName: teams.displayName,
-      hasBox: teams.hasBox,
       // Exclude finish time if it is after hunt end
       finishTime: sql<Date | null>`
       CASE 
@@ -109,11 +107,10 @@ export default async function Home() {
       asc(sql`last_solve_time`),
     );
 
-  const allRemoteTeams: LeaderboardItem[] = await db
+  const remoteTeams: LeaderboardItem[] = await db
     .select({
       id: teams.id,
       displayName: teams.displayName,
-      hasBox: teams.hasBox,
       // Exclude finish time if it is after hunt end
       finishTime: sql<Date | null>`
       CASE 
@@ -145,31 +142,19 @@ export default async function Home() {
       asc(sql`last_solve_time`),
     );
 
-  const remoteBoxTeams = allRemoteTeams.filter((team) => team.hasBox);
-  const remoteTeams = allRemoteTeams.filter((team) => !team.hasBox);
   const now = new Date();
 
   return (
     <div className="mx-auto mb-12 max-w-2xl px-4 pt-6">
       <h1 className="mb-2 text-center">Leaderboard</h1>
       <Tabs defaultValue="in-person" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 space-x-1 bg-footer-bg text-[#6c518e]">
+        <TabsList className="grid w-full grid-cols-2 space-x-1 bg-footer-bg text-[#6c518e]">
           <TabsTrigger
             className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
             value="in-person"
           >
             In-Person
             {now > IN_PERSON.END_TIME && (
-              <Lock className="h-[13px] stroke-[3.5]" />
-            )}
-          </TabsTrigger>
-          <TabsTrigger
-            className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
-            value="remote-box"
-          >
-            <span className="sm:hidden">Has Box</span>
-            <span className="hidden sm:block">Remote (Box)</span>
-            {now > REMOTE.END_TIME && (
               <Lock className="h-[13px] stroke-[3.5]" />
             )}
           </TabsTrigger>
@@ -186,11 +171,6 @@ export default async function Home() {
         <TabsContent value="in-person">
           <div className="w-full">
             <Leaderboard data={inPersonTeams} />
-          </div>
-        </TabsContent>
-        <TabsContent value="remote-box">
-          <div className="w-full">
-            <Leaderboard data={remoteBoxTeams} />
           </div>
         </TabsContent>
         <TabsContent value="remote">

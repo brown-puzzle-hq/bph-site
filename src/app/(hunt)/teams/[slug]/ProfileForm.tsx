@@ -92,7 +92,6 @@ export const profileFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean(),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    wantsBox: z.boolean().optional(),
     role: z.enum(roleEnum.enumValues),
     password: z
       .string()
@@ -100,16 +99,7 @@ export const profileFormSchema = z
       .max(50, { message: "Max 50 characters" })
       .or(z.literal("")),
     confirmPassword: z.string().or(z.literal("")),
-    hasBox: z.boolean(),
   })
-  // .refine(
-  //   (data) =>
-  //     !(data.interactionMode === "remote" && data.wantsBox === undefined),
-  //   {
-  //     message: "Required",
-  //     path: ["wantsBox"],
-  //   },
-  // )
   .refine(
     (data) =>
       !(data.interactionMode === "in-person" && data.phoneNumber === ""),
@@ -133,8 +123,6 @@ type TeamInfoFormProps = {
   phoneNumber: string;
   roomNeeded: boolean;
   solvingLocation: string;
-  wantsBox: boolean | null;
-  hasBox: boolean;
 };
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
@@ -159,8 +147,6 @@ export default function ProfileForm({
   phoneNumber,
   roomNeeded,
   solvingLocation,
-  wantsBox,
-  hasBox,
 }: TeamInfoFormProps) {
   const router = useRouter();
   const { data: session, update } = useSession();
@@ -181,8 +167,6 @@ export default function ProfileForm({
       solvingLocation,
       password: "",
       confirmPassword: "",
-      wantsBox: wantsBox ?? undefined,
-      hasBox: hasBox,
     },
     mode: "onChange",
   });
@@ -214,8 +198,6 @@ export default function ProfileForm({
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      wantsBox: data.wantsBox,
-      hasBox: data.hasBox,
       password: data.password,
     });
 
@@ -238,9 +220,6 @@ export default function ProfileForm({
         data.interactionMode != form.formState.defaultValues?.interactionMode
       ) {
         update({ interactionMode: data.interactionMode });
-      }
-      if (data.hasBox != form.formState.defaultValues?.hasBox) {
-        update({ hasBox: data.hasBox });
       }
     }
 
@@ -277,11 +256,6 @@ export default function ProfileForm({
       switch (key) {
         case "members":
           return serializeMembers(currentValues[key]) !== memberString;
-        case "wantsBox":
-          return (
-            currentValues["interactionMode"] === "remote" &&
-            currentValues[key] != wantsBox
-          );
         case "phoneNumber":
           return (
             currentValues["interactionMode"] === "in-person" &&
@@ -512,6 +486,7 @@ export default function ProfileForm({
 
           {/* Other fields */}
           {form.getValues("interactionMode") === "in-person" ? (
+            // In-person fields
             <div className="mb-8 space-y-8">
               <FormField
                 control={form.control}
@@ -616,64 +591,8 @@ export default function ProfileForm({
               />
             </div>
           ) : (
-            <div className="mb-8 space-y-8">
-              {/*
-              <FormField
-                control={form.control}
-                name="wantsBox"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex flex-row justify-between">
-                      <span className="text-main-header">
-                        Remote box <span className="text-error">*</span>
-                      </span>
-                      <FormMessage />
-                    </FormLabel>
-                    <FormDescription>
-                      Are you interested in purchasing a box of physical
-                      puzzles? This is non-binding and only offered to remote
-                      teams.
-                    </FormDescription>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={
-                          (value) =>
-                            field.onChange(
-                              value === "true"
-                                ? true
-                                : value === "false"
-                                  ? false
-                                  : undefined,
-                            ) // Map string to boolean
-                        }
-                        value={
-                          form.watch("wantsBox") === true
-                            ? "true"
-                            : form.watch("wantsBox") === false
-                              ? "false"
-                              : undefined
-                        } // Map boolean to string
-                        className="flex flex-col space-y-1"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="true" />
-                          <FormLabel className="font-normal text-main-header">
-                            Yes, I might be interested!
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="false" />
-                          <FormLabel className="font-normal text-main-header">
-                            No thank you.
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              */}
-            </div>
+            // Remote fields
+            <div className="mb-8 space-y-8"></div>
           )}
 
           {/* Team permissions */}
@@ -708,43 +627,6 @@ export default function ProfileForm({
                             </FormLabel>
                           </FormItem>
                         ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {/* Has box */}
-            {session?.user?.role === "admin" && (
-              <FormField
-                control={form.control}
-                name="hasBox"
-                render={({ field }) => (
-                  <FormItem className="mb-8 space-y-3">
-                    <FormLabel className="text-main-header">
-                      Has remote box
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={(value) =>
-                          field.onChange(value === "true")
-                        }
-                        value={field.value ? "true" : "false"}
-                        className="flex flex-col space-y-1"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="true" />
-                          <FormLabel className="font-normal text-main-text">
-                            Yes
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <RadioGroupItem value="false" />
-                          <FormLabel className="font-normal text-main-text">
-                            No
-                          </FormLabel>
-                        </FormItem>
                       </RadioGroup>
                     </FormControl>
                   </FormItem>
@@ -815,9 +697,6 @@ export default function ProfileForm({
                       !form
                         .watch("members")
                         .some((member: Member) => member?.email) ||
-                      // (form.watch("interactionMode") === "remote" &&
-                      //   form.watch("wantsBox") !== true &&
-                      //   form.watch("wantsBox") !== false) ||
                       form.watch("password") !== form.watch("confirmPassword")
                     }
                   >

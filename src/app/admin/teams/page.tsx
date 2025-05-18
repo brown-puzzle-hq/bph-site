@@ -5,7 +5,6 @@ import { count, sql } from "drizzle-orm";
 import { and, asc, desc, eq, ne } from "drizzle-orm/expressions";
 import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
-import { ActualInteractionMode } from "~/server/db/schema";
 
 export const revalidate = 300;
 
@@ -18,6 +17,8 @@ const fetchInPersonUsers = async () =>
         createTime: teams.createTime,
         finishTime: teams.finishTime,
         solves: count(solves).as("solves"),
+        interactionMode: teams.interactionMode,
+        role: teams.role,
 
         // Categories for leaderboard calculations
         // Exclude finish time if it is after hunt end
@@ -52,8 +53,6 @@ const fetchInPersonUsers = async () =>
   ).map((team, i) => ({
     ...team,
     rank: team.solves > 0 ? i + 1 : null,
-    actualInteractionMode: "in-person" as ActualInteractionMode,
-    role: "user",
   }));
 
 const fetchRemoteUsers = async () =>
@@ -64,8 +63,9 @@ const fetchRemoteUsers = async () =>
         displayName: teams.displayName,
         createTime: teams.createTime,
         finishTime: teams.finishTime,
-        hasBox: teams.hasBox,
         solves: count(solves).as("solves"),
+        interactionMode: teams.interactionMode,
+        role: teams.role,
 
         // Categories for leaderboard calculations
         // Exclude finish time if it is after hunt end
@@ -93,14 +93,10 @@ const fetchRemoteUsers = async () =>
         desc(sql`filtered_solves`),
         asc(sql`last_solve_time`),
       )
-  ).map((team) => ({
+  ).map((team, i) => ({
     ...team,
-    actualInteractionMode: (team.hasBox
-      ? "remote-box"
-      : "remote") as ActualInteractionMode,
-    role: "user",
+    rank: team.solves > 0 ? i + 1 : null,
   }));
-
 const fetchNonUsers = async () =>
   (
     await db.query.teams.findMany({
@@ -110,40 +106,23 @@ const fetchNonUsers = async () =>
         role: true,
         createTime: true,
         finishTime: true,
-
         interactionMode: true,
-        hasBox: true,
       },
       where: ne(teams.role, "user"),
     })
   ).map((team) => ({
     ...team,
     rank: null,
-    actualInteractionMode: (team.interactionMode === "remote" && team.hasBox
-      ? "remote-box"
-      : team.interactionMode) as ActualInteractionMode,
   }));
 
 export default async function Home() {
-  const [inPersonUsers, allRemoteUsers, nonUsers] = await Promise.all([
+  const [inPersonUsers, remoteUsers, nonUsers] = await Promise.all([
     fetchInPersonUsers(),
     fetchRemoteUsers(),
     fetchNonUsers(),
   ]);
 
-  const remoteBoxUsers = allRemoteUsers
-    .filter((team) => team.hasBox)
-    .map((team, i) => ({ ...team, rank: team.solves > 0 ? i + 1 : null }));
-  const remoteUsers = allRemoteUsers
-    .filter((team) => !team.hasBox)
-    .map((team, i) => ({ ...team, rank: team.solves > 0 ? i + 1 : null }));
-
-  const data = [
-    ...inPersonUsers,
-    ...remoteBoxUsers,
-    ...remoteUsers,
-    ...nonUsers,
-  ];
+  const data = [...inPersonUsers, ...remoteUsers, ...nonUsers];
 
   return (
     // FYI container is important don't be like Alex and spend an hour debugging after removing it

@@ -97,7 +97,6 @@ export const registerFormSchema = z
     phoneNumber: zPhone,
     roomNeeded: z.boolean().default(false),
     solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
-    wantsBox: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -111,14 +110,6 @@ export const registerFormSchema = z
       path: ["phoneNumber"],
     },
   );
-// .refine(
-//   (data) =>
-//     !(data.interactionMode === "remote" && data.wantsBox === undefined),
-//   {
-//     message: "Required",
-//     path: ["wantsBox"],
-//   },
-// )
 
 type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
@@ -140,7 +131,6 @@ export function RegisterForm({}: RegisterFormProps) {
       phoneNumber: "",
       roomNeeded: false,
       solvingLocation: "",
-      wantsBox: undefined,
     },
   });
 
@@ -173,7 +163,6 @@ export function RegisterForm({}: RegisterFormProps) {
       phoneNumber: data.phoneNumber,
       roomNeeded: data.roomNeeded,
       solvingLocation: data.solvingLocation,
-      wantsBox: data.wantsBox,
     });
 
     if (error) {
@@ -541,58 +530,6 @@ export function RegisterForm({}: RegisterFormProps) {
             />
           </div>
         )}
-
-        {/* Sold out of boxes
-        {form.watch("interactionMode") === "remote" && (
-          <div className="mb-8 space-y-8">
-            <FormField
-              control={form.control}
-              name="wantsBox"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex flex-row justify-between">
-                    <span className="text-main-header">
-                      Remote box <span className="text-error">*</span>
-                    </span>
-                    <FormMessage className="text-error" />
-                  </FormLabel>
-                  <FormDescription className="text-muted-foreground">
-                    Are you interested in purchasing a box of physical puzzles?
-                    This is non-binding and only offered to remote teams.{" "}
-                  </FormDescription>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={() => {}}
-                      value={
-                        field.value === undefined
-                          ? undefined
-                          : field.value === true
-                            ? "true"
-                            : "false"
-                      }
-                      className="flex flex-col space-y-1"
-                      disabled
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <RadioGroupItem value="true" disabled />
-                        <FormLabel className="font-normal text-main-header">
-                          Yes, I might be interested!
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <RadioGroupItem value="false" disabled />
-                        <FormLabel className="font-normal text-main-header">
-                          No thank you.
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        )}
-      */}
 
         <Button type="submit">Register</Button>
 

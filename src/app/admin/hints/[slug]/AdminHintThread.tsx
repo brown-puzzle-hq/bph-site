@@ -46,7 +46,6 @@ type Hint = {
     displayName: string;
     members: string;
     interactionMode: string;
-    hasBox: boolean;
   };
   claimer: {
     id: string;
@@ -314,7 +313,7 @@ export default function AdminHintThread({
           <div className="flex items-center space-x-1">
             <span className="font-semibold">Puzzle:</span>
             <Link
-              href={`/puzzle/${hint.puzzle.id}?interactionMode=${hint.team.interactionMode === "remote" && hint.team.hasBox ? "remote-box" : hint.team.interactionMode}`}
+              href={`/puzzle/${hint.puzzle.id}?interactionMode=${hint.team.interactionMode}`}
               className="text-blue-500 hover:underline"
               prefetch={false}
             >

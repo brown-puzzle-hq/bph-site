@@ -1,3 +1,5 @@
+import { db } from "@/db/index";
+import { INITIAL_PUZZLES, ROUNDS, META_PUZZLES } from "~/hunt.config";
 import {
   Table,
   TableBody,
@@ -6,33 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import {
-  INITIAL_PUZZLES,
-  ROUNDS,
-  META_PUZZLES,
-  SEQUENCES,
-} from "~/hunt.config";
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
-import { db } from "@/db/index";
-
-const roundBgColor: Record<string, string> = {
-  Action: "bg-red-100",
-  Horror: "bg-indigo-100",
-  Adventure: "bg-lime-100",
-  Comedy: "bg-amber-100",
-  Drama: "bg-purple-100",
-  Reality: "bg-orange-100",
-};
-
-const roundTextColor: Record<string, string> = {
-  Action: "text-red-900",
-  Horror: "text-indigo-900",
-  Adventure: "text-lime-900",
-  Comedy: "text-amber-900",
-  Drama: "text-purple-900",
-  Reality: "text-orange-900",
-};
 
 export default async function Home() {
   const query = await db.query.puzzles.findMany({
@@ -84,37 +61,38 @@ export default async function Home() {
       .length,
     solves: puzzle.solves.filter((solve) => solve.team.role === "user").length,
     hints: puzzle.hints.filter((hint) => hint.team.role === "user").length,
-    sequences: SEQUENCES.filter((seq) => seq.puzzles.includes(puzzle.id)),
   }));
+
+  const moduleMap: Record<string, () => Promise<any>> = {
+    example: () => import("../../(hunt)/puzzle/example/data"),
+  };
 
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
-      const roundName = ROUNDS.find((round) =>
-        round.puzzles.includes(puzzle.id),
-      )?.name.toLowerCase();
+      try {
+        const loadModule = moduleMap[puzzle.id]?.();
+        const module = loadModule ? await loadModule.catch(() => null) : null;
 
-      const module = await import(
-        `../../(hunt)/puzzle/(${roundName})/${puzzle.id}/data.tsx`
-      ).catch(() => null);
+        const { inPersonBody, remoteBody, solutionBody, copyText } =
+          module ?? {};
 
-      const {
-        inPersonBody,
-        remoteBoxBody,
-        remoteBody,
-        solutionBody,
-        copyText,
-      } = module ?? {};
-
-      return {
-        ...puzzle,
-        inPersonBody: inPersonBody ?? null,
-        remoteBoxBody:
-          remoteBoxBody !== inPersonBody ? (remoteBoxBody ?? null) : null,
-        remoteBody: remoteBody !== inPersonBody ? (remoteBody ?? null) : null,
-        solutionBody:
-          solutionBody !== inPersonBody ? (solutionBody ?? null) : null,
-        copyText: copyText ?? null,
-      };
+        return {
+          ...puzzle,
+          inPersonBody: inPersonBody ?? null,
+          remoteBody: remoteBody !== inPersonBody ? (remoteBody ?? null) : null,
+          solutionBody:
+            solutionBody !== inPersonBody ? (solutionBody ?? null) : null,
+          copyText: copyText ?? null,
+        };
+      } catch (e) {
+        return {
+          ...puzzle,
+          inPersonBody: null,
+          remoteBody: null,
+          solutionBody: null,
+          copyText: null,
+        };
+      }
     }),
   );
 
@@ -128,7 +106,6 @@ export default async function Home() {
               <TableHead className="w-10 py-0">Round</TableHead>
               <TableHead className="w-1/6 min-w-56 py-0">Name</TableHead>
               <TableHead className="w-10 break-all py-0">Answer</TableHead>
-              <TableHead className="w-fit py-0 text-center">Seqs</TableHead>
               <TableHead className="w-fit py-0 text-center">Unlocks</TableHead>
               <TableHead className="w-fit py-0 text-center">Solves</TableHead>
               <TableHead className="w-fit py-0 text-center">Guesses</TableHead>
@@ -136,7 +113,6 @@ export default async function Home() {
               <TableHead className="w-fit text-nowrap py-0 text-center">
                 In-Person
               </TableHead>
-              <TableHead className="w-fit py-0 text-center">Box</TableHead>
               <TableHead className="w-fit py-0 text-center">Remote</TableHead>
               <TableHead className="w-fit py-0 text-center">Solution</TableHead>
               <TableHead className="w-fit py-0 text-center">Stats</TableHead>
@@ -159,9 +135,7 @@ export default async function Home() {
                 .map((puzzle) => (
                   <TableRow key={puzzle.id} className="hover:bg-inherit">
                     <TableCell className="py-0">
-                      <div
-                        className={`${roundBgColor[round.name]} inline-flex rounded-sm ${roundTextColor[round.name]} px-1 py-0.5`}
-                      >
+                      <div className={`inline-flex rounded-sm px-1 py-0.5`}>
                         {round.name}
                       </div>
                     </TableCell>
@@ -181,9 +155,6 @@ export default async function Home() {
                     <TableCell className="py-0">
                       <p className="text-emerald-600">{puzzle.answer}</p>
                     </TableCell>
-                    <TableCell className="text-center text-base">
-                      {puzzle.sequences.map((seq) => seq.icon)}
-                    </TableCell>
                     <TableCell className="text-center">
                       {puzzle.unlocks}
                     </TableCell>
@@ -201,17 +172,6 @@ export default async function Home() {
                         <div className="flex justify-center">
                           <a
                             href={`/puzzle/${puzzle.id}?interactionMode=in-person`}
-                          >
-                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
-                          </a>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="justify-center">
-                      {puzzle.remoteBoxBody && (
-                        <div className="flex justify-center">
-                          <a
-                            href={`/puzzle/${puzzle.id}?interactionMode=remote-box`}
                           >
                             <Puzzle className="size-5 text-red-500 hover:opacity-75" />
                           </a>

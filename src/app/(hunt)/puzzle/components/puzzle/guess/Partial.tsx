@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { getCookie, setCookie } from "typescript-cookie";
 
+// Partial needs to be a client component because we want to use cookies
+// to track if the user has hovered over the tooltip
 export default function Partial({
   partialSolution,
 }: {

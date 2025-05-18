@@ -14,13 +14,11 @@ import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import ErratumDialog from "~/app/(hunt)/puzzle/components/puzzle/ErratumDialog";
 import GuessForm from "@/puzzle/components/puzzle/guess/GuessForm";
 import CopyButton from "@/puzzle/components/puzzle/CopyButton";
-import TokenRefresher from "@/puzzle/components/TokenRefresher";
 import { canViewPuzzle } from "@/puzzle/actions";
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   IN_PERSON,
   REMOTE,
-  PUZZLES_WITH_INFINITE_GUESSES,
   INITIAL_PUZZLES,
 } from "~/hunt.config";
 import { cn } from "~/lib/utils";
@@ -151,27 +149,14 @@ export default async function DefaultPuzzlePage({
   // Get the number of guesses left
   // If it is a puzzle with infinite guessses, set it to -1
   const numberOfGuessesLeft: NumberOfGuesses =
-    PUZZLES_WITH_INFINITE_GUESSES.includes(puzzleId)
-      ? "infinity"
-      : NUMBER_OF_GUESSES_PER_PUZZLE -
-        previousGuesses.filter(
-          ({ guess }) => !(guess in tasks || guess in partialSolutions),
-        ).length;
-
-  // Refresh hasBox token
-  var refresh = false;
-  if (typeof session.user.hasBox === "undefined") {
-    const user = await db.query.teams.findFirst({
-      where: eq(teams.id, session.user.id),
-    });
-    const hasBox = user!.hasBox;
-    session.user.hasBox = hasBox;
-    refresh = true;
-  }
+    NUMBER_OF_GUESSES_PER_PUZZLE -
+    previousGuesses.filter(
+      ({ guess }) => !(guess in tasks || guess in partialSolutions),
+    ).length;
 
   // If there is an URL query, use that for admins and after the hunt ends
   // Otherwise, use the session interaction mode
-  const actualInteractionMode =
+  const puzzleInteractionMode =
     interactionMode &&
     (session.user.role === "admin" ||
       (session.user.interactionMode === "in-person" &&
@@ -180,21 +165,13 @@ export default async function DefaultPuzzlePage({
       ? interactionMode
       : session.user.interactionMode === "in-person"
         ? "in-person"
-        : session.user.hasBox
-          ? "remote-box"
-          : "remote";
+        : "remote";
 
   const puzzleBody =
-    actualInteractionMode === "remote-box"
-      ? remoteBoxBody
-      : actualInteractionMode === "in-person"
-        ? inPersonBody
-        : remoteBody;
+    puzzleInteractionMode === "remote" ? remoteBody : inPersonBody;
 
   return (
     <div className="w-full px-4">
-      {refresh && <TokenRefresher hasBox={session.user.hasBox} />}
-
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>

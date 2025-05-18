@@ -34,25 +34,22 @@ import {
 } from "@/components/ui/table";
 
 import { getCookie, setCookie } from "typescript-cookie";
-import {
-  type ActualInteractionMode,
-  actualInteractionModeValues,
-  roleEnum,
-} from "~/server/db/schema";
-import { type EditedTeam, type Role, updateTeam } from "./actions";
+import { roleEnum, interactionModeEnum } from "~/server/db/schema";
+import { type EditedTeam, type Role, type InteractionMode } from "./actions";
 import { cn } from "~/lib/utils";
 import { Checkbox } from "~/components/ui/checkbox";
+import { updateTeam } from "./actions";
 
-export const clientEditableFieldKeys = ["role", "actualInteractionMode"];
+export const clientEditableFieldKeys = ["role", "interactionMode"];
 
 export type ClientEditableFields = {
   role: Role;
-  actualInteractionMode: ActualInteractionMode;
+  interactionMode: InteractionMode;
 };
 
 const fieldToOptions: Record<keyof ClientEditableFields, string[]> = {
   role: roleEnum.enumValues,
-  actualInteractionMode: actualInteractionModeValues,
+  interactionMode: interactionModeEnum.enumValues,
 };
 
 export type ClientEditedRow = {
@@ -72,7 +69,6 @@ const colorMap: Record<string, string> = {
   admin: "bg-emerald-200 text-emerald-900",
   testsolver: "bg-violet-200 text-violet-900",
   remote: "bg-lime-200 text-lime-900",
-  "remote-box": "bg-yellow-200 text-yellow-900",
   "in-person": "bg-orange-200 text-orange-900",
 };
 
@@ -85,13 +81,13 @@ export function TeamTable<TData, TValue>({
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     {
-      id: "actualInteractionMode",
-      value: ["remote", "remote-box"],
+      id: "interactionMode",
+      value: ["remote", "in-person"],
     },
   ]);
   const [interactionModeFilters, setInteractionModeFilters] = useState<
-    ActualInteractionMode[]
-  >(["remote", "remote-box"]);
+    InteractionMode[]
+  >(["remote", "in-person"]);
 
   const [isCompact, setIsCompact] = useState(true);
   useEffect(() => {
@@ -125,20 +121,16 @@ export function TeamTable<TData, TValue>({
       ],
       columnFilters: [
         {
-          id: "actualInteractionMode",
-          value: ["remote", "remote-box"],
+          id: "interactionMode",
+          value: ["remote", "in-person"],
         },
       ],
     },
     pageCount: Math.ceil(data.length / pageSize),
     filterFns: {
-      interactionModeFilter: (
-        row,
-        id,
-        filterValue: ActualInteractionMode[],
-      ) => {
+      interactionModeFilter: (row, id, filterValue: InteractionMode[]) => {
         if (filterValue.length === 0) return true;
-        const mode = row.getValue(id) as ActualInteractionMode;
+        const mode = row.getValue(id) as InteractionMode;
         return filterValue.includes(mode);
       },
     },
@@ -152,17 +144,17 @@ export function TeamTable<TData, TValue>({
     setEditedRows({});
     if (interactionModeFilters.length === 0) {
       setColumnFilters(
-        columnFilters.filter((filter) => filter.id !== "actualInteractionMode"),
+        columnFilters.filter((filter) => filter.id !== "interactionMode"),
       );
     } else {
       setColumnFilters((prev) => {
         const filtered = prev.filter(
-          (filter) => filter.id !== "actualInteractionMode",
+          (filter) => filter.id !== "interactionMode",
         );
         return [
           ...filtered,
           {
-            id: "actualInteractionMode",
+            id: "interactionMode",
             value: interactionModeFilters,
           },
         ];
@@ -224,14 +216,10 @@ export function TeamTable<TData, TValue>({
 
         const { new: newValue } = editedField;
 
-        if (field === "actualInteractionMode") {
+        if (field === "interactionMode") {
           editedTeams[teamId] = {
             ...editedTeams[teamId],
-            interactionMode:
-              newValue === "remote-box" || newValue === "remote"
-                ? "remote"
-                : "in-person",
-            hasBox: newValue === "remote-box",
+            interactionMode: newValue === "remote" ? "remote" : "in-person",
           };
           continue;
         }
@@ -301,26 +289,6 @@ export function TeamTable<TData, TValue>({
                   checked
                     ? [...prev, "remote"]
                     : prev.filter((mode) => mode !== "remote"),
-                );
-              }}
-              className="border-[1.5px] border-[#BBBBBB] shadow-none data-[state=checked]:border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"
-            />
-
-            <p
-              className={cn(
-                !interactionModeFilters.includes("remote-box") &&
-                  "text-[#BBBBBB]",
-              )}
-            >
-              Remote Box
-            </p>
-            <Checkbox
-              checked={interactionModeFilters.includes("remote-box")}
-              onCheckedChange={(checked) => {
-                setInteractionModeFilters((prev) =>
-                  checked
-                    ? [...prev, "remote-box"]
-                    : prev.filter((mode) => mode !== "remote-box"),
                 );
               }}
               className="border-[1.5px] border-[#BBBBBB] shadow-none data-[state=checked]:border-neutral-500 data-[state=checked]:bg-white data-[state=checked]:text-neutral-500"

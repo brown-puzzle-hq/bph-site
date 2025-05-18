@@ -9,14 +9,14 @@ import {
   Puzzle,
 } from "lucide-react";
 import { FormattedTime } from "~/lib/time";
-import { ActualInteractionMode } from "~/server/db/schema";
+import { Role, InteractionMode } from "./actions";
 
 export type TeamTableRow = {
   rank: number | null;
   id: string;
   displayName: string;
-  role: string;
-  actualInteractionMode: ActualInteractionMode;
+  role: Role;
+  interactionMode: InteractionMode;
   createTime: Date;
   finishTime: Date | null;
 };
@@ -121,7 +121,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
     ),
   },
   {
-    accessorKey: "actualInteractionMode",
+    accessorKey: "interactionMode",
     header: ({ column }) => (
       <div className="flex w-20 items-center space-x-0.5">
         <p>Mode</p>

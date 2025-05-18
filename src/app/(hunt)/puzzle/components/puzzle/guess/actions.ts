@@ -16,11 +16,9 @@ import { and, count, eq, inArray } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
   IN_PERSON,
-  META_PUZZLES,
   NUMBER_OF_GUESSES_PER_PUZZLE,
   PUZZLE_UNLOCK_MAP,
-  ROUNDS,
-  PUZZLES_WITH_INFINITE_GUESSES,
+  META_PUZZLES,
 } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/utils";
@@ -52,18 +50,14 @@ export async function handleGuess(puzzleId: string, guess: string) {
     return { error: "Already guessed!" };
 
   // Don't penalize guess if it is a task
-  const roundName = ROUNDS.find((round) =>
-    round.puzzles.includes(puzzleId),
-  )?.name.toLowerCase();
-  const module = await import(
-    `../../../(${roundName})/${puzzleId}/data.tsx`
-  ).catch(() => null);
+  const module = await import(`../../../${puzzleId}/data.tsx`).catch(
+    () => null,
+  );
   const tasks = module?.tasks ?? {};
   const partialSolutions = module?.partialSolutions ?? {};
 
   // Check if the number of guesses is exceeded
   if (
-    !PUZZLES_WITH_INFINITE_GUESSES.includes(puzzleId) &&
     puzzle.guesses.filter(
       ({ guess }) => !(guess in tasks || guess in partialSolutions),
     ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
@@ -157,34 +151,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
   // Message the guess channel
   const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
   await sendBotMessage(guessMessage, "guess");
-
-  // Message interaction channel about action meta solve and ping the lore role
-  // Only if the guess is correct and it is the in-person hunt
-  if (isCorrect && puzzleId == "drop-the" && new Date() < IN_PERSON.END_TIME) {
-    const query = await db.query.teams.findFirst({
-      columns: { solvingLocation: true },
-      where: eq(teams.id, teamId),
-    });
-
-    const actionInteractionMessage = `💥 **Action Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ). ${query && query.solvingLocation ? `They are in ${query.solvingLocation}.` : ""} <@&1201541948880736378>`;
-    await sendBotMessage(actionInteractionMessage, "interaction");
-  }
-
-  // Message interaction channel about horror guard and ping the lore role
-  // Only if the guess is correct and it is the in-person hunt
-  if (
-    isCorrect &&
-    puzzleId == "the-guard-and-the-door" &&
-    new Date() < IN_PERSON.END_TIME
-  ) {
-    const query = await db.query.teams.findFirst({
-      columns: { solvingLocation: true },
-      where: eq(teams.id, teamId),
-    });
-
-    const horrorInteractionMessage = `👻 **Horror Interaction** for [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) after [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ). ${query && query.solvingLocation ? `They are in ${query.solvingLocation}.` : ""} <@&1201541948880736378>`;
-    await sendBotMessage(horrorInteractionMessage, "interaction");
-  }
 
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt

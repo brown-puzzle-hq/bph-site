@@ -19,7 +19,6 @@ export type TeamProperties = {
   phoneNumber?: string;
   roomNeeded?: boolean;
   solvingLocation?: string;
-  wantsBox?: boolean;
 };
 
 export async function insertTeam(teamProperties: TeamProperties) {
@@ -49,7 +48,6 @@ export async function insertTeam(teamProperties: TeamProperties) {
       ...teamProperties,
       password: hashedPassword,
       role: "user" as const,
-      hasBox: false,
       createTime: new Date(),
     });
 

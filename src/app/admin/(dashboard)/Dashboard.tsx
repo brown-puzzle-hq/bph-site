@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   MessageCircleQuestion,
   PackageOpen,
@@ -17,7 +16,7 @@ import {
 import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
 import { guesses, hints, teams } from "~/server/db/schema";
-import { count, and, eq, isNull, not, sql } from "drizzle-orm";
+import { count, eq, isNull, not, sql } from "drizzle-orm";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 type hintLeaderboardItem = {
@@ -84,34 +83,6 @@ export async function Dashboard() {
   const unansweredHints = numHints["false"] ?? 0;
   const totalHints = answeredHints + unansweredHints;
   const percentAnsweredHints = ((answeredHints / totalHints) * 100).toFixed(2);
-
-  // Get remote box interest count
-  const numBoxesWanted =
-    (
-      await db
-        .select({ count: count() })
-        .from(teams)
-        .where(
-          and(
-            eq(teams.role, "user"),
-            eq(teams.interactionMode, "remote"),
-            eq(teams.wantsBox, true),
-          ),
-        )
-    )[0]?.count ?? 0;
-  const numBoxesHad =
-    (
-      await db
-        .select({ count: count() })
-        .from(teams)
-        .where(
-          and(
-            eq(teams.role, "user"),
-            eq(teams.interactionMode, "remote"),
-            eq(teams.hasBox, true),
-          ),
-        )
-    )[0]?.count ?? 0;
 
   /* Activity Table (chunk 4) */
   const data: Record<number, ActivityItem> = {};
@@ -270,17 +241,12 @@ export async function Dashboard() {
           </Card>
           <Card x-chunk="dashboard-01-chunk-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Remote Boxes
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Other</CardTitle>
               <PackageOpen className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{numBoxesHad}</div>
-              <p className="text-muted-foreground text-xs">
-                {numBoxesWanted} teams interested{" "}
-                <span className="text-neutral-300">(frozen 3/27)</span>
-              </p>
+              <div className="text-2xl font-bold">XX</div>
+              <p className="text-muted-foreground text-xs">XX</p>
             </CardContent>
           </Card>
         </div>

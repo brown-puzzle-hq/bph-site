@@ -13,7 +13,6 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
-        rammetto: ['"Rammetto One"', "cursive"],
       },
       borderRadius: {
         lg: "var(--radius)",

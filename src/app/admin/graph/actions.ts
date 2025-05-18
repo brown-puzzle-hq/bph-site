@@ -18,7 +18,6 @@ export async function getSearchedTeam(teamId: string) {
       phoneNumber: true,
       solvingLocation: true,
       numCommunity: true,
-      hasBox: true,
     },
     with: {
       unlocks: {

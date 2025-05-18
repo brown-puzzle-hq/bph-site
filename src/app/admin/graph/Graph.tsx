@@ -19,34 +19,20 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
-import { Team } from "~/server/db/schema";
+import { InferSelectModel } from "drizzle-orm";
+import { teams } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
 import { deserializeMembers } from "~/lib/team-members";
 import { formatPhoneNumber } from "~/app/(hunt)/teams/[slug]/ProfileForm";
 import { cn } from "~/lib/utils";
 
-const roundTextColor: Record<string, string> = {
-  Action: "text-red-600",
-  Horror: "text-indigo-600",
-  Adventure: "text-lime-600",
-  Comedy: "text-yellow-500",
-  Drama: "text-purple-500",
-  Reality: "text-orange-500",
-};
+const roundTextColor: Record<string, string> = {};
 
-const roundNodeColor: Record<string, string> = {
-  Action: "oklch(0.637 0.237 25.331)",
-  Horror: "oklch(0.457 0.24 277.023)",
-  Adventure: "oklch(0.768 0.233 130.85)",
-  Comedy: "oklch(0.879 0.169 91.605)",
-  Drama: "oklch(0.827 0.119 306.383)",
-  Reality: "oklch(0.75 0.183 55.934)",
-  Defaut: "oklch(0.708 0 0)",
-};
+const roundNodeColor: Record<string, string> = {};
 
 export type SearchedTeam = Omit<
-  Team,
-  "password" | "wantsBox" | "roomNeeded"
+  InferSelectModel<typeof teams>,
+  "password" | "roomNeeded"
 > & {
   unlocks: string[];
   solves: string[];
@@ -635,12 +621,6 @@ export default function Graph() {
                   </p>
                 </>
               )}
-              {searchedTeam.interactionMode === "remote" && (
-                <p>
-                  <span className="font-semibold">Has box: </span>
-                  {searchedTeam.hasBox ? "yes" : "no"}
-                </p>
-              )}
               <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                 Members
               </p>
@@ -761,7 +741,7 @@ export default function Graph() {
               </p>
               <p>
                 <Link
-                  href={`/puzzle/${searchedPuzzle.puzzleId}${searchedTeam ? "?interactionMode=" + (searchedTeam.interactionMode === "remote" && searchedTeam.hasBox ? "remote-box" : searchedTeam.interactionMode) : ""}`}
+                  href={`/puzzle/${searchedPuzzle.puzzleId}${searchedTeam ? "?interactionMode=" + searchedTeam.interactionMode : ""}`}
                   prefetch={false}
                   rel="noopener noreferrer"
                   target="_blank"

@@ -1,11 +1,10 @@
-import { relations, InferSelectModel } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
   pgTableCreator,
   pgEnum,
   serial,
-  integer,
   text,
   timestamp,
   unique,
@@ -30,13 +29,9 @@ export const interactionModeEnum = pgEnum("interaction_type", [
   "remote",
 ]);
 
-export const actualInteractionModeValues = [
-  "in-person",
-  "remote",
-  "remote-box",
-];
+export const actualInteractionModeValues = ["in-person", "remote"];
 
-export type ActualInteractionMode = "in-person" | "remote" | "remote-box";
+export type ActualInteractionMode = "in-person" | "remote";
 
 export const hintStatusEnum = pgEnum("status", [
   "no_response",
@@ -72,12 +67,6 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-  wantsBox: boolean("wants_box"),
-  hasBox: boolean("has_box").notNull().default(false),
-
-  // Not included:
-  // allow_time_unlocks, total_hints_awarded, total_free_answers_awarded
-  // last_solve_time, is_prerelease_testsolver, is_hidden
 });
 
 export const puzzles = createTable("puzzle", {
@@ -86,9 +75,6 @@ export const puzzles = createTable("puzzle", {
   // Human-readable name that can be changed at any time
   name: varchar("name", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
-  // Not included:
-  // body_template, round, order, is_meta, emoji
-  // unlock_hours, unlock_global, unlock_local
 });
 
 // Unlocks may happen when a team guesses the answer correctly,
@@ -195,9 +181,6 @@ export const hints = createTable(
     response: text("response"),
     responseTime: timestamp("response_time", { withTimezone: true }),
     status: hintStatusEnum("status").notNull().default("no_response"),
-    // Not included:
-    // obsolute statuses
-    // notify_emails, discord_id, is_followup
   },
   (table) => {
     return {
@@ -289,7 +272,6 @@ export const answerTokens = createTable(
       onDelete: "set null",
     }),
   },
-  // TODO: enforce this later
   (table) => ({
     unique_decision: unique("unique_token").on(table.teamId, table.eventId),
   }),
@@ -402,61 +384,3 @@ export const answerTokenRelations = relations(answerTokens, ({ one }) => ({
     references: [puzzles.id],
   }),
 }));
-
-export type Team = InferSelectModel<typeof teams>;
-
-// M Guards, N doors, and K Choices
-export const mnkDecisionEnum = pgEnum("mnk_decision", [
-  "door_1",
-  "door_2",
-  "door_3",
-  "stay",
-  "switch",
-]);
-
-export const mnkDecisionTypeEnum = pgEnum("mnk_decision_type", [
-  "door",
-  "final",
-]);
-
-export const mnk = createTable(
-  "m_guards_n_doors_k_choices",
-  {
-    id: serial("id").primaryKey(),
-    teamId: varchar("team_id")
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
-    run: integer("run").notNull(),
-    scenario: integer("scenario").notNull(), // 1-4
-    decision: mnkDecisionEnum("decision").notNull(),
-    decisionType: mnkDecisionTypeEnum("decision_type").notNull(), // door, final
-    time: timestamp("time", { withTimezone: true }).notNull().defaultNow(),
-  },
-  (table) => ({
-    unique_decision: unique("unique_decision").on(
-      table.teamId,
-      table.run,
-      table.scenario,
-      table.decisionType,
-    ),
-  }),
-);
-
-export type MNKDecision = (typeof mnkDecisionEnum.enumValues)[number];
-export type MNKDecisionType = (typeof mnkDecisionTypeEnum.enumValues)[number];
-
-// Two Guards, Two Doors
-export const tgtdDecisionEnum = pgEnum("tgtd_decision", ["left", "right"]);
-
-export const tgtd = createTable("two_guards_two_doors", {
-  id: serial("id").primaryKey(),
-  teamId: varchar("team_id")
-    .notNull()
-    .references(() => teams.id, { onDelete: "cascade" }),
-  door: integer("door").notNull(), // 1-4
-  decision: tgtdDecisionEnum("decision").notNull(),
-  time: timestamp("time", { withTimezone: true }).notNull().defaultNow(),
-});
-
-export type TGTDDecision = (typeof tgtdDecisionEnum.enumValues)[number];
-export type TGTDEntry = InferSelectModel<typeof tgtd>;

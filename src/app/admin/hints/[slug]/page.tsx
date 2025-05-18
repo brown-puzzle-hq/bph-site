@@ -36,7 +36,6 @@ export default async function Page({
           id: true,
           members: true,
           interactionMode: true,
-          hasBox: true,
         },
       },
       puzzle: { columns: { id: true, name: true, answer: true } },

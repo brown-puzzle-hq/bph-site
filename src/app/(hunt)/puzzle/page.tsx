@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { db } from "@/db/index";
 import { eq, inArray } from "drizzle-orm";
@@ -10,29 +9,20 @@ import {
   solves,
   answerTokens,
 } from "~/server/db/schema";
-import { IN_PERSON, INITIAL_PUZZLES, REMOTE } from "@/hunt.config";
-import { Round, ROUNDS } from "@/hunt.config";
+import {
+  IN_PERSON,
+  INITIAL_PUZZLES,
+  REMOTE,
+  ROUNDS,
+  Round,
+} from "@/hunt.config";
 import {
   AvailablePuzzle,
   SolvedPuzzle,
   AvailableEvent,
   FinishedEvent,
 } from "./components/puzzle-list/PuzzleListPage";
-import { headers } from "next/headers";
-
-const PuzzleListPage = dynamic(
-  () => import("./components/puzzle-list/PuzzleListPage"),
-  {
-    ssr: false,
-  },
-);
-
-const MobilePuzzleListPage = dynamic(
-  () => import("./components/puzzle-list/MobilePuzzleListPage"),
-  {
-    ssr: false,
-  },
-);
+import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
 
 export default async function Home() {
   const session = await auth();
@@ -142,28 +132,6 @@ export default async function Home() {
       availablePuzzles.some((ap) => ap.id === puzzle),
     ),
   })).filter((round) => round.puzzles.length > 0);
-
-  const headersList = headers();
-  const userAgent = headersList.get("user-agent") || "";
-  const isMobile =
-    /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
-      userAgent,
-    );
-
-  if (isMobile) {
-    return (
-      <MobilePuzzleListPage
-        availablePuzzles={availablePuzzles}
-        solvedPuzzles={solvedPuzzles}
-        availableRounds={availableRounds}
-        availableEvents={availableEvents}
-        finishedEvents={finishedEvents}
-        hasEventInputBox={!!session?.user}
-        hasFinishedHunt={hasFinishedHunt}
-        isInPerson={isInPerson}
-      />
-    );
-  }
 
   return (
     <PuzzleListPage
