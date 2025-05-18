@@ -165,4 +165,3 @@ export async function insertFollowUp({
     return null;
   }
 }
-

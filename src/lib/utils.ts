@@ -6,13 +6,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function ensureError(value: unknown): Error {
-  if (value instanceof Error) return value
+  if (value instanceof Error) return value;
 
-  let stringified = '[Unable to stringify the thrown value]'
+  let stringified = "[Unable to stringify the thrown value]";
   try {
-    stringified = JSON.stringify(value)
+    stringified = JSON.stringify(value);
   } catch {}
 
-  const error = new Error(`This value was thrown as is, not through an Error: ${stringified}`)
-  return error
+  const error = new Error(
+    `This value was thrown as is, not through an Error: ${stringified}`,
+  );
+  return error;
 }

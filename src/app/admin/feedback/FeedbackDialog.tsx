@@ -41,7 +41,7 @@ export default function FeedbackDialog({
               <article
                 className={
                   teamSide
-                    ? "prose-custom-colors prose prose-feedback"
+                    ? "prose prose-custom-colors prose-feedback"
                     : "prose prose-feedback"
                 }
               >

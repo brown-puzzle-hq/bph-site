@@ -39,12 +39,14 @@ function renderTableToPlainText(html: string): string {
 
 export default function CopyButton({ copyText }: { copyText: string }) {
   const isHtml = /<\/?[a-z][\s\S]*>/i.test(copyText);
-  
+
   return (
     <button
       onClick={() => {
         try {
-          const plainText = isHtml ? renderTableToPlainText(copyText) : copyText;
+          const plainText = isHtml
+            ? renderTableToPlainText(copyText)
+            : copyText;
           if (isHtml) {
             const blobHtml = new Blob([copyText], { type: "text/html" });
             const blobText = new Blob([plainText], { type: "text/plain" });
