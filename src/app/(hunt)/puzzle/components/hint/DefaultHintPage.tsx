@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and, asc } from "drizzle-orm";
-import { followUps, solves, hints, puzzles } from "~/server/db/schema";
+import { replies, solves, hints, puzzles } from "~/server/db/schema";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
 import HuntHintThreads from "./HuntHintThreads";
 import { canViewPuzzle } from "@/puzzle/actions";
@@ -60,10 +60,10 @@ export default async function DefaultHintPage({
     with: {
       team: { columns: { id: true, displayName: true, members: true } },
       claimer: { columns: { id: true, displayName: true } },
-      followUps: {
+      replies: {
         columns: { id: true, message: true, userId: true, time: true },
         with: { user: { columns: { id: true, displayName: true } } },
-        orderBy: [asc(followUps.time)],
+        orderBy: [asc(replies.time)],
       },
     },
     orderBy: [asc(hints.requestTime)],

@@ -1,18 +1,18 @@
 "use server";
 
 import { auth } from "@/auth";
-import { hints, followUps, hintStatusEnum } from "@/db/schema";
+import { hints, replies, hintStatusEnum } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { sendBotMessage, sendEmail, extractEmails } from "~/lib/comms";
 import { HintEmailTemplate } from "~/lib/email-template";
 import {
-  FollowUpEmailTemplate,
-  FollowUpEmailTemplateProps,
+  ReplyEmailTemplate,
+  ReplyEmailTemplateProps,
 } from "~/lib/email-template";
 
-export type MessageType = "request" | "response" | "follow-up";
+export type MessageType = "request" | "response" | "reply";
 
 export async function editHintStatus(
   hintId: number,
@@ -222,17 +222,17 @@ export async function editMessage(
         .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)))
         .returning({ id: hints.id });
       break;
-    case "follow-up":
+    case "reply":
       await db
-        .update(followUps)
+        .update(replies)
         .set({ message })
-        .where(and(eq(followUps.id, id), eq(followUps.userId, session.user.id)))
+        .where(and(eq(replies.id, id), eq(replies.userId, session.user.id)))
         .returning({ id: hints.id });
       break;
   }
 }
 
-export async function insertFollowUp({
+export async function insertReply({
   hintId,
   members,
   teamId,
@@ -240,7 +240,7 @@ export async function insertFollowUp({
   puzzleId,
   puzzleName,
   message,
-}: FollowUpEmailTemplateProps & {
+}: ReplyEmailTemplateProps & {
   hintId: number;
   teamId?: string;
   members: string;
@@ -251,23 +251,23 @@ export async function insertFollowUp({
   }
   try {
     const result = await db
-      .insert(followUps)
+      .insert(replies)
       .values({
         hintId,
         userId: session.user.id,
         message,
         time: new Date(),
       })
-      .returning({ id: followUps.id });
+      .returning({ id: replies.id });
 
     if (result[0]?.id) {
-      // If there are members, then this is a follow-up by a team
+      // If there are members, then this is a reply by a team
       // So send an email
       if (members) {
         await sendEmail(
           extractEmails(members),
-          `Follow-Up Hint [${puzzleName}]`,
-          FollowUpEmailTemplate({
+          `Reply [${puzzleName}]`,
+          ReplyEmailTemplate({
             teamDisplayName,
             puzzleId,
             puzzleName,
@@ -275,9 +275,9 @@ export async function insertFollowUp({
           }),
         );
       }
-      // Otherwise, notify admin on Discord that there is a follow-up
+      // Otherwise, notify admin on Discord that there is a reply
       else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [follow-up](https://www.brownpuzzlehunt.com/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleName}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): ${message} <@&1310029428864057504>`;
+        const hintMessage = `🙏 **Hint** [reply](https://www.brownpuzzlehunt.com/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleName}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): ${message} <@&1310029428864057504>`;
         await sendBotMessage(hintMessage, "hint");
       }
       return result[0].id;

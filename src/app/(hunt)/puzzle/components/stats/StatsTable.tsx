@@ -49,7 +49,7 @@ export default function StatsTable<TData, TValue>({
       columnVisibility: {
         responseTime: false,
         status: false,
-        followUps: false,
+        replies: false,
         teamId: false,
       },
     },

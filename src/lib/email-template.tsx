@@ -80,15 +80,15 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
 );
 
 // TODO: ideally we make these not optional
-export interface FollowUpEmailTemplateProps {
+export interface ReplyEmailTemplateProps {
   teamDisplayName?: string;
   puzzleId?: string;
   puzzleName?: string;
   message: string;
 }
 
-export const FollowUpEmailTemplate: React.FC<
-  Readonly<FollowUpEmailTemplateProps>
+export const ReplyEmailTemplate: React.FC<
+  Readonly<ReplyEmailTemplateProps>
 > = ({ teamDisplayName, puzzleId, puzzleName, message }) => (
   <div
     style={{
@@ -102,11 +102,11 @@ export const FollowUpEmailTemplate: React.FC<
     </p>
 
     <p style={{ color: "#333 !important" }}>
-      A new follow-up for <strong>{puzzleName}</strong> has been posted.
+      A new reply for <strong>{puzzleName}</strong> has been posted.
     </p>
 
     <p style={{ color: "#333 !important" }}>
-      <strong>Follow-Up:</strong>
+      <strong>Reply:</strong>
     </p>
     <blockquote
       style={{

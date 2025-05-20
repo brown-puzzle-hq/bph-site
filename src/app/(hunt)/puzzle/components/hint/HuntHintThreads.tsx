@@ -14,7 +14,7 @@ import {
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import {
   editMessage,
-  insertFollowUp,
+  insertReply,
   insertHintRequest,
   MessageType,
 } from "./actions";
@@ -47,7 +47,7 @@ type PreviousHints = {
     displayName: string;
   } | null;
   requestTime: Date;
-  followUps: {
+  replies: {
     id: number;
     message: string;
     user: { id: string; displayName: string };
@@ -70,8 +70,8 @@ type EditedMessage = {
   type: MessageType;
 };
 
-// New follow-up messages
-type FollowUp = {
+// New reply messages
+type Reply = {
   hintId: number;
   message: string;
 };
@@ -89,11 +89,11 @@ export default function HuntHintThreads({
   const { data: session } = useSession();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
   const [request, setRequest] = useState<string>("");
-  const [newFollowUp, setNewFollowUp] = useState<FollowUp | null>(
+  const [newReply, setNewReply] = useState<Reply | null>(
     reply ? { hintId: reply, message: "" } : null,
   );
   const [edit, setEdit] = useState<EditedMessage | null>(null);
-  const [hiddenFollowUps, setHiddenFollowUps] = useState<number[]>([]);
+  const [hiddenReplies, setHiddenReplies] = useState<number[]>([]);
 
   const handleSubmitRequest = async (puzzleId: string, message: string) => {
     setOptimisticHints((prev) => [
@@ -110,7 +110,7 @@ export default function HuntHintThreads({
         response: null,
         status: "no_response",
         requestTime: new Date(),
-        followUps: [],
+        replies: [],
       },
     ]);
     setRequest("");
@@ -139,7 +139,7 @@ export default function HuntHintThreads({
           if (request) navigator.clipboard.writeText(request);
         }
       } else {
-        // Update followUpId
+        // Update reply id
         startTransition(() => {
           setOptimisticHints((prev) =>
             prev.map((hint) =>
@@ -170,11 +170,11 @@ export default function HuntHintThreads({
             return hint.id === id ? { ...hint, request: value } : hint;
           case "response":
             return hint.id === id ? { ...hint, response: value } : hint;
-          case "follow-up":
+          case "reply":
             return {
               ...hint,
-              followUps: hint.followUps.map((followUp) =>
-                followUp.id === id ? { ...followUp, message: value } : followUp,
+              replies: hint.replies.map((reply) =>
+                reply.id === id ? { ...reply, message: value } : reply,
               ),
             };
           default:
@@ -185,7 +185,7 @@ export default function HuntHintThreads({
     setEdit(null);
   };
 
-  const handleSubmitFollowUp = async (
+  const handleSubmitReply = async (
     hintId: number,
     message: string,
     members: string,
@@ -196,7 +196,7 @@ export default function HuntHintThreads({
         hint.id === hintId
           ? {
               ...hint,
-              followUps: hint.followUps.concat({
+              replies: hint.replies.concat({
                 id: 0,
                 message,
                 user: {
@@ -210,13 +210,13 @@ export default function HuntHintThreads({
       ),
     );
 
-    setNewFollowUp(null);
+    setNewReply(null);
 
     startTransition(async () => {
       // TODO: is there a better option than passing a ton of arguments?
       // wondering if we should have centralized hint types, same goes for inserting/emailing normal hint responses
       // Also might be more efficient to only pass team members once instead of storing in each hint
-      const followUpId = await insertFollowUp({
+      const replyId = await insertReply({
         hintId,
         members,
         teamId: session?.user?.id,
@@ -226,38 +226,34 @@ export default function HuntHintThreads({
         message,
       });
 
-      if (followUpId === null) {
+      if (replyId === null) {
         // Revert optimistic update
         setOptimisticHints((prev) =>
           prev.map((hint) =>
             hint.id === hintId
               ? {
                   ...hint,
-                  followUps: hint.followUps.filter(
-                    (followUp) => followUp.id !== 0,
-                  ),
+                  replies: hint.replies.filter((reply) => reply.id !== 0),
                 }
               : hint,
           ),
         );
-        setNewFollowUp(newFollowUp); // Works since variable changes are not instant
+        setNewReply(newReply); // Works since variable changes are not instant
         toast({
-          title: "Failed to submit follow-up.",
+          title: "Failed to submit reply.",
           description:
             "Please try again. If the problem persists, contact HQ or use the feedback form.",
           variant: "destructive",
         });
       } else {
-        // Update followUpId
+        // Update replyId
         setOptimisticHints((prev) =>
           prev.map((hint) =>
             hint.id === hintId
               ? {
                   ...hint,
-                  followUps: hint.followUps.map((followUp) =>
-                    followUp.id === 0
-                      ? { ...followUp, id: followUpId }
-                      : followUp,
+                  replies: hint.replies.map((reply) =>
+                    reply.id === 0 ? { ...reply, id: replyId } : reply,
                   ),
                 }
               : hint,
@@ -267,13 +263,13 @@ export default function HuntHintThreads({
     });
   };
 
-  const handleHideFollowUps = (hintId: number) => {
-    if (hiddenFollowUps.includes(hintId)) {
-      setHiddenFollowUps((prev) => prev.filter((id) => id !== hintId));
+  const handleHideReplies = (hintId: number) => {
+    if (hiddenReplies.includes(hintId)) {
+      setHiddenReplies((prev) => prev.filter((id) => id !== hintId));
     } else {
-      setHiddenFollowUps((prev) => prev.concat(hintId));
-      if (newFollowUp?.hintId === hintId) {
-        setTimeout(() => setNewFollowUp(null), DURATION * 1000);
+      setHiddenReplies((prev) => prev.concat(hintId));
+      if (newReply?.hintId === hintId) {
+        setTimeout(() => setNewReply(null), DURATION * 1000);
       }
     }
   };
@@ -328,7 +324,7 @@ export default function HuntHintThreads({
 
   useEffect(() => {
     if (reply) {
-      document.getElementById(`${reply}-follow-up-request`)?.scrollIntoView({
+      document.getElementById(`${reply}-reply-request`)?.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
@@ -436,7 +432,7 @@ export default function HuntHintThreads({
                   ) : (
                     <button
                       onClick={() => {
-                        setNewFollowUp(null);
+                        setNewReply(null);
                         setEdit({
                           id: hint.id,
                           value: hint.request,
@@ -472,26 +468,25 @@ export default function HuntHintThreads({
           {hint.response && (
             <div className="group break-words rounded-md px-3 py-2 hover:bg-black/5">
               <div className="relative flex justify-between">
-                {/* Top section for claimer ID, the follow-up button, and the edit button */}
+                {/* Top section for claimer ID, the reply button, and the edit button */}
                 <div className="flex items-center">
                   <b>Admin</b>
                   {hint.status === "refunded" && (
                     <RefreshCcw className="h-[13px] stroke-[3.5]" />
                   )}
                 </div>
-                {/* Follow-up button, only show if collapsed */}
-                {(!hint.followUps.length ||
-                  hiddenFollowUps.includes(hint.id)) &&
-                  newFollowUp?.hintId !== hint.id && (
+                {/* reply button, only show if collapsed */}
+                {(!hint.replies.length || hiddenReplies.includes(hint.id)) &&
+                  newReply?.hintId !== hint.id && (
                     <div className="absolute -top-5 right-0">
                       <button
                         onClick={() => {
                           setEdit(null);
-                          // Hide other follow-ups under the same hint
-                          setHiddenFollowUps((prev) =>
+                          // Hide other replies under the same hint
+                          setHiddenReplies((prev) =>
                             prev.filter((prevId) => prevId !== hint.id),
                           );
-                          setNewFollowUp({
+                          setNewReply({
                             hintId: hint.id,
                             message: "",
                           });
@@ -509,24 +504,24 @@ export default function HuntHintThreads({
             </div>
           )}
 
-          {/* Follow-ups row */}
+          {/* Replies row */}
           <AnimatePresence>
             <motion.div
               style={{ overflow: "hidden" }}
               animate={{
-                height: hiddenFollowUps.includes(hint.id) ? 20 : "auto",
+                height: hiddenReplies.includes(hint.id) ? 20 : "auto",
                 transition: {
                   duration: DURATION,
                   ease: "linear",
                 },
               }}
             >
-              {/* Icon for displaying follow-up hints */}
-              {hint.followUps.length > 0 &&
-                (hiddenFollowUps.includes(hint.id) ? (
+              {/* Icon for displaying reply hints */}
+              {hint.replies.length > 0 &&
+                (hiddenReplies.includes(hint.id) ? (
                   <button
                     className="ml-3 flex items-center space-x-1.5 text-main-text/70 hover:opacity-85"
-                    onClick={() => handleHideFollowUps(hint.id)}
+                    onClick={() => handleHideReplies(hint.id)}
                   >
                     <ChevronDown className="-mx-1 size-5" />
                     <p className="font-medium">Show Replies</p>
@@ -534,7 +529,7 @@ export default function HuntHintThreads({
                 ) : (
                   <button
                     className="relative ml-3 flex items-center space-x-1.5 hover:opacity-85"
-                    onClick={() => handleHideFollowUps(hint.id)}
+                    onClick={() => handleHideReplies(hint.id)}
                   >
                     <div className="size-3 rounded-full bg-main-text/70" />
                     <div className="absolute -left-[1px] bottom-0 h-[4px] border-l-2 border-main-text/70"></div>
@@ -544,35 +539,32 @@ export default function HuntHintThreads({
                   </button>
                 ))}
 
-              {hint.followUps
-                .filter((followUp) => followUp.message !== "[Claimed]")
-                .map((followUp, i, row) => (
+              {hint.replies
+                .filter((reply) => reply.message !== "[Claimed]")
+                .map((reply, i, row) => (
                   <div
-                    key={`${followUp.id}`}
+                    key={`${reply.id}`}
                     className="group ml-[17px] break-words rounded-r-md border-l-2 border-main-text/70 px-3 py-2 hover:bg-black/5"
                   >
                     {/* Top section with userId and edit button */}
                     <div className="relative flex justify-between">
-                      {followUp.user.id === hint.team.id ? (
+                      {reply.user.id === hint.team.id ? (
                         <b>Team</b>
                       ) : (
                         <b>Admin</b>
                       )}
                       <div className="absolute -top-5 right-0 flex space-x-0.5">
                         {i + 1 === row.length &&
-                          !(
-                            edit?.type === "follow-up" &&
-                            edit.id === followUp.id
-                          ) &&
-                          newFollowUp?.hintId !== hint.id && (
+                          !(edit?.type === "reply" && edit.id === reply.id) &&
+                          newReply?.hintId !== hint.id && (
                             <button
                               onClick={() => {
                                 setEdit(null);
-                                // Hide other follow-ups under the same hint
-                                setHiddenFollowUps((prev) =>
+                                // Hide other replies under the same hint
+                                setHiddenReplies((prev) =>
                                   prev.filter((prevId) => prevId !== hint.id),
                                 );
-                                setNewFollowUp({
+                                setNewReply({
                                   hintId: hint.id,
                                   message: "",
                                 });
@@ -583,17 +575,16 @@ export default function HuntHintThreads({
                             </button>
                           )}
 
-                        {/* If the previous hint follow-up was made by user, allow edits */}
-                        {followUp.user.id === session?.user?.id &&
-                          (edit?.type === "follow-up" &&
-                          edit.id === followUp.id ? (
+                        {/* If the previous hint reply was made by user, allow edits */}
+                        {reply.user.id === session?.user?.id &&
+                          (edit?.type === "reply" && edit.id === reply.id ? (
                             <div className="space-x-0.5">
                               <button
                                 onClick={() =>
                                   handleSubmitEdit(
-                                    followUp.id,
+                                    reply.id,
                                     edit.value,
-                                    "follow-up",
+                                    "reply",
                                   )
                                 }
                                 className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
@@ -612,11 +603,11 @@ export default function HuntHintThreads({
                           ) : (
                             <button
                               onClick={() => {
-                                setNewFollowUp(null);
+                                setNewReply(null);
                                 setEdit({
-                                  id: followUp.id,
-                                  value: followUp.message,
-                                  type: "follow-up",
+                                  id: reply.id,
+                                  value: reply.message,
+                                  type: "reply",
                                 });
                               }}
                               className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
@@ -627,9 +618,9 @@ export default function HuntHintThreads({
                       </div>
                     </div>
 
-                    {/* Botton section with follow-up message */}
+                    {/* Botton section with reply message */}
                     <div>
-                      {edit?.type === "follow-up" && edit.id === followUp.id ? (
+                      {edit?.type === "reply" && edit.id === reply.id ? (
                         <AutosizeTextarea
                           maxHeight={500}
                           className="mb-1 mt-2 resize-none border-0 bg-white bg-opacity-10 focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -641,32 +632,32 @@ export default function HuntHintThreads({
                         />
                       ) : (
                         <div className="whitespace-pre-wrap">
-                          {followUp.message}
+                          {reply.message}
                         </div>
                       )}
                     </div>
                   </div>
                 ))}
 
-              {/* New follow-up request row */}
-              {newFollowUp !== null && newFollowUp.hintId === hint.id && (
+              {/* New reply request row */}
+              {newReply !== null && newReply.hintId === hint.id && (
                 <div
-                  id={`${hint.id}-follow-up-request`}
-                  key={`${hint.id}-follow-up-request`}
+                  id={`${hint.id}-reply-request`}
+                  key={`${hint.id}-reply-request`}
                   className="group ml-[17px] break-words border-l-2 border-main-text/70 px-3 py-2"
                 >
-                  <p className="font-semibold">Follow-Up</p>
+                  <p className="font-semibold">reply</p>
                   <p className="text-main-text/70">
-                    Ask for clarification in this follow-up thread. Follow-ups
-                    don't count toward your hint limit!
+                    Ask for clarification in this reply thread. Replies don't
+                    count toward your hint limit!
                   </p>
                   <AutosizeTextarea
                     maxHeight={500}
                     className="mt-1 resize-none border-0 bg-white bg-opacity-10 focus-visible:ring-0 focus-visible:ring-offset-0"
-                    value={newFollowUp.message}
+                    value={newReply.message}
                     onChange={(e) => {
-                      if (newFollowUp === null) return;
-                      setNewFollowUp({
+                      if (newReply === null) return;
+                      setNewReply({
                         hintId: hint.id,
                         message: e.target.value,
                       });
@@ -676,16 +667,16 @@ export default function HuntHintThreads({
                     <button
                       onClick={() =>
                         // TODO: kinda jank to use empty team members as signal to not send email
-                        handleSubmitFollowUp(hint.id, newFollowUp.message, "")
+                        handleSubmitReply(hint.id, newReply.message, "")
                       }
-                      disabled={!newFollowUp.message}
+                      disabled={!newReply.message}
                       className="rounded-sm bg-black/30 px-2.5 py-1.5 font-medium text-main-text hover:opacity-85 disabled:opacity-50"
                     >
                       Send
                     </button>
                     <button
                       onClick={() => {
-                        setNewFollowUp(null);
+                        setNewReply(null);
                       }}
                       className="h-fit text-main-text/70 hover:underline"
                     >

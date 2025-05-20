@@ -13,7 +13,7 @@ import {
   editHintStatus,
   insertHintResponse,
   editMessage,
-  insertFollowUp,
+  insertReply,
   MessageType,
 } from "../actions";
 import {
@@ -54,7 +54,7 @@ type Hint = {
   requestTime: Date;
   claimTime: Date | null;
   responseTime: Date | null;
-  followUps: {
+  replies: {
     id: number;
     message: string;
     user: { id: string; displayName: string };
@@ -69,8 +69,8 @@ type EditedMessage = {
   type: MessageType;
 };
 
-// New follow-up messages
-type FollowUp = {
+// New reply
+type Reply = {
   hintId: number;
   message: string;
 };
@@ -107,7 +107,7 @@ export default function AdminHintThread({
 
   const [optimisticHint, setOptimisticHint] = useState(hint);
   const [response, setResponse] = useState<string>("");
-  const [newFollowUp, setNewFollowUp] = useState<FollowUp | null>(
+  const [newReply, setNewReply] = useState<Reply | null>(
     reply ? { hintId: reply, message: "" } : null,
   );
   const [edit, setEdit] = useState<EditedMessage | null>(null);
@@ -196,11 +196,11 @@ export default function AdminHintThread({
           return hint.id === id ? { ...hint, request: value } : hint;
         case "response":
           return hint.id === id ? { ...hint, response: value } : hint;
-        case "follow-up":
+        case "reply":
           return {
             ...hint,
-            followUps: hint.followUps.map((followUp) =>
-              followUp.id === id ? { ...followUp, message: value } : followUp,
+            replies: hint.replies.map((reply) =>
+              reply.id === id ? { ...reply, message: value } : reply,
             ),
           };
         default:
@@ -211,7 +211,7 @@ export default function AdminHintThread({
     startTransition(async () => await editMessage(id, value, type));
   };
 
-  const handleSubmitFollowUp = async (
+  const handleSubmitReply = async (
     hintId: number,
     message: string,
     members: string,
@@ -219,7 +219,7 @@ export default function AdminHintThread({
     // Optimistic update
     setOptimisticHint((hint) => ({
       ...hint,
-      followUps: hint.followUps.concat({
+      replies: hint.replies.concat({
         id: 0,
         message,
         user: {
@@ -230,13 +230,13 @@ export default function AdminHintThread({
       }),
     }));
 
-    if (message !== "[Claimed]") setNewFollowUp(null);
+    if (message !== "[Claimed]") setNewReply(null);
 
     startTransition(async () => {
       // TODO: is there a better option than passing a ton of arguments?
       // wondering if we should have centralized hint types, same goes for inserting/emailing normal hint responses
       // Also might be more efficient to only pass team members once instead of storing in each hint
-      const followUpId = await insertFollowUp({
+      const replyId = await insertReply({
         hintId,
         members,
         teamId: session?.user?.id,
@@ -246,25 +246,25 @@ export default function AdminHintThread({
         message,
       });
 
-      if (followUpId === null) {
+      if (replyId === null) {
         // Revert optimistic update
         setOptimisticHint((hint) => ({
           ...hint,
-          followUps: hint.followUps.filter((followUp) => followUp.id !== 0),
+          replies: hint.replies.filter((reply) => reply.id !== 0),
         }));
-        setNewFollowUp(newFollowUp); // Works since variable changes are not instant
+        setNewReply(newReply); // Works since variable changes are not instant
         toast({
-          title: "Failed to submit follow-up.",
+          title: "Failed to submit reply.",
           description:
             "Please try again. If the problem persists, contact HQ or use the feedback form.",
           variant: "destructive",
         });
       } else {
-        // Update followUpId
+        // Update replyId
         setOptimisticHint((hint) => ({
           ...hint,
-          followUps: hint.followUps.map((followUp) =>
-            followUp.id === 0 ? { ...followUp, id: followUpId } : followUp,
+          replies: hint.replies.map((reply) =>
+            reply.id === 0 ? { ...reply, id: replyId } : reply,
           ),
         }));
       }
@@ -273,7 +273,7 @@ export default function AdminHintThread({
 
   useEffect(() => {
     if (reply) {
-      document.getElementById(`${reply}-follow-up-request`)?.scrollIntoView({
+      document.getElementById(`${reply}-reply`)?.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
@@ -468,21 +468,21 @@ export default function AdminHintThread({
           {optimisticHint.response !== null && optimisticHint.claimer && (
             <TableRow className="border-0 hover:bg-inherit">
               <TableCell className="break-words px-0">
-                {/* Top section for claimer ID, the follow-up button, and the edit button */}
+                {/* Top section for claimer ID, the reply button, and the edit button */}
                 <div className="flex items-center justify-between">
                   <p className="pb-1 font-bold">
                     {optimisticHint.claimer.displayName}
                   </p>
                   <div className="flex space-x-2">
-                    {/* Follow-up button, only show if there are no follow ups */}
+                    {/* Reply button, only show if there are no replies */}
                     {optimisticHint.response !== null &&
-                      optimisticHint.followUps.length === 0 && (
+                      optimisticHint.replies.length === 0 && (
                         <div>
-                          {newFollowUp?.hintId !== optimisticHint.id ? (
+                          {newReply?.hintId !== optimisticHint.id ? (
                             <button
                               onClick={() => {
                                 setEdit(null);
-                                setNewFollowUp({
+                                setNewReply({
                                   hintId: optimisticHint.id,
                                   message: "",
                                 });
@@ -493,7 +493,7 @@ export default function AdminHintThread({
                             </button>
                           ) : (
                             <button
-                              onClick={() => setNewFollowUp(null)}
+                              onClick={() => setNewReply(null)}
                               className="text-blue-500 hover:underline"
                             >
                               Cancel
@@ -525,7 +525,7 @@ export default function AdminHintThread({
                           ) : (
                             <button
                               onClick={() => {
-                                setNewFollowUp(null);
+                                setNewReply(null);
                                 setEdit({
                                   id: optimisticHint.id,
                                   value: optimisticHint.response ?? "",
@@ -569,24 +569,21 @@ export default function AdminHintThread({
             </TableRow>
           )}
 
-          {/* Follow-ups row */}
-          {optimisticHint.followUps.map((followUp, i, row) => (
-            <TableRow
-              key={`${followUp.id}`}
-              className="border-0 hover:bg-inherit"
-            >
+          {/* Replies row */}
+          {optimisticHint.replies.map((reply, i, row) => (
+            <TableRow key={`${reply.id}`} className="border-0 hover:bg-inherit">
               <TableCell className="break-words px-0">
                 {/* Top section */}
                 <div className="flex items-center justify-between">
-                  {/* Team name and whether this is a hidden follow-up*/}
-                  {followUp.user.id === optimisticHint.team.id ? (
+                  {/* Team name and whether this is a hidden reply */}
+                  {reply.user.id === optimisticHint.team.id ? (
                     <p className="pb-1 font-bold">
                       {optimisticHint.team.displayName}
                     </p>
                   ) : (
                     <div className="flex items-center pb-1 font-bold">
-                      {followUp.user.displayName}
-                      {followUp.message === "[Claimed]" && (
+                      {reply.user.displayName}
+                      {reply.message === "[Claimed]" && (
                         <div className="group relative ml-1.5 font-medium">
                           <EyeOff className="h-4 cursor-help" />
                           <span className="pointer-events-none absolute -bottom-7 left-1/2 z-10 w-max -translate-x-1/2 rounded bg-black px-2 py-1 text-xs text-white opacity-0 group-hover:opacity-100">
@@ -601,10 +598,10 @@ export default function AdminHintThread({
                   {/* Claim, reply, and edit buttons */}
                   <div className="flex space-x-2">
                     {i + 1 === row.length &&
-                      followUp.user.id === optimisticHint.team.id && (
+                      reply.user.id === optimisticHint.team.id && (
                         <button
                           onClick={() =>
-                            handleSubmitFollowUp(
+                            handleSubmitReply(
                               optimisticHint.id,
                               "[Claimed]",
                               "",
@@ -617,11 +614,11 @@ export default function AdminHintThread({
                       )}
 
                     {i + 1 === row.length &&
-                      (newFollowUp?.hintId !== optimisticHint.id ? (
+                      (newReply?.hintId !== optimisticHint.id ? (
                         <button
                           onClick={() => {
                             setEdit(null);
-                            setNewFollowUp({
+                            setNewReply({
                               hintId: optimisticHint.id,
                               message: "",
                             });
@@ -632,26 +629,21 @@ export default function AdminHintThread({
                         </button>
                       ) : (
                         <button
-                          onClick={() => setNewFollowUp(null)}
+                          onClick={() => setNewReply(null)}
                           className="text-blue-500 hover:underline"
                         >
                           Cancel
                         </button>
                       ))}
 
-                    {/* If the previous hint follow-up was made by user, allow edits */}
-                    {followUp.user.id === session?.user?.id &&
-                      followUp.message !== "[Claimed]" && (
+                    {/* If the previous hint reply was made by user, allow edits */}
+                    {reply.user.id === session?.user?.id &&
+                      reply.message !== "[Claimed]" && (
                         <div>
-                          {edit?.type === "follow-up" &&
-                          edit.id === followUp.id ? (
+                          {edit?.type === "reply" && edit.id === reply.id ? (
                             <button
                               onClick={() =>
-                                handleSubmitEdit(
-                                  followUp.id,
-                                  edit.value,
-                                  "follow-up",
-                                )
+                                handleSubmitEdit(reply.id, edit.value, "reply")
                               }
                               className="text-blue-500 hover:underline"
                             >
@@ -660,11 +652,11 @@ export default function AdminHintThread({
                           ) : (
                             <button
                               onClick={() => {
-                                setNewFollowUp(null);
+                                setNewReply(null);
                                 setEdit({
-                                  id: followUp.id,
-                                  value: followUp.message,
-                                  type: "follow-up",
+                                  id: reply.id,
+                                  value: reply.message,
+                                  type: "reply",
                                 });
                               }}
                               className="text-blue-500 hover:underline"
@@ -676,9 +668,9 @@ export default function AdminHintThread({
                       )}
                   </div>
                 </div>
-                {/* Botton section with follow-up message */}
+                {/* Botton section with reply message */}
                 <div>
-                  {edit?.type === "follow-up" && edit.id === followUp.id ? (
+                  {edit?.type === "reply" && edit.id === reply.id ? (
                     <div className="pt-2">
                       <AutosizeTextarea
                         maxHeight={500}
@@ -691,27 +683,25 @@ export default function AdminHintThread({
                       />
                     </div>
                   ) : (
-                    <div className="whitespace-pre-wrap">
-                      {followUp.message}
-                    </div>
+                    <div className="whitespace-pre-wrap">{reply.message}</div>
                   )}
                 </div>
               </TableCell>
             </TableRow>
           ))}
 
-          {/* New follow-up request row */}
-          {newFollowUp !== null && newFollowUp.hintId === optimisticHint.id && (
+          {/* New reply request row */}
+          {newReply !== null && newReply.hintId === optimisticHint.id && (
             <TableRow className="border-0 hover:bg-inherit">
               <TableCell className="break-words px-0">
-                <p className="pb-2 font-bold">Follow-Up</p>
+                <p className="pb-2 font-bold">Reply</p>
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none focus-visible:ring-0"
-                  value={newFollowUp.message}
+                  value={newReply.message}
                   onChange={(e) => {
-                    if (newFollowUp === null) return;
-                    setNewFollowUp({
+                    if (newReply === null) return;
+                    setNewReply({
                       hintId: optimisticHint.id,
                       message: e.target.value,
                     });
@@ -720,19 +710,16 @@ export default function AdminHintThread({
                 <div className="flex space-x-2 pt-3">
                   <Button
                     onClick={() =>
-                      handleSubmitFollowUp(
+                      handleSubmitReply(
                         optimisticHint.id,
-                        newFollowUp.message,
+                        newReply.message,
                         optimisticHint.team.members,
                       )
                     }
                   >
                     Submit
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setNewFollowUp(null)}
-                  >
+                  <Button variant="outline" onClick={() => setNewReply(null)}>
                     Cancel
                   </Button>
                 </div>

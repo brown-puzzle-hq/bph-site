@@ -6,12 +6,12 @@ import HintStatusBox from "./HintStatusBox";
 import { ChevronsUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 export type HintClaimer = { id: string; displayName: string } | null;
-export type FollowUpHint = { id: number; userId: string } | null;
+export type Reply = { id: number; userId: string } | null;
 
 export type HintWithRelations = typeof hints.$inferSelect & {
   team: { displayName: string };
   claimer: HintClaimer;
-  followUps: FollowUpHint[];
+  replies: Reply[];
   puzzle: { name: string };
 };
 
@@ -143,7 +143,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     header: () => null,
   },
   {
-    accessorKey: "followUps",
+    accessorKey: "replies",
     header: () => null,
   },
   {

@@ -1,6 +1,6 @@
 import { db } from "@/db/index";
 import { asc, desc } from "drizzle-orm";
-import { hints, followUps } from "@/db/schema";
+import { hints, replies } from "@/db/schema";
 import { columns } from "./Columns";
 import { HintTable } from "./HintTable";
 
@@ -11,9 +11,9 @@ export default async function Home() {
     with: {
       team: { columns: { displayName: true } },
       claimer: { columns: { id: true, displayName: true } },
-      followUps: {
+      replies: {
         columns: { id: true, userId: true },
-        orderBy: [asc(followUps.time)],
+        orderBy: [asc(replies.time)],
       },
       puzzle: { columns: { name: true } },
     },

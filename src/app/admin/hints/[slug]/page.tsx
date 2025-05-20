@@ -1,10 +1,10 @@
 import { db } from "@/db/index";
-import { followUps, guesses, hints, unlocks } from "@/db/schema";
+import { replies, guesses, hints, unlocks } from "@/db/schema";
 import { and, asc, eq } from "drizzle-orm";
 import Toast from "./Toast";
 import AdminHintThread from "./AdminHintThread";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
-import { IN_PERSON, REMOTE, ROUNDS } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/hunt.config";
 
 export default async function Page({
   params,
@@ -40,10 +40,10 @@ export default async function Page({
       },
       puzzle: { columns: { id: true, name: true, answer: true } },
       claimer: { columns: { id: true, displayName: true } },
-      followUps: {
+      replies: {
         columns: { id: true, message: true, userId: true, time: true },
         with: { user: { columns: { id: true, displayName: true } } },
-        orderBy: [asc(followUps.time)],
+        orderBy: [asc(replies.time)],
       },
     },
     columns: {
@@ -89,12 +89,8 @@ export default async function Page({
   });
 
   // Get partial solutions and tasks
-  const roundName = ROUNDS.find((round) =>
-    round.puzzles.includes(hint.puzzle.id),
-  )?.name.toLowerCase();
-
   const module = await import(
-    `../../../.../../../(hunt)/puzzle/(${roundName})/${hint.puzzle.id}/data.tsx`
+    `../../../.../../../(hunt)/puzzle/${hint.puzzle.id}/data.tsx`
   ).catch(() => null);
 
   const partialSolutions = module?.partialSolutions ?? {};

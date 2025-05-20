@@ -4,7 +4,7 @@ import { Row } from "@tanstack/react-table";
 import { claimHint, unclaimHint } from "./actions";
 import { toast } from "~/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import { FollowUpHint, HintClaimer } from "./Columns";
+import { Reply, HintClaimer } from "./Columns";
 import { useTransition } from "react";
 
 export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
@@ -13,7 +13,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const hintId = row.getValue("id") as number;
   const claimer: HintClaimer = row.getValue("claimer");
   const status = row.getValue("status");
-  const followUps: FollowUpHint[] = row.getValue("followUps");
+  const replies: Reply[] = row.getValue("replies");
   const teamId: string = row.getValue("teamId");
   const [isPending, startTransition] = useTransition();
 
@@ -71,7 +71,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     return <p className="border-y border-white">Claimed</p>;
   }
 
-  if (followUps[followUps.length - 1]?.userId === teamId) {
+  if (replies[replies.length - 1]?.userId === teamId) {
     return (
       <button
         className={

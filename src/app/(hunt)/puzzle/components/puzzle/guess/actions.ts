@@ -46,9 +46,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   if (!puzzle) return { error: "Puzzle not found" };
 
-  if (puzzle.guesses.find((g) => g.guess === guess))
-    return { error: "Already guessed!" };
-
   // Don't penalize guess if it is a task
   const module = await import(`../../../${puzzleId}/data.tsx`).catch(
     () => null,
@@ -56,6 +53,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
   const tasks = module?.tasks ?? {};
   const partialSolutions = module?.partialSolutions ?? {};
 
+  // TODO:
+  // WARNING: Could have a TOCTOU error here
   // Check if the number of guesses is exceeded
   if (
     puzzle.guesses.filter(

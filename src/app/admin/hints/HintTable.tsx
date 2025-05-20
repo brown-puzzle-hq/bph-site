@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FollowUpHint, HintClaimer } from "./Columns";
+import { Reply, HintClaimer } from "./Columns";
 
 interface HintTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -78,7 +78,7 @@ export function HintTable<TData, TValue>({
       columnVisibility: {
         responseTime: false,
         status: false,
-        followUps: false,
+        replies: false,
         teamId: false,
       },
     },
@@ -88,29 +88,29 @@ export function HintTable<TData, TValue>({
         const claimerB: HintClaimer | null = rowB.getValue("claimer");
         const statusA: string = rowA.getValue("status");
         const statusB: string = rowB.getValue("status");
-        const followUpsA: FollowUpHint[] | null = rowA.getValue("followUps");
-        const followUpsB: FollowUpHint[] | null = rowB.getValue("followUps");
+        const repliesA: Reply[] | null = rowA.getValue("replies");
+        const repliesB: Reply[] | null = rowB.getValue("replies");
         const dateA: Date = new Date(rowA.getValue("requestTime"));
         const dateB: Date = new Date(rowB.getValue("requestTime"));
 
-        const hasFollowUpA = !!(
-          followUpsA &&
-          followUpsA[followUpsA.length - 1]?.userId === rowA.getValue("teamId")
+        const hasReplyA = !!(
+          repliesA &&
+          repliesA[repliesA.length - 1]?.userId === rowA.getValue("teamId")
         );
-        const hasFollowUpB = !!(
-          followUpsB &&
-          followUpsB[followUpsB.length - 1]?.userId === rowB.getValue("teamId")
+        const hasReplyB = !!(
+          repliesB &&
+          repliesB[repliesB.length - 1]?.userId === rowB.getValue("teamId")
         );
 
         const getPriority = (
           claimerId: string | undefined,
           status: string,
-          hasFollowUp: boolean,
+          hasReply: boolean,
         ): number => {
           if (claimerId === userId && status === "no_response") return 0; // Unanswered for current user
-          if (claimerId === userId && hasFollowUp) return 1; // Follow-up for current user
+          if (claimerId === userId && hasReply) return 1; // Reply for current user
           if (!claimerId) return 2; // Unclaimed
-          if (hasFollowUp) return 3; // Follow-up for another user
+          if (hasReply) return 3; // Reply for another user
           if (status === "no_response") return 4; // Unanswered for another user
           if (claimerId !== userId && status === "answered") return 5; // Answered by another user
           if (claimerId !== userId) return 6; // Refunded by another user
@@ -118,8 +118,8 @@ export function HintTable<TData, TValue>({
           return 8; // Answered by current user
         };
 
-        const priorityA = getPriority(claimerA?.id, statusA, hasFollowUpA);
-        const priorityB = getPriority(claimerB?.id, statusB, hasFollowUpB);
+        const priorityA = getPriority(claimerA?.id, statusA, hasReplyA);
+        const priorityB = getPriority(claimerB?.id, statusB, hasReplyB);
 
         return priorityB - priorityA || dateA.getTime() - dateB.getTime();
       },
