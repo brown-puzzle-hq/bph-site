@@ -646,7 +646,7 @@ export default function HuntHintThreads({
                   key={`${hint.id}-reply-request`}
                   className="group ml-[17px] break-words border-l-2 border-main-text/70 px-3 py-2"
                 >
-                  <p className="font-semibold">reply</p>
+                  <p className="font-semibold">Reply</p>
                   <p className="text-main-text/70">
                     Ask for clarification in this reply thread. Replies don't
                     count toward your hint limit!
