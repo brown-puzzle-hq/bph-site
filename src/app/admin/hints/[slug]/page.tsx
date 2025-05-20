@@ -90,7 +90,7 @@ export default async function Page({
 
   // Get partial solutions and tasks
   const module = await import(
-    `../../../.../../../(hunt)/puzzle/${hint.puzzle.id}/data.tsx`
+    `../../../.../../(hunt)/puzzle/${hint.puzzle.id}/data.tsx`
   ).catch(() => null);
 
   const partialSolutions = module?.partialSolutions ?? {};
