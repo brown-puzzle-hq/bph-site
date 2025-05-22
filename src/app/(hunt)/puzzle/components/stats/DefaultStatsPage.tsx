@@ -5,9 +5,9 @@ import { canViewStats } from "../../actions";
 import { redirect } from "next/navigation";
 import { columns } from "./Columns";
 import { db } from "~/server/db";
-import { and, eq, desc, count } from "drizzle-orm";
+import { and, or, eq, desc, count, lte } from "drizzle-orm";
 import { puzzles, teams, solves, guesses, unlocks, hints } from "@/db/schema";
-import { INITIAL_PUZZLES } from "~/hunt.config";
+import { REMOTE, IN_PERSON, INITIAL_PUZZLES } from "~/hunt.config";
 
 export default async function DefaultStatsPage({
   puzzleId,
@@ -32,21 +32,66 @@ export default async function DefaultStatsPage({
         .select({ count: count() })
         .from(unlocks)
         .innerJoin(teams, eq(unlocks.teamId, teams.id))
-        .where(and(eq(unlocks.puzzleId, puzzleId), eq(teams.role, "user")))
+        .where(
+          and(
+            eq(unlocks.puzzleId, puzzleId),
+            eq(teams.role, "user"),
+            or(
+              and(
+                eq(teams.interactionMode, "remote"),
+                lte(unlocks.unlockTime, REMOTE.END_TIME),
+              ),
+              and(
+                eq(teams.interactionMode, "in-person"),
+                lte(unlocks.unlockTime, IN_PERSON.END_TIME),
+              ),
+            ),
+          ),
+        )
         .then((res) => res[0]?.count ?? 0);
 
   const totalGuesses = await db
     .select({ count: count() })
     .from(guesses)
     .innerJoin(teams, eq(guesses.teamId, teams.id))
-    .where(and(eq(guesses.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(guesses.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(guesses.submitTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(guesses.submitTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .then((res) => res[0]?.count ?? 0);
 
   const totalHints = await db
     .select({ count: count() })
     .from(hints)
     .innerJoin(teams, eq(hints.teamId, teams.id))
-    .where(and(eq(hints.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(hints.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(hints.requestTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(hints.requestTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .then((res) => res[0]?.count ?? 0);
 
   // For the stats table
@@ -73,7 +118,22 @@ export default async function DefaultStatsPage({
         eq(solves.puzzleId, guesses.puzzleId),
       ),
     )
-    .where(and(eq(solves.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(solves.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(solves.solveTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(solves.solveTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .groupBy(teams.id, unlocks.unlockTime, solves.solveTime);
 
   // For the guess chart
@@ -81,7 +141,22 @@ export default async function DefaultStatsPage({
     .select({ guess: guesses.guess, count: count() })
     .from(guesses)
     .innerJoin(teams, eq(guesses.teamId, teams.id))
-    .where(and(eq(guesses.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(guesses.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(guesses.submitTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(guesses.submitTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .groupBy(guesses.guess)
     .orderBy(desc(count()))
     .limit(10);
