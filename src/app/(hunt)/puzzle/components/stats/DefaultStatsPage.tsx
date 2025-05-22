@@ -97,7 +97,11 @@ export default async function DefaultStatsPage({
   // For the stats table
   const statsTableData = await db
     .select({
-      teamDisplayName: teams.displayName,
+      team: {
+        displayName: teams.displayName,
+        interactionMode: teams.interactionMode,
+        createTime: teams.createTime,
+      },
       guesses: count(),
       unlockTime: unlocks.unlockTime,
       solveTime: solves.solveTime,
@@ -135,6 +139,20 @@ export default async function DefaultStatsPage({
       ),
     )
     .groupBy(teams.id, unlocks.unlockTime, solves.solveTime);
+
+  // If the puzzle is an initial puzzle, there is no unlockTime in the db
+  // Figure out when the team could have actually seen the puzzle
+  if (INITIAL_PUZZLES.includes(puzzleId)) {
+    statsTableData.map((row) => {
+      const registerTime = row.team.createTime;
+      const huntStartTime =
+        row.team.interactionMode === "in-person"
+          ? IN_PERSON.START_TIME
+          : REMOTE.START_TIME;
+      row.unlockTime =
+        registerTime > huntStartTime ? registerTime : huntStartTime;
+    });
+  }
 
   // For the guess chart
   const guessChartData = await db
