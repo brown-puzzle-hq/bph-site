@@ -32,6 +32,7 @@ export default function StatsTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([
     { id: "delta", desc: false },
   ]);
+  const [showAll, setShowAll] = useState(false);
 
   const table = useReactTable({
     data,
@@ -55,51 +56,66 @@ export default function StatsTable<TData, TValue>({
     },
   });
 
+  const minRows = 10;
+  const allRows = table.getRowModel().rows;
+  const visibleRows = showAll ? allRows : allRows.slice(0, minRows);
+
   return (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow
-            key={`header-${headerGroup.id}`}
-            className="hover:bg-inherit"
-          >
-            {headerGroup.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                onClick={() =>
-                  header.column.toggleSorting(
-                    header.column.getIsSorted() === "asc",
-                  )
-                }
-                className="text-main-text hover:text-opacity-85"
-                role="button"
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row, i) => (
-          <TableRow
-            key={i}
-            data-state={row.getIsSelected() && "selected"}
-            className="hover:bg-inherit"
-          >
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id} className="py-1">
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow
+              key={`header-${headerGroup.id}`}
+              className="hover:bg-inherit"
+            >
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  onClick={() =>
+                    header.column.toggleSorting(
+                      header.column.getIsSorted() === "asc",
+                    )
+                  }
+                  className="text-main-text hover:text-opacity-85"
+                  role="button"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {visibleRows.map((row, i) => (
+            <TableRow
+              key={i}
+              data-state={row.getIsSelected() && "selected"}
+              className="hover:bg-inherit"
+            >
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id} className="py-1">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {allRows.length > minRows && (
+        <div
+          className="cursor-pointer border-t border-gray-300 pt-2 text-center text-sm text-gray-500 hover:text-black"
+          onClick={() => setShowAll((curr) => !curr)}
+        >
+          {!showAll ? "Show more" : "Show less"}
+        </div>
+      )}
+    </>
   );
 }
