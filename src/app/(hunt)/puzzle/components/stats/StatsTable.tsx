@@ -112,7 +112,7 @@ export default function StatsTable<TData, TValue>({
         <div className="flex w-full justify-center border-t border-gray-300 text-sm">
           <button
             onClick={() => setShowAll((curr) => !curr)}
-            className="text-sm text-white/60 transition-all hover:text-white/80 p-1.5"
+            className="p-1.5 text-sm text-white/60 transition-all hover:text-white/80"
           >
             {showAll ? "Show less" : "Show more"}
           </button>
