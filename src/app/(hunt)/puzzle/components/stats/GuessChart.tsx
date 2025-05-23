@@ -1,7 +1,6 @@
 "use client";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer } from "@/components/ui/chart";
-import { useEffect, useState } from "react";
 
 export type GuessChartItem = {
   guess: string;

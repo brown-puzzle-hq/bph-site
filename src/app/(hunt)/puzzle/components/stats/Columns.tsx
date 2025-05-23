@@ -4,7 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 export type TeamPuzzleStats = {
-  teamDisplayName: string;
+  team: {
+    displayName: string;
+  };
   guesses: number;
   unlockTime: Date | null;
   solveTime: Date | null;
@@ -53,7 +55,7 @@ export const columns: ColumnDef<TeamPuzzleStats>[] = [
         )}
       </div>
     ),
-    accessorFn: (row) => row.teamDisplayName,
+    accessorFn: (row) => row.team.displayName,
     cell: ({ row }) => (
       <div className="w-32 truncate">{row.getValue("teamDisplayName")}</div>
     ),

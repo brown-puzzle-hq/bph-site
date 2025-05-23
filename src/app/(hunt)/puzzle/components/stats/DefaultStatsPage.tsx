@@ -5,9 +5,9 @@ import { canViewStats } from "../../actions";
 import { redirect } from "next/navigation";
 import { columns } from "./Columns";
 import { db } from "~/server/db";
-import { and, eq, desc, count } from "drizzle-orm";
+import { and, or, eq, desc, count, lte } from "drizzle-orm";
 import { puzzles, teams, solves, guesses, unlocks, hints } from "@/db/schema";
-import { INITIAL_PUZZLES } from "~/hunt.config";
+import { REMOTE, IN_PERSON, INITIAL_PUZZLES } from "~/hunt.config";
 
 export default async function DefaultStatsPage({
   puzzleId,
@@ -32,27 +32,76 @@ export default async function DefaultStatsPage({
         .select({ count: count() })
         .from(unlocks)
         .innerJoin(teams, eq(unlocks.teamId, teams.id))
-        .where(and(eq(unlocks.puzzleId, puzzleId), eq(teams.role, "user")))
+        .where(
+          and(
+            eq(unlocks.puzzleId, puzzleId),
+            eq(teams.role, "user"),
+            or(
+              and(
+                eq(teams.interactionMode, "remote"),
+                lte(unlocks.unlockTime, REMOTE.END_TIME),
+              ),
+              and(
+                eq(teams.interactionMode, "in-person"),
+                lte(unlocks.unlockTime, IN_PERSON.END_TIME),
+              ),
+            ),
+          ),
+        )
         .then((res) => res[0]?.count ?? 0);
 
   const totalGuesses = await db
     .select({ count: count() })
     .from(guesses)
     .innerJoin(teams, eq(guesses.teamId, teams.id))
-    .where(and(eq(guesses.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(guesses.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(guesses.submitTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(guesses.submitTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .then((res) => res[0]?.count ?? 0);
 
   const totalHints = await db
     .select({ count: count() })
     .from(hints)
     .innerJoin(teams, eq(hints.teamId, teams.id))
-    .where(and(eq(hints.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(hints.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(hints.requestTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(hints.requestTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .then((res) => res[0]?.count ?? 0);
 
   // For the stats table
   const statsTableData = await db
     .select({
-      teamDisplayName: teams.displayName,
+      team: {
+        displayName: teams.displayName,
+        interactionMode: teams.interactionMode,
+        createTime: teams.createTime,
+      },
       guesses: count(),
       unlockTime: unlocks.unlockTime,
       solveTime: solves.solveTime,
@@ -73,15 +122,59 @@ export default async function DefaultStatsPage({
         eq(solves.puzzleId, guesses.puzzleId),
       ),
     )
-    .where(and(eq(solves.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(solves.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(solves.solveTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(solves.solveTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .groupBy(teams.id, unlocks.unlockTime, solves.solveTime);
+
+  // If the puzzle is an initial puzzle, there is no unlockTime in the db
+  // Figure out when the team could have actually seen the puzzle
+  if (INITIAL_PUZZLES.includes(puzzleId)) {
+    statsTableData.forEach((row) => {
+      const registerTime = row.team.createTime;
+      const huntStartTime =
+        row.team.interactionMode === "in-person"
+          ? IN_PERSON.START_TIME
+          : REMOTE.START_TIME;
+      row.unlockTime =
+        registerTime > huntStartTime ? registerTime : huntStartTime;
+    });
+  }
 
   // For the guess chart
   const guessChartData = await db
     .select({ guess: guesses.guess, count: count() })
     .from(guesses)
     .innerJoin(teams, eq(guesses.teamId, teams.id))
-    .where(and(eq(guesses.puzzleId, puzzleId), eq(teams.role, "user")))
+    .where(
+      and(
+        eq(guesses.puzzleId, puzzleId),
+        eq(teams.role, "user"),
+        or(
+          and(
+            eq(teams.interactionMode, "remote"),
+            lte(guesses.submitTime, REMOTE.END_TIME),
+          ),
+          and(
+            eq(teams.interactionMode, "in-person"),
+            lte(guesses.submitTime, IN_PERSON.END_TIME),
+          ),
+        ),
+      ),
+    )
     .groupBy(guesses.guess)
     .orderBy(desc(count()))
     .limit(10);
