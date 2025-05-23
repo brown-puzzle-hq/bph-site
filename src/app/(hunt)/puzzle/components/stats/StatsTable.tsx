@@ -109,11 +109,13 @@ export default function StatsTable<TData, TValue>({
       </Table>
 
       {allRows.length > minRows && (
-        <div
-          className="cursor-pointer border-t border-gray-300 pt-2 text-center text-sm text-gray-500 hover:text-black"
-          onClick={() => setShowAll((curr) => !curr)}
-        >
-          {!showAll ? "Show more" : "Show less"}
+        <div className="flex w-full justify-center border-t border-gray-300 text-sm">
+          <button
+            onClick={() => setShowAll((curr) => !curr)}
+            className="text-sm text-white/60 transition-all hover:text-white/80 p-1.5"
+          >
+            {showAll ? "Show less" : "Show more"}
+          </button>
         </div>
       )}
     </>
