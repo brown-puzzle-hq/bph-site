@@ -95,7 +95,7 @@ export default async function Page({
   )?.name.toLowerCase();
 
   const module = await import(
-    `../../../.../../../(hunt)/puzzle/(${roundName})/${hint.puzzle.id}/data.tsx`
+    `../../../.../../(hunt)/puzzle/(${roundName})/${hint.puzzle.id}/data.tsx`
   ).catch(() => null);
 
   const partialSolutions = module?.partialSolutions ?? {};
