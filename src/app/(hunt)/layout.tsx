@@ -1,106 +1,68 @@
 import "~/styles/globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
-import { auth } from "~/server/auth/auth";
-import { LogoutButton } from "../nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "../nav/HamburgerMenu";
+import { HuntHamburgerMenu } from "./HuntHamburgerMenu";
+import { HuntTopNavSpacer } from "@/components/nav/HuntTopNavSpacer";
 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await auth();
-
-  const leftMenuItems: MenuItem[] = [
-    {
-      title: "Home",
-      href: "/",
-      type: "link",
-    },
-    {
-      title: "Info",
-      href: "/info",
-      type: "link",
-    },
-    {
-      title: "Puzzles",
-      href: "/puzzle",
-      type: "link",
-    },
-    {
-      title: "Teams",
-      href: "/teams",
-      type: "link",
-    },
-  ];
-
-  const rightMenuItems: MenuItem[] = [];
-
-  if (session?.user?.id) {
-    leftMenuItems.push({
-      title: "Feedback",
-      href: "/feedback",
-      type: "link",
-    });
-
-    rightMenuItems.push({
-      title: session.user.displayName,
-      href: `/teams/${session.user.id}`,
-      type: "link",
-    });
-
-    if (session?.user?.role == "admin") {
-      rightMenuItems.push({
-        title: "Admin",
-        href: "/admin",
-        type: "link",
-      });
-    }
-
-    rightMenuItems.push({
-      title: "logout",
-      element: <LogoutButton />,
-      type: "element",
-    });
-  } else {
-    rightMenuItems.push({
-      title: "Login",
-      href: "/login",
-      type: "link",
-    });
-  }
-
   return (
-    <>
-      <HamburgerMenu
-        leftMenuItems={leftMenuItems}
-        rightMenuItems={rightMenuItems}
-      />
+    <body className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg text-main-text">
+      {/* Navbar */}
+      <div className="bg-nav-bg">
+        <HuntHamburgerMenu />
+      </div>
+
       {/* Navbar spacer */}
-      <div className="min-h-[56px]"></div>
-      <main className="flex min-h-[calc(100vh-56px-32px)] pt-6">
-        {children}
-      </main>
+      <HuntTopNavSpacer />
+      <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
       <Toaster />
-      <footer className="py-2 text-center text-xs">
-        <p>
+
+      <footer className="bg-footer-bg py-2 text-center text-xs">
+        <p className="hidden sm:block">
           Having a good time? Want support more puzzlehunts like this in the
           future? Consider{" "}
           <Link
             href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
-            className="text-blue-500 hover:underline"
+            className="text-link hover:underline"
           >
             donating
           </Link>{" "}
           to your friendly neighborhood{" "}
           <Link
-            href="http://brownpuzzle.club/"
-            className="text-blue-500 hover:underline"
+            href="https://brownpuzzle.club/"
+            className="text-link hover:underline"
           >
             puzzle club
+          </Link>{" "}
+          or checking out our{" "}
+          <Link
+            href="https://brownpuzzle.club/archive/"
+            className="text-link hover:underline"
+          >
+            archive
           </Link>
-          .
+          !
+        </p>
+        <p className="sm:hidden">
+          Having fun? Consider{" "}
+          <Link
+            href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
+            className="text-link hover:underline"
+          >
+            donating
+          </Link>{" "}
+          or viewing our{" "}
+          <Link
+            href="https://brownpuzzle.club/archive/"
+            className="text-link hover:underline"
+          >
+            archive
+          </Link>
+          !
         </p>
       </footer>
-    </>
+    </body>
   );
 }

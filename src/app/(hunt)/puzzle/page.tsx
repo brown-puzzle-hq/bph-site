@@ -1,68 +1,90 @@
 import { auth } from "@/auth";
-import { IN_PERSON, INITIAL_PUZZLES, REMOTE } from "@/hunt.config";
 import Link from "next/link";
 import { db } from "@/db/index";
-import { and, eq, inArray } from "drizzle-orm";
-import { guesses, puzzles, unlocks } from "~/server/db/schema";
-import PuzzleTable from "./components/PuzzleTable";
+import { eq, inArray } from "drizzle-orm";
+import {
+  teams,
+  puzzles,
+  unlocks,
+  solves,
+  answerTokens,
+} from "~/server/db/schema";
+import {
+  IN_PERSON,
+  INITIAL_PUZZLES,
+  REMOTE,
+  ROUNDS,
+  Round,
+} from "@/hunt.config";
+import {
+  AvailablePuzzle,
+  SolvedPuzzle,
+  AvailableEvent,
+  FinishedEvent,
+} from "./components/puzzle-list/PuzzleListPage";
+import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
 
 export default async function Home() {
-  // Get user id
   const session = await auth();
+  const currDate = new Date();
 
-  // If the hunt has not yet started, display a message
-  if (
-    new Date() <
-    (session?.user?.interactionMode === "in-person"
-      ? IN_PERSON.START_TIME
-      : REMOTE.START_TIME)
-  ) {
-    return (
-      <div className="flex grow flex-col items-center text-secondary">
-        <div className="mb-6 flex grow flex-col items-center">
-          <h1 className="mb-2 text-secondary">Puzzles!</h1>
+  var availablePuzzles: AvailablePuzzle[] = [];
+  var solvedPuzzles: SolvedPuzzle[] = [];
+  var hasFinishedHunt = false;
+  var availableEvents: AvailableEvent[] = [];
+  var finishedEvents: FinishedEvent[] = [];
+  const isInPerson = session?.user?.interactionMode === "in-person";
+
+  // Not logged in
+  if (!session?.user?.id) {
+    // If the hunt has not ended, tell them to log in
+    if (currDate < REMOTE.END_TIME) {
+      return (
+        <div className="mb-12 px-4 pt-6 text-center">
+          <h1 className="mb-2">Puzzles</h1>
+          <p>
+            <Link
+              href="/login"
+              className="text-link hover:underline"
+              prefetch={false}
+            >
+              Login
+            </Link>{" "}
+            to access puzzles
+          </p>
+        </div>
+      );
+    } // Otherwise, let them see all of the puzzles
+    else {
+      availablePuzzles = (
+        await db.query.puzzles.findMany({
+          columns: { id: true, name: true, answer: true },
+        })
+      ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
+
+      solvedPuzzles = [];
+    }
+  }
+
+  // Logged in
+  if (session?.user?.id) {
+    // If the hunt has not yet started for users or admin, display a message
+    if (
+      (session.user.role === "user" || session.user.role === "admin") &&
+      currDate <
+        (session.user.interactionMode === "in-person"
+          ? IN_PERSON.START_TIME
+          : REMOTE.START_TIME)
+    ) {
+      return (
+        <div className="mb-12 px-4 pt-6 text-center">
+          <h1 className="mb-2">Puzzles</h1>
           <p>The hunt has not started yet.</p>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // If the user is not logged in and the hunt has not ended, display a message
-  if (
-    !session?.user?.id &&
-    new Date() <
-      (session?.user?.interactionMode === "in-person"
-        ? IN_PERSON.END_TIME
-        : REMOTE.END_TIME)
-  ) {
-    return (
-      <div className="flex grow flex-col items-center text-secondary">
-        <h1 className="mb-2">Puzzles!</h1>
-        <p>
-          <Link href="/login" className="text-perwinkle hover:underline">
-            Login
-          </Link>{" "}
-          to access puzzles
-        </p>
-      </div>
-    );
-  }
-
-  var availablePuzzles: {
-    unlockTime: Date | null;
-    id: string;
-    name: string;
-    answer: string;
-  }[];
-
-  // If the user is logged in and the hunt has not ended
-  if (
-    session?.user?.id &&
-    new Date() <
-      (session.user.interactionMode === "in-person"
-        ? IN_PERSON.END_TIME
-        : REMOTE.END_TIME)
-  ) {
+    // Otherwise, always display the puzzles unlocked
     let initialPuzzles = await db.query.puzzles.findMany({
       columns: { id: true, name: true, answer: true },
       where: inArray(puzzles.id, INITIAL_PUZZLES),
@@ -81,36 +103,46 @@ export default async function Home() {
         unlockTime: unlock.unlockTime,
       })),
     ];
-  } else {
-    availablePuzzles = (
-      await db.query.puzzles.findMany({
-        columns: { id: true, name: true, answer: true },
-      })
-    ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
-  }
 
-  var solvedPuzzles: { puzzleId: string }[];
-
-  // Check which puzzles are solved
-  if (session?.user?.id) {
-    solvedPuzzles = await db.query.guesses.findMany({
+    solvedPuzzles = await db.query.solves.findMany({
       columns: { puzzleId: true },
-      where: and(
-        eq(guesses.teamId, session.user.id),
-        eq(guesses.isCorrect, true),
-      ),
+      where: eq(solves.teamId, session.user.id),
     });
-  } else {
-    solvedPuzzles = [];
+
+    // TODO: not a great way to order events
+    availableEvents = await db.query.events.findMany({
+      orderBy: (events, { asc }) => [asc(events.startTime)],
+    });
+
+    finishedEvents = await db.query.answerTokens.findMany({
+      where: eq(answerTokens.teamId, session.user?.id!),
+    });
+
+    // Check if the user has finished the hunt
+    const finishTime = await db.query.teams.findFirst({
+      columns: { finishTime: true },
+      where: eq(teams.id, session.user.id),
+    });
+    hasFinishedHunt = !!finishTime?.finishTime;
   }
+
+  const availableRounds: Round[] = ROUNDS.map((round) => ({
+    name: round.name,
+    puzzles: round.puzzles.filter((puzzle) =>
+      availablePuzzles.some((ap) => ap.id === puzzle),
+    ),
+  })).filter((round) => round.puzzles.length > 0);
 
   return (
-    <div className="mb-6 flex grow flex-col items-center">
-      <h1 className="mb-2">Puzzles!</h1>
-      <PuzzleTable
-        availablePuzzles={availablePuzzles}
-        solvedPuzzles={solvedPuzzles}
-      />
-    </div>
+    <PuzzleListPage
+      availablePuzzles={availablePuzzles}
+      solvedPuzzles={solvedPuzzles}
+      availableRounds={availableRounds}
+      availableEvents={availableEvents}
+      finishedEvents={finishedEvents}
+      hasEventInputBox={!!session?.user}
+      hasFinishedHunt={hasFinishedHunt}
+      isInPerson={isInPerson}
+    />
   );
 }

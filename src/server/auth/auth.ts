@@ -26,17 +26,7 @@ export const signInSchema = object({
  * object and keep type safety.
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    // user: {
-    //   id: string;
-    //   email: string;
-    //   emailVerified: Date;
-    //   name: string;
-    //   image: any;
-    // role: Userrole;
-    // } // & DefaultSession["user"];
-  }
-
+  interface Session extends DefaultSession {}
   interface User {
     id?: string | undefined;
     displayName: string;
@@ -80,7 +70,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
               };
             }
           }
-
           return null;
         } catch (error) {
           console.error(error);

@@ -1,31 +1,18 @@
-import { redirect } from "next/navigation";
-import { db } from "~/server/db";
-import { eq } from "drizzle-orm";
-import { puzzles } from "~/server/db/schema";
+import { puzzleId, solutionBody } from "./data";
+import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
-import { puzzleId, SolutionBody } from "./data";
-import DefaultHeader from "../components/DefaultHeader";
+export const metadata = {
+  title: "Six Degrees - Brown Puzzlehunt",
+};
 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // Get puzzle name
-  const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-  })!;
-  if (!puzzle) {
-    redirect("/404");
-  }
-
-  const hasSolution = !!SolutionBody();
+  const hasSolution = !!solutionBody;
 
   return (
-    <div className="flex w-2/3 min-w-36 grow flex-col items-center">
-      <DefaultHeader
-        puzzleId={puzzleId}
-        puzzleName={puzzle.name}
-        hasSolution={hasSolution}
-      />
+    <div className="flex min-w-36 grow flex-col items-center">
+      <DefaultHeader puzzleId={puzzleId} hasSolution={hasSolution} />
       {children}
     </div>
   );

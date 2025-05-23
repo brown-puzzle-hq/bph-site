@@ -7,6 +7,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -20,7 +21,7 @@ import {
 
 export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 
-export const roleEnum = pgEnum("role", ["admin", "user"]);
+export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
 
 export const interactionModeEnum = pgEnum("interaction_type", [
   "in-person",
@@ -33,15 +34,28 @@ export const hintStatusEnum = pgEnum("status", [
   "refunded",
 ]);
 
+export const solveTypeEnum = pgEnum("solve_type", [
+  "guess",
+  "answer_token",
+  /* time_solve */
+]);
+
+export const unlockTypeEnum = pgEnum("unlock_type", [
+  "guess",
+  /* "time_unlock" */
+]);
+
 export const teams = createTable("team", {
-  id: varchar("id", { length: 255 }).primaryKey(), // Also acts as a login username
-  displayName: varchar("display_name", { length: 255 }).notNull(), // For display
+  id: varchar("id", { length: 255 }).primaryKey(), // login username
+  displayName: varchar("display_name", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
   members: text("members").notNull().default("[]"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
+  createTime: timestamp("create_time", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   finishTime: timestamp("finish_time", { withTimezone: true }),
-  createTime: timestamp("create_time", { withTimezone: true }),
 
   // Only for in-person teams
   // NOTE: defaults seem to not be working, entries still get added with NULL by default
@@ -51,12 +65,6 @@ export const teams = createTable("team", {
   solvingLocation: varchar("solving_location", { length: 255 })
     .notNull()
     .default(""),
-  wantsBox: boolean("wants_box").notNull().default(false),
-  hasBox: boolean("has_box").notNull().default(false),
-
-  // Not included:
-  // allow_time_unlocks, total_hints_awarded, total_free_answers_awarded
-  // last_solve_time, is_prerelease_testsolver, is_hidden
 });
 
 export const puzzles = createTable("puzzle", {
@@ -65,11 +73,10 @@ export const puzzles = createTable("puzzle", {
   // Human-readable name that can be changed at any time
   name: varchar("name", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
-  // Not included:
-  // body_template, round, order, is_meta, emoji
-  // unlock_hours, unlock_global, unlock_local
 });
 
+// Unlocks may happen when a team guesses the answer correctly,
+// when there is a time unlock, or when a team uses an answer token
 export const unlocks = createTable(
   "unlock",
   {
@@ -80,11 +87,41 @@ export const unlocks = createTable(
     teamId: varchar("team_id")
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
-    unlockTime: timestamp("unlock_time", { withTimezone: true }).notNull(),
+    unlockTime: timestamp("unlock_time", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    type: unlockTypeEnum("type").notNull().default("guess"),
   },
   (table) => {
     return {
-      team_and_puzzle_idx: index("unlocks_team_puzzle_idx").on(
+      unique_unlocks_team_puzzle: unique("unlock_team_puzzle").on(
+        table.teamId,
+        table.puzzleId,
+      ),
+    };
+  },
+);
+
+// Solves may happen when a team guesses an answer correctly
+// Or when a team uses an answer token
+export const solves = createTable(
+  "solve",
+  {
+    id: serial("id").primaryKey(),
+    puzzleId: varchar("puzzle_id")
+      .notNull()
+      .references(() => puzzles.id, { onDelete: "cascade" }),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    solveTime: timestamp("solve_time", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    type: solveTypeEnum("type").notNull().default("guess"),
+  },
+  (table) => {
+    return {
+      unique_solves_team_puzzle: unique("solve_team_puzzle").on(
         table.teamId,
         table.puzzleId,
       ),
@@ -104,13 +141,13 @@ export const guesses = createTable(
       .references(() => teams.id, { onDelete: "cascade" }),
     guess: varchar("guess", { length: 255 }).notNull(),
     isCorrect: boolean("is_correct").notNull(),
-    submitTime: timestamp("submit_time", { withTimezone: true }).notNull(),
-    // Not included:
-    // used_free_answer
+    submitTime: timestamp("submit_time", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => {
     return {
-      team_and_puzzle_idx: index("guesses_team_and_puzzle_idx").on(
+      unique_guesses_team_puzzle_guess: unique("guess_team_puzzle_guess").on(
         table.teamId,
         table.puzzleId,
       ),
@@ -118,39 +155,27 @@ export const guesses = createTable(
   },
 );
 
-export const hints = createTable(
-  "hint",
-  {
-    id: serial("id").primaryKey(),
-    puzzleId: varchar("puzzle_id")
-      .notNull()
-      .references(() => puzzles.id, { onDelete: "cascade" }),
-    teamId: varchar("team_id")
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
-    request: text("request").notNull(),
-    requestTime: timestamp("request_time", { withTimezone: true }).notNull(),
-    claimer: varchar("claimer").references(() => teams.id),
-    claimTime: timestamp("claim_time", { withTimezone: true }),
-    response: text("response"),
-    responseTime: timestamp("response_time", { withTimezone: true }),
-    status: hintStatusEnum("status").notNull().default("no_response"),
-    // Not included:
-    // obsolute statuses
-    // notify_emails, discord_id, is_followup
-  },
-  (table) => {
-    return {
-      team_and_puzzle_idx: index("hints_team_and_puzzle_idx").on(
-        table.teamId,
-        table.puzzleId,
-      ),
-    };
-  },
-);
+export const hints = createTable("hint", {
+  id: serial("id").primaryKey(),
+  puzzleId: varchar("puzzle_id")
+    .notNull()
+    .references(() => puzzles.id, { onDelete: "cascade" }),
+  teamId: varchar("team_id")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+  request: text("request").notNull(),
+  requestTime: timestamp("request_time", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  claimer: varchar("claimer").references(() => teams.id),
+  claimTime: timestamp("claim_time", { withTimezone: true }),
+  response: text("response"),
+  responseTime: timestamp("response_time", { withTimezone: true }),
+  status: hintStatusEnum("status").notNull().default("no_response"),
+});
 
-export const followUps = createTable(
-  "follow_up",
+export const replies = createTable(
+  "reply",
   {
     id: serial("id").primaryKey(),
     hintId: serial("hint_id")
@@ -160,7 +185,7 @@ export const followUps = createTable(
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     message: text("message").notNull(),
-    time: timestamp("time", { withTimezone: true }).notNull(),
+    time: timestamp("time", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => {
     return {
@@ -169,24 +194,16 @@ export const followUps = createTable(
   },
 );
 
-export const errata = createTable(
-  "erratum",
-  {
-    id: serial("id").primaryKey(),
-    puzzleId: varchar("puzzle_id")
-      .notNull()
-      .references(() => puzzles.id, { onDelete: "cascade" }),
-    timestamp: timestamp("timestamp", { withTimezone: true })
-      .notNull()
-      .$defaultFn(() => new Date()),
-    description: text("description").notNull(),
-  },
-  (table) => {
-    return {
-      puzzle_idx: index("errata_puzzle_idx").on(table.puzzleId),
-    };
-  },
-);
+export const errata = createTable("erratum", {
+  id: serial("id").primaryKey(),
+  puzzleId: varchar("puzzle_id")
+    .notNull()
+    .references(() => puzzles.id, { onDelete: "cascade" }),
+  timestamp: timestamp("timestamp", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  description: text("description").notNull(),
+});
 
 export const feedback = createTable("feedback", {
   id: serial("id").primaryKey(),
@@ -195,9 +212,47 @@ export const feedback = createTable("feedback", {
     .references(() => teams.id, { onDelete: "cascade" }),
   timestamp: timestamp("timestamp", { withTimezone: true })
     .notNull()
-    .$defaultFn(() => new Date()),
+    .defaultNow(),
   description: text("feedback").notNull(),
 });
+
+export const events = createTable("event", {
+  id: varchar("id", { length: 255 }).primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  answer: varchar("answer", { length: 255 }).notNull(),
+  startTime: varchar("start_time").notNull(),
+  description: text("description").notNull(),
+});
+
+export const answerTokens = createTable(
+  "answer_token",
+  {
+    id: serial("id").primaryKey(),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, {
+        onDelete: "cascade",
+      }),
+    eventId: varchar("event_id")
+      .notNull()
+      .references(() => events.id, {
+        onDelete: "cascade",
+      }),
+    timestamp: timestamp("timestamp", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    // This is the puzzle that the token was used for
+    puzzleId: varchar("puzzle_id").references(() => puzzles.id, {
+      onDelete: "set null",
+    }),
+  },
+  (table) => ({
+    unique_tokens_team_event: unique("unique_token_team_event").on(
+      table.teamId,
+      table.eventId,
+    ),
+  }),
+);
 
 export const teamRelations = relations(teams, ({ many }) => ({
   unlocks: many(unlocks),
@@ -206,6 +261,8 @@ export const teamRelations = relations(teams, ({ many }) => ({
   requestedHints: many(hints, { relationName: "requested_hints" }),
   // Hints claimed by this admin "team"
   claimedHints: many(hints, { relationName: "claimed_hints" }),
+  answerTokens: many(answerTokens),
+  solves: many(solves),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
@@ -213,6 +270,8 @@ export const puzzleRelations = relations(puzzles, ({ many }) => ({
   guesses: many(guesses),
   hints: many(hints),
   errata: many(errata),
+  solves: many(solves),
+  tokens: many(answerTokens),
 }));
 
 export const unlockRelations = relations(unlocks, ({ one }) => ({
@@ -222,6 +281,17 @@ export const unlockRelations = relations(unlocks, ({ one }) => ({
   }),
   puzzle: one(puzzles, {
     fields: [unlocks.puzzleId],
+    references: [puzzles.id],
+  }),
+}));
+
+export const solveRelations = relations(solves, ({ one }) => ({
+  team: one(teams, {
+    fields: [solves.teamId],
+    references: [teams.id],
+  }),
+  puzzle: one(puzzles, {
+    fields: [solves.puzzleId],
     references: [puzzles.id],
   }),
 }));
@@ -252,19 +322,42 @@ export const hintRelations = relations(hints, ({ one, many }) => ({
     references: [teams.id],
     relationName: "claimed_hints",
   }),
-  followUps: many(followUps),
+  replies: many(replies),
 }));
 
-export const followUpRelations = relations(followUps, ({ one }) => ({
+export const replyRelations = relations(replies, ({ one }) => ({
   hint: one(hints, {
-    fields: [followUps.hintId],
+    fields: [replies.hintId],
     references: [hints.id],
+  }),
+  user: one(teams, {
+    fields: [replies.userId],
+    references: [teams.id],
   }),
 }));
 
 export const erratumRelations = relations(errata, ({ one }) => ({
   puzzle: one(puzzles, {
     fields: [errata.puzzleId],
+    references: [puzzles.id],
+  }),
+}));
+
+export const eventRelations = relations(events, ({ many }) => ({
+  tokens: many(answerTokens),
+}));
+
+export const answerTokenRelations = relations(answerTokens, ({ one }) => ({
+  team: one(teams, {
+    fields: [answerTokens.teamId],
+    references: [teams.id],
+  }),
+  event: one(events, {
+    fields: [answerTokens.eventId],
+    references: [events.id],
+  }),
+  puzzle: one(puzzles, {
+    fields: [answerTokens.puzzleId],
     references: [puzzles.id],
   }),
 }));

@@ -1,6 +1,6 @@
 function Dot() {
   return (
-    <div className="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700"></div>
+    <div className="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-white dark:border-gray-900 dark:bg-gray-700"></div>
   );
 }
 
@@ -11,14 +11,18 @@ type TimelineItem = {
 
 export default function Timeline({ timeline }: { timeline: TimelineItem[] }) {
   return (
-    <div className="relative border-s border-gray-200 dark:border-gray-700">
-      {timeline.map(({ title, description }) => (
-        <div className="ms-4">
-          <Dot />
-          <p>{title}</p>
-          <p className="text-gray-500">{description}</p>
-        </div>
-      ))}
+    <div className="relative rounded-2xl border border-gray-400 px-6">
+      <div className="relative border-s border-gray-200 dark:border-gray-700">
+        {timeline.map(({ title, description }) => (
+          <div className="ms-4" key={title}>
+            <Dot />
+            <p>
+              <strong>{title}</strong>
+            </p>
+            <p className="text-main-text/75">{description}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

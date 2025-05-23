@@ -7,16 +7,26 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
-import { Card } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardDescription,
+} from "@/components/ui/card";
+import { FormattedTime } from "~/lib/time";
+
+// TODO: calls an admin component in hunt page
+// Refactor this
+
 import {
   Form,
   FormControl,
   FormDescription,
   FormField,
   FormItem,
-  FormMessage,
 } from "@/components/ui/form";
-import FeedbackDialog from "~/app/(admin)/admin/feedback/FeedbackDialog";
+import FeedbackDialog from "~/app/admin/feedback/FeedbackDialog";
+
 import { insertFeedback } from "./actions";
 
 export const feedbackFormSchema = z.object({
@@ -45,7 +55,8 @@ export default function FeedbackForm({
   });
 
   const onSubmit = async (data: z.infer<typeof feedbackFormSchema>) => {
-    const result = await insertFeedback(data.description);
+    const timestamp = new Date();
+    const result = await insertFeedback(data.description, timestamp);
     if (result.error) {
       toast({
         title: "Submission failed",
@@ -56,7 +67,7 @@ export default function FeedbackForm({
         id: feedbackList.length,
         teamId: teamId,
         description: data.description,
-        timestamp: new Date(),
+        timestamp,
       };
       feedbackList.push(newFeedback);
       toast({
@@ -77,22 +88,29 @@ export default function FeedbackForm({
             render={({ field }) => (
               <>
                 <FormItem className="mb-4">
-                  <FormDescription>
+                  <FormDescription className="text-main-text">
                     Any puzzle errors, website bugs, or general comments will be
                     enormously helpful for us. This textbox supports Markdown.
                   </FormDescription>
                   <FormControl>
                     {preview ? (
-                      <Card>
-                        <div className="p-4">
-                          <article className="prose">
+                      <Card className="bg-inherit">
+                        <CardHeader className="p-4 pb-0.5">
+                          <CardDescription className="text-main-header">
+                            <strong>
+                              <FormattedTime time={new Date()} />
+                            </strong>
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0">
+                          <article className="prose prose-feedback text-main-text">
                             {useRemarkSync(field.value) || <></>}
                           </article>
-                        </div>
+                        </CardContent>
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-gray-50 text-black"
+                        className="bg-inherit text-main-text placeholder:text-white/40 focus-visible:ring-offset-0"
                         placeholder="No response yet"
                         {...field}
                       />
@@ -118,7 +136,7 @@ export default function FeedbackForm({
         </form>
       </Form>
       <div>
-        <FeedbackDialog showTeam={false} feedbackList={feedbackList} />
+        <FeedbackDialog teamSide={true} feedbackList={feedbackList} />
       </div>
     </div>
   );

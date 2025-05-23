@@ -16,13 +16,13 @@ export const authConfig = {
         token.interactionMode = user.interactionMode;
       }
       if (trigger === "update") {
-        if (session?.displayName) {
+        if (session?.displayName !== undefined) {
           token.displayName = session.displayName;
         }
-        if (session?.role) {
+        if (session?.role !== undefined) {
           token.role = session.role;
         }
-        if (session?.interactionMode) {
+        if (session?.interactionMode !== undefined) {
           token.interactionMode = session.interactionMode;
         }
       }

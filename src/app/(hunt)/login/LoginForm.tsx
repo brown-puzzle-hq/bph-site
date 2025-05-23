@@ -12,7 +12,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 import { login, logout } from "./actions";
@@ -25,8 +24,8 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
-  const session = useSession();
-  const [error, setError] = useState<string | null>(null);
+  const { update } = useSession();
+  const [shaking, setShaking] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -38,19 +37,22 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const result = await login(data.id, data.password);
-    if (result.error !== null) {
-      setError(result.error);
+    const { error, session } = await login(data.id, data.password);
+    if (error) {
+      const input = document.querySelector(
+        "input[name='password']",
+      ) as HTMLInputElement;
+      input?.select();
+      setShaking(true);
+      setTimeout(() => setShaking(false), 200);
     } else {
+      update(session);
       if (session.data?.user?.role === "admin") {
         router.push("/admin");
       } else {
         router.push("/");
-        // Not sure how to refresh nav without this,
-        // but this seems to not be a problem for admin
-        router.refresh();
       }
-      setError(null);
+      router.refresh();
     }
   };
 
@@ -63,12 +65,8 @@ export function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input
-                  className="placeholder:text-gray-300"
-                  placeholder="jcarberr"
-                  {...field}
-                />
+              <FormControl className="placeholder:text-white/40 focus-visible:ring-opacity-20">
+                <Input placeholder="jcarberr" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -82,30 +80,29 @@ export function LoginForm() {
                 <FormLabel>Password</FormLabel>
                 <Link
                   href="mailto:brownpuzzlehq@gmail.com"
-                  className="text-sm text-blue-500 hover:underline"
+                  className="text-sm text-link hover:underline"
                   tabIndex={-1}
                 >
                   Forgot?
                 </Link>
               </div>
-              <FormControl>
+              <FormControl className="placeholder:text-white/40 focus-visible:ring-opacity-20">
                 <Input
                   type="password"
-                  className="placeholder:text-gray-300"
                   placeholder="password"
+                  className={shaking ? "animate-shake" : undefined}
                   {...field}
                 />
               </FormControl>
-              <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
-        <Button className="hover:bg-otherblue" type="submit">
-          Log In
+        <Button type="submit">
+          <p className="w-full text-center">Log In</p>
         </Button>
         <div className="pt-4 text-sm">
           New to the hunt?{" "}
-          <Link href="/register" className="text-secondary hover:underline">
+          <Link href="/register" className="text-link hover:underline">
             Register
           </Link>
         </div>
@@ -116,7 +113,11 @@ export function LoginForm() {
 
 export function LogoutForm() {
   return (
-    <Button className="hover:bg-otherblue" onClick={() => logout()}>
+    <Button
+      onClick={async () => {
+        await logout();
+      }}
+    >
       Logout
     </Button>
   );

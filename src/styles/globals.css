@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,8 +6,21 @@
 @layer base {
   :root {
     --radius: 0.5rem;
+    font-family: "Figtree", sans-serif;
   }
   h1 {
-    @apply text-2xl font-bold; /* Adjust these values as needed */
+    @apply text-2xl font-bold;
+  }
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
