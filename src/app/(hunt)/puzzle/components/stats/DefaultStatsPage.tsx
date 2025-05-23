@@ -143,7 +143,7 @@ export default async function DefaultStatsPage({
   // If the puzzle is an initial puzzle, there is no unlockTime in the db
   // Figure out when the team could have actually seen the puzzle
   if (INITIAL_PUZZLES.includes(puzzleId)) {
-    statsTableData.map((row) => {
+    statsTableData.forEach((row) => {
       const registerTime = row.team.createTime;
       const huntStartTime =
         row.team.interactionMode === "in-person"
