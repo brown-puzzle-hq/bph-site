@@ -11,6 +11,12 @@
   h1 {
     @apply text-2xl font-bold;
   }
+  ol {
+    @apply list-decimal;
+  }
+  ul {
+    @apply list-disc;
+  }
 }
 
 @layer utilities {
