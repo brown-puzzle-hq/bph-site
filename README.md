@@ -89,9 +89,9 @@ To run the development server and see your changes live:
 
     `data.tsx` contains
     1. Puzzle id (required)
-    2. Puzzle body (required) [[advice]](#creating-puzzle-bodies)
+    2. Puzzle body (required) [[advice](#creating-puzzle-bodies)]
     3. Solution body
-    4. Copy text [[advice]](#creating-copy-text)
+    4. Copy text [[advice](#creating-copy-text)]
     5. Partial solutions
     6. Extra tasks
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
@@ -17,8 +17,11 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.0",
     "@hookform/resolvers": "^3.9.0",
+    "@mdx-js/loader": "^3.1.0",
+    "@mdx-js/react": "^3.1.0",
     "@neondatabase/serverless": "^0.10.3",
     "@next/env": "^14.2.15",
+    "@next/mdx": "^15.1.8",
     "@pixi/events": "^7.4.2",
     "@pixi/math": "^7.4.2",
     "@pixi/react": "^7.1.2",
@@ -52,6 +55,7 @@
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.6.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/mdx": "^2.0.13",
     "@vercel/postgres": "^0.10.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
