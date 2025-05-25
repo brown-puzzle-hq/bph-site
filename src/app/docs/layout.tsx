@@ -8,10 +8,9 @@ export default async function RootLayout({
   return (
     <body className="bg-white">
       {/* Navbar */}
-      <div className="bg-nav-bg">
-        <DocsHamburgerMenu />
-      </div>
-      <main className="markdown-body min-h-[calc(100vh-56px-32px)] max-w-3xl p-16">
+      <DocsHamburgerMenu />
+      <div className="min-h-[56px]" />
+      <main className="markdown-body min-h-[calc(100vh-56px)] max-w-4xl p-16 pt-8">
         {children}
       </main>
     </body>

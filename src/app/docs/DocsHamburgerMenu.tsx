@@ -21,13 +21,13 @@ export default async function DocsHamburgerMenu() {
       type: "link",
     },
     {
-      title: "Develop",
-      href: "/docs/develop",
+      title: "Administer",
+      href: "/docs/administer",
       type: "link",
     },
     {
-      title: "Administer",
-      href: "/docs/administer",
+      title: "Develop",
+      href: "/docs/develop",
       type: "link",
     },
   ];
