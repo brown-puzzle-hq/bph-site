@@ -37,42 +37,7 @@ On the development side:
 1. Set up the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to use the Neon Postgres database.
 
   ```
-  # This file will be committed to version control, so make sure not to have any
-# secrets in it. If you are cloning this repo, create a copy of this file named
-# ".env" and populate it with your secrets.
-
-# When adding additional *required* environment variables, the schema in "/src/env.js"
-# should be updated accordingly.
-
-# Next Auth (required)
-# You can generate a new secret on the command line with:
-# openssl rand -base64 32
-# https://next-auth.js.org/configuration/options#secret
-AUTH_SECRET=""
-AUTH_URL="http://localhost:3000" # Remember to change this for production
-AUTH_DRIZZLE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
-
-# Database (required)
-DATABASE_URL=""
-POSTGRES_DATABASE=""
-POSTGRES_HOST=""
-POSTGRES_PASSWORD=""
-POSTGRES_PRISMA_URL=""
-POSTGRES_URL=""
-POSTGRES_URL_NON_POOLING=""
-POSTGRES_URL_NO_SSL=""
-POSTGRES_USER=""
-
-# Communication (optional)
-DISCORD_WEBHOOK_URL=""
-DISCORD_WEBHOOK_URL_HINT=""
-DISCORD_WEBHOOK_URL_GUESS=""
-DISCORD_WEBHOOK_URL_FINISH=""
-DISCORD_WEBHOOK_URL_FEEDBACK=""
-DISCORD_WEBHOOK_URL_TEAM=""
-DISCORD_WEBHOOK_URL_DEV=""
-
-RESEND_API_KEY="" # https://resend.com/api-keys
+  {{{ env_example }}}
   ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
