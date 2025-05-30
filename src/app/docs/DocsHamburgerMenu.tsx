@@ -1,11 +1,3 @@
-import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Ellipsis } from "lucide-react";
 import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
 
 export default async function DocsHamburgerMenu() {
@@ -16,11 +8,6 @@ export default async function DocsHamburgerMenu() {
       type: "link",
     },
     {
-      title: "Postprod",
-      href: "/docs/postprod",
-      type: "link",
-    },
-    {
       title: "Administer",
       href: "/docs/administer",
       type: "link",
@@ -28,6 +15,11 @@ export default async function DocsHamburgerMenu() {
     {
       title: "Develop",
       href: "/docs/develop",
+      type: "link",
+    },
+    {
+      title: "Postprod",
+      href: "/docs/postprod",
       type: "link",
     },
   ];
@@ -47,8 +39,8 @@ export default async function DocsHamburgerMenu() {
       type: "link",
     },
     {
-      title: "Postprod",
-      href: "/docs/postprod",
+      title: "Administer",
+      href: "/docs/administer",
       type: "link",
     },
     {
@@ -57,8 +49,8 @@ export default async function DocsHamburgerMenu() {
       type: "link",
     },
     {
-      title: "Administer",
-      href: "/docs/administer",
+      title: "Postprod",
+      href: "/docs/postprod",
       type: "link",
     },
     {

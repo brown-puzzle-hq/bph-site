@@ -2,14 +2,13 @@
 
 1. [Quick Links](#quick-links)
 2. [Overview](#overview)
-3. [Features](#features)
-4. [Copying this repository](#copying-this-repository)
-5. [Setting up the database](#setting-up-the-database)
-6. [Setting up the dev environment](#setting-up-the-dev-environment)
-7. [Hunt Structure](#hunt-structure)
-8. [Final Checks](#final-checks)
+3. [Copying this repository](#copying-this-repository)
+4. [Setting up the database](#setting-up-the-database)
+5. [Setting up the dev environment](#setting-up-the-dev-environment)
+6. [Hunt Structure](#hunt-structure)
+7. [Final Checks](#final-checks)
 
-#### Quick Links
+## Quick Links
 
 Make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
 
@@ -24,7 +23,7 @@ Most documentation out there is still for v4, so check that you are reading docu
 - [Tailwind CSS](https://tailwindcss.com/docs/installation)
 - [Shadcn](https://ui.shadcn.com/docs)
 
-#### Overview
+## Overview
 
 This project is built using **Next.js v14** using the App Router. The frontend is in the `src/app` folder, and the backend is in the `src/server` folder.
 
@@ -43,7 +42,7 @@ The setup is in the `src/server/auth` folder.
 
 Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
 
-#### Copying this repository
+## Copying this repository
 
 I recommend duplicating this repository for each hunt. If you want to get updates from the original repository, you can follow these steps:
 
@@ -95,7 +94,7 @@ I recommend duplicating this repository for each hunt. If you want to get update
 
 There is more information on the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository).
 
-#### Setting up the database
+## Setting up the database
 
 1. Connect the database to the project
 
@@ -113,7 +112,7 @@ Take a look at `.env.example`. You will need to create a `.env` file at the root
    pnpm run db:studio
    ```
 
-#### Setting up the dev environment
+## Setting up the dev environment
 
 1. Download all of the dependencies. This only needs to be done when you update the dependencies in `package.json`.
 
@@ -129,12 +128,12 @@ Take a look at `.env.example`. You will need to create a `.env` file at the root
 
 3. Go to `http://localhost:3000/` to see the development server.
 
-#### Hunt Structure
+## Hunt Structure
 
 Most of the customizable features of the hunt structure is in `hunt.config.ts`.
 Edit `/puzzle/actions.ts` to change how it handles guesses and solves.
 
-#### Final Checks
+## Final Checks
 
 Make sure that `hunt.config.ts` is correct.
 

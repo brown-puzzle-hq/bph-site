@@ -2,10 +2,10 @@
 
 1. [First steps](#first-steps)
 2. [Adding puzzles](#adding-puzzles)
-3. [Creating puzzle and solution bodies](#creating-puzzle-and-solution-bodies)
+3. [Creating puzzle bodies](#creating-puzzle-bodies)
 4. [Creating copy text](#creating-copy-text)
 
-#### First steps
+## First steps
 
 1. Clone this repository
 2. Get the `.env` and put it in the root directory
@@ -20,7 +20,7 @@ To run the development server and see your changes live:
 1. Run `pnpm run dev` in the terminal
 2. Go to `http://localhost:3000/`
 
-#### Adding puzzles
+## Adding puzzles
 
 1. Add the puzzle to the database
 
@@ -122,7 +122,7 @@ To run the development server and see your changes live:
    };
    ```
 
-#### Creating puzzle bodies
+## Creating puzzle bodies
 
 Puzzle bodies are written in JSX (HTML-in-JavaScript) and Tailwind CSS. There are also some Next.js components that you should use.
 Here are some tips:
@@ -135,7 +135,7 @@ Here are some tips:
 
 **Lists, Images, and Videos**
 
-5. For **images**, use the Next.js `Image` component instead of the `img` tag. Put it somewhere in the puzzle folder and import it like this:
+3. For **images**, use the Next.js `Image` component instead of the `img` tag. Put it somewhere in the puzzle folder and import it like this:
 
    ```html
    import Image from "next/image"; import SUDOKU_IMAGE from
@@ -145,7 +145,7 @@ Here are some tips:
 
    Next.js documentation will tell you to put images in the `public` folder. We don't do that because it makes it harder to leak puzzle information.
 
-6. For **videos**, I recommend uploading it to YouTube as unlisted. YouTube will give you a code embedding that you can copy. You'll have to change some properties to camelCase, so that it looks like this:
+4. For **videos**, I recommend uploading it to YouTube as unlisted. YouTube will give you a code embedding that you can copy. You'll have to change some properties to camelCase, so that it looks like this:
 
    ```html
    <iframe
@@ -189,7 +189,7 @@ Here are some tips:
    <p>The answer is{" "}<span className="bg-main-text">ANSWER</span>.</p>
    ```
 
-#### Creating copy text
+## Creating copy text
 
 1. Each copy text entry should either be plaintext (simple and faster) or HTML (which allows for text and cell formatting).
 
