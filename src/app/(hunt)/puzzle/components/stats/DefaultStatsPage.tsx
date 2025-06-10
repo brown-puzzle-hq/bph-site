@@ -213,9 +213,7 @@ export default async function DefaultStatsPage({
         <p className="mb-4 font-semibold text-main-header">
           Most Common Guesses
         </p>
-        <div className="flex w-full flex-col">
-          <GuessChart data={guessChartData} puzzleAnswer={puzzleAnswer} />
-        </div>
+        <GuessChart data={guessChartData} puzzleAnswer={puzzleAnswer} />
       </div>
     </div>
   );

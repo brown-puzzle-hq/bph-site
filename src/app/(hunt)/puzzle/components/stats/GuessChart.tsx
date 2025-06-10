@@ -1,6 +1,7 @@
 "use client";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer } from "@/components/ui/chart";
+import { useRef, useState, useEffect } from "react";
 
 export type GuessChartItem = {
   guess: string;
@@ -12,22 +13,56 @@ type GuessChartProps = {
   puzzleAnswer: string;
 };
 
+const maxLineLength = 16;
+
+function resolveLength(text: string): [number, number] {
+  const lineCount = Math.ceil(text.length / maxLineLength);
+  const baseLength = Math.floor(text.length / lineCount);
+  const extra = text.length % lineCount;
+  return [baseLength, extra];
+}
+
+// TODO: simplify logic for guess chart font/box sizing
 export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [fontSize, setFontSize] = useState(14);
+  const fontScaler = fontSize / 14;
+
+  useEffect(() => {
+    const updateFontSize = () => {
+      const width = containerRef.current?.offsetWidth || 400;
+      setFontSize(width * 0.02);
+    };
+    updateFontSize();
+
+    const observer = new ResizeObserver(updateFontSize);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const maxCount = Math.max(...data.map((d) => d.count));
   const intervals = 5;
   const step = Math.max(Math.floor(maxCount / intervals / 5) * 5, 5);
+  const maxLength = Math.max(
+    ...data.map((d) => {
+      const [baseLength, extra] = resolveLength(d.guess);
+      return baseLength + (extra ? 1 : 0) + 1;
+    }),
+  );
+  const labelSpace = 0.25; // Added length in character widths between the label and bar
+  const leftMargin = (maxLength + labelSpace) * 8.43 * fontScaler + 8.43;
 
   return (
-    <ChartContainer config={{}} className="min-h-[400px]">
+    <ChartContainer config={{}} className="w-full" ref={containerRef}>
       <BarChart
         accessibilityLayer
         data={data}
         layout="vertical"
         margin={{
-          top: 10,
-          right: 40,
-          left: 80,
-          bottom: 0,
+          right: 40 * fontScaler,
         }}
       >
         <CartesianGrid
@@ -39,7 +74,7 @@ export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
           type="number"
           tickLine={false}
           axisLine={false}
-          tick={{ fill: "#E7E3FC" }}
+          tick={{ fill: "#E7E3FC", fontSize: fontSize }}
           ticks={Array.from(
             { length: Math.ceil(maxCount / step) },
             (_, i) => i * step,
@@ -51,14 +86,11 @@ export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
           type="category"
           tickLine={false}
           axisLine={false}
-          tickMargin={10}
-          width={80}
+          width={leftMargin}
+          interval={0}
           tick={({ payload, x, y, textAnchor }) => {
             const text = payload.value;
-            const maxLineLength = 16;
-            const lineCount = Math.ceil(text.length / maxLineLength);
-            const baseLength = Math.floor(text.length / lineCount);
-            const extra = text.length % lineCount;
+            const [baseLength, extra] = resolveLength(text);
             const lines = [];
 
             for (let i = 0; i < text.length; ) {
@@ -67,17 +99,20 @@ export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
               i += lineLength;
             }
 
-            const padX = 15;
-            const padY = 10;
+            const pad = 1; // In character widths
             const boxWidth =
-              Math.min(baseLength + (extra ? 1 : 0), maxLineLength) * 8.43 +
-              padX;
-            const boxHeight = 16.5 * lines.length + padY;
-            const boxX = x - boxWidth + padX / 2;
-            const boxY = y - boxHeight / 2 - 0.5;
+              (baseLength + (extra ? 1 : 0) + pad) * 8.43 * fontScaler;
+            const boxHeight =
+              lines.length * 16.5 * fontScaler + pad * 8.43 * fontScaler;
+            const boxX =
+              x - boxWidth + (pad / 2 - labelSpace) * 8.43 * fontScaler;
+            const boxY = y - boxHeight / 2;
 
-            const textX = x;
-            const textY = y - boxHeight / 2 + 12.5;
+            const textX = x - labelSpace * 8.43 * fontScaler;
+            const textY =
+              y +
+              (8.43 / 2) * fontScaler - // Half a line down
+              ((lines.length - 1) / 2) * 16.5 * fontScaler; // Some number of lines up
 
             if (payload.value === puzzleAnswer) {
               return (
@@ -99,8 +134,8 @@ export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
                     y={textY}
                     fill="#E7E3FC"
                     textAnchor={textAnchor}
-                    dominantBaseline="central"
-                    fontSize={14}
+                    dominantBaseline="alphabetic"
+                    fontSize={fontSize}
                     fontWeight="bold"
                     fontFamily="monospace"
                   >
@@ -125,8 +160,8 @@ export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
                 y={textY}
                 fill="#E7E3FC"
                 textAnchor={textAnchor}
-                dominantBaseline="central"
-                fontSize={14}
+                dominantBaseline="alphabetic"
+                fontSize={fontSize}
                 fontFamily="monospace"
               >
                 {lines.map((line, index) => (
@@ -143,15 +178,15 @@ export default function GuessChart({ data, puzzleAnswer }: GuessChartProps) {
           fill="#CBC3E3"
           barSize={100}
           label={({ x, y, width, height, value }) => {
-            const padding = 8;
+            const pad = 1; // In character widths
             return (
               <text
-                x={x + width + padding}
+                x={x + width + pad * 8.43 * fontScaler}
                 y={y + height / 2}
                 textAnchor="start"
-                dominantBaseline="middle"
+                dominantBaseline="central"
                 fill="#E7E3FC"
-                fontSize={14}
+                fontSize={fontSize}
                 fontWeight="bold"
                 fontFamily="monospace"
               >
