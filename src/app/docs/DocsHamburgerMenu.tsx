@@ -3,13 +3,13 @@ import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
 export default async function DocsHamburgerMenu() {
   const leftMenuItems: MenuItem[] = [
     {
-      title: "Docs",
+      title: "Contents",
       href: "/docs",
       type: "link",
     },
     {
-      title: "Administer",
-      href: "/docs/administer",
+      title: "Manage",
+      href: "/docs/manage",
       type: "link",
     },
     {
@@ -39,8 +39,8 @@ export default async function DocsHamburgerMenu() {
       type: "link",
     },
     {
-      title: "Administer",
-      href: "/docs/administer",
+      title: "Manage",
+      href: "/docs/manage",
       type: "link",
     },
     {
