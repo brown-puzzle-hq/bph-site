@@ -22,6 +22,14 @@ async function extractSnippet(file: string, marker: string) {
 
 async function main() {
   const env_example = (await fs.readFile(".env.example", "utf-8")).trim();
+  const discord_message = await extractSnippet(
+    "src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts",
+    "DISCORD_MESSAGE",
+  );
+  const color_config = await extractSnippet(
+    "tailwind.config.ts",
+    "COLOR_CONFIG",
+  );
 
   const files = [
     { template: "README.template.md", output: "README.md" },
@@ -34,7 +42,7 @@ async function main() {
   for (const { template, output } of files) {
     const source = await fs.readFile(template, "utf-8");
     const compiled = handlebars.compile(source);
-    const result = compiled({ env_example });
+    const result = compiled({ env_example, discord_message, color_config });
     await fs.writeFile(output, result);
     console.log(`${output} created!`);
   }

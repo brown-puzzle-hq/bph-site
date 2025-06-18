@@ -9,7 +9,7 @@
 
 ## Quick Start
 
-1. Set up the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to use the Neon Postgres database.
+1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
 
 ```
 {{{ env_example }}}
@@ -21,13 +21,13 @@
 pnpm run db:push
 ```
 
-You can look at the current state of the database by visiting Drizzle Studio.
+You can view the current state of the database and edit tables on Drizzle Studio.
 
 ```
  pnpm run db:studio
 ```
 
-3. Download all dependencies. You need to do this every time the dependencies in `package.json` changes.
+3. Download all dependencies. You need to do this every time a dependency in `package.json` changes.
 
 ```
 pnpm install
@@ -51,7 +51,7 @@ Navigate to [http://localhost:3000/](http://localhost:3000/) to see the developm
 
 ## Architecture
 
-This project is built using **Next.js v14** using the App Router. The frontend is in the `src/app` folder, and the backend is in the `src/server` folder.
+This project is built using **Next.js v14** using the App Router.
 
 We use Neon **Postgres** as the database and **Drizzle** as the ORM. The schema for the database is in the `src/server/db` folder. It's a good starting point.
 
@@ -66,7 +66,11 @@ We only support username/password authentication using the `Credentials` provide
 Sessions are stored in Json Web Tokens (JWTs) instead of database sessions.
 The setup is in the `src/server/auth` folder.
 
-Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
+Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
+
+```
+{{{ color_config }}}
+```
 
 ## Copying this repository
 
@@ -120,10 +124,17 @@ I recommend duplicating this repository for each hunt. If you want to get update
 
 There is more information on the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository).
 
+## Communication
+
+We use Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
+
+```
+{{{ discord_message }}}
+```
+
 ## Hunt Structure
 
-Most of the customizable features of the hunt structure is in `hunt.config.ts`.
-Edit `/puzzle/actions.ts` to change how it handles guesses and solves.
+Most of the customizable features of the hunt structure are in `hunt.config.ts`. Timestamps are in UTC but can be converted to local time using the `FormattedTime` component in `src/lib/time.tsx`. Edit `/puzzle/actions.ts` to change how it handles guesses and solves.
 
 ## Final Checks
 

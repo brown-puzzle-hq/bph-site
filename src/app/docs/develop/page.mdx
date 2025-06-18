@@ -9,7 +9,7 @@
 
 ## Quick Start
 
-1. Set up the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to use the Neon Postgres database.
+1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
 
 ```
 # This file will be committed to version control, so make sure not to have any
@@ -39,6 +39,7 @@ POSTGRES_URL_NO_SSL=""
 POSTGRES_USER=""
 
 # Communication (optional)
+# https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
 DISCORD_WEBHOOK_URL=""
 DISCORD_WEBHOOK_URL_HINT=""
 DISCORD_WEBHOOK_URL_GUESS=""
@@ -47,7 +48,8 @@ DISCORD_WEBHOOK_URL_FEEDBACK=""
 DISCORD_WEBHOOK_URL_TEAM=""
 DISCORD_WEBHOOK_URL_DEV=""
 
-RESEND_API_KEY="" # https://resend.com/api-keys
+# https://resend.com/api-keys
+RESEND_API_KEY=""
 ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
@@ -56,13 +58,13 @@ RESEND_API_KEY="" # https://resend.com/api-keys
 pnpm run db:push
 ```
 
-You can look at the current state of the database by visiting Drizzle Studio.
+You can view the current state of the database and edit tables on Drizzle Studio.
 
 ```
  pnpm run db:studio
 ```
 
-3. Download all dependencies. You need to do this every time the dependencies in `package.json` changes.
+3. Download all dependencies. You need to do this every time a dependency in `package.json` changes.
 
 ```
 pnpm install
@@ -86,7 +88,7 @@ Navigate to [http://localhost:3000/](http://localhost:3000/) to see the developm
 
 ## Architecture
 
-This project is built using **Next.js v14** using the App Router. The frontend is in the `src/app` folder, and the backend is in the `src/server` folder.
+This project is built using **Next.js v14** using the App Router.
 
 We use Neon **Postgres** as the database and **Drizzle** as the ORM. The schema for the database is in the `src/server/db` folder. It's a good starting point.
 
@@ -101,7 +103,34 @@ We only support username/password authentication using the `Credentials` provide
 Sessions are stored in Json Web Tokens (JWTs) instead of database sessions.
 The setup is in the `src/server/auth` folder.
 
-Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
+Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
+
+```
+colors: {
+        // Main is the primary color of the site
+        "main-bg": "#452c63",
+        "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
+        "main-header": "#e7e3fc",
+        "main-accent": "#d4a7fc",
+
+        // Secondary is for text fields
+        "secondary-bg": "#e7e3fc",
+        "secondary-text": colors.gray[300], // This text goes with a dark background
+        "secondary-accent": colors.black, // This text goes with a light background
+
+        // Other backgrounds
+        "footer-bg": "#322046",
+        "nav-bg": "#452c63",
+        "tooltip-bg": colors.gray[900],
+
+        // Other text colors
+        link: colors.blue[300],
+        "correct-guess": colors.emerald[300],
+        "partial-guess": colors.yellow[300],
+        "incorrect-guess": colors.rose[300],
+        error: colors.red[400],
+      },
+```
 
 ## Copying this repository
 
@@ -155,10 +184,19 @@ I recommend duplicating this repository for each hunt. If you want to get update
 
 There is more information on the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository).
 
+## Communication
+
+We use Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
+
+```
+// Message the guess channel
+  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+  await sendBotMessage(guessMessage, "guess");
+```
+
 ## Hunt Structure
 
-Most of the customizable features of the hunt structure is in `hunt.config.ts`.
-Edit `/puzzle/actions.ts` to change how it handles guesses and solves.
+Most of the customizable features of the hunt structure are in `hunt.config.ts`. Timestamps are in UTC but can be converted to local time using the `FormattedTime` component in `src/lib/time.tsx`. Edit `/puzzle/actions.ts` to change how it handles guesses and solves.
 
 ## Final Checks
 

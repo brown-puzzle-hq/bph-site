@@ -5,7 +5,7 @@ export default function NotFound() {
         <h1 className="text-4xl font-bold text-main-header">404</h1>
         <p className="text-lg">Page not found. This is not a puzzle.</p>
         <a href="/" className="text-link hover:underline">
-          Go back home
+          Go home
         </a>
       </div>
     </body>
