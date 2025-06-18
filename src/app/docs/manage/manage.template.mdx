@@ -2,22 +2,22 @@
 
 2. [Hinting](#hinting)
 3. [Errata](#errata)
-3. [Teams](#teams)
-    1. [Schema](#schema)
-    2. [The teams table](#the-teams-table)
-    3. [Adding the first admin](#adding-the-first-admin)
-    4. [Adding new admins](#adding-new-admins)
-    5. [Adding new testsolvers](#adding-new-testsolvers)
-    6. [Changing interaction modes](#changing-interaction-modes)
-    7. [Resetting passwords](#resetting-passwords)
-    8. [Emailing teams](#emailing-teams)
-    9. [Texting teams](#texting-teams)
-4. [Sending emails](#sending-emails)
-5. [Navigation](#navigation)
+4. [Teams](#teams)
+   1. [Schema](#schema)
+   2. [The teams table](#the-teams-table)
+   3. [Adding the first admin](#adding-the-first-admin)
+   4. [Adding new admins](#adding-new-admins)
+   5. [Adding new testsolvers](#adding-new-testsolvers)
+   6. [Changing interaction modes](#changing-interaction-modes)
+   7. [Resetting passwords](#resetting-passwords)
+   8. [Emailing teams](#emailing-teams)
+   9. [Texting teams](#texting-teams)
+5. [Sending emails](#sending-emails)
+6. [Navigation](#navigation)
 
 ## Hinting
 
-Hints can be issued on the [hinting page](/admin/hinting). 
+Hints can be issued on the [hinting page](/admin/hinting).
 
 ## Errata
 
@@ -28,20 +28,32 @@ Errata can be issued on the [errata page](/admin/errata). This will send an emai
 ### Schema
 
 ```ts
-{{{ team_schema }}}
+{
+  {
+    {
+      team_schema;
+    }
+  }
+}
 ```
 
 The `id` is the username for logging in, and the `displayName` is what is shown on the leaderboard.
 
 The `password` is hashed, so don't change it directly on the database. The only way to do it is to visit the individual teams page (more information [here](/resetting-passwords)).
 
-The `role` determines the level of privileges for the team. 
-Generally, admins can access every part of the site (including `/admin`), testsolvers can view puzzles before the `HUNT_START_TIME` (defined in hunt.config.ts), and regular users can only see puzzles when the `HUNT_START_TIME` has passed. 
+The `role` determines the level of privileges for the team.
+Generally, admins can access every part of the site (including `/admin`), testsolvers can view puzzles before the `HUNT_START_TIME` (defined in hunt.config.ts), and regular users can only see puzzles when the `HUNT_START_TIME` has passed.
 Team roles can be toggled on the [teams table](/admin/teams).
 The current role enum in this codebase is:
 
 ```ts
-{{{ role_enum }}}
+{
+  {
+    {
+      role_enum;
+    }
+  }
+}
 ```
 
 By default, teams have either an "in-person" or "remote" `interactionMode`
@@ -50,13 +62,20 @@ Team interaction modes can be toggled on the [teams table](/admin/teams).
 The current enum in this codebase is:
 
 ```ts
-{{{ interaction_mode_enum }}}
+{
+  {
+    {
+      interaction_mode_enum;
+    }
+  }
+}
 ```
 
 ### The teams table
 
 The [teams table](/admin/teams) contains all the teams registered on the site. Its features include:
-1. Text filter 
+
+1. Text filter
 2. Interaction mode filter
 3. Compact and regular view toggle
 4. Pagination
@@ -88,7 +107,7 @@ This can be done on the [teams table](/admin/teams).
 
 1. Have the admin [register](/register) on the site
 2. Find the team on the [teams table](/admin/teams)
-3. Toggle the **Role** cell 
+3. Toggle the **Role** cell
 4. Save your changes
 
 ### Adding new testsolvers
@@ -97,7 +116,7 @@ This can be done on the [teams table](/admin/teams).
 
 1. Have the testsolvers [register](/register) on the site
 2. Find the team on the [teams table](/admin/teams)
-3. Toggle the **Role** cell 
+3. Toggle the **Role** cell
 4. Save your changes
 
 ### Changing interaction modes
@@ -105,12 +124,12 @@ This can be done on the [teams table](/admin/teams).
 This can be done on the [teams table](/admin/teams).
 
 1. Find the team on the [teams table](/admin/teams)
-3. Toggle the **Mode** cell 
-4. Save your changes
+2. Toggle the **Mode** cell
+3. Save your changes
 
 ### Resetting passwords
 
-This can be done on individual teams pages. 
+This can be done on individual teams pages.
 
 The password is hashed, so do not edit the password column on the database directly.
 
