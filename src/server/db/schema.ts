@@ -21,12 +21,16 @@ import {
 
 export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 
+/** BEGIN_SNIPPET:ROLE_ENUM */
 export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
+/** END_SNIPPET:ROLE_ENUM */
 
+/** BEGIN_SNIPPET:INTERACTION_MODE_ENUM */
 export const interactionModeEnum = pgEnum("interaction_type", [
   "in-person",
   "remote",
 ]);
+/** END_SNIPPET:INTERACTION_MODE_ENUM */
 
 export const hintStatusEnum = pgEnum("status", [
   "no_response",
@@ -45,6 +49,7 @@ export const unlockTypeEnum = pgEnum("unlock_type", [
   /* "time_unlock" */
 ]);
 
+/** BEGIN_SNIPPET:TEAM_SCHEMA */
 export const teams = createTable("team", {
   id: varchar("id", { length: 255 }).primaryKey(), // login username
   displayName: varchar("display_name", { length: 255 }).notNull(),
@@ -66,6 +71,7 @@ export const teams = createTable("team", {
     .notNull()
     .default(""),
 });
+/** END_SNIPPET:TEAM_SCHEMA */
 
 export const puzzles = createTable("puzzle", {
   // This is also the slug used in URLS to identify this puzzle
