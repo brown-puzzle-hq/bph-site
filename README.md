@@ -64,6 +64,7 @@ POSTGRES_URL_NO_SSL=""
 POSTGRES_USER=""
 
 # Communication (optional)
+# https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
 DISCORD_WEBHOOK_URL=""
 DISCORD_WEBHOOK_URL_HINT=""
 DISCORD_WEBHOOK_URL_GUESS=""
@@ -72,7 +73,8 @@ DISCORD_WEBHOOK_URL_FEEDBACK=""
 DISCORD_WEBHOOK_URL_TEAM=""
 DISCORD_WEBHOOK_URL_DEV=""
 
-RESEND_API_KEY="" # https://resend.com/api-keys
+# https://resend.com/api-keys
+RESEND_API_KEY=""
   ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.

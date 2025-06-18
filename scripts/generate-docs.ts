@@ -34,12 +34,22 @@ async function main() {
     "src/server/db/schema.ts",
     "INTERACTION_MODE_ENUM",
   );
+  const discord_message = await extractSnippet(
+    "src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts",
+    "DISCORD_MESSAGE",
+  );
+  const color_config = await extractSnippet(
+    "tailwind.config.ts",
+    "COLOR_CONFIG",
+  );
 
   const snippets = {
     env_example,
     team_schema,
     role_enum,
     interaction_mode_enum,
+    discord_message,
+    color_config,
   };
 
   const files = [

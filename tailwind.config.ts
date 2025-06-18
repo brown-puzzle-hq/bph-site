@@ -19,6 +19,7 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      /** BEGIN_SNIPPET:COLOR_CONFIG */
       colors: {
         // Main is the primary color of the site
         "main-bg": "#452c63",
@@ -43,6 +44,7 @@ export default {
         "incorrect-guess": colors.rose[300],
         error: colors.red[400],
       },
+      /** END_SNIPPET:COLOR_CONFIG */
       typography: ({ theme }: { theme: any }) => ({
         wrapup: {
           css: {
