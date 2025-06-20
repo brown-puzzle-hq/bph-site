@@ -4,9 +4,9 @@
 2. [Setup](#setup)
 3. [Architecture](#architecture)
 4. [Files](#files)
-    1. [Hunt configuration](#hunt-configuration)
-    2. [Next.js and Tailwind](#nextjs-and-tailwind)
-    3. [Docs](#docs)
+   1. [Hunt configuration](#hunt-configuration)
+   2. [Next.js and Tailwind](#nextjs-and-tailwind)
+   3. [Docs](#docs)
 5. [Communication](#communication)
 6. [Final Checks](#final-checks)
 7. [References](#references)
@@ -162,16 +162,16 @@ To debug permissions problem, check
 
 ### Next.js and Tailwind
 
-| Path       | Description                            |
-| ---------- | -------------------------------------- |
-| \*.tsx     | React component                        |
-| page.tsx   | Next.js page                           |
-| layout.tsx | Next.js layout page                    |
-| \*.ts      | Typescript file                        |
-| actions.ts | Server Actions                         |
-| folder   | Route segment                          |
-| [folder] | Dynamic route segment                  |
-| (folder) | Group routes without affecting routing |
+| Path               | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| \*.tsx             | React component                                |
+| page.tsx           | Next.js page                                   |
+| layout.tsx         | Next.js layout page                            |
+| \*.ts              | Typescript file                                |
+| actions.ts         | Server Actions                                 |
+| folder             | Route segment                                  |
+| [folder]           | Dynamic route segment                          |
+| (folder)           | Group routes without affecting routing         |
 | tailwind.config.ts | Tailwind configuration file with custom styles |
 | styles/\*.css      | CSS file                                       |
 
@@ -181,21 +181,22 @@ More information about the Next.js file structure [here](https://nextjs.org/docs
 
 ### Docs
 
-| Path            | Description                                                                                 |
-| --------------- | ------------------------------------------------------------------------------------------- |
-| next.config.mjs | Next.js configuration files, contains MDX plugins                                           |
-| /docs           | Docs folder                                                                                 |
-| /scripts        | Scripts folder                                                                              |
-| \*.md           | Markdown file                                                                               |
-| page.mdx        | MDX (Markdown + React) file |
-| \*.template.mdx | Handlebars template |
+| Path            | Description                                       |
+| --------------- | ------------------------------------------------- |
+| next.config.mjs | Next.js configuration files, contains MDX plugins |
+| /docs           | Docs folder                                       |
+| /scripts        | Scripts folder                                    |
+| \*.md           | Markdown file                                     |
+| page.mdx        | MDX (Markdown + React) file                       |
+| \*.template.mdx | Handlebars template                               |
 
-The docs are written in MDX (`*.mdx`). Note that `page.mdx` files are automatically gets converted into a normal page at built-time. 
+The docs are written in MDX (`*.mdx`). Note that `page.mdx` files are automatically gets converted into a normal page at built-time.
 
 Sometimes, its useful to provide snippets of the codebase inside of the docs. To do that:
+
 1. Take a look at `/scripts/generate-docs.ts`, which is automatically called at runtime
 2. Make a `*.template.mdx` file in the folder
-3. Label the region that you want as a snippet 
+3. Label the region that you want as a snippet
 4. Add the relevent paths and snippet names to `/scripts/generate-docs.ts`
 
 ## Communication
