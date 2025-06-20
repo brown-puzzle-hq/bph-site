@@ -147,9 +147,11 @@ export async function handleGuess(puzzleId: string, guess: string) {
     return { error: "An unexpected error occurred. Please try again." };
   }
 
+  /** BEGIN_SNIPPET:DISCORD_MESSAGE */
   // Message the guess channel
   const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
   await sendBotMessage(guessMessage, "guess");
+  /** END_SNIPPET:DISCORD_MESSAGE */
 
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt
