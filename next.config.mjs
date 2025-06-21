@@ -1,6 +1,7 @@
 import createMDX from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import remarkGFM from "remark-gfm";
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
@@ -26,6 +27,7 @@ const nextConfig = {
 const withMDX = createMDX({
   extension: /\.(md|mdx)$/,
   options: {
+    remarkPlugins: [remarkGFM],
     rehypePlugins: [
       rehypeSlug,
       [
