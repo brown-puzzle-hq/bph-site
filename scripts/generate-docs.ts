@@ -14,10 +14,23 @@ async function extractSnippet(file: string, marker: string) {
     throw new Error(`Snippet markers not found for ${marker}`);
   }
 
-  return lines
-    .slice(startIndex + 1, endIndex)
-    .join("\n")
-    .trim();
+  const snippetLines = lines.slice(startIndex + 1, endIndex);
+
+  // Determine minimum indentation
+  const indentLengths = snippetLines
+    .filter((line) => line.trim() !== "")
+    .map((line) => line.match(/^(\s*)/)![0].length);
+
+  const minIndent = Math.min(...indentLengths);
+
+  // Remove from each line
+  const normalized = snippetLines.map((line) =>
+    line.startsWith(" ".repeat(minIndent))
+      ? line.slice(minIndent)
+      : line.trimStart() // fallback if inconsistent
+  );
+
+  return normalized.join("\n");
 }
 
 async function main() {
