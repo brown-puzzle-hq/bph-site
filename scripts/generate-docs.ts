@@ -24,10 +24,11 @@ async function extractSnippet(file: string, marker: string) {
   const minIndent = Math.min(...indentLengths);
 
   // Remove from each line
-  const normalized = snippetLines.map((line) =>
-    line.startsWith(" ".repeat(minIndent))
-      ? line.slice(minIndent)
-      : line.trimStart() // fallback if inconsistent
+  const normalized = snippetLines.map(
+    (line) =>
+      line.startsWith(" ".repeat(minIndent))
+        ? line.slice(minIndent)
+        : line.trimStart(), // fallback if inconsistent
   );
 
   return normalized.join("\n");
