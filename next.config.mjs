@@ -2,6 +2,7 @@ import createMDX from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkGFM from "remark-gfm";
+import rehypeSnippetLink from "./scripts/rehype-snippet-link.js";
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
@@ -36,6 +37,13 @@ const withMDX = createMDX({
           behavior: "prepend",
         },
       ],
+      [
+        rehypeSnippetLink,
+        {
+          repoUrl: "https://github.com/brown-puzzle-hq/bph-site",
+          branch: "main",
+        },
+      ]
     ],
   },
 });

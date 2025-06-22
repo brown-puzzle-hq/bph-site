@@ -67,7 +67,7 @@ There is more information on the [GitHub docs](https://docs.github.com/en/reposi
 
 1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
 
-```
+```example file=.env.example
 # This file will be committed to version control, so make sure not to have any
 # secrets in it. If you are cloning this repo, create a copy of this file named
 # ".env" and populate it with your secrets.
@@ -106,6 +106,7 @@ DISCORD_WEBHOOK_URL_DEV=""
 
 # https://resend.com/api-keys
 RESEND_API_KEY=""
+
 ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
@@ -157,31 +158,31 @@ Sessions are stored in Json Web Tokens (JWTs). The setup is in the `src/server/a
 
 On the frontend, the site has **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
 
-```
+```ts file=tailwind.config.ts:22-47
 colors: {
-        // Main is the primary color of the site
-        "main-bg": "#452c63",
-        "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
-        "main-header": "#e7e3fc",
-        "main-accent": "#d4a7fc",
+  // Main is the primary color of the site
+  "main-bg": "#452c63",
+  "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
+  "main-header": "#e7e3fc",
+  "main-accent": "#d4a7fc",
 
-        // Secondary is for text fields
-        "secondary-bg": "#e7e3fc",
-        "secondary-text": colors.gray[300], // This text goes with a dark background
-        "secondary-accent": colors.black, // This text goes with a light background
+  // Secondary is for text fields
+  "secondary-bg": "#e7e3fc",
+  "secondary-text": colors.gray[300], // This text goes with a dark background
+  "secondary-accent": colors.black, // This text goes with a light background
 
-        // Other backgrounds
-        "footer-bg": "#322046",
-        "nav-bg": "#452c63",
-        "tooltip-bg": colors.gray[900],
+  // Other backgrounds
+  "footer-bg": "#322046",
+  "nav-bg": "#452c63",
+  "tooltip-bg": colors.gray[900],
 
-        // Other text colors
-        link: colors.blue[300],
-        "correct-guess": colors.emerald[300],
-        "partial-guess": colors.yellow[300],
-        "incorrect-guess": colors.rose[300],
-        error: colors.red[400],
-      },
+  // Other text colors
+  link: colors.blue[300],
+  "correct-guess": colors.emerald[300],
+  "partial-guess": colors.yellow[300],
+  "incorrect-guess": colors.rose[300],
+  error: colors.red[400],
+},
 ```
 
 ## Files
@@ -263,10 +264,10 @@ Sometimes, its useful to provide snippets of the codebase inside of the docs. To
 
 The site uses Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
 
-```
+```ts file=src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts:150-154
 // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
-  await sendBotMessage(guessMessage, "guess");
+const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+await sendBotMessage(guessMessage, "guess");
 ```
 
 ## Final Checks

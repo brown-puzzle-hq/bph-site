@@ -1,5 +1,13 @@
 import fs from "fs/promises";
 import handlebars from "handlebars";
+import path from "path";
+
+async function extractAll(file: string) {
+  const content = await fs.readFile(file, "utf-8");
+  const ext = path.extname(file).slice(1);
+
+  return `\`\`\`${ext} file=${file}\n${content}\n\`\`\``;
+}
 
 async function extractSnippet(file: string, marker: string) {
   const content = await fs.readFile(file, "utf-8");
@@ -31,11 +39,12 @@ async function extractSnippet(file: string, marker: string) {
         : line.trimStart(), // fallback if inconsistent
   );
 
-  return normalized.join("\n");
+  const ext = path.extname(file).slice(1);
+  return `\`\`\`${ext} file=${file}:${startIndex + 1}-${endIndex + 1}\n${normalized.join("\n")}\n\`\`\``;
 }
 
 async function main() {
-  const env_example = (await fs.readFile(".env.example", "utf-8")).trim();
+  const env_example = await extractAll(".env.example");
   const team_schema = await extractSnippet(
     "src/server/db/schema.ts",
     "TEAM_SCHEMA",

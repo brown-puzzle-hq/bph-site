@@ -67,9 +67,7 @@ There is more information on the [GitHub docs](https://docs.github.com/en/reposi
 
 1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
 
-```
 {{{ env_example }}}
-```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
 
@@ -120,9 +118,7 @@ Sessions are stored in Json Web Tokens (JWTs). The setup is in the `src/server/a
 
 On the frontend, the site has **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
 
-```
 {{{ color_config }}}
-```
 
 ## Files
 
@@ -203,9 +199,7 @@ Sometimes, its useful to provide snippets of the codebase inside of the docs. To
 
 The site uses Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
 
-```
 {{{ discord_message }}}
-```
 
 ## Final Checks
 

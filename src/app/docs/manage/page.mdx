@@ -27,7 +27,7 @@ Errata can be issued on the [errata page](/admin/errata). This will send an emai
 
 ### Schema
 
-```ts
+```ts file=src/server/db/schema.ts:52-74
 export const teams = createTable("team", {
   id: varchar("id", { length: 255 }).primaryKey(), // login username
   displayName: varchar("display_name", { length: 255 }).notNull(),
@@ -60,7 +60,7 @@ Generally, admins can access every part of the site (including `/admin`), testso
 Team roles can be toggled on the [teams table](/admin/teams).
 The current role enum in this codebase is:
 
-```ts
+```ts file=src/server/db/schema.ts:24-26
 export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
 ```
 
@@ -69,7 +69,7 @@ In-person and remote teams are on separate leaderboards and may see different ve
 Team interaction modes can be toggled on the [teams table](/admin/teams).
 The current enum in this codebase is:
 
-```ts
+```ts file=src/server/db/schema.ts:28-33
 export const interactionModeEnum = pgEnum("interaction_type", [
   "in-person",
   "remote",

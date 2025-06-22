@@ -27,15 +27,7 @@ Errata can be issued on the [errata page](/admin/errata). This will send an emai
 
 ### Schema
 
-```ts
-{
-  {
-    {
-      team_schema;
-    }
-  }
-}
-```
+{{{ team_schema }}}
 
 The `id` is the username for logging in, and the `displayName` is what is shown on the leaderboard.
 
@@ -46,30 +38,14 @@ Generally, admins can access every part of the site (including `/admin`), testso
 Team roles can be toggled on the [teams table](/admin/teams).
 The current role enum in this codebase is:
 
-```ts
-{
-  {
-    {
-      role_enum;
-    }
-  }
-}
-```
+{{{ role_enum }}}
 
 By default, teams have either an "in-person" or "remote" `interactionMode`
 In-person and remote teams are on separate leaderboards and may see different versions of a puzzle.
 Team interaction modes can be toggled on the [teams table](/admin/teams).
 The current enum in this codebase is:
 
-```ts
-{
-  {
-    {
-      interaction_mode_enum;
-    }
-  }
-}
-```
+{{{ interaction_mode_enum }}}
 
 ### The teams table
 
