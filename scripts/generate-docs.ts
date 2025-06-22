@@ -3,14 +3,14 @@ import handlebars from "handlebars";
 import path from "path";
 
 async function extractAll(file: string) {
-  const content = await fs.readFile(file, "utf-8");
+  const content = (await fs.readFile(file, "utf-8")).trimEnd();
   const ext = path.extname(file).slice(1);
 
   return `\`\`\`${ext} file=${file}\n${content}\n\`\`\``;
 }
 
 async function extractSnippet(file: string, marker: string) {
-  const content = await fs.readFile(file, "utf-8");
+  const content = (await fs.readFile(file, "utf-8")).trimEnd();
   const start = `/** BEGIN_SNIPPET:${marker} */`;
   const end = `/** END_SNIPPET:${marker} */`;
 
