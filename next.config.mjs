@@ -43,7 +43,7 @@ const withMDX = createMDX({
           repoUrl: "https://github.com/brown-puzzle-hq/bph-site",
           branch: "main",
         },
-      ]
+      ],
     ],
   },
 });
