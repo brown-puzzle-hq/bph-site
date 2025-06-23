@@ -156,7 +156,7 @@ export const guesses = createTable(
       unique_guesses_team_puzzle_guess: unique("guess_team_puzzle_guess").on(
         table.teamId,
         table.puzzleId,
-        table.guess
+        table.guess,
       ),
     };
   },
