@@ -6,12 +6,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { insertAnswerToken } from "./actions";
 import { SquareCheckBig } from "lucide-react";
-
-function sanitizeAnswer(answer: any) {
-  return typeof answer === "string"
-    ? answer.toUpperCase().replace(/[^A-Z]/g, "")
-    : "";
-}
+import { sanitizeAnswer } from "@/hunt.config";
 
 const formSchema = z.object({
   answer: z.preprocess(
@@ -65,15 +60,16 @@ export default function EventForm({ eventId }: FormProps) {
                 <input
                   {...field}
                   onChange={(e) => {
-                    form.setValue(
-                      "answer",
-                      e.target.value.toUpperCase().replace(/[^A-Z ]/g, ""),
-                    );
+                    field.onChange(e);
                     setError(null);
+                  }}
+                  onBlur={() => {
+                    const cleaned = sanitizeAnswer(form.getValues("answer"));
+                    form.setValue("answer", cleaned, { shouldValidate: true });
                   }}
                   placeholder="TOKEN"
                   autoComplete="off"
-                  className={`w-full bg-inherit placeholder:text-white/40 ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none ${shaking ? "animate-shake" : ""}`}
+                  className={`w-full bg-inherit uppercase placeholder:text-white/40 ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none ${shaking ? "animate-shake" : ""}`}
                 />
               </FormControl>
             </FormItem>
