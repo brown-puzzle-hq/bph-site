@@ -2,7 +2,7 @@
 
 import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
-import { hash } from "bcryptjs";
+import { hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 import { IN_PERSON } from "~/hunt.config";

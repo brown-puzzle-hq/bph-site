@@ -6,8 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
 import { object, string } from "zod";
-import { compare } from "bcryptjs";
-
+import { compare } from "bcrypt";
 import { authConfig } from "./auth.config";
 
 export const signInSchema = object({
@@ -22,8 +21,7 @@ export const signInSchema = object({
 });
 
 /**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
+ * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session` object and keep type safety.
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {}
@@ -35,9 +33,6 @@ declare module "next-auth" {
   }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- */
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
@@ -49,28 +44,26 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          if (!credentials?.id || !credentials?.password) {
-            return null;
-          }
-
+          // Get id and password
+          if (!credentials?.id || !credentials?.password) return null;
           const { id, password } = await signInSchema.parseAsync(credentials);
 
+          // Get user
           const user = await db.query.teams.findFirst({
             where: eq(teams.id, id.toLowerCase()),
           });
+          if (!user) return null;
 
-          if (user) {
-            const validCredentials = await compare(password, user.password);
-            if (validCredentials) {
-              return {
-                id: user.id,
-                displayName: user.displayName,
-                role: user.role,
-                interactionMode: user.interactionMode,
-              };
-            }
-          }
-          return null;
+          // Check if credentials are valid
+          const validCredentials = await compare(password, user.password);
+          if (!validCredentials) return null;
+
+          return {
+            id: user.id,
+            displayName: user.displayName,
+            role: user.role,
+            interactionMode: user.interactionMode,
+          };
         } catch (error) {
           console.error(error);
           return null;
