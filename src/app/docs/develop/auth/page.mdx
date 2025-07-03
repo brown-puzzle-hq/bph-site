@@ -1,0 +1,21 @@
+# Authentication
+
+Authentication is handled by **Auth.js** v5 and `bcrypt`.
+
+**Auth.js** is used to handle the majority of the authentication process, including assigning JWTs (JSON Web Tokens) and managing sessions. We use the Credentials Provider to authenticate users with their teamId and password.
+
+`bcrypt` is used only to hash and verify passwords.
+
+## Files
+
+The two relevant files are:
+1. `bph-site/server/auth/auth.config.ts`
+2. `bph-site/server/auth/auth.ts`
+
+## Environment Variables
+
+**Auth.js** automatically uses the environment variables `AUTH_URL` and `AUTH_SECRET`.
+
+`AUTH_URL` should be the canonical URL of the site. Make sure to change this in production.
+
+`AUTH_SECRET` is used to encrypt the JWT. It is already the default value for the `secret` option in `authConfig`, so it is not necessary to set it there.
