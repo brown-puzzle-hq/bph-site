@@ -1,5 +1,28 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": [
+    "AUTH_SECRET",
+    "AUTH_URL",
+    "AUTH_DRIZZLE_URL",
+    "DATABASE_URL",
+    "POSTGRES_DATABASE",
+    "POSTGRES_HOST",
+    "POSTGRES_PASSWORD",
+    "POSTGRES_PRISMA_URL",
+    "POSTGRES_URL",
+    "POSTGRES_URL_NON_POOLING",
+    "POSTGRES_URL_NO_SSL",
+    "POSTGRES_USER",
+    "DISCORD_WEBHOOK_URL",
+    "DISCORD_WEBHOOK_URL_HINT",
+    "DISCORD_WEBHOOK_URL_GUESS",
+    "DISCORD_WEBHOOK_URL_FINISH",
+    "DISCORD_WEBHOOK_URL_FEEDBACK",
+    "DISCORD_WEBHOOK_URL_TEAM",
+    "DISCORD_WEBHOOK_URL_DEV",
+    "RESEND_API_KEY"
+  ],
+  "globalDependencies": [".env"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
