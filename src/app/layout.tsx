@@ -2,8 +2,9 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
-import { CommandPalette } from "~/components/nav/CommandPalette";
 import { auth } from "@/auth";
+import { Toaster } from "~/components/ui/toaster";
+import { CommandPalette } from "~/components/nav/CommandPalette";
 
 export const metadata: Metadata = {
   title: "Brown Puzzlehunt",
@@ -18,8 +19,11 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <Providers session={session}>
-        <CommandPalette />
-        {children}
+        <body>
+          <CommandPalette />
+          <Toaster />
+          {children}
+        </body>
       </Providers>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import { WebSocketProvider } from "~/components/websockets/WebsocketProvider";
 
 export function Providers({
   children,
@@ -11,7 +12,7 @@ export function Providers({
 }) {
   return (
     <SessionProvider refetchOnWindowFocus={false} session={session}>
-      {children}
+      <WebSocketProvider>{children}</WebSocketProvider>
     </SessionProvider>
   );
 }

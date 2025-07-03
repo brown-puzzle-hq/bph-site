@@ -1,14 +1,13 @@
 import "~/styles/globals.css";
 import Link from "next/link";
-import { Toaster } from "@/components/ui/toaster";
 import { HuntHamburgerMenu } from "./HuntHamburgerMenu";
 import { HuntTopNavSpacer } from "@/components/nav/HuntTopNavSpacer";
 
-export default async function RootLayout({
+export default async function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <body className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg text-main-text">
+    <div className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg text-main-text">
       {/* Navbar */}
       <div className="bg-nav-bg">
         <HuntHamburgerMenu />
@@ -17,8 +16,6 @@ export default async function RootLayout({
       {/* Navbar spacer */}
       <HuntTopNavSpacer />
       <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
-      <Toaster />
-
       <footer className="bg-footer-bg py-2 text-center text-xs">
         <p className="hidden sm:block">
           Having a good time? Want support more puzzlehunts like this in the
@@ -63,6 +60,6 @@ export default async function RootLayout({
           !
         </p>
       </footer>
-    </body>
+    </div>
   );
 }
