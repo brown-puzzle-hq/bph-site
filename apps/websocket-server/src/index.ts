@@ -1,0 +1,62 @@
+import express from "express";
+import { WebSocket, WebSocketServer } from "ws";
+import http from "http";
+import cors from "cors";
+
+const app = express();
+// TODO: currently forced to use http, not https in dev
+app.use(cors()); // TODO: need to fix in production
+app.get("/", (_req, res) => {
+  res.send("Brown Puzzlehunt Websocket Server");
+});
+
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+
+// teamId -> clients
+const channels = new Map<string, Set<WebSocket>>();
+const socketToTeam = new Map<WebSocket, string>();
+
+wss.on("connection", (ws) => {
+  // Message
+  ws.on("message", (msg) => {
+    const parsed = JSON.parse(msg.toString());
+    if (parsed.type !== "subscribe") return;
+    const teamId = parsed.teamId;
+    if (!teamId) return;
+
+    if (!channels.has(teamId)) channels.set(teamId, new Set());
+    channels.get(teamId)!.add(ws);
+    socketToTeam.set(ws, teamId);
+    console.log(`Added to channel ${teamId}`);
+  });
+
+  // Close
+  ws.on("close", () => {
+    const teamId = socketToTeam.get(ws);
+    if (teamId && channels.has(teamId)) {
+      channels.get(teamId)!.delete(ws);
+    }
+    console.log(`Removed from channel ${teamId}`);
+  });
+});
+
+app.post("/broadcast", express.json(), (req, res) => {
+  const { teamId, ...message } = req.body;
+  const clients = channels.get(teamId);
+  if (!clients) {
+    res.status(404).send("No such team channel");
+    return;
+  }
+  for (const client of clients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  }
+  res.status(200).send("Broadcasted");
+  console.log(`Broadcasted message to team ${teamId}`);
+});
+
+server.listen(1030, () => {
+  console.log("Server running on port 1030");
+});
