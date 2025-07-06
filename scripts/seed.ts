@@ -25,7 +25,7 @@ async function seed() {
     const username = faker.lorem.slug(2);
     // TODO: use common imported hash function
     const hashedPassword = bcrypt.hashSync(username, 10);
-    const phoneNumber = faker.phone.number({ style: "national" })
+    const phoneNumber = faker.phone.number({ style: "national" });
 
     return {
       id: username,
@@ -76,7 +76,9 @@ async function seed() {
 seed()
   .then(() => {
     console.log("✅ Seeding complete!");
-    console.log("📁 Consider running `pnpm seed:folders` if you haven't already.");
+    console.log(
+      "📁 Consider running `pnpm seed:folders` if you haven't already.",
+    );
     process.exit(0);
   })
   .catch((err) => {

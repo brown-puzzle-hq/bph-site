@@ -4,7 +4,11 @@ import { db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 
-const TEMPLATE_DIR = path.join(process.cwd(), "src/app/(hunt)/puzzle", "example");
+const TEMPLATE_DIR = path.join(
+  process.cwd(),
+  "src/app/(hunt)/puzzle",
+  "example",
+);
 const PUZZLE_DIR = path.join(process.cwd(), "src/app/(hunt)/puzzle");
 
 async function main() {
