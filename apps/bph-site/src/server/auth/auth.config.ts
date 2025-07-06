@@ -1,4 +1,5 @@
 import { type NextAuthConfig } from "next-auth";
+import { sign } from "jsonwebtoken";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -14,6 +15,18 @@ export const authConfig = {
         token.displayName = user.displayName;
         token.role = user.role;
         token.interactionMode = user.interactionMode;
+
+        // Manually sign JWT with user info for websockets
+        token.accessToken = sign(
+          {
+            id: user.id,
+            displayName: user.displayName,
+            role: user.role,
+            interactionMode: user.interactionMode,
+          },
+          process.env.AUTH_SECRET!,
+          { expiresIn: "98h" },
+        );
       }
       if (trigger === "update") {
         if (session?.displayName !== undefined) {
@@ -37,10 +50,10 @@ export const authConfig = {
           role: token.role as string,
           interactionMode: token.interactionMode as string,
         };
+        session.accessToken = token.accessToken as string;
       }
       return session;
     },
   },
-  // adapter: DrizzleAdapter(db),
   providers: [],
 } satisfies NextAuthConfig;

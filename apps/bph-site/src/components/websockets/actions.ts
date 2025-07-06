@@ -1,15 +1,15 @@
 "use server";
 import { type SocketMessage } from "./types";
+import { auth } from "~/server/auth/auth";
 
-export async function sendToWebsocketServer(
-  teamId: string,
-  msg: SocketMessage,
-) {
+export async function sendToWebsocketServer(msg: SocketMessage) {
+  const session = await auth();
+
   try {
     const res = await fetch("http://localhost:1030/broadcast", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId, ...msg }),
+      body: JSON.stringify({ teamId: session?.user.id, ...msg }),
     });
     if (!res.ok) {
       console.error(res.statusText);

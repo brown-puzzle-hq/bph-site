@@ -2,6 +2,16 @@ import express from "express";
 import { WebSocket, WebSocketServer } from "ws";
 import http from "http";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
+interface TokenPayload {
+  id: string;
+  displayName: string;
+  role: string;
+  interactionMode: string;
+}
 
 const app = express();
 // TODO: currently forced to use http, not https in dev
@@ -17,18 +27,44 @@ const wss = new WebSocketServer({ server });
 const channels = new Map<string, Set<WebSocket>>();
 const socketToTeam = new Map<WebSocket, string>();
 
-wss.on("connection", (ws) => {
-  // Message
-  ws.on("message", (msg) => {
-    const parsed = JSON.parse(msg.toString());
-    if (parsed.type !== "subscribe") return;
-    const teamId = parsed.teamId;
-    if (!teamId) return;
+wss.on("connection", (ws, req) => {
+  // Make sure that AUTH_SECRET exists
+  if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
+
+  const url = new URL(req.url || "", `http://${req.headers.host}`);
+  console.log(`Connecting with ${url}`);
+  const token = url.searchParams.get("token");
+  if (!token) {
+    console.error(`No token provided`);
+    ws.close(1008, "No token provided");
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.AUTH_SECRET) as TokenPayload;
+    const teamId = decoded.id;
 
     if (!channels.has(teamId)) channels.set(teamId, new Set());
     channels.get(teamId)!.add(ws);
     socketToTeam.set(ws, teamId);
-    console.log(`Added to channel ${teamId}`);
+    console.log("Authenticated user:", decoded);
+    console.log("Added to channel", teamId);
+  } catch (e) {
+    console.error("Invalid token");
+    ws.close(1009, "Invalid token");
+    return;
+  }
+
+  // Message
+  ws.on("message", (msg) => {
+    // const parsed = JSON.parse(msg.toString());
+    // if (parsed.type !== "subscribe") return;
+    // const teamId = parsed.teamId;
+    // if (!teamId) return;
+    // if (!channels.has(teamId)) channels.set(teamId, new Set());
+    // channels.get(teamId)!.add(ws);
+    // socketToTeam.set(ws, teamId);
+    // console.log(`Added to channel ${teamId}`);
   });
 
   // Close
@@ -45,6 +81,7 @@ app.post("/broadcast", express.json(), (req, res) => {
   const { teamId, ...message } = req.body;
   const clients = channels.get(teamId);
   if (!clients) {
+    console.error("No such team channel:", teamId);
     res.status(404).send("No such team channel");
     return;
   }

@@ -7,6 +7,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
+import { useSession } from "next-auth/react";
 import { toast } from "~/hooks/use-toast";
 import { type SocketMessage } from "./types";
 
@@ -14,9 +15,9 @@ const WebSocketContext = createContext<WebSocket | null>(null);
 export const useWebSocket = () => useContext(WebSocketContext);
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  // TODO: what even is this?
-  const socketRef = useRef<WebSocket | null>(null);
+  const socketRef = useRef<WebSocket | null>(null); // TODO: what even is this?
 
   // Use a toast
   const handleMessage = useCallback((event: MessageEvent) => {
@@ -45,11 +46,14 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Check that user is logged in
+    if (status !== "authenticated" || !session) return;
+    const token = session?.accessToken ?? "";
     // TODO: wss:// in production
-    const ws = new WebSocket("ws://localhost:1030");
+    const ws = new WebSocket(`ws://localhost:1030?token=${token}`);
 
     ws.onopen = () => {
-      ws.send(JSON.stringify({ type: "subscribe", teamId: "team-abc" }));
+      // ws.send(JSON.stringify({ type: "subscribe", teamId: "team-abc" }));
       console.log("✅ WebSocket connected");
     };
 
@@ -70,7 +74,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     setSocket(ws);
 
     return () => ws.close();
-  }, [handleMessage]);
+  }, [status, session, handleMessage]);
 
   return (
     <WebSocketContext.Provider value={socket}>

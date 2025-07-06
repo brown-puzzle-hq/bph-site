@@ -7,7 +7,7 @@ export default function Page() {
       <button
         className="mb-4 rounded bg-blue-500 px-4 py-2 text-white"
         onClick={async () =>
-          await sendToWebsocketServer("team-abc", {
+          await sendToWebsocketServer({
             type: "Toast",
             title: "Hi",
             description: "Hello",
@@ -20,7 +20,7 @@ export default function Page() {
       <button
         className="mb-4 rounded bg-blue-500 px-4 py-2 text-white"
         onClick={async () =>
-          await sendToWebsocketServer("team-abc", {
+          await sendToWebsocketServer({
             type: "UnlockedPuzzle",
             puzzleId: "example",
             puzzleName: "Example",
@@ -33,7 +33,7 @@ export default function Page() {
       <button
         className="mb-4 rounded bg-blue-500 px-4 py-2 text-white"
         onClick={async () =>
-          await sendToWebsocketServer("team-abc", {
+          await sendToWebsocketServer({
             type: "SolvedPuzzle",
             puzzleId: "example",
             puzzleName: "Example",
