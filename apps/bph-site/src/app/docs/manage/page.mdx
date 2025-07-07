@@ -27,14 +27,28 @@ Errata can be issued on the [errata page](/admin/errata). This will send an emai
 
 ### Schema
 
-```ts
-{
-  {
-    {
-      team_schema;
-    }
-  }
-}
+```ts file=src/server/db/schema.ts:52-74
+export const teams = createTable("team", {
+  id: varchar("id", { length: 255 }).primaryKey(), // login username
+  displayName: varchar("display_name", { length: 255 }).notNull(),
+  password: varchar("password", { length: 255 }).notNull(),
+  role: roleEnum("role").notNull().default("user"),
+  members: text("members").notNull().default("[]"),
+  interactionMode: interactionModeEnum("interaction_type").notNull(),
+  createTime: timestamp("create_time", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  finishTime: timestamp("finish_time", { withTimezone: true }),
+
+  // Only for in-person teams
+  // NOTE: defaults seem to not be working, entries still get added with NULL by default
+  numCommunity: varchar("num_community", { length: 31 }).notNull().default(""),
+  phoneNumber: varchar("phone_number", { length: 31 }).notNull().default(""),
+  roomNeeded: boolean("room_needed").notNull().default(false),
+  solvingLocation: varchar("solving_location", { length: 255 })
+    .notNull()
+    .default(""),
+});
 ```
 
 The `id` is the username for logging in, and the `displayName` is what is shown on the leaderboard.
@@ -46,14 +60,8 @@ Generally, admins can access every part of the site (including `/admin`), testso
 Team roles can be toggled on the [teams table](/admin/teams).
 The current role enum in this codebase is:
 
-```ts
-{
-  {
-    {
-      role_enum;
-    }
-  }
-}
+```ts file=src/server/db/schema.ts:24-26
+export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
 ```
 
 By default, teams have either an "in-person" or "remote" `interactionMode`
@@ -61,14 +69,11 @@ In-person and remote teams are on separate leaderboards and may see different ve
 Team interaction modes can be toggled on the [teams table](/admin/teams).
 The current enum in this codebase is:
 
-```ts
-{
-  {
-    {
-      interaction_mode_enum;
-    }
-  }
-}
+```ts file=src/server/db/schema.ts:28-33
+export const interactionModeEnum = pgEnum("interaction_type", [
+  "in-person",
+  "remote",
+]);
 ```
 
 ### The teams table

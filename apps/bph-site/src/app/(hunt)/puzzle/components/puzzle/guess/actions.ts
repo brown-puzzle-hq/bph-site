@@ -52,7 +52,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
   const tasks = module?.tasks ?? {};
   const partialSolutions = module?.partialSolutions ?? {};
 
-  // TODO: Could have a TOCTOU error here
+  // TODO: Could have a TOCTTOU error here
   // Check if the number of guesses is exceeded
   if (
     puzzle.guesses.filter(

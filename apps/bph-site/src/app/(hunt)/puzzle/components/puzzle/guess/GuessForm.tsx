@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,16 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { handleGuess } from "./actions";
-import { useTransition } from "react";
 import { toast } from "sonner";
 import { NumberOfGuesses } from "../DefaultPuzzlePage";
 import { Infinity } from "lucide-react";
-
-function sanitizeAnswer(answer: any) {
-  return typeof answer === "string"
-    ? answer.toUpperCase().replace(/[^A-ZÜ]/g, "")
-    : "";
-}
+import { sanitizeAnswer } from "@/hunt.config";
 
 const formSchema = z.object({
   guess: z.preprocess(
@@ -86,13 +80,14 @@ export default function GuessForm({
                 <Input
                   {...field}
                   onChange={(e) => {
-                    form.setValue(
-                      "guess",
-                      e.target.value.toUpperCase().replace(/[^A-Z Ü]/g, ""),
-                    );
+                    field.onChange(e);
                     setError(null);
                   }}
-                  className="bg-secondary-bg text-secondary-accent"
+                  onBlur={() => {
+                    const cleaned = sanitizeAnswer(form.getValues("guess"));
+                    form.setValue("guess", cleaned, { shouldValidate: true });
+                  }}
+                  className="bg-secondary-bg uppercase text-secondary-accent"
                   disabled={isSolved || !numberOfGuessesLeft || isPending}
                   autoComplete="off"
                 />

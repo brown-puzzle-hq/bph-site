@@ -1,141 +1,19 @@
 # Developing the site
 
-1. [Quick start](#quick-start)
-2. [Architecture](#architecture)
-3. [Copying this repository](#copying-this-repository)
-4. [Communication](#communication)
-5. [Hunt Structure](#hunt-structure)
+1. [Copying the repository](#copying-the-repository)
+2. [Setup](#setup)
+3. [Architecture](#architecture)
+4. [Files](#files)
+   1. [Hunt configuration](#hunt-configuration)
+   2. [Next.js and Tailwind](#nextjs-and-tailwind)
+   3. [Docs](#docs)
+5. [Communication](#communication)
 6. [Final Checks](#final-checks)
 7. [References](#references)
 
-## Quick Start
+## Copying the repository
 
-1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
-
-```
-# This file will be committed to version control, so make sure not to have any
-# secrets in it. If you are cloning this repo, create a copy of this file named
-# ".env" and populate it with your secrets.
-
-# When adding additional *required* environment variables, the schema in "/src/env.js"
-# should be updated accordingly.
-
-# Next Auth (required)
-# You can generate a new secret on the command line with:
-# openssl rand -base64 32
-# https://next-auth.js.org/configuration/options#secret
-AUTH_SECRET=""
-AUTH_URL="http://localhost:3000" # Remember to change this for production
-AUTH_DRIZZLE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
-
-# Database (required)
-DATABASE_URL=""
-POSTGRES_DATABASE=""
-POSTGRES_HOST=""
-POSTGRES_PASSWORD=""
-POSTGRES_PRISMA_URL=""
-POSTGRES_URL=""
-POSTGRES_URL_NON_POOLING=""
-POSTGRES_URL_NO_SSL=""
-POSTGRES_USER=""
-
-# Communication (optional)
-# https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
-DISCORD_WEBHOOK_URL=""
-DISCORD_WEBHOOK_URL_HINT=""
-DISCORD_WEBHOOK_URL_GUESS=""
-DISCORD_WEBHOOK_URL_FINISH=""
-DISCORD_WEBHOOK_URL_FEEDBACK=""
-DISCORD_WEBHOOK_URL_TEAM=""
-DISCORD_WEBHOOK_URL_DEV=""
-
-# https://resend.com/api-keys
-RESEND_API_KEY=""
-```
-
-2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
-
-```
-pnpm run db:push
-```
-
-You can view the current state of the database and edit tables on Drizzle Studio.
-
-```
- pnpm run db:studio
-```
-
-3. Download all dependencies. You need to do this every time a dependency in `package.json` changes.
-
-```
-pnpm install
-```
-
-4. Start the development server.
-
-```
-pnpm run dev
-```
-
-After a second, you'll see this text appear in the terminal:
-
-```
-▲ Next.js 14.2.15
-- Local:        http://localhost:3000
-- Environments: .env
-```
-
-Navigate to [http://localhost:3000/](http://localhost:3000/) to see the development server.
-
-## Architecture
-
-This project is built using **Next.js v14** using the App Router.
-
-We use Neon **Postgres** as the database and **Drizzle** as the ORM. The schema for the database is in the `src/server/db` folder. It's a good starting point.
-
-Most of the client-to-server communication is currently handled by Vercel **Server Actions**.
-Server Actions allow us to execute database queries or API calls inside of a React component without needing to explicitly define an API route.
-Note that Server Actions can only be defined in Server Components marked with the `use server` directive.
-To make them available in Client Components marked with the `use client` directive, they must be imported or passed as a prop.
-Server Actions are generally located in `actions.tsx` files distributed throughout `src/app`.
-
-Authentication, authorization, and session management is handled by **Auth.js**.
-We only support username/password authentication using the `Credentials` provider.
-Sessions are stored in Json Web Tokens (JWTs) instead of database sessions.
-The setup is in the `src/server/auth` folder.
-
-Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
-
-```
-colors: {
-        // Main is the primary color of the site
-        "main-bg": "#452c63",
-        "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
-        "main-header": "#e7e3fc",
-        "main-accent": "#d4a7fc",
-
-        // Secondary is for text fields
-        "secondary-bg": "#e7e3fc",
-        "secondary-text": colors.gray[300], // This text goes with a dark background
-        "secondary-accent": colors.black, // This text goes with a light background
-
-        // Other backgrounds
-        "footer-bg": "#322046",
-        "nav-bg": "#452c63",
-        "tooltip-bg": colors.gray[900],
-
-        // Other text colors
-        link: colors.blue[300],
-        "correct-guess": colors.emerald[300],
-        "partial-guess": colors.yellow[300],
-        "incorrect-guess": colors.rose[300],
-        error: colors.red[400],
-      },
-```
-
-## Copying this repository
-
-I recommend duplicating this repository for each hunt. If you want to get updates from the original repository, you can follow these steps:
+I recommend duplicating the repository for each hunt. If you want to get updates from the original repository, you can follow these steps:
 
 1. Create a bare clone of this repository.
 
@@ -185,19 +63,211 @@ I recommend duplicating this repository for each hunt. If you want to get update
 
 There is more information on the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository).
 
+## Setup
+
+1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
+
+```example file=.env.example
+# This file will be committed to version control, so make sure not to have any
+# secrets in it. If you are cloning this repo, create a copy of this file named
+# ".env" and populate it with your secrets.
+
+# When adding additional *required* environment variables, the schema in "/src/env.js"
+# should be updated accordingly.
+
+# Next Auth (required)
+# You can generate a new secret on the command line with:
+# openssl rand -base64 32
+# https://next-auth.js.org/configuration/options#secret
+AUTH_SECRET=""
+AUTH_URL="http://localhost:3000" # Remember to change this for production
+AUTH_DRIZZLE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
+
+# Database (required)
+DATABASE_URL=""
+POSTGRES_DATABASE=""
+POSTGRES_HOST=""
+POSTGRES_PASSWORD=""
+POSTGRES_PRISMA_URL=""
+POSTGRES_URL=""
+POSTGRES_URL_NON_POOLING=""
+POSTGRES_URL_NO_SSL=""
+POSTGRES_USER=""
+
+# Communication (optional)
+# https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
+DISCORD_WEBHOOK_URL=""
+DISCORD_WEBHOOK_URL_HINT=""
+DISCORD_WEBHOOK_URL_GUESS=""
+DISCORD_WEBHOOK_URL_FINISH=""
+DISCORD_WEBHOOK_URL_FEEDBACK=""
+DISCORD_WEBHOOK_URL_TEAM=""
+DISCORD_WEBHOOK_URL_DEV=""
+
+# https://resend.com/api-keys
+RESEND_API_KEY=""
+```
+
+2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
+
+   ```
+   pnpm run db:push
+   ```
+
+   You can view the current state of the database and edit tables on Drizzle Studio.
+
+   ```
+   pnpm run db:studio
+   ```
+
+3. Download all dependencies. You need to do this every time a dependency in `package.json` changes.
+
+   ```
+   pnpm install
+   ```
+
+4. Start the development server.
+
+   ```
+   pnpm run dev
+   ```
+
+   After a second, you'll see this text appear in the terminal:
+
+   ```
+   ▲ Next.js 14.2.15
+   - Local:        http://localhost:3000
+   - Environments: .env
+   ```
+
+   Navigate to [http://localhost:3000/](http://localhost:3000/) to see the development server.
+
+## Architecture
+
+The site is built using **Next.js v14** using the App Router. The databse is Neon **Postgres** with **Drizzle** ORM. The schema for the database is in the `src/server/db` folder.
+
+Most of the client-to-server communication is currently handled by Vercel **Server Actions**.
+Server Actions allow us to execute database queries or API calls inside of a React component without needing to explicitly define an API route.
+
+Note that Server Actions can only be defined in Server Components marked with the `use server` directive. To make them available in Client Components marked with the `use client` directive, they must be imported or passed as a prop. Server Actions are generally located in `actions.ts` files distributed throughout `src/app`.
+
+Authentication, authorization, and session management is handled by **Auth.js**.
+The project only supports username/password authentication using the `Credentials` provider.
+Sessions are stored in Json Web Tokens (JWTs). The setup is in the `src/server/auth` folder.
+
+On the frontend, the site has **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
+
+```ts file=tailwind.config.ts:22-47
+colors: {
+  // Main is the primary color of the site
+  "main-bg": "#452c63",
+  "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
+  "main-header": "#e7e3fc",
+  "main-accent": "#d4a7fc",
+
+  // Secondary is for text fields
+  "secondary-bg": "#e7e3fc",
+  "secondary-text": colors.gray[300], // This text goes with a dark background
+  "secondary-accent": colors.black, // This text goes with a light background
+
+  // Other backgrounds
+  "footer-bg": "#322046",
+  "nav-bg": "#452c63",
+  "tooltip-bg": colors.gray[900],
+
+  // Other text colors
+  link: colors.blue[300],
+  "correct-guess": colors.emerald[300],
+  "partial-guess": colors.yellow[300],
+  "incorrect-guess": colors.rose[300],
+  error: colors.red[400],
+},
+```
+
+## Files
+
+### Hunt configuration
+
+| Path                           | Description                      |
+| ------------------------------ | -------------------------------- |
+| .env                           | Environment variables            |
+| src/env.js                     | Mirorrs .env for the application |
+| src/hunt.config.ts             | Main hunt configuration file     |
+| src/app/(hunt)/\*\*/actions.ts | Server Actions                   |
+| src/middleware.ts              | Next.js request middleware       |
+
+The `.env` files need to be set up first. It affects database, Discord, and Resend integration. If you add new environment variables, be sure to update `src/env.js` to reflect the changes.
+
+Basic hunt settings are controlled via `src/hunt.config.ts`. More advanced logic (such as unlock structure) should be handled in the `actions.ts` files in the `src/app/(hunt)/components/puzzle/` folder.
+
+In particular, the default unlock structure is **adjacency-based**. You can customize the `handleSolve` function in `src/app/(hunt)/components/puzzle/guess/actions.ts`.
+
+| Path                                              | Functions                                                         |
+| ------------------------------------------------- | ----------------------------------------------------------------- |
+| ../puzzle/actions.ts                              | `canViewPuzzle`, `canViewHint`, `canViewSolution`, `canViewStats` |
+| ../puzzle/components/puzzle/guess/actions.ts      | `handleGuess`, `handleSolve`                                      |
+| ../puzzle/components/hint/actions.ts              | `insertHintRequest`, `editMessage`, `insertReply`                 |
+| ../puzzle/components/puzzle-list/event/actions.ts | `insertAnswerToken`                                               |
+
+Note that the site automatically protects certain pages depending on
+
+1. Team role (admin, testsolver, user)
+2. Time (before, during, or after `HUNT_START_TIME`)
+
+To debug permissions problem, check
+
+1. `src/middleware.ts`, which protects `/admin` pages
+2. `canViewPuzzle`, `canViewHint`, `canViewSolution`, and `canViewStats` functions in `src/app/(hunt)/components/puzzle/actions.ts`, which protects `/puzzle` pages
+3. `hunt.config.ts`, which controls the `HUNT_START_TIME`
+
+### Next.js and Tailwind
+
+| Path               | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| \*.tsx             | React component                                |
+| page.tsx           | Next.js page                                   |
+| layout.tsx         | Next.js layout page                            |
+| \*.ts              | Typescript file                                |
+| actions.ts         | Server Actions                                 |
+| folder             | Route segment                                  |
+| [folder]           | Dynamic route segment                          |
+| (folder)           | Group routes without affecting routing         |
+| tailwind.config.ts | Tailwind configuration file with custom styles |
+| styles/\*.css      | CSS file                                       |
+
+Next.js supports Typescript (`*.ts`) and React components (`*tsx`). Folders inside of `src/app` are treated as route segments. For example, `src/app/(hunt)/page.tsx` represents the index page at `/`, and `src/app/(hunt)/puzzle/example/page.tsx` represents the page at `/puzzle/example`.
+
+More information about the Next.js file structure [here](https://nextjs.org/docs/app/getting-started/project-structure).
+
+### Docs
+
+| Path            | Description                                       |
+| --------------- | ------------------------------------------------- |
+| next.config.mjs | Next.js configuration files, contains MDX plugins |
+| /docs           | Docs folder                                       |
+| /scripts        | Scripts folder                                    |
+| \*.md           | Markdown file                                     |
+| page.mdx        | MDX (Markdown + React) file                       |
+| \*.template.mdx | Handlebars template                               |
+
+The docs are written in MDX (`*.mdx`). Note that `page.mdx` files are automatically gets converted into a normal page at built-time.
+
+Sometimes, its useful to provide snippets of the codebase inside of the docs. To do that:
+
+1. Take a look at `/scripts/generate-docs.ts`, which is automatically called at runtime
+2. Make a `*.template.mdx` file in the folder
+3. Label the region that you want as a snippet
+4. Add the relevent paths and snippet names to `/scripts/generate-docs.ts`
+
 ## Communication
 
-We use Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
+The site uses Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
 
-```
+```ts file=src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts:144-148
 // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
-  await sendBotMessage(guessMessage, "guess");
+const guessMessage = `🧩 **Guess** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) on [${puzzleId}](https://www.brownpuzzlehunt.com/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+await sendBotMessage(guessMessage, "guess");
 ```
-
-## Hunt Structure
-
-Most of the customizable features of the hunt structure are in `hunt.config.ts`. Timestamps are in UTC but can be converted to local time using the `FormattedTime` component in `src/lib/time.tsx`. Edit `/puzzle/actions.ts` to change how it handles guesses and solves.
 
 ## Final Checks
 

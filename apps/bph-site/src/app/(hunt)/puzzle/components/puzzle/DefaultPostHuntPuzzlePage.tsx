@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { NumberOfGuesses } from "./DefaultPuzzlePage";
 import { Infinity } from "lucide-react";
+import { sanitizeAnswer } from "@/hunt.config";
 
 type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;
@@ -57,12 +58,6 @@ export default function DefaultPostHuntPuzzlePage({
 
   // Guess form
   const GuessForm = ({ puzzleAnswer }: FormProps) => {
-    const sanitizeAnswer = (answer: any) => {
-      return typeof answer === "string"
-        ? answer.toUpperCase().replace(/[^A-ZÜ]/g, "")
-        : "";
-    };
-
     const formSchema = z.object({
       guess: z.preprocess(
         sanitizeAnswer,
@@ -123,13 +118,14 @@ export default function DefaultPostHuntPuzzlePage({
                   <Input
                     {...field}
                     onChange={(e) => {
-                      form.setValue(
-                        "guess",
-                        e.target.value.toUpperCase().replace(/[^A-Z Ü]/g, ""),
-                      );
+                      field.onChange(e);
                       setError(null);
                     }}
-                    className="bg-secondary-bg text-secondary-accent"
+                    onBlur={() => {
+                      const cleaned = sanitizeAnswer(form.getValues("guess"));
+                      form.setValue("guess", cleaned, { shouldValidate: true });
+                    }}
+                    className="bg-secondary-bg uppercase text-secondary-accent"
                     disabled={isSolved || !numberOfGuessesLeft}
                     autoComplete="off"
                   />

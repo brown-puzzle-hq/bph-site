@@ -1,8 +1,16 @@
 import fs from "fs/promises";
 import handlebars from "handlebars";
+import path from "path";
+
+async function extractAll(file: string) {
+  const content = (await fs.readFile(file, "utf-8")).trimEnd();
+  const ext = path.extname(file).slice(1);
+
+  return `\`\`\`${ext} file=${file}\n${content}\n\`\`\``;
+}
 
 async function extractSnippet(file: string, marker: string) {
-  const content = await fs.readFile(file, "utf-8");
+  const content = (await fs.readFile(file, "utf-8")).trimEnd();
   const start = `/** BEGIN_SNIPPET:${marker} */`;
   const end = `/** END_SNIPPET:${marker} */`;
 
@@ -14,14 +22,29 @@ async function extractSnippet(file: string, marker: string) {
     throw new Error(`Snippet markers not found for ${marker}`);
   }
 
-  return lines
-    .slice(startIndex + 1, endIndex)
-    .join("\n")
-    .trim();
+  const snippetLines = lines.slice(startIndex + 1, endIndex);
+
+  // Determine minimum indentation
+  const indentLengths = snippetLines
+    .filter((line) => line.trim() !== "")
+    .map((line) => line.match(/^(\s*)/)![0].length);
+
+  const minIndent = Math.min(...indentLengths);
+
+  // Remove from each line
+  const normalized = snippetLines.map(
+    (line) =>
+      line.startsWith(" ".repeat(minIndent))
+        ? line.slice(minIndent)
+        : line.trimStart(), // fallback if inconsistent
+  );
+
+  const ext = path.extname(file).slice(1);
+  return `\`\`\`${ext} file=${file}:${startIndex + 1}-${endIndex + 1}\n${normalized.join("\n")}\n\`\`\``;
 }
 
 async function main() {
-  const env_example = (await fs.readFile(".env.example", "utf-8")).trim();
+  const env_example = await extractAll(".env.example");
   const team_schema = await extractSnippet(
     "src/server/db/schema.ts",
     "TEAM_SCHEMA",

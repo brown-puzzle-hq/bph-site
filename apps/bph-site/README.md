@@ -37,7 +37,8 @@ On the development side:
 1. Set up the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to use the Neon Postgres database.
 
   ```
-  # This file will be committed to version control, so make sure not to have any
+  ```example file=.env.example
+# This file will be committed to version control, so make sure not to have any
 # secrets in it. If you are cloning this repo, create a copy of this file named
 # ".env" and populate it with your secrets.
 
@@ -75,6 +76,7 @@ DISCORD_WEBHOOK_URL_DEV=""
 
 # https://resend.com/api-keys
 RESEND_API_KEY=""
+```
   ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.

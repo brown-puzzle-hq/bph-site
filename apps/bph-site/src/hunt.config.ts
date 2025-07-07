@@ -29,13 +29,20 @@ export type Round = {
 /** GUESSES */
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
+/** Uppercase string and strip all characters except A-Z and 0-9 */
+export function sanitizeAnswer(answer: any) {
+  return typeof answer === "string"
+    ? answer.toUpperCase().replace(/[^A-Z0-9]/g, "")
+    : "";
+}
+
 /** PUZZLE UNLOCK SYSTEM
  * WARNING: make sure that everything here is a valid puzzle ID.
  * You should really avoid changing anything here after the hunt starts
  */
 
 /** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team. */
-export const INITIAL_PUZZLES: string[] = ["example"];
+export const INITIAL_PUZZLES: string[] = ["example-1"];
 
 /** Adjacency list for puzzles */
 export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
@@ -44,7 +51,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
 
 /** List of puzzles in each round. Each puzzle must be in a round. **/
 export const ROUNDS: Round[] = [
-  { name: "Example Round", puzzles: ["example"] },
+  { name: "Example Round", puzzles: ["example-1"] },
 ];
 
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */
