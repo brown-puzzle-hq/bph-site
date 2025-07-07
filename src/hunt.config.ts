@@ -29,6 +29,13 @@ export type Round = {
 /** GUESSES */
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
+/** Uppercase string and strip all characters except A-Z and 0-9 */
+export function sanitizeAnswer(answer: any) {
+  return typeof answer === "string"
+    ? answer.toUpperCase().replace(/[^A-Z0-9]/g, "")
+    : "";
+}
+
 /** PUZZLE UNLOCK SYSTEM
  * WARNING: make sure that everything here is a valid puzzle ID.
  * You should really avoid changing anything here after the hunt starts
