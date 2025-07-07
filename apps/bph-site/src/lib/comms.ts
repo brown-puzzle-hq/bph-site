@@ -92,6 +92,7 @@ export async function sendEmail(
 export type SocketMessage =
   | { type: "SolvedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
+  | { type: "FinishedHunt" }
   | { type: "Toast"; title: string; description: string };
 
 export async function sendToWebsocketServer(

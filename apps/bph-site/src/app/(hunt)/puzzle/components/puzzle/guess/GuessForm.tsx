@@ -69,13 +69,6 @@ export default function GuessForm({
           variant: "destructive",
         });
       }
-      if (result && result.hasFinishedHunt) {
-        toast({
-          className: "bg-emerald-300",
-          title: "You won the bloscar!",
-          description: "Congratulations on completing BPH 2025 🥳!",
-        });
-      }
       form.reset();
     });
   };

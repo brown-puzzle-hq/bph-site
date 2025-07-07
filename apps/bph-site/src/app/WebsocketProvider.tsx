@@ -28,14 +28,30 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       switch (data.type) {
         case "SolvedPuzzle":
           toast({ description: `Solved puzzle ${data.puzzleId}` });
+          toast({ description: `Solved puzzle ${data.puzzleId}` });
           break;
         case "UnlockedPuzzle":
-          toast({ description: `Unlocked puzzle ${data.puzzleId}` });
+          toast({ description: `Solved puzzle ${data.puzzleId}` });
+          toast({ description: `Solved puzzle ${data.puzzleId}` });
+          break;
+        case "FinishedHunt":
+          toast({
+            className: "bg-emerald-300",
+            title: "You won the bloscar!",
+            description: "Congratulations on completing BPH 2025 🥳!",
+          });
+          toast({
+            className: "bg-emerald-300",
+            title: "You won the bloscar!",
+            description: "Congratulations on completing BPH 2025 🥳!",
+          });
           break;
         case "Toast":
           toast({ title: data.title, description: data.description });
+          toast({ title: data.title, description: data.description });
           break;
         default:
+          toast({ description: JSON.stringify(data) });
           toast({ description: JSON.stringify(data) });
           break;
       }
@@ -74,7 +90,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     setSocket(ws);
 
     return () => ws.close();
-  }, [status, session, handleMessage]);
+  }, [status, session]);
 
   return (
     <WebSocketContext.Provider value={socket}>

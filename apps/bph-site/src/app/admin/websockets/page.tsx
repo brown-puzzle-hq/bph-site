@@ -4,7 +4,7 @@ import { sendToWebsocketServer } from "~/lib/comms";
 import { useSession } from "next-auth/react";
 import { Button } from "~/components/ui/button";
 
-export default function TestWebsocketPage() {
+export default function Page() {
   const { data } = useSession();
   const teamId = data.user.id;
 
@@ -59,6 +59,17 @@ export default function TestWebsocketPage() {
           }
         >
           ✅ Solve Puzzle
+        </Button>
+
+        <Button
+          className="w-full sm:w-auto"
+          onClick={() =>
+            handleClick({
+              type: "FinishedHunt",
+            })
+          }
+        >
+          🏆 Finish Hunt
         </Button>
       </div>
     </div>

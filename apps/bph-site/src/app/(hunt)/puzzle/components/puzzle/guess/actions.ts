@@ -1,6 +1,8 @@
 "use server";
+import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
+import { and, count, eq, inArray } from "drizzle-orm";
 import {
   puzzles,
   guesses,
@@ -12,21 +14,19 @@ import {
   answerTokens,
   solveTypeEnum,
 } from "@/db/schema";
-import { and, count, eq, inArray } from "drizzle-orm";
-import { auth } from "@/auth";
 import {
   IN_PERSON,
   NUMBER_OF_GUESSES_PER_PUZZLE,
   PUZZLE_UNLOCK_MAP,
   META_PUZZLES,
 } from "~/hunt.config";
-import { sendBotMessage } from "~/lib/comms";
+import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/utils";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 /** Handles a guess for a puzzle. May call handleSolve.
- * Returns a { error?: string, hasFinishedHunt?: boolean } */
+ * Returns a { error: string } */
 export async function handleGuess(puzzleId: string, guess: string) {
   // Check that the user is logged in
   const session = await auth();
@@ -34,7 +34,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
   const teamId = session.user.id;
   const currDate = new Date();
 
-  // Check that the guess is valid
+  // Check that the guess does not exceed guess limits
+  // Don't penalize guess if it is a task or partialSolution
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
     with: {
@@ -43,18 +44,15 @@ export async function handleGuess(puzzleId: string, guess: string) {
       },
     },
   });
-
   if (!puzzle) return { error: "Puzzle not found" };
 
-  // Don't penalize guess if it is a task
   const module = await import(`../../../${puzzleId}/data.tsx`).catch(
     () => null,
   );
   const tasks = module?.tasks ?? {};
   const partialSolutions = module?.partialSolutions ?? {};
 
-  // TODO:
-  // WARNING: Could have a TOCTOU error here
+  // TODO: Could have a TOCTOU error here
   // Check if the number of guesses is exceeded
   if (
     puzzle.guesses.filter(
@@ -65,21 +63,23 @@ export async function handleGuess(puzzleId: string, guess: string) {
     return { error: "You have no guesses left. Please contact HQ for help." };
   }
 
-  // Insert the guess into the guess table
-  // If the guess is correct, handle the solve
+  // Check if the puzzle was solved by being the right string
+  // or by using an answer token
   var isCorrect = puzzle.answer === guess;
   var solveType: (typeof solveTypeEnum.enumValues)[number] = "guess";
 
-  // If the guess is not correct and it is not a meta puzzle
-  // check if it is an answer token
   if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
+    // If the answer is an answer token answer, check if the
+    // answer token already exists and if it is used.
+    // If it already exists and is not used, update it with the puzzleId.
+    // If it does not exist, insert it into the table.
+    // Mark the guess as correct with solveType "answer_token"
     const event = await db.query.events.findFirst({
       columns: { id: true },
       where: eq(events.answer, guess),
     });
 
     if (event) {
-      // Check if it is an answer token.
       const answerToken = await db.query.answerTokens.findFirst({
         where: and(
           eq(answerTokens.eventId, event.id),
@@ -87,9 +87,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
         ),
       });
 
-      // If the answer token already exists and the it is not used yet,
-      // update it with the puzzleId and use it to solve the puzzle
-      // Mark the guess as correct with solveType "answer_token"
       if (answerToken && !answerToken.puzzleId) {
         isCorrect = true;
         solveType = "answer_token";
@@ -104,8 +101,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
           );
       }
 
-      // If there is no answer token, insert a new one
-      // Mark the guess as correct with solveType "answer_token"
       if (!answerToken) {
         isCorrect = true;
         solveType = "answer_token";
@@ -119,10 +114,10 @@ export async function handleGuess(puzzleId: string, guess: string) {
     }
   }
 
-  // Insert the guess into the guess table, handle the solve
-  // And check if the team has completed the hunt
-  var hasFinishedHunt = false;
-
+  // Insert the guess into the guess table
+  // If the guess is correct, handle the solve
+  let finishedHunt = false;
+  let unlockedPuzzles: string[] = [];
   try {
     await db.transaction(async (tx) => {
       await tx.insert(guesses).values({
@@ -132,17 +127,16 @@ export async function handleGuess(puzzleId: string, guess: string) {
         isCorrect,
         submitTime: currDate,
       });
-
-      // Handle the solve
       if (isCorrect) {
-        const res = await handleSolve(tx, teamId, puzzleId, solveType);
-        // Check if the team has completed the hunt
-        if (res?.hasFinishedHunt) hasFinishedHunt = true;
+        const result = await handleSolve(tx, teamId, puzzleId, solveType);
+        finishedHunt = result.finishedHunt;
+        unlockedPuzzles = result.unlockedPuzzles;
       }
     });
   } catch (e) {
     const error = ensureError(e);
     const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message} <@?1287563929282678795>`;
+    console.error(errorMessage);
     sendBotMessage(errorMessage, "dev");
     return { error: "An unexpected error occurred. Please try again." };
   }
@@ -153,11 +147,58 @@ export async function handleGuess(puzzleId: string, guess: string) {
   await sendBotMessage(guessMessage, "guess");
   /** END_SNIPPET:DISCORD_MESSAGE */
 
+  // Broadcast that the puzzle was solved
+  if (isCorrect)
+    await sendToWebsocketServer(teamId, {
+      type: "SolvedPuzzle",
+      puzzleId,
+      puzzleName: puzzle.name,
+    });
+
+  // for (const puzzleId of unlockedPuzzles) {
+  //   const puzzle = await db.query.puzzles.findFirst({
+  //     where: eq(puzzles.id, puzzleId),
+  //     columns: { name: true },
+  //   });
+  //
+  //   if (!puzzle) continue;
+  //
+  //   await sendToWebsocketServer(teamId, {
+  //     type: "UnlockedPuzzle",
+  //     puzzleId,
+  //     puzzleName: puzzle.name,
+  //   });
+  // }
+
+  // Broadcast all unlocked puzzles
+  await Promise.allSettled(
+    unlockedPuzzles.map(async (puzzleId) => {
+      const puzzleName = await db.query.puzzles
+        .findFirst({
+          where: eq(puzzles.id, puzzleId),
+          columns: { name: true },
+        })
+        .then((puzzle) => puzzle!.name);
+      await sendToWebsocketServer(teamId, {
+        type: "UnlockedPuzzle",
+        puzzleId,
+        puzzleName,
+      });
+    }),
+  );
+
+  // Disable for dev
+  const HQ_ROLE_ID = "";
+  // const HQ_ROLE_ID = "<@&900958940475559969>"
+
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt
-  if (hasFinishedHunt) {
-    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) ${new Date() < IN_PERSON.END_TIME ? "<@&900958940475559969>" : ""}`;
-    await sendBotMessage(finishMessage, "interaction");
+  if (finishedHunt) {
+    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.brownpuzzlehunt.com/teams/${teamId}) ${new Date() < IN_PERSON.END_TIME ? HQ_ROLE_ID : ""}`;
+    await Promise.allSettled([
+      sendBotMessage(finishMessage, "interaction"),
+      sendToWebsocketServer(teamId, { type: "FinishedHunt" }),
+    ]);
   }
 
   revalidatePath(`/puzzle/${puzzleId}`);
@@ -180,16 +221,21 @@ export async function handleGuess(puzzleId: string, guess: string) {
       );
   }
 
-  return { hasFinishedHunt };
+  return { error: null };
 }
 
-/** Handles a solve for a puzzle */
+/** Handles a solve for a puzzle. Returns whether the hunt was finished. */
+type SolveOutcome = {
+  finishedHunt: boolean;
+  unlockedPuzzles: string[];
+};
+
 export async function handleSolve(
   tx: TxType,
   teamId: string,
   puzzleId: string,
   type: (typeof solveTypeEnum.enumValues)[number],
-) {
+): Promise<SolveOutcome> {
   // Insert the solve into the solve table
   const currDate = new Date();
   await tx.insert(solves).values({
@@ -199,6 +245,9 @@ export async function handleSolve(
     type,
   });
 
+  var unlockedPuzzles: string[] = [];
+  var finishedHunt = false;
+
   // Unlock the next puzzles
   const nextPuzzles = PUZZLE_UNLOCK_MAP[puzzleId];
   if (nextPuzzles?.length) {
@@ -207,7 +256,12 @@ export async function handleSolve(
       puzzleId,
       unlockTime: currDate,
     }));
-    await tx.insert(unlocks).values(newUnlocks).onConflictDoNothing();
+    unlockedPuzzles = await tx
+      .insert(unlocks)
+      .values(newUnlocks)
+      .onConflictDoNothing()
+      .returning({ puzzleId: unlocks.puzzleId })
+      .then((res) => res.map((r) => r.puzzleId));
   }
 
   // Check if the team has just completed the hunt
@@ -225,9 +279,9 @@ export async function handleSolve(
         .update(teams)
         .set({ finishTime: new Date() })
         .where(eq(teams.id, teamId));
-      return { hasFinishedHunt: true };
+      finishedHunt = true;
     }
   }
 
-  return { hasFinishedHunt: false };
+  return { unlockedPuzzles, finishedHunt };
 }
