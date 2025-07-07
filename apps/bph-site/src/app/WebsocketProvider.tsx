@@ -1,20 +1,21 @@
 "use client";
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
   useRef,
   useCallback,
+  ReactNode,
 } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "~/hooks/use-toast";
-import { type SocketMessage } from "./types";
+import { type SocketMessage } from "~/lib/comms";
 
 const WebSocketContext = createContext<WebSocket | null>(null);
 export const useWebSocket = () => useContext(WebSocketContext);
 
-export function WebSocketProvider({ children }: { children: React.ReactNode }) {
+export function WebSocketProvider({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
   const socketRef = useRef<WebSocket | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);

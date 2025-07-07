@@ -1,7 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { WebSocketProvider } from "~/components/websockets/WebsocketProvider";
+import { WebSocketProvider } from "./WebsocketProvider";
 
 export function Providers({
   children,

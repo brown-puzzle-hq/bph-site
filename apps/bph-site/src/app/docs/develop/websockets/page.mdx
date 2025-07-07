@@ -55,9 +55,13 @@ Instead, the communication flow is:
 
 - The websockets server lives in `apps/ws-server`. The `index.ts` accepts connections from bph-site clients and forwards messages sent to the `/broadcast` endpoint.
 
-- WebSocket-related client code for bph-site is located in `apps/bph-site/src/components/websockets`. The `SocketMessage` type—shared between server and client—is defined in types.ts, and specifies the format of messages that ws-server can forward to clients.
+- Both bph-site client and bph-site server code lives in `apps/bph-site`.
 
-- To send a message from the bph-site server, use the `sendToWebsocketServer` helper in `actions.ts`. The message handler on the client side is implemented as the `handleMessage` function in `WebSocketProvider.tsx`.
+- To send a message from bph-site server to ws-server via server actions, use the `sendToWebsocketServer` helper function in `src/lib/comms.ts`.
+
+- To change how messages are handled on the client side, edit the `handleMessage` function in `WebSocketProvider.tsx`.
+
+- To support different types of messages, edit the `SocketMessage` type in `src/lib/comms.ts` and update the `handleMessage` function in `src/app/WebSocketProvider.tsx`.
 
 ### Environment setup
 

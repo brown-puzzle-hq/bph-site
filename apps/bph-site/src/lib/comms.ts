@@ -1,13 +1,9 @@
-import { Resend } from "resend";
 import axios from "axios";
+import { Resend } from "resend";
 import { ReactNode } from "react";
 import { ensureError } from "./utils";
 
-export function extractEmails(memberString: string): string[] {
-  return JSON.parse(memberString)
-    .map(([_, email]: [string, string]) => email)
-    .filter(Boolean);
-}
+/** Discord integration */
 
 type Channel =
   | "general"
@@ -55,6 +51,14 @@ export async function sendBotMessage(
   }
 }
 
+/** Email integration */
+
+export function extractEmails(memberString: string): string[] {
+  return JSON.parse(memberString)
+    .map(([_, email]: [string, string]) => email)
+    .filter(Boolean);
+}
+
 export async function sendEmail(
   to: string[],
   subject: string,
@@ -81,5 +85,29 @@ export async function sendEmail(
       "dev",
     );
     return { success: false, error: error.message };
+  }
+}
+
+/** Broadcast via websockets */
+export type SocketMessage =
+  | { type: "SolvedPuzzle"; puzzleName: string; puzzleId: string }
+  | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
+  | { type: "Toast"; title: string; description: string };
+
+export async function sendToWebsocketServer(
+  teamId: string,
+  msg: SocketMessage,
+) {
+  const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
+  if (!wsServer) return;
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  try {
+    await axios.post(`${protocol}://${wsServer}/broadcast`, {
+      teamId,
+      ...msg,
+    });
+  } catch (err) {
+    console.error("WebSocket server unreachable:", err);
   }
 }
