@@ -3,59 +3,23 @@ import { type SocketMessage } from "./types";
 import { auth } from "~/server/auth/auth";
 
 export async function sendToWebsocketServer(msg: SocketMessage) {
+  // Check that websocket server exists
+  const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
+  if (!wsServer) return;
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  // Check that user is logged in
   const session = await auth();
+  if (!session) return;
 
   try {
-    const res = await fetch("http://localhost:1030/broadcast", {
+    const res = await fetch(`${protocol}://${wsServer}/broadcast`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId: session?.user.id, ...msg }),
+      body: JSON.stringify({ teamId: session.user.id, ...msg }),
     });
-    if (!res.ok) {
-      console.error(res.statusText);
-    }
+    if (!res.ok) console.error("WebSocket server error:", res.statusText);
   } catch (err) {
-    console.error(err);
+    console.error("WebSocket server unreachable:", err);
   }
 }
-
-// export async function broadcastToTeam(teamId: string, msg: SocketMessage) {
-//   const clients = channels.get(teamId);
-//   if (!clients) return;
-//
-//   const payload = JSON.stringify(msg);
-//
-//   for (const client of clients) {
-//     if (client.readyState === WebSocket.OPEN) {
-//       client.send(payload);
-//     }
-//   }
-// }
-//
-// export async function notifyUnlockedPuzzle(
-//   puzzleName: string,
-//   puzzleId: string,
-// ) {
-//   try {
-//     const res = await fetch("http://localhost:1030/broadcast", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         teamId: "team-abc",
-//         message: `Unlocked ${puzzleId}`,
-//       }),
-//     });
-//     if (!res.ok) {
-//       console.error("Failed to notify unlocked puzzle: ", res.statusText);
-//     }
-//   } catch (err) {
-//     console.error("Failed to notify unlocked puzzle: ", err);
-//   }
-// }
-
-// | { type: "NewChatMessage"; from: string; content: string }
-// | { type: "TeamStatusUpdate"; teamId: string; score: number };
-
-// export type ClientToServerMessage =
-//   | { type: "SubscribeToTeam"; teamId: string }
-//   | { type: "SendChatMessage"; content: string };

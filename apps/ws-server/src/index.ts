@@ -31,6 +31,7 @@ wss.on("connection", (ws, req) => {
   // Make sure that AUTH_SECRET exists
   if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
 
+  // Get the token from the URL
   const url = new URL(req.url || "", `http://${req.headers.host}`);
   console.log(`Connecting with ${url}`);
   const token = url.searchParams.get("token");
@@ -40,6 +41,7 @@ wss.on("connection", (ws, req) => {
     return;
   }
 
+  // Try to autheneticate the user
   try {
     const decoded = jwt.verify(token, process.env.AUTH_SECRET) as TokenPayload;
     const teamId = decoded.id;
@@ -54,18 +56,6 @@ wss.on("connection", (ws, req) => {
     ws.close(1009, "Invalid token");
     return;
   }
-
-  // Message
-  ws.on("message", (msg) => {
-    // const parsed = JSON.parse(msg.toString());
-    // if (parsed.type !== "subscribe") return;
-    // const teamId = parsed.teamId;
-    // if (!teamId) return;
-    // if (!channels.has(teamId)) channels.set(teamId, new Set());
-    // channels.get(teamId)!.add(ws);
-    // socketToTeam.set(ws, teamId);
-    // console.log(`Added to channel ${teamId}`);
-  });
 
   // Close
   ws.on("close", () => {

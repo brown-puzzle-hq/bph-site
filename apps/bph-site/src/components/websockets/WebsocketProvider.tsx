@@ -16,12 +16,11 @@ export const useWebSocket = () => useContext(WebSocketContext);
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
+  const socketRef = useRef<WebSocket | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const socketRef = useRef<WebSocket | null>(null); // TODO: what even is this?
 
-  // Use a toast
+  // TODO: need to validate the data
   const handleMessage = useCallback((event: MessageEvent) => {
-    // TODO: need to validate the data
     try {
       const data: SocketMessage = JSON.parse(event.data);
 
@@ -45,30 +44,30 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Try to create a websocket
   useEffect(() => {
-    // Check that user is logged in
+    // Check that a websocket does not already exist
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN)
+      return;
+
+    // Check that websocket server exists and the user is logged in
+    const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
+    if (!wsServer) {
+      console.warn("NEXT_PUBLIC_WEBSOCKET_SERVER is not configured.");
+      return;
+    }
     if (status !== "authenticated" || !session) return;
+
+    // Create the websocket
     const token = session?.accessToken ?? "";
-    // TODO: wss:// in production
-    const ws = new WebSocket(`ws://localhost:1030?token=${token}`);
+    const protocol = process.env.NODE_ENV === "production" ? "wss" : "ws";
+    const ws = new WebSocket(`${protocol}://${wsServer}?token=${token}`);
 
-    ws.onopen = () => {
-      // ws.send(JSON.stringify({ type: "subscribe", teamId: "team-abc" }));
-      console.log("✅ WebSocket connected");
-    };
-
-    ws.onmessage = (event) => {
-      console.log("📨 Message from server:", event.data);
-      handleMessage(event);
-    };
-
-    ws.onerror = (err) => {
-      console.error("❌ WebSocket error", err);
-    };
-
-    ws.onclose = () => {
-      console.warn("⚠️ WebSocket closed");
-    };
+    // Initialize the websocket
+    ws.onopen = () => console.log("✅ WebSocket connected");
+    ws.onmessage = (event) => handleMessage(event);
+    ws.onerror = (err) => console.error("❌ WebSocket error", err);
+    ws.onclose = () => console.warn("⚠️ WebSocket closed");
 
     socketRef.current = ws;
     setSocket(ws);
