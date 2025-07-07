@@ -3,7 +3,7 @@
 import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
-import { hash } from "bcryptjs";
+import { hashSync } from "bcryptjs";
 import { auth } from "~/server/auth/auth";
 import { IN_PERSON } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
@@ -49,12 +49,7 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
     teamProperties.password &&
     teamProperties.password.length >= 8
   ) {
-    const hashedPassword = await new Promise<string>((resolve, reject) => {
-      hash(teamProperties.password!, 10, (err, hash) => {
-        if (err) reject(err);
-        resolve(hash);
-      });
-    });
+    const hashedPassword = hashSync(teamProperties.password, 10);
     teamProperties.password = hashedPassword;
   } else {
     delete teamProperties.password;

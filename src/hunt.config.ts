@@ -42,14 +42,14 @@ export function sanitizeAnswer(answer: any) {
  */
 
 /** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team. */
-export const INITIAL_PUZZLES: string[] = ["example"];
+export const INITIAL_PUZZLES: string[] = ["example-1"];
 
 /** Adjacency list for puzzles */
 export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {};
 
 /** List of puzzles in each round. Each puzzle must be in a round. **/
 export const ROUNDS: Round[] = [
-  { name: "Example Round", puzzles: ["example"] },
+  { name: "Example Round", puzzles: ["example-1"] },
 ];
 
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */

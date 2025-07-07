@@ -2,7 +2,7 @@
 
 import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
-import { hash } from "bcryptjs";
+import { hashSync } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 import { IN_PERSON } from "~/hunt.config";
@@ -37,12 +37,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
     teamProperties.interactionMode = "remote";
 
   try {
-    const hashedPassword = await new Promise<string>((resolve, reject) => {
-      hash(teamProperties.password, 10, (err, hash) => {
-        if (err) reject(err);
-        resolve(hash);
-      });
-    });
+    const hashedPassword = hashSync(teamProperties.password, 10);
 
     await db.insert(teams).values({
       ...teamProperties,

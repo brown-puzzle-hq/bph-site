@@ -11,6 +11,9 @@ importers:
       '@auth/drizzle-adapter':
         specifier: ^1.7.0
         version: 1.7.0
+      '@faker-js/faker':
+        specifier: ^9.9.0
+        version: 9.9.0
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
@@ -149,6 +152,9 @@ importers:
       cmdk:
         specifier: 1.0.0
         version: 1.0.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      dotenv:
+        specifier: ^17.0.1
+        version: 17.0.1
       drizzle-orm:
         specifier: ^0.33.0
         version: 0.33.0(@neondatabase/serverless@0.10.3)(@types/pg@8.11.6)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(postgres@3.4.4)(react@18.3.1)
@@ -242,6 +248,9 @@ importers:
       typescript-cookie:
         specifier: ^1.0.6
         version: 1.0.6
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
       vercel:
         specifier: ^37.8.0
         version: 37.8.0
@@ -820,6 +829,10 @@ packages:
   '@eslint/js@8.57.1':
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  '@faker-js/faker@9.9.0':
+    resolution: {integrity: sha512-OEl393iCOoo/z8bMezRlJu+GlRGlsKbUAN7jKB6LhnKoqKve5DXRpalbItIIcwnCjs1k/FOPjFzcA6Qn+H+YbA==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
@@ -3282,6 +3295,10 @@ packages:
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
+
+  dotenv@17.0.1:
+    resolution: {integrity: sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==}
+    engines: {node: '>=12'}
 
   drizzle-dbml-generator@0.9.0:
     resolution: {integrity: sha512-R/INfHUJNtxUkanSng8suh6er3snYKzMLFCeshqMMtGbrzo1+ulOY6qyrWXkY1d5jLuFwydySUD6bIZSyr0aSg==}
@@ -6438,6 +6455,8 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
+  '@faker-js/faker@9.9.0': {}
+
   '@fastify/busboy@2.1.1': {}
 
   '@floating-ui/core@1.6.8':
@@ -8151,7 +8170,7 @@ snapshots:
 
   '@types/mdast@4.0.4':
     dependencies:
-      '@types/unist': 2.0.11
+      '@types/unist': 3.0.3
 
   '@types/mdx@2.0.13': {}
 
@@ -9028,6 +9047,8 @@ snapshots:
       dom-serializer: 2.0.0
       domelementtype: 2.3.0
       domhandler: 5.0.3
+
+  dotenv@17.0.1: {}
 
   drizzle-dbml-generator@0.9.0(drizzle-orm@0.33.0(@neondatabase/serverless@0.10.3)(@types/pg@8.11.6)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(postgres@3.4.4)(react@18.3.1)):
     dependencies:
