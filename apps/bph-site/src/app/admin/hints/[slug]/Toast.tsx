@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function Toast({
   title,
@@ -12,8 +12,7 @@ export default function Toast({
 }) {
   const router = useRouter();
 
-  toast({
-    title: title,
+  toast(title, {
     description: description,
   });
 

@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -47,8 +47,7 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const result = await insertErratum(data.puzzleId, data.description);
     if (result.error) {
-      toast({
-        title: "Submission failed",
+      toast("Submission failed", {
         description: result.error,
       });
     } else {
@@ -59,7 +58,7 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
         timestamp: new Date(),
       };
       errataList.push(newErrata);
-      toast({
+      toast("", {
         description: "Erratum submitted for " + data.puzzleId + ".",
         action: (
           <Button

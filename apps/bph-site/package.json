@@ -15,7 +15,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:dbml": "tsx src/server/db/dbml.ts",
-    "generate-docs": "tsx scripts/generate-docs.ts"
+    "generate-docs": "tsx scripts/generate-docs.ts",
+    "seed:folders": "tsx scripts/create-puzzle-folders.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.0",
@@ -44,7 +45,6 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.1",
-    "@radix-ui/react-toast": "^1.2.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@radix-ui/react-visually-hidden": "^1.1.0",
     "@t3-oss/env-nextjs": "^0.10.1",
@@ -66,6 +66,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "dotenv": "^17.0.1",
     "drizzle-orm": "^0.33.0",
     "framer-motion": "^11.11.17",
     "geist": "^1.3.1",
@@ -93,6 +94,7 @@
     "resend": "^4.1.2",
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
+    "sonner": "^2.0.6",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",

@@ -1,9 +1,9 @@
 import "~/styles/globals.css";
+import { auth } from "@/auth";
 import { GeistSans } from "geist/font/sans";
 import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
-import { auth } from "@/auth";
-import { Toaster } from "~/components/ui/toaster";
+import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default async function RootLayout({
       <Providers session={session}>
         <body>
           <CommandPalette />
-          <Toaster />
+          <Toaster expand={true} />
           {children}
         </body>
       </Providers>

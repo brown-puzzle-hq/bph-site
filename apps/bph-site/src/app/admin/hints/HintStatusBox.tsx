@@ -2,7 +2,7 @@
 
 import { Row } from "@tanstack/react-table";
 import { claimHint, unclaimHint } from "./actions";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { Reply, HintClaimer } from "./Columns";
 import { useTransition } from "react";
@@ -21,9 +21,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     startTransition(async () => {
       const { error, title } = await claimHint(hintId);
       if (error) {
-        toast({
-          variant: "destructive",
-          title,
+        toast.error(title, {
           description: error,
         });
       } else {
@@ -36,9 +34,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
     startTransition(async () => {
       const { error, title } = await unclaimHint(hintId);
       if (error) {
-        toast({
-          variant: "destructive",
-          title,
+        toast.error(title, {
           description: error,
         });
       }

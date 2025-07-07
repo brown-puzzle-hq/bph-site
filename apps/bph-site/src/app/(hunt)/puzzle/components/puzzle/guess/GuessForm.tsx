@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { handleGuess } from "./actions";
 import { useTransition } from "react";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { NumberOfGuesses } from "../DefaultPuzzlePage";
 import { Infinity } from "lucide-react";
 
@@ -63,10 +63,8 @@ export default function GuessForm({
       setError(null);
       const result = await handleGuess(puzzleId, data.guess);
       if (result && result.error) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: result.error,
-          variant: "destructive",
         });
       }
       form.reset();

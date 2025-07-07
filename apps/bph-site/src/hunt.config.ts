@@ -38,7 +38,9 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 export const INITIAL_PUZZLES: string[] = ["example"];
 
 /** Adjacency list for puzzles */
-export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {};
+export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
+  "example-3": ["example-4", "example-5"],
+};
 
 /** List of puzzles in each round. Each puzzle must be in a round. **/
 export const ROUNDS: Round[] = [
@@ -46,7 +48,7 @@ export const ROUNDS: Round[] = [
 ];
 
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */
-export const META_PUZZLES: string[] = [];
+export const META_PUZZLES: string[] = ["example-1"];
 
 /* HINTING SYSTEM
  * Teams currently get a hint request every three hours since the start of the hunt.

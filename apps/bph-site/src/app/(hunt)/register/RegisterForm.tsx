@@ -4,7 +4,7 @@ import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -166,14 +166,12 @@ export function RegisterForm({}: RegisterFormProps) {
     });
 
     if (error) {
-      toast({
-        title: "Register failed",
+      toast.error("Register failed", {
         description: error,
       });
     } else {
       update(session);
-      toast({
-        title: "Welcome to Brown Puzzlehunt, " + data.displayName + "!",
+      toast("Welcome to Brown Puzzlehunt, " + data.displayName + "!", {
         description: "Your team has been registered.",
       });
       router.push("/");

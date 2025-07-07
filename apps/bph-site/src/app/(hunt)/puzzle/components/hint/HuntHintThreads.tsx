@@ -18,7 +18,7 @@ import {
   insertHintRequest,
   MessageType,
 } from "./actions";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { hintStatusEnum } from "~/server/db/schema";
 
@@ -124,16 +124,12 @@ export default function HuntHintThreads({
           error ===
           "Please try again. If the problem persists, contact HQ or use the feedback form."
         ) {
-          toast({
-            variant: "destructive",
-            title: "Failed to request hint",
+          toast.error("Failed to request hint", {
             description: error,
           });
           setRequest(request);
         } else {
-          toast({
-            variant: "destructive",
-            title: "Failed to request hint",
+          toast.error("Failed to request hint", {
             description: error + " Request copied to clipboard.",
           });
           if (request) navigator.clipboard.writeText(request);
@@ -239,11 +235,9 @@ export default function HuntHintThreads({
           ),
         );
         setNewReply(newReply); // Works since variable changes are not instant
-        toast({
-          title: "Failed to submit reply.",
+        toast.error("Failed to submit reply.", {
           description:
             "Please try again. If the problem persists, contact HQ or use the feedback form.",
-          variant: "destructive",
         });
       } else {
         // Update replyId

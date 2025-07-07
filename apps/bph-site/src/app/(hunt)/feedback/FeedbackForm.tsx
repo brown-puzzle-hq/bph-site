@@ -1,5 +1,5 @@
 "use client";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRemarkSync } from "react-remark";
@@ -58,8 +58,7 @@ export default function FeedbackForm({
     const timestamp = new Date();
     const result = await insertFeedback(data.description, timestamp);
     if (result.error) {
-      toast({
-        title: "Submission failed",
+      toast("Submission failed", {
         description: result.error,
       });
     } else {
@@ -70,7 +69,7 @@ export default function FeedbackForm({
         timestamp,
       };
       feedbackList.push(newFeedback);
-      toast({
+      toast("", {
         description: "Feedback submitted. Thank you!",
       });
       form.reset();

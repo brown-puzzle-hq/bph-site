@@ -9,7 +9,7 @@ import {
   ReactNode,
 } from "react";
 import { useSession } from "next-auth/react";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { type SocketMessage } from "~/lib/comms";
 
 const WebSocketContext = createContext<WebSocket | null>(null);
@@ -27,37 +27,28 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
       switch (data.type) {
         case "SolvedPuzzle":
-          toast({ description: `Solved puzzle ${data.puzzleId}` });
-          toast({ description: `Solved puzzle ${data.puzzleId}` });
+          toast(`Solved ${data.puzzleName}`, {
+            description: `Here: ${data.puzzleId}`,
+          });
           break;
         case "UnlockedPuzzle":
-          toast({ description: `Solved puzzle ${data.puzzleId}` });
-          toast({ description: `Solved puzzle ${data.puzzleId}` });
+          toast(`Unlocked ${data.puzzleName}`, {
+            description: `Here: ${data.puzzleId}`,
+          });
           break;
         case "FinishedHunt":
-          toast({
-            className: "bg-emerald-300",
-            title: "You won the bloscar!",
-            description: "Congratulations on completing BPH 2025 🥳!",
-          });
-          toast({
-            className: "bg-emerald-300",
-            title: "You won the bloscar!",
+          toast("You won the bloscar!", {
             description: "Congratulations on completing BPH 2025 🥳!",
           });
           break;
         case "Toast":
-          toast({ title: data.title, description: data.description });
-          toast({ title: data.title, description: data.description });
+          toast(data.title, { description: data.description });
           break;
         default:
-          toast({ description: JSON.stringify(data) });
-          toast({ description: JSON.stringify(data) });
           break;
       }
     } catch (err) {
       console.error("Invalid WebSocket message:", event.data);
-      toast({ description: "⚠️ Invalid message received" });
     }
   }, []);
 

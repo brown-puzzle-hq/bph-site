@@ -1,6 +1,6 @@
 "use client";
 import { Clipboard } from "lucide-react";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 
 function renderTableToPlainText(html: string): string {
   const parser = new DOMParser();
@@ -58,8 +58,7 @@ export default function CopyButton({ copyText }: { copyText: string }) {
           } else {
             navigator.clipboard.writeText(copyText);
           }
-          toast({
-            title: "Copied to clipboard!",
+          toast("Copied to clipboar!", {
             description: (
               <span className="block max-w-[calc(100vw-64px)] truncate md:max-w-[356px]">
                 {plainText}
@@ -67,9 +66,7 @@ export default function CopyButton({ copyText }: { copyText: string }) {
             ),
           });
         } catch (error) {
-          toast({
-            variant: "destructive",
-            title: "Failed to copy",
+          toast.error("Failed to copy", {
             description: "An error occurred while copying.",
           });
         }

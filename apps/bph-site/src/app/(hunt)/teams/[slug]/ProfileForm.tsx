@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -202,8 +202,7 @@ export default function ProfileForm({
     });
 
     if (result.error) {
-      toast({
-        title: "Update failed",
+      toast("Update failed", {
         description: result.error,
       });
       return;

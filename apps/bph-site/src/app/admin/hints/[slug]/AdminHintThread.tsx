@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { EyeOff, KeyRound, RefreshCw, Waypoints } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 import {
   claimHint,
   unclaimHint,
@@ -95,9 +95,7 @@ export default function AdminHintThread({
       const { error, title } = await editHintStatus(hint.id, selectedStatus);
       setStatusLoading(false);
       if (error) {
-        toast({
-          variant: "destructive",
-          title,
+        toast.error(title, {
           description: error,
         });
         setOptimisticHint(optimisticHint);
@@ -121,9 +119,7 @@ export default function AdminHintThread({
     startTransition(async () => {
       const { error, title } = await claimHint(hint.id);
       if (error) {
-        toast({
-          variant: "destructive",
-          title,
+        toast.error(title, {
           description: error,
         });
         setOptimisticHint(optimisticHint);
@@ -141,9 +137,7 @@ export default function AdminHintThread({
     startTransition(async () => {
       const { error, title } = await unclaimHint(hint.id);
       if (error) {
-        toast({
-          variant: "destructive",
-          title,
+        toast.error(title, {
           description: error,
         });
         setOptimisticHint(optimisticHint);
@@ -173,9 +167,7 @@ export default function AdminHintThread({
         hint.team.members,
       );
       if (error) {
-        toast({
-          variant: "destructive",
-          title,
+        toast.error(title, {
           description: response
             ? error + " Response copied to clipboard."
             : error,
@@ -253,11 +245,9 @@ export default function AdminHintThread({
           replies: hint.replies.filter((reply) => reply.id !== 0),
         }));
         setNewReply(newReply); // Works since variable changes are not instant
-        toast({
-          title: "Failed to submit reply.",
+        toast.error("Failed to submit reply", {
           description:
             "Please try again. If the problem persists, contact HQ or use the feedback form.",
-          variant: "destructive",
         });
       } else {
         // Update replyId

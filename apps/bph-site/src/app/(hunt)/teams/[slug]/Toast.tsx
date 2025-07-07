@@ -1,7 +1,6 @@
 "use client";
-
 import { useRouter } from "next/navigation";
-import { toast } from "~/hooks/use-toast";
+import { toast } from "sonner";
 
 // TODO: this component is repeated in multiple places
 // Might not be necessary to have it as a separate component
@@ -15,8 +14,7 @@ export default function Toast({
 }) {
   const router = useRouter();
 
-  toast({
-    title: title,
+  toast(title, {
     description: description,
   });
 
