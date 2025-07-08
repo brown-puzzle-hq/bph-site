@@ -257,6 +257,9 @@ importers:
       typescript-cookie:
         specifier: ^1.0.6
         version: 1.0.6
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
       vercel:
         specifier: ^37.8.0
         version: 37.14.0

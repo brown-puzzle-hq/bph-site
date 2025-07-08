@@ -16,10 +16,12 @@
     "db:studio": "drizzle-kit studio",
     "db:dbml": "tsx src/server/db/dbml.ts",
     "generate-docs": "tsx scripts/generate-docs.ts",
+    "seed": "tsx scripts/seed.ts",
     "seed:folders": "tsx scripts/create-puzzle-folders.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.0",
+    "@faker-js/faker": "^9.9.0",
     "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
@@ -100,6 +102,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tsparticles": "^3.6.0",
     "typescript-cookie": "^1.0.6",
+    "unist-util-visit": "^5.0.0",
     "vercel": "^37.8.0",
     "zod": "^3.23.8"
   },
