@@ -106,6 +106,10 @@ DISCORD_WEBHOOK_URL_DEV=""
 
 # https://resend.com/api-keys
 RESEND_API_KEY=""
+
+# Websocket
+# Needs to be NEXT_PUBLIC_ so that it is exposed to the client
+NEXT_PUBLIC_WEBSOCKET_SERVER="localhost:1030"
 ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.

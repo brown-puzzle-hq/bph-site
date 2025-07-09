@@ -41,10 +41,10 @@ While it's technically possible for clients to send messages directly to the ws-
 
 Instead, the communication flow is:
 
-1. A bph-site **client** submits an action (eg. a guess) via a **server action** to the bph-site server
+1. A bph-site **client** submits an action (e.g. a guess) via a **server action** to the bph-site server
 2. The bph-site **server**:
    1. Authenticates the user session
-   2. Validates the request (eg. checks the guess is correct)
+   2. Validates the request (e.g. checks the guess is correct)
    3. Sends a message to the ws-server
 3. The **ws-server** broadcasts the message to all connected clients
 4. Clients receive the message over their websocket connection and update the UI accordingly
@@ -66,7 +66,7 @@ Instead, the communication flow is:
 ### Environment setup
 
 - Make sure that `AUTH_SECRET` is identical in `apps/ws-server/.env` and `apps/bph-site/.env`.
-- Set `NEXT_PUBLIC_WEBSOCKET_SERVER` in `apps/bph-site/.env` to point to your websocket server. This should not include the protocol (eg. use `localhost:3000` instead of `https://localhost:3000`).
+- Set `NEXT_PUBLIC_WEBSOCKET_SERVER` in `apps/bph-site/.env` to point to your websocket server. This should not include the protocol (e.g. use `localhost:3000` instead of `https://localhost:3000`).
 
 ## Inside `WebsocketProvider.tsx`
 

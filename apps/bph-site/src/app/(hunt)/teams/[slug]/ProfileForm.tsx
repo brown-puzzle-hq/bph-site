@@ -236,8 +236,7 @@ export default function ProfileForm({
   const onDelete = async () => {
     const result = await deleteTeam(id, form.watch("displayName"));
     if (result.error) {
-      toast({
-        title: "Deletion failed",
+      toast("Deletion failed", {
         description: result.error,
       });
     } else {

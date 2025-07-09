@@ -6,7 +6,12 @@ import { Button } from "~/components/ui/button";
 
 export default function Page() {
   const { data } = useSession();
-  const teamId = data.user.id;
+  const teamId = data?.user.id;
+
+  if (!teamId) {
+    console.error("No teamId found");
+    return;
+  }
 
   const handleClick = async (
     msg: Parameters<typeof sendToWebsocketServer>[1],

@@ -29,8 +29,11 @@ Since `bph-site` is hosted serverlessly on Vercel (which does not support websoc
 To transition an existing `bph-site` application to use websockets, do the following:
 
 1. Clone this repository and replace `apps/bph-site` with your `bph-site` application
-2. In the Vercel deployment, set the root directory to `apps/bph-site`
-3. Deploy `apps/ws-server` in Fly.io
+2. Set up websocket environment variables for `apps/bph-site` (i.e. `NEXT_PUBLIC_WEBSOCKET_SERVER`)
+3. Set up websocket environment variables for `apps/ws-server` (i.e. `AUTH_SECRET`)
+4. In the Vercel deployment, set the root directory to `apps/bph-site`
+5. Deploy `apps/ws-server` in Fly.io
+6. Relog to refresh your tokens.
 
 Notes:
 
@@ -43,3 +46,5 @@ Notes:
   ```
 
 - Environment variables and `package.json` commands (such as `build` or `db:push`) need to be specified in `turbo.json`
+
+- For local development, you'll need to move your `.env` file into `apps/bph-site`. Hidden files and directories such as `.next` and `next-env.d.ts` can be deleted from the root directory.

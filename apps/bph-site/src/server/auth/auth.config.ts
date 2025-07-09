@@ -11,7 +11,7 @@ export const authConfig = {
   // and pass the data to the browser in the session callback
   callbacks: {
     // The jwt callback is called whenever a token is created
-    // (ie. at sign-in) or updated (ie. `useSession`).
+    // (i.e. at sign-in) or updated (i.e. `useSession`).
     // The returned value is encrypted and stored in a cookie.
     jwt: async ({ token, user, trigger, session }) => {
       if (user) {

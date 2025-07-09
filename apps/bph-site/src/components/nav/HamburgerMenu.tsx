@@ -20,7 +20,7 @@ export type MenuItem = {
 };
 
 const colorMap: Record<string, string> = {
-  hunt: "bg-nav-bg",
+  hunt: "bg-nav-bg text-main-text",
   admin: "bg-white",
 };
 
