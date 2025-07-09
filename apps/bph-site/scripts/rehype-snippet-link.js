@@ -70,6 +70,10 @@ export default function rehypeSnippetLink(options) {
 
         parent.children.splice(index, 0, headerNode);
         node.data = { ...(node.data || {}), snippetHeaderInserted: true };
+        node.properties = {
+          ...(node.properties || {}),
+          className: [...(node.properties?.className || []), "snippet-code"],
+        };
       }
     });
   };

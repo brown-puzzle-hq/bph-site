@@ -1145,3 +1145,8 @@
 .snippet-header .github-link {
   color: #000;
 }
+
+.snippet-header + .snippet-code {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
