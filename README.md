@@ -1,112 +1,50 @@
-bph-site is a fully functional and customizable puzzlehunt site built with Next.js, TypeScript, and Tailwind CSS. It has been used in [Puzzlethon 2024](https://puzzlethon.brownpuzzle.club/) and [BPH 2025](https://www.brownpuzzlehunt.com/).
+## README
 
-The docs are available [here](https://bph-site.vercel.app/docs).
+The Brown Puzzlehunt monorepo has two applications:
 
-## Features
+- `app/bph-site`: a Next.js application that contains the main hunt logic
+- `app/ws-server`: an express server that handles WebSocket connections
 
-On the hunt side:
+The monorepo is managed with **turborepo**. It is recommended to install it globally.
 
-1. Team registration and authentication
-2. Real-time leaderboard
-3. Guessing system with support for:
-   1. Guess limits
-   2. Answer verification
-   3. Partial solutions
-   4. Follow-up tasks
-4. Hint-request system with hint limits and follow-up replies
-4. Puzzle copy text, solutions, and statistics
-5. Feedback system
-6. Info and wrapup pages
+```bash
+pnpm add turbo --global
+```
 
-On the admin side:
+**Getting started**
 
-1. Team account management
-2. Hint claiming and response
-2. Errata system
-4. Integration with Discord and email notifications
+1. Run `pnpm i` in the root directory to install all dependencies across the workspace
+2. Then run `turbo dev` to start both `bph-site` and `ws-server`
 
-On the development side:
+## bph-site
 
-1. Customizable hunt structure
-2. Customizable hunt-end conditions
-3. Flexible puzzle template for static or interactive puzzles
-4. Support for both in-person and remote interaction modes
+`bph-site` is the primary web application and can be run as a standalone hunt site (without websockets). See the [README](/apps/bph-site/README.md) for details.
 
-## Quick Start
+## ws-server
 
-1. Set up the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to use the Neon Postgres database.
+Since `bph-site` is hosted serverlessly on Vercel (which does not support websocket connections), a separate server is required for handling websockets. This is the purpose of `ws-server`.
 
-  ```
-  # This file will be committed to version control, so make sure not to have any
-# secrets in it. If you are cloning this repo, create a copy of this file named
-# ".env" and populate it with your secrets.
+**Migration**
 
-# When adding additional *required* environment variables, the schema in "/src/env.js"
-# should be updated accordingly.
+To transition an existing `bph-site` application to use websockets, do the following:
 
-# Next Auth (required)
-# You can generate a new secret on the command line with:
-# openssl rand -base64 32
-# https://next-auth.js.org/configuration/options#secret
-AUTH_SECRET=""
-AUTH_URL="http://localhost:3000" # Remember to change this for production
-AUTH_DRIZZLE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
+1. Clone this repository and replace `apps/bph-site` with your `bph-site` application
+2. Set up websocket environment variables for `apps/bph-site` (i.e. `NEXT_PUBLIC_WEBSOCKET_SERVER`)
+3. Set up websocket environment variables for `apps/ws-server` (i.e. `AUTH_SECRET`)
+4. In the Vercel deployment, set the root directory to `apps/bph-site`
+5. Deploy `apps/ws-server` in Fly.io
+6. Relog to refresh your tokens.
 
-# Database (required)
-DATABASE_URL=""
-POSTGRES_DATABASE=""
-POSTGRES_HOST=""
-POSTGRES_PASSWORD=""
-POSTGRES_PRISMA_URL=""
-POSTGRES_URL=""
-POSTGRES_URL_NON_POOLING=""
-POSTGRES_URL_NO_SSL=""
-POSTGRES_USER=""
+Notes:
 
-# Communication (optional)
-# https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
-DISCORD_WEBHOOK_URL=""
-DISCORD_WEBHOOK_URL_HINT=""
-DISCORD_WEBHOOK_URL_GUESS=""
-DISCORD_WEBHOOK_URL_FINISH=""
-DISCORD_WEBHOOK_URL_FEEDBACK=""
-DISCORD_WEBHOOK_URL_TEAM=""
-DISCORD_WEBHOOK_URL_DEV=""
+- This repo is primarily set up for `pnpm`. If you prefer to use `npm`, make sure to declare the workspaces in `package.json` like so:
 
-# https://resend.com/api-keys
-RESEND_API_KEY=""
+  ```json
+  {
+    "workspaces": ["apps/*"]
+  }
   ```
 
-2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
+- Environment variables and `package.json` commands (such as `build` or `db:push`) need to be specified in `turbo.json`
 
-  ```
-  pnpm run db:push
-  ```
-
-  You can look at the current state of the database by visiting Drizzle Studio.
-
-  ```
-   pnpm run db:studio
-  ```
-
-3. Download all dependencies. You need to do this every time the dependencies in `package.json` changes.
-
-  ```
-  pnpm install
-  ```
-
-4. Start the development server.
-
-  ```
-  pnpm run dev
-  ```
-
-  After a second, you'll see this text appear in the terminal:
-
-  ```
-  ▲ Next.js 14.2.15
-  - Local:        http://localhost:3000
-  - Environments: .env
-  ```
-  
-  Navigate to [http://localhost:3000/](http://localhost:3000/) to see the development server.
+- For local development, you'll need to move your `.env` file into `apps/bph-site`. Hidden files and directories such as `.next` and `next-env.d.ts` can be deleted from the root directory.
