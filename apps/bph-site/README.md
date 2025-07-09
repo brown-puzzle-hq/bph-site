@@ -112,5 +112,5 @@ NEXT_PUBLIC_WEBSOCKET_SERVER="localhost:1030"
    - Local:        http://localhost:3000
    - Environments: .env
    ```
-  
+
    Navigate to [http://localhost:3000/](http://localhost:3000/) to see the development server.

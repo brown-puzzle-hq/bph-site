@@ -69,5 +69,5 @@ On the development side:
    - Local:        http://localhost:3000
    - Environments: .env
    ```
-  
+
    Navigate to [http://localhost:3000/](http://localhost:3000/) to see the development server.
