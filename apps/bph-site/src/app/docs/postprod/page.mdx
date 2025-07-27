@@ -1,0 +1,223 @@
+# Postprodding puzzles
+
+1. [First steps](#first-steps)
+2. [Adding puzzles](#adding-puzzles)
+3. [Creating puzzle bodies](#creating-puzzle-bodies)
+4. [Creating copy text](#creating-copy-text)
+
+## First steps
+
+1. Clone this repository
+2. Get the `.env` and put it in the root directory
+3. Install [pnpm](https://pnpm.io/)
+4. Run `pnpm install` to install the dependencies
+5. Create a new branch on GitHub called `your-name-postprodding`
+
+Now you're ready to postprod!
+
+To run the development server and see your changes live:
+
+1. Run `pnpm run dev` in the terminal
+2. Go to `http://localhost:3000/`
+
+## Adding puzzles
+
+1. Add the puzzle to the database
+
+   First, run `pnpm run db:studio` and go to `https://local.drizzle.studio/`. You will see a lot of different tables, but the only one you need to edit is `bph_site_puzzle`.
+
+   ![drizzle-studio.png](/docs/drizzle-studio.png)
+
+   The `name` column is the title of the puzzle, the `id` column is the slug (URL) for the puzzle, and the `answer` column is the answer to the puzzle in **all caps, no spaces.**
+
+   ```ts
+   {
+       id: "example",
+       name: "Example",
+       answer: "ANSWER"
+   }
+   ```
+
+2. Create a webpage for the puzzle
+
+   Copy the `src/app/(hunt)/puzzle/example` folder to a sibling folder called `src/app/(hunt)/puzzle/your-puzzle-id`.
+   Go to `https://localhost:3000/puzzle/your-puzzle-id` to see the new webpage.
+
+   ```
+   .
+   ├── actions.ts
+   ├── components
+   │   ├── hint
+   │   ├── puzzle
+   │   ├── puzzle-list
+   │   ├── solution
+   │   └── stats
+   ├── example
+   │   ├── data.tsx
+   │   ├── hint
+   │   ├── layout.tsx
+   │   ├── page.tsx
+   │   ├── solution
+   │   └── stats
+   ├── page.tsx
+   └── your-puzzle-id
+       ├── data.tsx
+       ├── hint
+       ├── layout.tsx
+       ├── page.tsx
+       ├── solution
+       └── stats
+   ```
+
+3. **Add puzzle information in data.tsx.**
+
+   `data.tsx` contains
+   1. Puzzle id (required)
+   2. Puzzle body (required) [[advice](#creating-puzzle-bodies)]
+   3. Solution body
+   4. Copy text [[advice](#creating-copy-text)]
+   5. Partial solutions
+   6. Extra tasks
+
+   Set values to null or empty if they don't exist.
+
+   ```ts
+   export const puzzleId = "example";
+
+   export const inPersonBody = (
+       <div className="max-w-3xl text-center">This is the body of the puzzle.</div>
+   );
+
+   export const remoteBoxBody = inPersonBody;
+
+   export const remoteBody = (
+       <div className="max-w-3xl text-center">This is the body of the remote puzzle.</div>
+   );
+
+   export const solutionBody = (
+       <div className="max-w-3xl text-center">This is an example solution.</div>
+   );
+
+   export const copyText = `1\t2\t3
+   4\t5\t6
+   7\t8\t9`;
+
+   export const partialSolutions: Record<string, string> = {
+       EXAMP: "Almost there!",
+       EXAMPL: "Learn to spell!",
+   };
+
+   export const tasks: Record<string, JSX.Element> = {
+       EX: (
+           <div className="max-w-3xl text-center">
+           This is a task unlocked by submitting EX.
+           </div>
+       ),
+       EXAM: (
+           <div className="max-w-3xl text-center">
+           This is a task unlocked by submitting EXAM.
+           </div>
+       ),
+   };
+   ```
+
+## Creating puzzle bodies
+
+Puzzle bodies are written in JSX (HTML-in-JavaScript) and Tailwind CSS. There are also some Next.js components that you should use.
+Here are some tips:
+
+**General**
+
+1. If the original puzzle is on a **Google Doc**, try exporting it as a Markdown file. Then put that in a Markdown-to-HTML converter like [this](https://markdowntohtml.com/).
+
+2. AI tools are pretty good at web development. Remember to tell it that you're using Next.js (App Router) with Tailwind CSS.
+
+**Lists, Images, and Videos**
+
+3. For **images**, use the Next.js `Image` component instead of the `img` tag. Put it somewhere in the puzzle folder and import it like this:
+
+   ```html
+   import Image from "next/image"; import SUDOKU_IMAGE from
+   "./solution/sudoku_image.png";
+   <image src="{SUDOKU_IMAGE}" width="{500}" height="{500}" alt="" />
+   ```
+
+   Next.js documentation will tell you to put images in the `public` folder. We don't do that because it makes it harder to leak puzzle information.
+
+4. For **videos**, I recommend uploading it to YouTube as unlisted. YouTube will give you a code embedding that you can copy. You'll have to change some properties to camelCase, so that it looks like this:
+
+   ```html
+   <iframe
+     className="aspect-video w-full"
+     src="https://www.youtube-nocookie.com/embed/XXXXXXXXXXX"
+     title="YouTube video player"
+     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+     referrerpolicy="strict-origin-when-cross-origin"
+     allowfullscreen
+   ></iframe>
+   ```
+
+   You can also use `iframe` for Google Drive videos. The alternative is to download the video and serve it via an API route, but that gets a bit hairy.
+
+**Appearance**
+
+5. If you want to increase the vertical spacing between elements, use the `mb-4` utility class.
+
+   ```html
+   <div>
+     <p className="mb-4">Solve this puzzle.</p>
+     <image
+       src="/puzzle/sudoku-51.png"
+       width="{500}"
+       height="{500}"
+       alt=""
+       className="mb-4"
+     />
+   </div>
+   ```
+
+6. If you need a space between a `p` and a `span`, use `{" "}`.
+
+   ```html
+   <p>This puzzle is{" "}<span className="underline">difficult</span>.</p>
+   ```
+
+7. If you want to **hide** some text, change the background using a `span`.
+
+   ```html
+   <p>The answer is{" "}<span className="bg-main-text">ANSWER</span>.</p>
+   ```
+
+## Creating copy text
+
+1. Each copy text entry should either be plaintext (simple and faster) or HTML (which allows for text and cell formatting).
+
+2. With **plaintext**, write a newline to move down a row and `\t` to move across a row. Make sure to wrap the string with backticks (`` ` ``) instead of single or double quotes.
+
+   ```ts
+   export const copyText = `one\ttwo
+   three\tfour
+   =IMAGE("https://www.brownpuzzlehunt.com/home/Register.png")`;
+   ```
+
+   With **HTML**, you will have to use raw HTML `style` tags which differ slightly from Tailwind (used for puzzle and solution bodies). You might want to write the HTML elsewhere for syntax highlighting before placing it into the `copyText`.
+
+   ```ts
+   export const copyText = `<table>
+       <tr>
+           <td><b>Bold</b></td>
+           <td><i>Italic</i></td>
+           <td><u>Underline</u></td>
+       </tr>
+       <tr>
+           <td><span style="color: red;">Red</span></td>
+           <td style="background-color: yellow; border: 1px solid red;">Cell</td>
+           <td style="background-color: yellow; border-top: 1px solid #452c63;">Cell</td>
+       </tr>
+       <tr>
+           <td>=IMAGE("https://www.brownpuzzlehunt.com/home/Register.png")</td>
+       </tr>
+   </table>`;
+   ```
+
+3. You can make and format table(s) in Google Sheets, export them to HTML, and use that as a starting point.

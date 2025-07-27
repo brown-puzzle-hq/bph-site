@@ -1,0 +1,152 @@
+# Websockets
+
+1. [How websockets work in this app](#how-websockets-work-in-this-app)
+   1. [Architecture](#architecture)
+   2. [Quick start](#quick-start)
+   3. [Environment setup](#environment-setup)
+2. [Inside `WebsocketProvider.tsx`](#inside-websocketprovidertsx)
+   1. [`WebSocketContext`](#websocketcontext)
+   1. [`WebSocketProvider`](#websocketprovider)
+      1. [How the websocket is managed](#how-the-websocket-is-managed)
+      2. [How messages are handled](#how-messages-are-handled)
+      3. [How the websocket is exposed to the rest of the app](#how-the-websocket-is-exposed-to-the-rest-of-the-app)
+   1. [`useWebSocket` hook](#usewebsocket-hook)
+
+## How websockets work in this app
+
+Websockets are bidirectional communication channels that allow real-time data exchange between a client and a server.
+
+They can be used to keep everyone on a hunt team up to date on:
+
+- Puzzle solves
+- Puzzle unlocks
+- New interactions
+
+### Architecture
+
+There are three types of servers and clients:
+
+1. **bph-site client** - a browser tab connected to the hunt site. Each tab is a separate client.
+2. **bph-site server** - the backend server running on Vercel that handles user actions and validation
+3. **ws-server** - the dedicated WebSocket server that manages broadcasting to clients
+
+Each bph-site client has its own persistent websocket connection with ws-server.
+
+![Websocket layout](/docs/develop/websockets/websocket-layout.jpeg)
+
+While it's technically possible for clients to send messages directly to the ws-server, this approach is insecure because it:
+
+- Bypasses server-side validation
+- Allows potentially unauthorized actions
+
+Instead, the communication flow is:
+
+1. A bph-site **client** submits an action (e.g. a guess) via a **server action** to the bph-site server
+2. The bph-site **server**:
+   1. Authenticates the user session
+   2. Validates the request (e.g. checks the guess is correct)
+   3. Sends a message to the ws-server
+3. The **ws-server** broadcasts the message to all connected clients
+4. Clients receive the message over their websocket connection and update the UI accordingly
+
+![Websocket layout 2](/docs/develop/websockets/websocket-layout2.jpeg)
+
+### Quick start
+
+- The websockets server lives in `apps/ws-server`. The `index.ts` accepts connections from bph-site clients and forwards messages sent to the `/broadcast` endpoint.
+
+- Both bph-site client and bph-site server code lives in `apps/bph-site`.
+
+- To send a message from bph-site server to ws-server via server actions, use the `sendToWebsocketServer` helper function in `src/lib/comms.ts`.
+
+- To change how messages are handled on the client side, edit the `handleMessage` function in `WebSocketProvider.tsx`.
+
+- To support different types of messages, edit the `SocketMessage` type in `src/lib/comms.ts` and update the `handleMessage` function in `src/app/WebSocketProvider.tsx`.
+
+### Environment setup
+
+- Make sure that `AUTH_SECRET` is identical in `apps/ws-server/.env` and `apps/bph-site/.env`.
+- Set `NEXT_PUBLIC_WEBSOCKET_SERVER` in `apps/bph-site/.env` to point to your websocket server. This should not include the protocol (e.g. use `localhost:3000` instead of `https://localhost:3000`).
+
+## Inside `WebsocketProvider.tsx`
+
+`WebsocketProvider.tsx` is a client-side React component that manages a global websocket connection and exposes it to the rest of the app via React Context.
+
+It consists of three main parts:
+
+1. `WebSocketContext` - the context object
+2. `WebSocketProvider` - the context provider that manages the socket
+3. `useWebSocket` - a hook to access the socket from any child component
+
+### `WebSocketContext`
+
+```ts
+const WebSocketContext = createContext<WebSocket | null>(null);
+```
+
+This creates a React Context that holds a single `WebSocket` instance or `null`.
+
+Think of it as a shared container that lets any child component access the active socket connection without needing to pass it down through props.
+
+### `WebSocketProvider`
+
+This component wraps your application and establishes the actual WebSocket connection when the user is authenticated. It uses:
+
+- `useRef` to store a persistent socket reference
+- `useState` to trigger rerenders when the socket becomes available
+- `useEffect` to create the socket when the session changes
+- `useCallback` to handle incoming messages from the socket
+
+#### How the websocket is managed
+
+The `useEffect` hook is run every time the session is updated.
+
+1. It checks if the websocket server exists, if the user is authenticated, and if the socket is already connected
+2. It creates a connection string based on the environment and the session token
+3. It creates a websocket which listens on `onmessage`, `onopen`, `onclose`, and `onerror`
+4. On `teardown` (component unmount), it cleans up with `ws.close()`
+
+#### How messages are handled
+
+The `onmessage` event listener is set up to handle incoming messages from the websocket server. It parses the message data and calls the `handleMessage` function with the parsed data.
+
+If you want to add different variables of `SocketMessage`, edit `types.ts`.
+
+#### How the websocket is exposed to the rest of the app
+
+```ts
+<WebSocketContext.Provider value={socket}>
+  {children}
+</WebSocketContext.Provider>
+```
+
+The entire app is already wrapped by `WebSocketProvider`. `WebSocketProvider` is imported by `providers.tsx`, which is imported by the base `layout.tsx`.
+
+### `useWebSocket` Hook
+
+**While it is possible for clients to communicate to ws-server via this hook, this is discouraged (see: [Architecture](#architecture)). Instead, have the server communicate to ws-server via the `sendToWebSocketServer` server action (see: [Quick start](#quick-start)).**
+
+```ts
+export const useWebSocket = () => useContext(WebSocketContext);
+```
+
+If `WebSocketProvider` is wrapped around your app, you can call `useWebSocket` in any component to access the socket.
+
+```ts
+"use client";
+import { useWebSocket } from "./WebsocketProvider";
+
+export default function SocketExample() {
+  const socket = useWebSocket();
+  useEffect(() => {
+    if (!socket) return;
+    socket.send(
+      JSON.stringify({
+        type: "Toast",
+        title: "Example",
+        description: "Example",
+      }),
+    );
+  }, [socket]);
+}
+```
