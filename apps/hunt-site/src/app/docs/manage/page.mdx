@@ -27,7 +27,7 @@ Errata can be issued on the [errata page](/admin/errata). This will send an emai
 
 ### Schema
 
-```ts file=src/server/db/schema.ts:52-65
+```ts file=src/server/db/schema.ts:53-66
 export const teams = createTable("team", {
   id: varchar("id", { length: 255 }).primaryKey(), // login username
   displayName: varchar("display_name", { length: 255 }).notNull(),
