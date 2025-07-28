@@ -17,7 +17,7 @@ const app = express();
 // TODO: currently forced to use http, not https in dev
 app.use(cors()); // TODO: need to fix in production
 app.get("/", (_req, res) => {
-  res.send("Brown Puzzlehunt Websocket Server");
+  res.send("Websocket Server");
 });
 
 const server = http.createServer(app);

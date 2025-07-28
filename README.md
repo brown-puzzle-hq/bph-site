@@ -1,8 +1,8 @@
 ## README
 
-The Brown Puzzlehunt monorepo has two applications:
+The monorepo has two applications:
 
-- `app/bph-site`: a Next.js application that contains the main hunt logic
+- `app/hunt-site`: a Next.js application that contains the main hunt logic
 - `app/ws-server`: an express server that handles WebSocket connections
 
 The monorepo is managed with **turborepo**. It is recommended to install it globally.
@@ -14,24 +14,24 @@ pnpm add turbo --global
 **Getting started**
 
 1. Run `pnpm i` in the root directory to install all dependencies across the workspace
-2. Then run `turbo dev` to start both `bph-site` and `ws-server`
+2. Then run `turbo dev` to start both `hunt-site` and `ws-server`
 
-## bph-site
+## hunt-site
 
-`bph-site` is the primary web application and can be run as a standalone hunt site (without websockets). See the [README](/apps/bph-site/README.md) for details.
+`hunt-site` is the primary web application and can be run as a standalone hunt site (without websockets). See the [README](/apps/hunt-site/README.md) for details.
 
 ## ws-server
 
-Since `bph-site` is hosted serverlessly on Vercel (which does not support websocket connections), a separate server is required for handling websockets. This is the purpose of `ws-server`.
+Since `hunt-site` is hosted serverlessly on Vercel (which does not support websocket connections), a separate server is required for handling websockets. This is the purpose of `ws-server`.
 
 **Migration**
 
-To transition an existing `bph-site` application to use websockets, do the following:
+To transition an existing `hunt-site` application to use websockets, do the following:
 
-1. Clone this repository and replace `apps/bph-site` with your `bph-site` application
-2. Set up websocket environment variables for `apps/bph-site` (i.e. `NEXT_PUBLIC_WEBSOCKET_SERVER`)
+1. Clone this repository and replace `apps/hunt-site` with your `hunt-site` application
+2. Set up websocket environment variables for `apps/hunt-site` (i.e. `NEXT_PUBLIC_WEBSOCKET_SERVER`)
 3. Set up websocket environment variables for `apps/ws-server` (i.e. `AUTH_SECRET`)
-4. In the Vercel deployment, set the root directory to `apps/bph-site`
+4. In the Vercel deployment, set the root directory to `apps/hunt-site`
 5. Deploy `apps/ws-server` in Fly.io
 6. Relog to refresh your tokens.
 
@@ -47,4 +47,4 @@ Notes:
 
 - Environment variables and `package.json` commands (such as `build` or `db:push`) need to be specified in `turbo.json`
 
-- For local development, you'll need to move your `.env` file into `apps/bph-site`. Hidden files and directories such as `.next` and `next-env.d.ts` can be deleted from the root directory.
+- For local development, you'll need to move your `.env` file into `apps/hunt-site`. Hidden files and directories such as `.next` and `next-env.d.ts` can be deleted from the root directory.
