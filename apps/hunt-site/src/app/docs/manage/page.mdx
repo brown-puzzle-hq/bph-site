@@ -1,0 +1,146 @@
+# Managing the hunt
+
+1. [Hinting](#hinting)
+2. [Errata](#errata)
+3. [Teams](#teams)
+   1. [Schema](#schema)
+   2. [The teams table](#the-teams-table)
+   3. [Adding the first admin](#adding-the-first-admin)
+   4. [Adding new admins](#adding-new-admins)
+   5. [Adding new testsolvers](#adding-new-testsolvers)
+   6. [Changing interaction modes](#changing-interaction-modes)
+   7. [Resetting passwords](#resetting-passwords)
+   8. [Emailing teams](#emailing-teams)
+   9. [Texting teams](#texting-teams)
+4. [Sending emails](#sending-emails)
+5. [Navigation](#navigation)
+
+## Hinting
+
+Hints can be issued on the [hinting page](/admin/hinting).
+
+## Errata
+
+Errata can be issued on the [errata page](/admin/errata). This will send an email out to every user team who has unlocked but not solved the puzzle.
+
+## Teams
+
+### Schema
+
+```ts file=src/server/db/schema.ts:52-65
+export const teams = createTable("team", {
+  id: varchar("id", { length: 255 }).primaryKey(), // login username
+  displayName: varchar("display_name", { length: 255 }).notNull(),
+  password: varchar("password", { length: 255 }).notNull(),
+  role: roleEnum("role").notNull().default("user"),
+  members: text("members").notNull().default("[]"),
+  interactionMode: interactionModeEnum("interaction_type").notNull(),
+  createTime: timestamp("create_time", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  finishTime: timestamp("finish_time", { withTimezone: true }),
+});
+```
+
+The `id` is the username for logging in, and the `displayName` is what is shown on the leaderboard.
+
+The `password` is hashed, so don't change it directly on the database. The only way to do it is to visit the individual teams page (more information [here](/resetting-passwords)).
+
+The `role` determines the level of privileges for the team.
+Generally, admins can access every part of the site (including `/admin`), testsolvers can view puzzles before the `HUNT_START_TIME` (defined in hunt.config.ts), and regular users can only see puzzles when the `HUNT_START_TIME` has passed.
+Team roles can be toggled on the [teams table](/admin/teams).
+The current role enum in this codebase is:
+
+```ts file=src/server/db/schema.ts:24-26
+export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
+```
+
+By default, teams have either an "in-person" or "remote" `interactionMode`
+In-person and remote teams are on separate leaderboards and may see different versions of a puzzle.
+Team interaction modes can be toggled on the [teams table](/admin/teams).
+The current enum in this codebase is:
+
+```ts file=src/server/db/schema.ts:28-33
+export const interactionModeEnum = pgEnum("interaction_type", [
+  "in-person",
+  "remote",
+]);
+```
+
+### The teams table
+
+The [teams table](/admin/teams) contains all the teams registered on the site. Its features include:
+
+1. Text filter
+2. Interaction mode filter
+3. Compact and regular view toggle
+4. Pagination
+5. Column sorting (by clicking on the column header)
+6. Role and interaction mode editing (by clicking on the cell)
+
+The table contains the following columns:
+
+1. Trophy: leaderboard ranking
+2. Puzzle: # puzzles solved
+3. ID
+4. Display name
+5. Role
+6. Mode
+7. Create time
+8. Finish team
+
+### Adding the first admin
+
+This is likely a task for the tech team. They need to:
+
+1. Launch drizzle studio by running `pnpm run db:studio`
+2. Visit [https://local.drizzle.studio/](https://local.drizzle.studio/)
+3. Add the first admin on the teams table
+
+### Adding new admins
+
+This can be done on the [teams table](/admin/teams).
+
+1. Have the admin [register](/register) on the site
+2. Find the team on the [teams table](/admin/teams)
+3. Toggle the **Role** cell
+4. Save your changes
+
+### Adding new testsolvers
+
+This can be done on the [teams table](/admin/teams).
+
+1. Have the testsolvers [register](/register) on the site
+2. Find the team on the [teams table](/admin/teams)
+3. Toggle the **Role** cell
+4. Save your changes
+
+### Changing interaction modes
+
+This can be done on the [teams table](/admin/teams).
+
+1. Find the team on the [teams table](/admin/teams)
+2. Toggle the **Mode** cell
+3. Save your changes
+
+### Resetting passwords
+
+This can be done on individual teams pages.
+
+The password is hashed, so do not edit the password column on the database directly.
+
+1. Get the team username
+2. Go to /team/[username]
+3. Reset and save the password
+
+### Emailing teams
+
+We ask every team to leave an email for us to contact. The easiest way to get a list of emails is to use the [queries editor](/admin/sql).
+
+### Texting teams
+
+The easiest way to contact individual teams is to find their team username and go to the profile page at /teams/[username].
+
+## Navigation
+
+This site is divided into three areas: [/](/) (hunt), [/docs](/docs), and [/admin](/admin). You can navigate by opening up the command palette (`Cmd-K`or`Ctrl-K`).
