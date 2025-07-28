@@ -15,7 +15,6 @@ import {
   solveTypeEnum,
 } from "@/db/schema";
 import {
-  IN_PERSON,
   NUMBER_OF_GUESSES_PER_PUZZLE,
   PUZZLE_UNLOCK_MAP,
   META_PUZZLES,
@@ -136,7 +135,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
     });
   } catch (e) {
     const error = ensureError(e);
-    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message} <@?1287563929282678795>`;
+    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
     console.error(errorMessage);
     sendBotMessage(errorMessage, "dev");
     return { error: "An unexpected error occurred. Please try again." };
@@ -188,14 +187,10 @@ export async function handleGuess(puzzleId: string, guess: string) {
     }),
   );
 
-  // Disable for dev
-  const HQ_ROLE_ID = "";
-  // const HQ_ROLE_ID = "<@&900958940475559969>"
-
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt
   if (finishedHunt) {
-    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId}) ${new Date() < IN_PERSON.END_TIME ? HQ_ROLE_ID : ""}`;
+    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId})`;
     await Promise.allSettled([
       sendBotMessage(finishMessage, "interaction"),
       sendToWebsocketServer(teamId, { type: "FinishedHunt" }),
