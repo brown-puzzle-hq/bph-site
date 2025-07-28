@@ -19,7 +19,7 @@ import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   PUZZLE_UNLOCK_MAP,
   META_PUZZLES,
-  HUNT_DOMAIN
+  HUNT_DOMAIN,
 } from "~/hunt.config";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/utils";
