@@ -18,6 +18,6 @@ export default function Toast({
     description: description,
   });
 
-  router.push("/teams");
+  router.push("/team");
   return null;
 }

@@ -176,7 +176,7 @@ export default function ProfileForm({
       });
     } else {
       if (session?.user?.id !== id && session?.user?.role === "admin") {
-        router.push("/admin/teams");
+        router.push("/admin/team");
       } else {
         await logout();
       }

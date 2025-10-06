@@ -30,7 +30,7 @@ export async function insertFeedback(description: string, timestamp: Date) {
   }
 
   // Message the feedback channel and ping HQ
-  const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId} ): ${description} <@&900958940475559969>`;
+  const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId} ): ${description} <@&900958940475559969>`;
   await sendBotMessage(feedbackMessage, "feedback");
   return { error: null };
 }

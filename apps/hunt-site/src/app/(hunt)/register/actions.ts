@@ -43,7 +43,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
     });
 
     // Message registration channel
-    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.${HUNT_DOMAIN}/teams/${teamProperties.id}))`;
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.${HUNT_DOMAIN}/team/${teamProperties.id}))`;
     await sendBotMessage(teamMessage, "team");
 
     // Automatically log in the user
