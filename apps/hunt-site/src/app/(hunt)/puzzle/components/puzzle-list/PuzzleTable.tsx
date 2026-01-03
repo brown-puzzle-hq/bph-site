@@ -1,4 +1,3 @@
-"use client";
 import { Round, META_PUZZLES } from "~/hunt.config";
 
 type puzzleList = {

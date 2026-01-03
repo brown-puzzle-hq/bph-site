@@ -11,7 +11,7 @@ import {
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
 
-export default async function Home() {
+export default async function Page() {
   const query = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
     with: {
@@ -63,15 +63,12 @@ export default async function Home() {
     hints: puzzle.hints.filter((hint) => hint.team.role === "user").length,
   }));
 
-  const moduleMap: Record<string, () => Promise<any>> = {
-    example: () => import("../../(hunt)/puzzle/example/data"),
-  };
-
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
       try {
-        const loadModule = moduleMap[puzzle.id]?.();
-        const module = loadModule ? await loadModule.catch(() => null) : null;
+        const module = await import(
+          `../../(hunt)/puzzle/${puzzle.id}/data.tsx`
+        ).catch(() => null);
 
         const { inPersonBody, remoteBody, solutionBody, copyText } =
           module ?? {};
@@ -80,8 +77,7 @@ export default async function Home() {
           ...puzzle,
           inPersonBody: inPersonBody ?? null,
           remoteBody: remoteBody !== inPersonBody ? (remoteBody ?? null) : null,
-          solutionBody:
-            solutionBody !== inPersonBody ? (solutionBody ?? null) : null,
+          solutionBody: solutionBody ?? null,
           copyText: copyText ?? null,
         };
       } catch (e) {
@@ -96,6 +92,8 @@ export default async function Home() {
     }),
   );
 
+  const colorMap = {};
+
   return (
     <div className="container mx-auto mb-12">
       <h1 className="mb-2 text-center">Puzzles</h1>
@@ -103,7 +101,7 @@ export default async function Home() {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-inherit">
-              <TableHead className="w-10 py-0">Round</TableHead>
+              <TableHead className="w-fit py-0">Round</TableHead>
               <TableHead className="w-1/6 min-w-56 py-0">Name</TableHead>
               <TableHead className="w-10 break-all py-0">Answer</TableHead>
               <TableHead className="w-fit py-0 text-center">Unlocks</TableHead>
@@ -135,7 +133,9 @@ export default async function Home() {
                 .map((puzzle) => (
                   <TableRow key={puzzle.id} className="hover:bg-inherit">
                     <TableCell className="py-0">
-                      <div className={`inline-flex rounded-sm px-1 py-0.5`}>
+                      <div
+                        className={`inline-flex rounded-sm px-1 py-0.5 ${colorMap[round.name as keyof typeof colorMap] ?? ""} space-y-2`}
+                      >
                         {round.name}
                       </div>
                     </TableCell>

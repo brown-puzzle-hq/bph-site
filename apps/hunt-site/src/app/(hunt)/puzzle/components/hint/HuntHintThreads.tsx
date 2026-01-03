@@ -328,8 +328,8 @@ export default function HuntHintThreads({
   return (
     <div className="px-1 text-sm">
       <div className="mb-6 break-words px-3">
-        <p className="mb-1 font-semibold">Request</p>
-        <p className="text-main-text/70">
+        <p className="mb-1 font-semibold text-main-header">Request</p>
+        <p className="text-main-text">
           Please provide as much detail as possible to help us understand where
           you're at and where you're stuck! Specific clues, steps, and
           hypotheses are all helpful. If you're working with any spreadsheets,
@@ -369,7 +369,7 @@ export default function HuntHintThreads({
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME)
           }
-          className="mt-2 rounded-md bg-black/30 px-3 py-2 font-medium text-main-text hover:opacity-85 disabled:opacity-50"
+          className="mt-2 rounded-md bg-black/30 px-3 py-2 font-medium text-main-text hover:opacity-85 disabled:pointer-events-none disabled:opacity-50"
         >
           Submit
         </button>

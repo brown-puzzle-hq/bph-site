@@ -131,6 +131,7 @@ export function RegisterForm({}: RegisterFormProps) {
         description: "Your team has been registered.",
       });
       router.push("/");
+      router.refresh();
     }
   };
 

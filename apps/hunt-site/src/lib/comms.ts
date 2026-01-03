@@ -82,7 +82,7 @@ export async function sendEmail(
   } catch (e) {
     const error = ensureError(e);
     await sendBotMessage(
-      `✉️ Email send failed: ${error.message} <@689833230739964006> <@473709815261036554>`,
+      `✉️ Email send failed: ${error.message} <@&1287563929282678795>`,
       "dev",
     );
     return { success: false, error: error.message };

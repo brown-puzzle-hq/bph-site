@@ -441,19 +441,22 @@ export function TeamTable<TData, TValue>({
             : "translate-y-[5rem]"
         }`}
       >
-        <Alert className="w-full border-0 bg-slate-900/75 p-2 shadow-lg">
+        <Alert className="w-full border-0 bg-slate-100/95 p-2 shadow-lg">
           <div className="flex items-center justify-between">
-            <AlertDescription className="flex items-center space-x-2 text-white">
+            <AlertDescription className="flex items-center space-x-2">
               <AlertCircle className="h-4 w-4" />
               <span className="hidden sm:block">
                 Careful — you have unsaved changes!
               </span>
               <span className="sm:hidden">Unsaved changes!</span>
             </AlertDescription>
-            <div className="flex space-x-2">
-              <Button variant="outline" onClick={() => setEditedRows({})}>
+            <div className="flex space-x-4">
+              <button
+                className="hover:underline"
+                onClick={() => setEditedRows({})}
+              >
                 Reset
-              </Button>
+              </button>
               <Button onClick={handleSaveEdits}>Save</Button>
             </div>
           </div>

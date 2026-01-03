@@ -53,7 +53,7 @@ export function HamburgerMenu({
       optimisticPath === href
         ? side === "hunt"
           ? "bg-opacity-30 bg-black"
-          : "bg-opacity-20"
+          : "bg-opacity-15"
         : "",
     );
   return (
@@ -119,14 +119,14 @@ export function HamburgerMenu({
           <Button
             variant="ghost"
             size="icon"
-            className="flex items-center justify-center hover:bg-transparent hover:text-current md:hidden"
+            className="flex items-center justify-center hover:bg-white/15 hover:text-current md:hidden"
           >
             <Menu />
           </Button>
         </SheetTrigger>
         <SheetContent
           side="top"
-          className={`w-full ${colorMap[side]} border-0 ${side == "hunt" ? "bg-opacity-30 backdrop-blur-md backdrop-filter" : ""}`}
+          className={`w-full ${colorMap[side]} border-0 ${side === "hunt" && "bg-opacity-30 backdrop-blur-md backdrop-filter"}`}
         >
           <nav className="flex flex-col items-center space-y-2">
             {hamburgerMenuItems.map((item) => (
