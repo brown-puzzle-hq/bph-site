@@ -28,14 +28,10 @@ export type AvailablePuzzle = {
 export type AvailableEvent = {
   id: string;
   name: string;
-  answer: string;
+  answer: string | null;
+  spent: boolean;
   description: string;
   startTime: string;
-};
-
-export type FinishedEvent = {
-  eventId: string;
-  puzzleId: string | null;
 };
 
 export default async function Home() {
@@ -43,9 +39,8 @@ export default async function Home() {
   const currDate = new Date();
 
   var availablePuzzles: AvailablePuzzle[] = [];
-  var hasFinishedHunt = false;
   var availableEvents: AvailableEvent[] = [];
-  var finishedEvents: FinishedEvent[] = [];
+  var hasFinishedHunt = false;
   const isInPerson = session?.user?.interactionMode === "in-person";
 
   // Not logged in
@@ -129,12 +124,24 @@ export default async function Home() {
     }));
 
     // TODO: not a great way to order events
-    availableEvents = await db.query.events.findMany({
+    const events = await db.query.events.findMany({
       orderBy: (events, { asc }) => [asc(events.startTime)],
     });
 
-    finishedEvents = await db.query.answerTokens.findMany({
+    // Hide answers for unfinished events
+    const finishedEvents = await db.query.answerTokens.findMany({
       where: eq(answerTokens.teamId, session.user?.id!),
+    });
+
+    availableEvents = events.map((event) => {
+      const finishedEvent = finishedEvents.find(
+        (fe) => fe.eventId === event.id,
+      );
+      return {
+        ...event,
+        answer: finishedEvent ? event.answer : null,
+        spent: !!finishedEvent && finishedEvent.puzzleId !== null,
+      };
     });
 
     // Check if the user has finished the hunt
@@ -157,7 +164,6 @@ export default async function Home() {
       availablePuzzles={availablePuzzles}
       availableRounds={availableRounds}
       availableEvents={availableEvents}
-      finishedEvents={finishedEvents}
       hasEventInputBox={!!session?.user}
       hasFinishedHunt={hasFinishedHunt}
       isInPerson={isInPerson}
