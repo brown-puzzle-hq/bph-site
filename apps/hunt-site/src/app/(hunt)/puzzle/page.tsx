@@ -16,20 +16,33 @@ import {
   ROUNDS,
   Round,
 } from "@/hunt.config";
-import {
-  AvailablePuzzle,
-  SolvedPuzzle,
-  AvailableEvent,
-  FinishedEvent,
-} from "./components/puzzle-list/PuzzleListPage";
 import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
+
+export type AvailablePuzzle = {
+  unlockTime: Date | null;
+  id: string;
+  name: string;
+  answer: string | null;
+};
+
+export type AvailableEvent = {
+  id: string;
+  name: string;
+  answer: string;
+  description: string;
+  startTime: string;
+};
+
+export type FinishedEvent = {
+  eventId: string;
+  puzzleId: string | null;
+};
 
 export default async function Home() {
   const session = await auth();
   const currDate = new Date();
 
   var availablePuzzles: AvailablePuzzle[] = [];
-  var solvedPuzzles: SolvedPuzzle[] = [];
   var hasFinishedHunt = false;
   var availableEvents: AvailableEvent[] = [];
   var finishedEvents: FinishedEvent[] = [];
@@ -54,20 +67,18 @@ export default async function Home() {
           </p>
         </div>
       );
-    } // Otherwise, let them see all of the puzzles
+    } // Otherwise, let them see all puzzles without answers
     else {
       availablePuzzles = (
         await db.query.puzzles.findMany({
-          columns: { id: true, name: true, answer: true },
+          columns: { id: true, name: true },
         })
-      ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
-
-      solvedPuzzles = [];
+      ).map((puzzle) => ({ ...puzzle, unlockTime: null, answer: null }));
     }
   }
 
   // Logged in
-  if (session?.user?.id) {
+  else {
     // If the hunt has not yet started for users or admin, display a message
     if (
       (session.user.role === "user" || session.user.role === "admin") &&
@@ -85,12 +96,12 @@ export default async function Home() {
     }
 
     // Otherwise, always display the puzzles unlocked
-    let initialPuzzles = await db.query.puzzles.findMany({
+    const initialPuzzles = await db.query.puzzles.findMany({
       columns: { id: true, name: true, answer: true },
       where: inArray(puzzles.id, INITIAL_PUZZLES),
     });
 
-    let unlockedPuzzles = await db.query.unlocks.findMany({
+    const unlockedPuzzles = await db.query.unlocks.findMany({
       columns: { unlockTime: true },
       where: eq(unlocks.teamId, session.user.id),
       with: { puzzle: { columns: { id: true, name: true, answer: true } } },
@@ -104,10 +115,18 @@ export default async function Home() {
       })),
     ];
 
-    solvedPuzzles = await db.query.solves.findMany({
+    // Hide answers for unsolved puzzles
+    const solvedPuzzles = await db.query.solves.findMany({
       columns: { puzzleId: true },
       where: eq(solves.teamId, session.user.id),
     });
+
+    availablePuzzles = availablePuzzles.map((puzzle) => ({
+      ...puzzle,
+      answer: solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id)
+        ? puzzle.answer
+        : null,
+    }));
 
     // TODO: not a great way to order events
     availableEvents = await db.query.events.findMany({
@@ -136,7 +155,6 @@ export default async function Home() {
   return (
     <PuzzleListPage
       availablePuzzles={availablePuzzles}
-      solvedPuzzles={solvedPuzzles}
       availableRounds={availableRounds}
       availableEvents={availableEvents}
       finishedEvents={finishedEvents}

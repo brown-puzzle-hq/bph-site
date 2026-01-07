@@ -1,20 +1,12 @@
 import { Round, META_PUZZLES } from "~/hunt.config";
-
-type puzzleList = {
-  unlockTime: Date | null;
-  id: string;
-  name: string;
-  answer: string;
-}[];
+import { AvailablePuzzle } from "@/puzzle/page";
 
 export default function PuzzleTable({
   availableRounds,
   availablePuzzles,
-  solvedPuzzles,
 }: {
   availableRounds: Round[];
-  availablePuzzles: puzzleList;
-  solvedPuzzles: { puzzleId: string }[];
+  availablePuzzles: AvailablePuzzle[];
 }) {
   return (
     <div>
@@ -47,7 +39,7 @@ export default function PuzzleTable({
                     className="grid grid-cols-2 p-2 transition-all hover:bg-white/5"
                   >
                     <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
-                    {solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id) && (
+                    {puzzle.answer !== null && (
                       <p className="truncate text-ellipsis text-correct-guess">
                         {puzzle.answer}
                       </p>
