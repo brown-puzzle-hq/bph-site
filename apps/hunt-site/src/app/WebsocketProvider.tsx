@@ -121,8 +121,10 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     // Create the websocket
     const token = session?.accessToken ?? "";
-    const protocol = process.env.NODE_ENV === "production" ? "wss" : "ws";
-    const ws = new WebSocket(`${protocol}://${wsServer}?token=${token}`);
+    const protocol = process.env.NODE_ENV === "production" ? "wss:" : "ws:";
+    const url = new URL(`${protocol}//${wsServer}`);
+    url.searchParams.append("token", token);
+    const ws = new WebSocket(url.toString());
 
     // Initialize the websocket
     ws.onopen = () => console.log("✅ WebSocket connected");

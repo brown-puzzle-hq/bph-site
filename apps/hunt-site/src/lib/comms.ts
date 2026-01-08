@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { ReactNode } from "react";
 import { ensureError } from "./utils";
 import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "~/hunt.config";
+import { sign } from "jsonwebtoken";
 
 /** Discord integration */
 
@@ -102,13 +103,29 @@ export async function sendToWebsocketServer(
 ) {
   const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
   if (!wsServer) return;
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const protocol = process.env.NODE_ENV === "production" ? "https:" : "http:";
+  const token = sign(
+    {
+      iss: "hunt-site",
+      sub: "broadcast",
+      aud: "ws-server",
+    },
+    process.env.AUTH_SECRET!,
+    { expiresIn: "30s" },
+  );
 
   try {
-    await axios.post(`${protocol}://${wsServer}/broadcast`, {
-      teamId,
-      ...msg,
-    });
+    const url = new URL("/broadcast", `${protocol}//${wsServer}`);
+    await axios.post(
+      url.toString(),
+      {
+        teamId,
+        ...msg,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
   } catch (err) {
     console.error("WebSocket server unreachable:", err);
   }

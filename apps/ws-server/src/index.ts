@@ -2,7 +2,7 @@ import express from "express";
 import { WebSocket, WebSocketServer } from "ws";
 import http from "http";
 import cors from "cors";
-import jwt from "jsonwebtoken";
+import { verify, JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -32,8 +32,7 @@ wss.on("connection", (ws, req) => {
   if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
 
   // Get the token from the URL
-  const url = new URL(req.url || "", `http://${req.headers.host}`);
-  console.log(`Connecting with ${url}`);
+  const url = new URL(req.url || "", "http://dummy");
   const token = url.searchParams.get("token");
   if (!token) {
     console.error(`No token provided`);
@@ -43,7 +42,7 @@ wss.on("connection", (ws, req) => {
 
   // Try to autheneticate the user
   try {
-    const decoded = jwt.verify(token, process.env.AUTH_SECRET) as TokenPayload;
+    const decoded = verify(token, process.env.AUTH_SECRET) as TokenPayload;
     const teamId = decoded.id;
 
     if (!channels.has(teamId)) channels.set(teamId, new Set());
@@ -68,6 +67,31 @@ wss.on("connection", (ws, req) => {
 });
 
 app.post("/broadcast", express.json(), (req, res) => {
+  // Make sure that AUTH_SECRET exists
+  if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
+
+  const auth = req.headers.authorization;
+  if (!auth?.startsWith("Bearer ")) {
+    res.status(401).send("No authorization header");
+    return;
+  }
+  const token = auth.slice(7);
+
+  try {
+    const decoded = verify(token, process.env.AUTH_SECRET) as JwtPayload;
+    if (
+      decoded.iss !== "hunt-site" ||
+      decoded.aud !== "ws-server" ||
+      decoded.sub !== "broadcast"
+    ) {
+      res.status(401).send("Invalid claim(s)");
+      return;
+    }
+  } catch (e) {
+    res.status(401).send("Invalid token");
+    return;
+  }
+
   const { teamId, ...message } = req.body;
   const clients = channels.get(teamId);
   if (!clients) {
