@@ -71,8 +71,8 @@ wss.on("connection", (ws, req) => {
     const teamId = socketToTeam.get(ws);
     if (teamId && channels.has(teamId)) {
       channels.get(teamId)!.delete(ws);
+      console.log("Removed from channel", teamId);
     }
-    console.log("Removed from channel", teamId);
   });
 });
 
