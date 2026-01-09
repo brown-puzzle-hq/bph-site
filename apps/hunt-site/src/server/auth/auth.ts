@@ -26,11 +26,7 @@ export const signInSchema = object({
  * object and keep type safety.
  */
 declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-    user: User & DefaultSession["user"];
-  }
-
+  interface Session extends DefaultSession {}
   interface User {
     id?: string | undefined;
     displayName: string;

@@ -8,12 +8,12 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { type SocketMessage } from "~/lib/comms";
 import Link from "next/link";
 import { HUNT_DOMAIN } from "~/hunt.config";
 import { CheckCircle, Unlock, Trophy } from "lucide-react";
+import axios from "axios";
 
 const TOAST_CLASS = "bg-[#703B50] text-white shadow-lg rounded-xl";
 
@@ -21,7 +21,6 @@ const WebSocketContext = createContext<WebSocket | null>(null);
 export const useWebSocket = () => useContext(WebSocketContext);
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
   const socketRef = useRef<WebSocket | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
@@ -79,7 +78,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 </div>
               </div>
             ),
-            { duration: 5000 },
+            { duration: 4000 },
           );
           break;
 
@@ -117,26 +116,42 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       console.warn("NEXT_PUBLIC_WEBSOCKET_SERVER is not configured.");
       return;
     }
-    if (status !== "authenticated" || !session) return;
 
-    // Create the websocket
-    const token = session?.accessToken ?? "";
-    const protocol = process.env.NODE_ENV === "production" ? "wss:" : "ws:";
-    const url = new URL(`${protocol}//${wsServer}`);
-    url.searchParams.append("token", token);
-    const ws = new WebSocket(url.toString());
+    let cancelled = false;
 
-    // Initialize the websocket
-    ws.onopen = () => console.log("✅ WebSocket connected");
-    ws.onmessage = (event) => handleMessage(event);
-    ws.onerror = (err) => console.error("❌ WebSocket error", err);
-    ws.onclose = () => console.warn("⚠️ WebSocket closed");
+    async function connect() {
+      try {
+        const { data } = await axios.post("/api/ws-token");
+        const token = data.token;
 
-    socketRef.current = ws;
-    setSocket(ws);
+        if (cancelled) return;
 
-    return () => ws.close();
-  }, [status, session]);
+        // Create the websocket
+        const protocol = process.env.NODE_ENV === "production" ? "wss:" : "ws:";
+        const url = new URL(`${protocol}//${wsServer}`);
+        url.searchParams.append("token", token);
+        const ws = new WebSocket(url.toString());
+
+        // Initialize the websocket
+        ws.onopen = () => console.log("✅ WebSocket connected");
+        ws.onmessage = (event) => handleMessage(event);
+        ws.onerror = (err) => console.error("❌ WebSocket error", err);
+        ws.onclose = () => console.warn("⚠️ WebSocket closed");
+
+        socketRef.current = ws;
+        setSocket(ws);
+      } catch (err) {
+        console.error("Failed to connect to WebSocket server:", err);
+      }
+    }
+
+    connect();
+
+    return () => {
+      cancelled = true;
+      socket?.close();
+    };
+  }, []);
 
   return (
     <WebSocketContext.Provider value={socket}>

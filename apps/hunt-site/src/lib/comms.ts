@@ -107,8 +107,9 @@ export async function sendToWebsocketServer(
   const token = sign(
     {
       iss: "hunt-site",
-      sub: "broadcast",
+      sub: "hunt-site",
       aud: "ws-server",
+      scope: "broadcast",
     },
     process.env.AUTH_SECRET!,
     { expiresIn: "30s" },

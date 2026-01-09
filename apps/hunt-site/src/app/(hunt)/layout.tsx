@@ -23,7 +23,7 @@ export default async function RootLayout({
     <html lang="en" className={GeistSans.variable}>
       <body className="bg-main-bg text-main-text">
         <Providers session={session}>
-          {session?.user.role === "admin" && <CommandPalette />}
+          {session?.user?.role === "admin" && <CommandPalette />}
           <Toaster expand={true} visibleToasts={10} />
           <div className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg">
             {/* Navbar */}
