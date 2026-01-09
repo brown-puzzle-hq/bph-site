@@ -5,8 +5,8 @@ import { useSession } from "next-auth/react";
 import { Button } from "~/components/ui/button";
 
 export default function Page() {
-  const { data } = useSession();
-  const teamId = data?.user?.id;
+  const { data: session } = useSession();
+  const teamId = session?.user?.id;
 
   if (!teamId) {
     console.error("No teamId found");

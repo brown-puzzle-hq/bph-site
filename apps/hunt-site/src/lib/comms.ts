@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { Resend } from "resend";
 import { ReactNode } from "react";
@@ -54,12 +56,6 @@ export async function sendBotMessage(
 }
 
 /** Email integration */
-
-export function extractEmails(memberString: string): string[] {
-  return JSON.parse(memberString)
-    .map(([_, email]: [string, string]) => email)
-    .filter(Boolean);
-}
 
 export async function sendEmail(
   to: string[],

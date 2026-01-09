@@ -1,3 +1,5 @@
+/** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
+
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 

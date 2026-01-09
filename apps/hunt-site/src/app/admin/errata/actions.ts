@@ -5,7 +5,8 @@ import { errata } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
 import { unlocks, puzzles, solves } from "@/db/schema";
-import { sendEmail, extractEmails } from "~/lib/comms";
+import { sendEmail } from "~/lib/comms";
+import { extractEmails } from "~/lib/team-members";
 import { INITIAL_PUZZLES, HUNT_EMAIL } from "~/hunt.config";
 import { ErratumEmailTemplate } from "~/lib/email-template";
 

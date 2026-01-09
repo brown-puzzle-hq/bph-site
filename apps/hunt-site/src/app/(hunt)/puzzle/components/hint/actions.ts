@@ -1,10 +1,12 @@
 "use server";
+
 import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
-import { sendBotMessage, sendEmail, extractEmails } from "~/lib/comms";
+import { sendBotMessage, sendEmail } from "~/lib/comms";
+import { extractEmails } from "~/lib/team-members";
 import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
