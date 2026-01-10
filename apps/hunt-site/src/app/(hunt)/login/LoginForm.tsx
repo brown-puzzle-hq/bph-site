@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,7 +39,7 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const { error, session } = await login(data.id, data.password);
+    const { error } = await login(data.id, data.password);
     if (error) {
       const input = document.querySelector(
         "input[name='password']",
@@ -47,12 +48,7 @@ export function LoginForm() {
       setShaking(true);
       setTimeout(() => setShaking(false), 200);
     } else {
-      update(session);
-      if (session.data?.user?.role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+      router.push("/");
       router.refresh();
     }
   };

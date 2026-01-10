@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
 import { object, string } from "zod";
-import { compare } from "bcryptjs";
+import { compareSync } from "bcryptjs";
 
 import { authConfig } from "./auth.config";
 
@@ -47,8 +47,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       authorize: async (credentials) => {
         try {
           // Get id and password
-          if (!credentials?.id || !credentials?.password) return null;
-          const { id, password } = await signInSchema.parseAsync(credentials);
+          const { id, password } = signInSchema.parse(credentials);
 
           // Get user
           const user = await db.query.teams.findFirst({
@@ -57,7 +56,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           if (!user) return null;
 
           // Check if credentials are valid
-          const validCredentials = await compare(password, user.password);
+          const validCredentials = compareSync(password, user.password);
           if (!validCredentials) return null;
 
           return {
@@ -67,7 +66,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             interactionMode: user.interactionMode,
           };
         } catch (error) {
-          console.error(error);
           return null;
         }
       },

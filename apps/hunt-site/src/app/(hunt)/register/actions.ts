@@ -47,11 +47,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
     await sendBotMessage(teamMessage, "team");
 
     // Automatically log in the user
-    const { error, session } = await login(
-      teamProperties.id,
-      teamProperties.password,
-    );
-    return { error, session };
+    return await login(teamProperties.id, teamProperties.password);
   } catch (e) {
     // Message dev channel
     const error = ensureError(e);

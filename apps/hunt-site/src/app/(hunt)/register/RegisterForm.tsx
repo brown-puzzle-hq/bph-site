@@ -113,7 +113,7 @@ export function RegisterForm({}: RegisterFormProps) {
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    const { error, session } = await insertTeam({
+    const { error } = await insertTeam({
       id: data.id,
       displayName: data.displayName,
       password: data.password,
@@ -126,7 +126,6 @@ export function RegisterForm({}: RegisterFormProps) {
         description: error,
       });
     } else {
-      update(session);
       toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
         description: "Your team has been registered.",
       });
