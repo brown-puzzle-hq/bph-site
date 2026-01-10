@@ -48,7 +48,12 @@ export function LoginForm() {
       setShaking(true);
       setTimeout(() => setShaking(false), 200);
     } else {
-      router.push("/");
+      const session = await update({});
+      if (session?.user?.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
       router.refresh();
     }
   };

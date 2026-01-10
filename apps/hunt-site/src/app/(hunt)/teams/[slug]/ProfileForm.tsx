@@ -144,19 +144,7 @@ export default function ProfileForm({
       return;
     }
 
-    if (session?.user?.id === id) {
-      if (data.displayName != form.formState.defaultValues?.displayName) {
-        update({ displayName: data.displayName });
-      }
-      if (data.role != form.formState.defaultValues?.role) {
-        update({ role: data.role });
-      }
-      if (
-        data.interactionMode != form.formState.defaultValues?.interactionMode
-      ) {
-        update({ interactionMode: data.interactionMode });
-      }
-    }
+    if (session?.user?.id === id) await update({});
 
     form.reset({
       ...data,

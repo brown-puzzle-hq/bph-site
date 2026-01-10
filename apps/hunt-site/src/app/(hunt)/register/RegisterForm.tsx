@@ -129,6 +129,7 @@ export function RegisterForm({}: RegisterFormProps) {
       toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
         description: "Your team has been registered.",
       });
+      await update({});
       router.push("/");
       router.refresh();
     }

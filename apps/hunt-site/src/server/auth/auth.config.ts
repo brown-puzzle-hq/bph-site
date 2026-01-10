@@ -1,4 +1,7 @@
 import { type NextAuthConfig } from "next-auth";
+import { db } from "@/db/index";
+import { eq } from "drizzle-orm";
+import { teams } from "@/db/schema";
 
 export const authConfig = {
   session: { strategy: "jwt" },
@@ -19,15 +22,15 @@ export const authConfig = {
         token.role = user.role;
         token.interactionMode = user.interactionMode;
       }
-      if (trigger === "update") {
-        if (session?.displayName !== undefined) {
-          token.displayName = session.displayName;
-        }
-        if (session?.role !== undefined) {
-          token.role = session.role;
-        }
-        if (session?.interactionMode !== undefined) {
-          token.interactionMode = session.interactionMode;
+      if (trigger === "update" && typeof token.id === "string") {
+        const team = await db.query.teams.findFirst({
+          where: eq(teams.id, token.id),
+        });
+
+        if (team) {
+          token.displayName = team.displayName;
+          token.role = team.role;
+          token.interactionMode = team.interactionMode;
         }
       }
       return token;
