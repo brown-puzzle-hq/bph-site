@@ -17,13 +17,10 @@ export async function login(id: string, password: string) {
     const error = ensureError(e);
     if (error instanceof CredentialsSignin) {
       return { error: "Username or password is incorrect" };
-    } else {
-      sendBotMessage(
-        `🐛 Login for ${id} failed: ${error.message} <@&1287563929282678795>`,
-        "dev",
-      );
-      return { error: "An unexpected error occurred" };
     }
+    const errorMessage = `🐛 Login for ${id} failed: ${error.message} <@&1287563929282678795>`;
+    sendBotMessage(errorMessage, "dev");
+    return { error: "An unexpected error occurred" };
   }
 }
 

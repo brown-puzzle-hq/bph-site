@@ -135,15 +135,14 @@ export async function handleGuess(puzzleId: string, guess: string) {
     });
   } catch (e) {
     const error = ensureError(e);
-    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
-    console.error(errorMessage);
-    sendBotMessage(errorMessage, "dev");
     // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to submit the same guess twice
     if ("code" in error && error.code === "23505") {
       return { error: "Already guessed!" };
     }
-    return { error: "An unexpected error occurred. Please try again." };
+    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
+    sendBotMessage(errorMessage, "dev");
+    return { error: "An unexpected error occurred." };
   }
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */

@@ -169,10 +169,10 @@ export default function ProfileForm({
   };
 
   const onDelete = async () => {
-    const result = await deleteTeam(id, form.watch("displayName"));
-    if (result.error) {
+    const { error } = await deleteTeam(id);
+    if (error) {
       toast("Deletion failed", {
-        description: result.error,
+        description: error,
       });
     } else {
       if (session?.user?.id !== id && session?.user?.role === "admin") {
