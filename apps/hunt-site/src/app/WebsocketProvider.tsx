@@ -4,7 +4,6 @@ import {
   useContext,
   useState,
   useEffect,
-  useRef,
   useCallback,
   ReactNode,
 } from "react";
@@ -21,7 +20,6 @@ const WebSocketContext = createContext<WebSocket | null>(null);
 export const useWebSocket = () => useContext(WebSocketContext);
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
-  const socketRef = useRef<WebSocket | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const handleMessage = useCallback((event: MessageEvent) => {
@@ -107,8 +105,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   // Try to create a websocket
   useEffect(() => {
     // Check that a websocket does not already exist
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN)
-      return;
+    if (socket && socket.readyState === WebSocket.OPEN) return;
 
     // Check that websocket server exists and the user is logged in
     const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
@@ -138,7 +135,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         ws.onerror = (err) => console.error("❌ WebSocket error", err);
         ws.onclose = () => console.warn("⚠️ WebSocket closed");
 
-        socketRef.current = ws;
         setSocket(ws);
       } catch (err) {
         console.error("Failed to connect to WebSocket server:", err);

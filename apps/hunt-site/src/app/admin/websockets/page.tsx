@@ -2,10 +2,12 @@
 
 import { sendToWebsocketServer, type SocketMessage } from "~/lib/comms";
 import { useSession } from "next-auth/react";
+import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 
 export default function Page() {
   const { data: session } = useSession();
+  const socket = useWebSocket();
   const teamId = session?.user?.id;
 
   if (!teamId) {
@@ -20,11 +22,11 @@ export default function Page() {
   return (
     <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
       <h1 className="text-2xl font-bold">Websockets</h1>
-      <p className="mb-4 text-gray-600">
+      <p className="text-gray-600">
         Test whether the websocket server is working correctly.
       </p>
 
-      <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+      <div className="my-4 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
@@ -74,6 +76,21 @@ export default function Page() {
         >
           🏆 Finish Hunt
         </Button>
+      </div>
+
+      <div className="flex items-center space-x-1">
+        <p className="text-gray-600">Socket status: </p>
+        {socket ? (
+          socket.readyState === WebSocket.OPEN ? (
+            <p className="text-lime-600">OPEN</p>
+          ) : socket.readyState === WebSocket.CLOSED ? (
+            <p className="text-red-500">CLOSED</p>
+          ) : (
+            <p className="text-yellow-500">OTHER</p>
+          )
+        ) : (
+          <p className="text-red-500">NOT CONNECTED</p>
+        )}
       </div>
     </div>
   );
