@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useWebSocket } from "~/app/WebsocketProvider";
 import { toast } from "sonner";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -96,6 +97,7 @@ export default function ProfileForm({
 }: TeamInfoFormProps) {
   const router = useRouter();
   const { data: session, update } = useSession();
+  const { disconnect } = useWebSocket();
   const members = deserializeMembers(memberString);
 
   const form = useForm<ProfileFormValues>({
@@ -166,6 +168,7 @@ export default function ProfileForm({
       if (session?.user?.id !== id && session?.user?.role === "admin") {
         router.push("/admin/teams");
       } else {
+        disconnect();
         await logout();
       }
     }

@@ -7,16 +7,13 @@ import { Button } from "~/components/ui/button";
 
 export default function Page() {
   const { data: session } = useSession();
-  const socket = useWebSocket();
-  const teamId = session?.user?.id;
-
-  if (!teamId) {
-    console.error("No teamId found");
-    return;
-  }
+  const { readyState } = useWebSocket();
 
   const handleClick = async (msg: SocketMessage) => {
-    await sendToWebsocketServer(teamId, msg);
+    const teamId = session?.user?.id;
+    if (teamId) {
+      await sendToWebsocketServer(teamId, msg);
+    }
   };
 
   return (
@@ -80,14 +77,14 @@ export default function Page() {
 
       <div className="flex items-center space-x-1">
         <p className="text-gray-600">Socket status: </p>
-        {socket ? (
-          socket.readyState === WebSocket.OPEN ? (
-            <p className="text-lime-600">OPEN</p>
-          ) : socket.readyState === WebSocket.CLOSED ? (
-            <p className="text-red-500">CLOSED</p>
-          ) : (
-            <p className="text-yellow-500">OTHER ({socket.readyState})</p>
-          )
+        {readyState === WebSocket.CONNECTING ? (
+          <p className="text-yellow-500">CONNECTING</p>
+        ) : readyState === WebSocket.OPEN ? (
+          <p className="text-lime-600">OPEN</p>
+        ) : readyState === WebSocket.CLOSING ? (
+          <p className="text-yellow-500">CLOSING</p>
+        ) : readyState === WebSocket.CLOSED ? (
+          <p className="text-red-500">CLOSED</p>
         ) : (
           <p className="text-red-500">NOT CONNECTED</p>
         )}

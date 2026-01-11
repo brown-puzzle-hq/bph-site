@@ -19,6 +19,7 @@ import { HUNT_EMAIL } from "~/hunt.config";
 import { login, logout } from "./actions";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useWebSocket } from "~/app/WebsocketProvider";
 
 export const loginFormSchema = z.object({
   id: z.string(),
@@ -112,9 +113,11 @@ export function LoginForm() {
 }
 
 export function LogoutForm() {
+  const { disconnect } = useWebSocket();
   return (
     <Button
       onClick={async () => {
+        disconnect();
         await logout();
       }}
     >
