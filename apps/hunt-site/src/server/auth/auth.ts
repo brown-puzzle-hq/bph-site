@@ -28,7 +28,7 @@ export const signInSchema = object({
 declare module "next-auth" {
   interface Session extends DefaultSession {}
   interface User {
-    id?: string | undefined;
+    id?: string;
     displayName: string;
     role: string;
     interactionMode: string;
@@ -59,12 +59,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           const validCredentials = compareSync(password, user.password);
           if (!validCredentials) return null;
 
-          return {
-            id: user.id,
-            displayName: user.displayName,
-            role: user.role,
-            interactionMode: user.interactionMode,
-          };
+          return user;
         } catch (error) {
           return null;
         }

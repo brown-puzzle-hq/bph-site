@@ -4,7 +4,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useWebSocket } from "~/app/WebsocketProvider";
 import { toast } from "sonner";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -39,7 +38,6 @@ import { AlertCircle, X } from "lucide-react";
 
 // Other
 import { deleteTeam, updateTeam } from "../actions";
-import { logout } from "../../login/actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { IN_PERSON } from "~/hunt.config";
 import {
@@ -47,6 +45,7 @@ import {
   deserializeMembers,
   serializeMembers,
 } from "~/lib/team-members";
+import { signOut } from "next-auth/react";
 
 export const profileFormSchema = z
   .object({
@@ -97,7 +96,6 @@ export default function ProfileForm({
 }: TeamInfoFormProps) {
   const router = useRouter();
   const { data: session, update } = useSession();
-  const { disconnect } = useWebSocket();
   const members = deserializeMembers(memberString);
 
   const form = useForm<ProfileFormValues>({
@@ -168,8 +166,7 @@ export default function ProfileForm({
       if (session?.user?.id !== id && session?.user?.role === "admin") {
         router.push("/admin/teams");
       } else {
-        disconnect();
-        await logout();
+        signOut();
       }
     }
   };

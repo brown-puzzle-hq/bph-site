@@ -16,10 +16,8 @@ import {
 } from "@/components/ui/form";
 import { HUNT_EMAIL } from "~/hunt.config";
 
-import { login, logout } from "./actions";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useWebSocket } from "~/app/WebsocketProvider";
+import { signIn, signOut } from "next-auth/react";
 
 export const loginFormSchema = z.object({
   id: z.string(),
@@ -27,7 +25,6 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
-  const { update } = useSession();
   const [shaking, setShaking] = useState(false);
   const router = useRouter();
 
@@ -40,22 +37,24 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const { error } = await login(data.id, data.password);
-    if (error) {
+    const result = await signIn("credentials", {
+      id: data.id,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (result?.code === "credentials") {
       const input = document.querySelector(
         "input[name='password']",
       ) as HTMLInputElement;
       input?.select();
       setShaking(true);
       setTimeout(() => setShaking(false), 200);
-    } else {
-      const session = await update({});
-      if (session?.user?.role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+    } else if (result?.ok) {
+      router.push("/");
       router.refresh();
+    } else {
+      alert("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -113,15 +112,5 @@ export function LoginForm() {
 }
 
 export function LogoutForm() {
-  const { disconnect } = useWebSocket();
-  return (
-    <Button
-      onClick={async () => {
-        disconnect();
-        await logout();
-      }}
-    >
-      Logout
-    </Button>
-  );
+  return <Button onClick={() => signOut()}>Logout</Button>;
 }

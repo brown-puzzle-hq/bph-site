@@ -4,7 +4,6 @@ import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
 import { hashSync } from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { login } from "../login/actions";
 import { IN_PERSON, HUNT_DOMAIN } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/utils";
@@ -45,9 +44,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
     // Message registration channel
     const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.${HUNT_DOMAIN}/teams/${teamProperties.id}))`;
     await sendBotMessage(teamMessage, "team");
-
-    // Automatically log in the user
-    return await login(teamProperties.id, teamProperties.password);
+    return { error: null };
   } catch (e) {
     // Message dev channel
     const error = ensureError(e);

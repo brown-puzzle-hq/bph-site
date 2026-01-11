@@ -23,7 +23,7 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { IN_PERSON, HUNT_NAME } from "~/hunt.config";
-import { useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export type Member = {
   id?: number;
@@ -79,7 +79,6 @@ type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 export function RegisterForm({}: RegisterFormProps) {
-  const { update } = useSession();
   const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
@@ -125,14 +124,25 @@ export function RegisterForm({}: RegisterFormProps) {
       toast.error("Register failed", {
         description: error,
       });
-    } else {
-      toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
-        description: "Your team has been registered.",
-      });
-      await update({});
-      router.push("/");
-      router.refresh();
+      return;
     }
+
+    const result = await signIn("credentials", {
+      id: data.id,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (!result?.ok || result?.code === "credentials") {
+      alert("An unexpected error occurred. Please try again.");
+      return;
+    }
+
+    toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
+      description: "Your team has been registered.",
+    });
+    router.push("/");
+    router.refresh();
   };
 
   return (

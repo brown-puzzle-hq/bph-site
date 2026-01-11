@@ -15,12 +15,12 @@ import Link from "next/link";
 import { HUNT_DOMAIN } from "~/hunt.config";
 import { CheckCircle, Unlock, Trophy } from "lucide-react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const TOAST_CLASS = "bg-[#703B50] text-white shadow-lg rounded-xl";
 
 type WebSocketContextValue = {
   readyState: number;
-  disconnect: () => void;
 };
 
 export const WebSocketContext = createContext<WebSocketContextValue | null>(
@@ -36,6 +36,7 @@ export function useWebSocket() {
 }
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
+  const { status } = useSession();
   const socketRef = useRef<WebSocket | null>(null);
   const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
 
@@ -119,17 +120,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const disconnect = useCallback(() => {
-    socketRef.current?.close(1000);
-  }, []);
-
   // Try to create a websocket
   useEffect(() => {
-    // Check that a websocket does not already exist
-    if (socketRef.current) return;
+    // Check that the user is logged in
+    if (status !== "authenticated") return;
 
     // Check that websocket server exists
-
     const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
     const protocol = process.env.NEXT_PUBLIC_WEBSOCKET_PROTOCOL;
     if (!wsServer || !protocol) {
@@ -142,7 +138,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     async function connect() {
       try {
         // Get permission token
-        // TODO: check session beforehand?
         const { data } = await axios.post("/api/ws-token");
         const token = data.token;
 
@@ -177,16 +172,15 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     connect();
 
     return () => {
+      socketRef.current?.close(1000);
       cancelled = true;
-      disconnect();
     };
-  }, [disconnect]);
+  }, [status]);
 
   return (
     <WebSocketContext.Provider
       value={{
         readyState,
-        disconnect,
       }}
     >
       {children}
