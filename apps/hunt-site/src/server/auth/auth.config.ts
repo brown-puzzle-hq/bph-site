@@ -15,7 +15,7 @@ export const authConfig = {
     // The jwt callback is called whenever a token is created
     // (i.e. at sign-in) or updated (i.e. `useSession`).
     // The returned value is encrypted and stored in a cookie.
-    jwt: async ({ token, user, trigger, session }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user) {
         token.id = user.id;
         token.displayName = user.displayName;

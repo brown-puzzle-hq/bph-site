@@ -1,20 +1,11 @@
 "use client";
 
-import { sendToWebsocketServer, type SocketMessage } from "~/lib/comms";
-import { useSession } from "next-auth/react";
+import { sendWebsocketMessage } from "./actions";
 import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 
 export default function Page() {
-  const { data: session } = useSession();
   const { readyState } = useWebSocket();
-
-  const handleClick = async (msg: SocketMessage) => {
-    const teamId = session?.user?.id;
-    if (teamId) {
-      await sendToWebsocketServer(teamId, msg);
-    }
-  };
 
   return (
     <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
@@ -27,7 +18,7 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "Toast",
               title: "Hi",
               description: "Hello",
@@ -40,7 +31,7 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "UnlockedPuzzle",
               puzzleId: "example",
               puzzleName: "Example",
@@ -53,7 +44,7 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "SolvedPuzzle",
               puzzleId: "example",
               puzzleName: "Example",
@@ -66,7 +57,7 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "FinishedHunt",
             })
           }

@@ -144,7 +144,8 @@ export default function ProfileForm({
       return;
     }
 
-    if (session?.user?.id === id) await update({});
+    // updateTeam drives changes, this pulls from the database
+    if (session?.user?.id === id) await update(null);
 
     form.reset({
       ...data,
