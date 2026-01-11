@@ -1,9 +1,10 @@
 "use server";
+
 import { auth } from "@/auth";
 import { feedback } from "@/db/schema";
 import { db } from "@/db/index";
 import { sendBotMessage } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError } from "~/lib/server";
 import { HUNT_DOMAIN } from "~/hunt.config";
 
 export async function insertFeedback(description: string, timestamp: Date) {

@@ -6,7 +6,7 @@ import { hashSync } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { IN_PERSON, HUNT_DOMAIN } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError } from "~/lib/server";
 
 export type TeamProperties = {
   id: string;

@@ -7,7 +7,7 @@ import { hashSync } from "bcryptjs";
 import { auth } from "~/server/auth/auth";
 import { IN_PERSON } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError } from "~/lib/server";
 
 export type TeamProperties = {
   displayName?: string;

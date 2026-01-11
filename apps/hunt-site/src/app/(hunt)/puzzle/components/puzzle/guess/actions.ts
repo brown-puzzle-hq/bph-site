@@ -1,4 +1,5 @@
 "use server";
+
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
@@ -21,7 +22,7 @@ import {
   HUNT_DOMAIN,
 } from "~/hunt.config";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 

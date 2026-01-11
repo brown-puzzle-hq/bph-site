@@ -3,7 +3,7 @@
 import axios from "axios";
 import { Resend } from "resend";
 import { ReactNode } from "react";
-import { ensureError } from "./utils";
+import { ensureError } from "./server";
 import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "~/hunt.config";
 import { sign } from "jsonwebtoken";
 

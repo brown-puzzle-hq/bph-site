@@ -1,3 +1,5 @@
+"use server";
+
 import { HUNT_DOMAIN } from "~/hunt.config";
 
 export interface HintEmailTemplateProps {
