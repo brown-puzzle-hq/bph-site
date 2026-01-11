@@ -2,11 +2,18 @@
 
 import { SessionProvider } from "next-auth/react";
 import { WebSocketProvider } from "./WebsocketProvider";
+import { Session } from "next-auth";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null;
+}) {
   return (
-    <WebSocketProvider>
-      <SessionProvider refetchOnWindowFocus={false}>{children}</SessionProvider>
-    </WebSocketProvider>
+    <SessionProvider refetchOnWindowFocus={false} session={session}>
+      <WebSocketProvider>{children}</WebSocketProvider>
+    </SessionProvider>
   );
 }
