@@ -1,4 +1,5 @@
 import { Round, META_PUZZLES } from "~/hunt.config";
+import Link from "next/link";
 
 type puzzleList = {
   unlockTime: Date | null;
@@ -42,9 +43,10 @@ export default function PuzzleTable({
               .map((puzzle) => (
                 <div key={puzzle.id}>
                   <hr className="w-full" />
-                  <a
+                  <Link
                     href={`/puzzle/${puzzle.id}`}
                     className="grid grid-cols-2 p-2 transition-all hover:bg-white/5"
+                    prefetch={false}
                   >
                     <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
                     {solvedPuzzles.some((sp) => sp.puzzleId === puzzle.id) && (
@@ -52,7 +54,7 @@ export default function PuzzleTable({
                         {puzzle.answer}
                       </p>
                     )}
-                  </a>
+                  </Link>
                 </div>
               ))}
             <hr className="w-full" />

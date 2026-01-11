@@ -1,5 +1,4 @@
 import "~/styles/globals.css";
-import { auth } from "@/auth";
 import { GeistSans } from "geist/font/sans";
 import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
@@ -18,12 +17,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await auth();
   return (
     <html lang="en" className={GeistSans.variable}>
       <body className="bg-main-bg text-main-text">
-        <Providers session={session}>
-          {session?.user?.role === "admin" && <CommandPalette />}
+        <Providers>
+          <CommandPalette />
           <Toaster expand={true} visibleToasts={10} />
           <div className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg">
             {/* Navbar */}

@@ -86,7 +86,7 @@ export default function Page() {
           ) : socket.readyState === WebSocket.CLOSED ? (
             <p className="text-red-500">CLOSED</p>
           ) : (
-            <p className="text-yellow-500">OTHER</p>
+            <p className="text-yellow-500">OTHER ({socket.readyState})</p>
           )
         ) : (
           <p className="text-red-500">NOT CONNECTED</p>

@@ -1,5 +1,4 @@
 import "~/styles/globals.css";
-import { auth } from "@/auth";
 import { GeistSans } from "geist/font/sans";
 import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
@@ -17,11 +16,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await auth();
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <Providers session={session}>
+        <Providers>
           <CommandPalette />
           <Toaster expand={true} visibleToasts={10} />
           <AdminHamburgerMenu />
