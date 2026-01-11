@@ -1,4 +1,5 @@
 "use client";
+
 import {
   createContext,
   useContext,
@@ -124,7 +125,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
 
         // Create the websocket
-        const protocol = process.env.NODE_ENV === "production" ? "wss:" : "ws:";
+        const protocol = process.env.NEXT_PUBLIC_WEBSOCKET_PROTOCOL;
         const url = new URL(`${protocol}//${wsServer}`);
         url.searchParams.append("token", token);
         const ws = new WebSocket(url.toString());

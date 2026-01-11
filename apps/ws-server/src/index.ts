@@ -37,7 +37,7 @@ wss.on("connection", (ws, req) => {
     return;
   }
 
-  // Try to autheneticate the user
+  // Try to authenticate the user
   try {
     const decoded = verify(token, process.env.AUTH_SECRET) as WsJwtPayload;
     if (

@@ -99,7 +99,7 @@ export async function sendToWebsocketServer(
 ) {
   const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
   if (!wsServer) return;
-  const protocol = process.env.NODE_ENV === "production" ? "https:" : "http:";
+  const protocol = process.env.BROADCAST_PROTOCOL;
   const token = sign(
     {
       iss: "hunt-site",
