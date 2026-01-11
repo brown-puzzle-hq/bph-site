@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 
 export function ensureError(value: unknown): Error {
   if (value instanceof Error) return value;

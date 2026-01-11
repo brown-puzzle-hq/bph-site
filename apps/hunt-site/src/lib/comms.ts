@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 
 import axios from "axios";
 import { Resend } from "resend";
