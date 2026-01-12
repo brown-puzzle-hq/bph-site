@@ -9,27 +9,13 @@ import {
 } from "~/components/ui/table";
 import EventForm from "./EventForm";
 import { Calendar, PencilLine } from "lucide-react";
-
-type Event = {
-  id: string;
-  name: string;
-  startTime: string;
-  description: string;
-  answer: string;
-};
-
-type Token = {
-  eventId: string;
-  puzzleId: string | null;
-};
+import { AvailableEvent } from "@/puzzle/page";
 
 export default function EventTable({
   availableEvents,
-  finishedEvents,
   inputBox,
 }: {
-  availableEvents: Event[];
-  finishedEvents: Token[];
+  availableEvents: AvailableEvent[];
   inputBox: boolean;
 }) {
   return (
@@ -54,11 +40,10 @@ export default function EventTable({
                   {inputBox && (
                     <div className="flex items-center space-x-2">
                       <PencilLine className="h-4 w-4 min-w-4" />
-                      {finishedEvents.some((fe) => fe.eventId === event.id) ? (
+                      {event.answer !== null ? (
                         <span
                           className={
-                            finishedEvents.find((fe) => fe.eventId === event.id)
-                              ?.puzzleId
+                            event.spent
                               ? "text-correct-guess line-through"
                               : "text-correct-guess"
                           }
