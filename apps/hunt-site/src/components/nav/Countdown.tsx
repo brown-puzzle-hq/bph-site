@@ -41,7 +41,10 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
   }
 
   return (
-    <div className="hidden w-full font-mono text-sm lg:block">
+    <div
+      className="hidden w-full font-mono text-sm lg:block"
+      suppressHydrationWarning
+    >
       ✨ {String(timeRemaining.days).padStart(2, "0")}:
       {String(timeRemaining.hours).padStart(2, "0")}:
       {String(timeRemaining.minutes).padStart(2, "0")}:

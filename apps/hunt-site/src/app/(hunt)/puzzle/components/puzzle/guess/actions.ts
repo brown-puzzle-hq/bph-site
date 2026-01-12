@@ -138,6 +138,11 @@ export async function handleGuess(puzzleId: string, guess: string) {
     const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
     console.error(errorMessage);
     sendBotMessage(errorMessage, "dev");
+    // PostgreSQL error code 23505 is a unique constraint violation
+    // This occurs when a team tries to submit the same guess twice
+    if ("code" in error && error.code === "23505") {
+      return { error: "Already guessed!" };
+    }
     return { error: "An unexpected error occurred. Please try again." };
   }
 
@@ -147,57 +152,43 @@ export async function handleGuess(puzzleId: string, guess: string) {
   await sendBotMessage(guessMessage, "guess");
   /** END_SNIPPET:DISCORD_MESSAGE */
 
-  // Broadcast that the puzzle was solved
-  if (isCorrect)
-    await sendToWebsocketServer(teamId, {
-      type: "SolvedPuzzle",
-      puzzleId,
-      puzzleName: puzzle.name,
-    });
-
-  // for (const puzzleId of unlockedPuzzles) {
-  //   const puzzle = await db.query.puzzles.findFirst({
-  //     where: eq(puzzles.id, puzzleId),
-  //     columns: { name: true },
-  //   });
-  //
-  //   if (!puzzle) continue;
-  //
-  //   await sendToWebsocketServer(teamId, {
-  //     type: "UnlockedPuzzle",
-  //     puzzleId,
-  //     puzzleName: puzzle.name,
-  //   });
-  // }
-
-  // Broadcast all unlocked puzzles
-  await Promise.allSettled(
-    unlockedPuzzles.map(async (puzzleId) => {
-      const puzzleName = await db.query.puzzles
-        .findFirst({
-          where: eq(puzzles.id, puzzleId),
-          columns: { name: true },
-        })
-        .then((puzzle) => puzzle!.name);
-      await sendToWebsocketServer(teamId, {
-        type: "UnlockedPuzzle",
-        puzzleId,
-        puzzleName,
-      });
-    }),
-  );
-
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt
   if (finishedHunt) {
     const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId})`;
-    await Promise.allSettled([
-      sendBotMessage(finishMessage, "interaction"),
-      sendToWebsocketServer(teamId, { type: "FinishedHunt" }),
-    ]);
+    sendBotMessage(finishMessage, "general");
   }
 
-  revalidatePath(`/puzzle/${puzzleId}`);
+  // Make websocket notifications to the clients
+  const notifications: Promise<unknown>[] = [];
+
+  if (isCorrect) {
+    notifications.push(
+      sendToWebsocketServer(teamId, {
+        type: "SolvedPuzzle",
+        puzzleId,
+        puzzleName: puzzle.name,
+      }),
+    );
+  }
+
+  const unlockedRows = await db.query.puzzles.findMany({
+    where: inArray(puzzles.id, unlockedPuzzles),
+    columns: { id: true, name: true },
+  });
+
+  for (const row of unlockedRows) {
+    notifications.push(
+      sendToWebsocketServer(teamId, {
+        type: "UnlockedPuzzle",
+        puzzleId: row.id,
+        puzzleName: row.name,
+      }),
+    );
+  }
+
+  if (finishedHunt)
+    notifications.push(sendToWebsocketServer(teamId, { type: "FinishedHunt" }));
 
   // Refund hints if the guess is correct
   if (isCorrect) {
@@ -217,6 +208,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
       );
   }
 
+  revalidatePath(`/puzzle/${puzzleId}`);
   return { error: null };
 }
 

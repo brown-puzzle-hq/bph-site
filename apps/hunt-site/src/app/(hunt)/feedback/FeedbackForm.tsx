@@ -88,8 +88,11 @@ export default function FeedbackForm({
               <>
                 <FormItem className="mb-4">
                   <FormDescription className="text-main-text">
-                    Any puzzle errors, website bugs, or general comments will be
-                    enormously helpful for us. This textbox supports Markdown.
+                    <p>
+                      Notice puzzle errata, website bugs, or anything else we
+                      should be aware of? Send us feedback here.
+                    </p>
+                    <p>This text box supports Markdown.</p>
                   </FormDescription>
                   <FormControl>
                     {preview ? (

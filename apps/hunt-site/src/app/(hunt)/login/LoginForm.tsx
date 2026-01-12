@@ -98,9 +98,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">
-          <p className="w-full text-center">Log In</p>
-        </Button>
+        <Button type="submit">Log In</Button>
         <div className="pt-4 text-sm">
           New to the hunt?{" "}
           <Link href="/register" className="text-link hover:underline">

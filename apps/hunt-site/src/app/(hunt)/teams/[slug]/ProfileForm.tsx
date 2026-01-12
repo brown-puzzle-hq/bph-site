@@ -502,10 +502,13 @@ export default function ProfileForm({
                   </span>
                   <span className="sm:hidden">Unsaved changes!</span>
                 </AlertDescription>
-                <div className="flex space-x-2">
-                  <Button variant="outline" onClick={() => form.reset()}>
+                <div className="flex space-x-4">
+                  <button
+                    className="text-main-text hover:underline"
+                    onClick={() => form.reset()}
+                  >
                     Reset
-                  </Button>
+                  </button>
                   <Button
                     type="submit"
                     disabled={

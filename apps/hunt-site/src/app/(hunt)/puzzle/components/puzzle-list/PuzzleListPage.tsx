@@ -1,4 +1,3 @@
-"use client";
 import PuzzleTable from "./PuzzleTable";
 import EventTable from "./event/EventTable";
 import { IN_PERSON, Round } from "~/hunt.config";
@@ -47,37 +46,28 @@ export default function PuzzleListPage({
   isInPerson,
 }: PuzzleListPageProps) {
   return (
-    <div className="grid min-h-[calc(100vh-56px-32px)]">
-      {/* Table content */}
-      <div
-        className={
-          "z-10 col-start-1 row-start-1 block bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg"
-        }
-      >
-        <div className="mx-auto mb-6 flex w-full max-w-3xl grow flex-col items-center p-4 pt-6">
-          <h1 className="mb-2">Puzzles</h1>
-          {/* Puzzle table */}
-          <div className="w-full">
-            <PuzzleTable
-              availableRounds={availableRounds}
-              availablePuzzles={availablePuzzles}
-              solvedPuzzles={solvedPuzzles}
-            />
-          </div>
-
-          {/* Event table */}
-          {isInPerson && new Date() > IN_PERSON.START_TIME && (
-            <>
-              <h1 className="mb-2 mt-4">Events</h1>
-              <EventTable
-                availableEvents={availableEvents}
-                finishedEvents={finishedEvents}
-                inputBox={hasEventInputBox}
-              />
-            </>
-          )}
-        </div>
+    <div className="mx-auto mb-12 flex w-full max-w-3xl flex-col items-center px-4 pt-6">
+      <h1 className="mb-2">Puzzles</h1>
+      {/* Puzzle table */}
+      <div className="w-full">
+        <PuzzleTable
+          availableRounds={availableRounds}
+          availablePuzzles={availablePuzzles}
+          solvedPuzzles={solvedPuzzles}
+        />
       </div>
+
+      {/* Event table */}
+      {isInPerson && new Date() > IN_PERSON.START_TIME && (
+        <>
+          <h1 className="mb-2 mt-4">Events</h1>
+          <EventTable
+            availableEvents={availableEvents}
+            finishedEvents={finishedEvents}
+            inputBox={hasEventInputBox}
+          />
+        </>
+      )}
     </div>
   );
 }

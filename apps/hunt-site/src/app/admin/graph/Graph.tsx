@@ -249,7 +249,7 @@ export default function Graph() {
     return Object.keys(PUZZLE_UNLOCK_MAP).map((puzzle) => ({
       id: puzzle,
       name: puzzle,
-      round: ROUNDS.find((round) => round.puzzles.includes(puzzle))!.name,
+      round: ROUNDS.find((round) => round.puzzles.includes(puzzle))?.name,
       neighbors: [],
       links: [],
     })) as NodeObject[];
@@ -286,6 +286,15 @@ export default function Graph() {
 
     return gData;
   }, [nodes, links]);
+
+  useEffect(() => {
+    if (!fgRef.current) return;
+    const charge = fgRef.current.d3Force("charge");
+    if (charge) {
+      charge.strength(-50).distanceMax(50);
+    }
+    fgRef.current.d3ReheatSimulation();
+  }, [data]);
 
   const handleNodeHover = (node: NodeObject | null) => {
     setHoveredNode(node || null);

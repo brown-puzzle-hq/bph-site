@@ -22,7 +22,7 @@ export default async function DefaultHeader({
   if (!puzzle) redirect("/puzzle");
 
   return (
-    <div className="mb-8 flex w-full max-w-3xl flex-col items-center space-y-4">
+    <div className="mb-8 mt-6 flex w-full max-w-3xl flex-col items-center space-y-4">
       {/* Subtitle links below */}
       <div className="flex w-full flex-col items-center text-center">
         <h1>{puzzle.name}</h1>
