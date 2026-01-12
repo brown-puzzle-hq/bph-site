@@ -64,8 +64,8 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
     return { error: null };
   } catch (e) {
     const error = ensureError(e);
-    const errorMessage = `🐛 Update for ${id} failed: ${error.message} <@&1287563929282678795>`;
-    await sendBotMessage(errorMessage, "dev");
+    const errorMessage = `🐛 Update for ${id} failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { error: "An unexpected error occurred." };
   }
 }
@@ -92,8 +92,8 @@ export async function deleteTeam(id: string) {
     return { error: null };
   } catch (e) {
     const error = ensureError(e);
-    const errorMessage = `🐛 Delete for ${id} failed: ${error.message} <@&1287563929282678795>`;
-    await sendBotMessage(errorMessage, "dev");
+    const errorMessage = `🐛 Deletion for ${id} failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { error: "An unexpected error occurred." };
   }
 }

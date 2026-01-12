@@ -23,15 +23,13 @@ export async function insertFeedback(description: string, timestamp: Date) {
   } catch (e) {
     // Message the dev channel
     const error = ensureError(e);
-    await sendBotMessage(
-      `🐛 Feedback insert failed: ${error.message} <@&1287563929282678795>`,
-      "dev",
-    );
+    const errorMessage = `🐛 Feedback insertion for ${teamId} failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { error: "Failed to submit feedback." };
   }
 
   // Message the feedback channel and ping HQ
-  const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId} ): ${description} <@&900958940475559969>`;
-  await sendBotMessage(feedbackMessage, "feedback");
+  const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId} ): ${description}`;
+  await sendBotMessage(feedbackMessage, "feedback", "@HQ");
   return { error: null };
 }

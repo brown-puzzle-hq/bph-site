@@ -28,9 +28,18 @@ const channelToWebhookURL: Record<Channel, string | undefined> = {
   dev: process.env.DISCORD_WEBHOOK_URL_DEV,
 };
 
+type Mention = "@hint" | "@HQ" | "@tech";
+
+const mentionToRoleId: Record<Mention, string> = {
+  "@hint": "<@&1310029428864057504>",
+  "@HQ": "<@&900958940475559969>",
+  "@tech": "<@&1287563929282678795>",
+};
+
 export async function sendBotMessage(
   message: string,
   channel: Channel = "general",
+  mention?: Mention,
 ) {
   // Use the general channel if the other channels are not set
   const webhookURL =
@@ -38,6 +47,12 @@ export async function sendBotMessage(
 
   // Disable the webhook by not including it in the env file
   if (!webhookURL) return;
+
+  // Append mention if provided
+  if (mention) {
+    const roleId = mentionToRoleId[mention];
+    message += " " + roleId;
+  }
 
   if (message.length > 2000) {
     const chunks = message.match(/[\s\S]{1,2000}/g);
@@ -78,10 +93,8 @@ export async function sendEmail(
     return { success: true, response };
   } catch (e) {
     const error = ensureError(e);
-    await sendBotMessage(
-      `✉️ Email send failed: ${error.message} <@&1287563929282678795>`,
-      "dev",
-    );
+    const errorMessage = `✉️ Email send failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { success: false, error: error.message };
   }
 }
@@ -98,8 +111,9 @@ export async function sendToWebsocketServer(
   msg: SocketMessage,
 ) {
   const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
-  if (!wsServer) return;
   const protocol = process.env.BROADCAST_PROTOCOL;
+  if (!wsServer || !protocol) return;
+
   const token = sign(
     {
       iss: "hunt-site",
