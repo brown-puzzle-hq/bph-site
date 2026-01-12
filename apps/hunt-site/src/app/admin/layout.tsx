@@ -26,6 +26,7 @@ export default async function RootLayout({
           <Toaster expand={true} visibleToasts={10} />
           <AdminHamburgerMenu />
           <div className="min-h-[56px]" />
+          { /* TODO: get rid of flex and pt-6 */ }
           <main className="flex min-h-[calc(100vh-56px)] pt-6">{children}</main>
         </Providers>
       </body>

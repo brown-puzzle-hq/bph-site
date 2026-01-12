@@ -1,10 +1,9 @@
 import ProfileForm from "./ProfileForm";
-import Toast from "./Toast";
 import { auth } from "@/auth";
 import { db } from "@/db/index";
 import { teams } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Page({
   params,
@@ -27,12 +26,7 @@ export default async function Page({
     !team ||
     (team.id != session.user.id && !(session.user.role === "admin"))
   ) {
-    return (
-      <Toast
-        title={"Team not found"}
-        description={`No team with username ${slug} was found.`}
-      />
-    );
+    notFound();
   }
 
   return (
