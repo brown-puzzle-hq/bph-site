@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -143,11 +144,15 @@ export default async function Home() {
     );
 
   const now = new Date();
+  const session = await auth();
 
   return (
     <div className="mx-auto mb-12 max-w-2xl px-4 pt-6">
       <h1 className="mb-2 text-center">Leaderboard</h1>
-      <Tabs defaultValue="in-person" className="w-full">
+      <Tabs
+        defaultValue={session?.user.interactionMode ?? "in-person"}
+        className="w-full"
+      >
         <TabsList className="grid w-full grid-cols-2 space-x-1 bg-footer-bg text-[#6c518e]">
           <TabsTrigger
             className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
