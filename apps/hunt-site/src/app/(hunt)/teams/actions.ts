@@ -4,7 +4,7 @@ import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hashSync } from "bcryptjs";
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { IN_PERSON } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
