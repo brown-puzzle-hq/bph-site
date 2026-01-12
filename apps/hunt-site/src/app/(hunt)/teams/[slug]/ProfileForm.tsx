@@ -144,8 +144,17 @@ export default function ProfileForm({
       return;
     }
 
-    // updateTeam drives changes, this pulls from the database
-    if (session?.user?.id === id) await update(null);
+    if (session?.user?.id === id) {
+      // updateTeam drives changes, this pulls from the database
+      const session = await update(null);
+      // Check for external updates
+      if (session?.user) {
+        data.displayName = session.user.displayName;
+        data.interactionMode = session.user
+          .interactionMode as typeof data.interactionMode;
+        data.role = session.user.role as typeof data.role;
+      }
+    }
 
     form.reset({
       ...data,
