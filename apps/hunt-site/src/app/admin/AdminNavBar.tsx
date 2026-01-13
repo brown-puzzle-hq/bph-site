@@ -9,7 +9,7 @@ import { Ellipsis } from "lucide-react";
 import { LogoutButton } from "@/components/nav/LogoutButton";
 import { NavBar, MenuItem } from "@/components/nav/NavBar";
 
-export default async function AdminHamburgerMenu() {
+export default async function AdminNavBar() {
   const OtherMenuItems = () => {
     return (
       <DropdownMenu>

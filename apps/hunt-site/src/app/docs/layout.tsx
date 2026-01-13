@@ -1,18 +1,19 @@
 import "~/styles/globals.css";
 import "~/styles/github-markdown.css";
-import DocsHamburgerMenu from "./DocsHamburgerMenu";
+import DocsNavBar from "./DocsNavBar";
 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="bg-white">
-      {/* Navbar */}
-      <DocsHamburgerMenu />
-      <div className="min-h-[56px]" />
-      <main className="markdown-body min-h-[calc(100vh-56px)] max-w-4xl p-16 pt-8">
-        {children}
-      </main>
-    </div>
+    <html lang="en">
+      <body>
+        <DocsNavBar />
+        <div className="min-h-[56px]" />
+        <main className="markdown-body min-h-[calc(100vh-56px)] max-w-4xl p-16 pt-8">
+          {children}
+        </main>
+      </body>
+    </html>
   );
 }

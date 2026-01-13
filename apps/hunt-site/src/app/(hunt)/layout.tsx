@@ -6,7 +6,7 @@ import { type Metadata } from "next";
 import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "~/hunt.config";
-import { HuntHamburgerMenu } from "./HuntHamburgerMenu";
+import { HuntNavBar } from "./HuntNavBar"
 import { HuntNavBarSpacer } from "@/components/nav/HuntNavBarSpacer";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default async function RootLayout({
           <div className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg">
             {/* Navbar */}
             <div className="bg-nav-bg">
-              <HuntHamburgerMenu />
+              <HuntNavBar />
             </div>
 
             {/* Navbar spacer */}

@@ -4,7 +4,7 @@ import { NavBar, MenuItem } from "@/components/nav/NavBar";
 import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
-export async function HuntHamburgerMenu() {
+export async function HuntNavBar() {
   const session = await auth();
   const now = new Date();
 

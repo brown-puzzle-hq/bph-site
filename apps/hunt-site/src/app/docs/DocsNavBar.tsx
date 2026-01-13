@@ -1,6 +1,6 @@
 import { NavBar, MenuItem } from "@/components/nav/NavBar";
 
-export default async function DocsHamburgerMenu() {
+export default async function DocsNavBar() {
   const leftMenuItems: MenuItem[] = [
     {
       title: "Home",
