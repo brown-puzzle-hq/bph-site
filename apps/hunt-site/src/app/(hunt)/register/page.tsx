@@ -1,6 +1,6 @@
 import { REGISTRATION_START_TIME, REGISTRATION_END_TIME } from "@/hunt.config";
 import { RegisterForm } from "./RegisterForm";
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function Home() {

@@ -1,4 +1,4 @@
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { REMOTE } from "~/hunt.config";
 import WrapUp from "./WrapUp";
 import { redirect } from "next/navigation";

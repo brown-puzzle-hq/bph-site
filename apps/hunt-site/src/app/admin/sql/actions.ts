@@ -1,5 +1,5 @@
 "use server";
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { db } from "@/db/index";
 import { sql } from "drizzle-orm";
 

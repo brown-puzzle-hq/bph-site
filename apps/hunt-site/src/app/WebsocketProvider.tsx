@@ -1,29 +1,44 @@
 "use client";
+
 import {
   createContext,
   useContext,
+  useRef,
   useState,
   useEffect,
-  useRef,
   useCallback,
   ReactNode,
 } from "react";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { type SocketMessage } from "~/lib/comms";
 import Link from "next/link";
 import { HUNT_DOMAIN } from "~/hunt.config";
 import { CheckCircle, Unlock, Trophy } from "lucide-react";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const TOAST_CLASS = "bg-[#703B50] text-white shadow-lg rounded-xl";
 
-const WebSocketContext = createContext<WebSocket | null>(null);
-export const useWebSocket = () => useContext(WebSocketContext);
+type WebSocketContextValue = {
+  readyState: number;
+};
+
+export const WebSocketContext = createContext<WebSocketContextValue | null>(
+  null,
+);
+
+export function useWebSocket() {
+  const ctx = useContext(WebSocketContext);
+  if (!ctx) {
+    throw new Error("useWebSocket must be used within WebSocketProvider");
+  }
+  return ctx;
+}
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const socketRef = useRef<WebSocket | null>(null);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
 
   const handleMessage = useCallback((event: MessageEvent) => {
     try {
@@ -79,7 +94,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 </div>
               </div>
             ),
-            { duration: 5000 },
+            { duration: 4000 },
           );
           break;
 
@@ -107,37 +122,67 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   // Try to create a websocket
   useEffect(() => {
-    // Check that a websocket does not already exist
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN)
-      return;
+    // Check that the user is logged in
+    if (status !== "authenticated") return;
 
-    // Check that websocket server exists and the user is logged in
+    // Check that websocket server exists
     const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
-    if (!wsServer) {
-      console.warn("NEXT_PUBLIC_WEBSOCKET_SERVER is not configured.");
+    const protocol = process.env.NEXT_PUBLIC_WEBSOCKET_PROTOCOL;
+    if (!wsServer || !protocol) {
+      console.warn("WebSocket server or protocol not configured.");
       return;
     }
-    if (status !== "authenticated" || !session) return;
 
-    // Create the websocket
-    const token = session?.accessToken ?? "";
-    const protocol = process.env.NODE_ENV === "production" ? "wss" : "ws";
-    const ws = new WebSocket(`${protocol}://${wsServer}?token=${token}`);
+    let cancelled = false;
 
-    // Initialize the websocket
-    ws.onopen = () => console.log("✅ WebSocket connected");
-    ws.onmessage = (event) => handleMessage(event);
-    ws.onerror = (err) => console.error("❌ WebSocket error", err);
-    ws.onclose = () => console.warn("⚠️ WebSocket closed");
+    async function connect() {
+      try {
+        // Get permission token
+        const { data } = await axios.post("/api/ws-token");
+        const token = data.token;
 
-    socketRef.current = ws;
-    setSocket(ws);
+        if (cancelled) return;
 
-    return () => ws.close();
-  }, [status, session]);
+        // Create the websocket
+        const url = new URL(`${protocol}//${wsServer}`);
+        url.searchParams.append("token", token);
+        const ws = new WebSocket(url.toString());
+        socketRef.current = ws;
+        setReadyState(ws.readyState);
+
+        // Initialize the websocket
+        ws.onopen = () => {
+          console.log("✅ WebSocket connected");
+          setReadyState(ws.readyState);
+        };
+        ws.onmessage = (event) => handleMessage(event);
+        ws.onerror = (err) => {
+          console.error("❌ WebSocket error", err);
+          setReadyState(ws.readyState);
+        };
+        ws.onclose = () => {
+          console.warn("⚠️ WebSocket closed");
+          setReadyState(ws.readyState);
+        };
+      } catch (err) {
+        console.error("Failed to connect to WebSocket server:", err);
+      }
+    }
+
+    connect();
+
+    return () => {
+      socketRef.current?.close(1000);
+      cancelled = true;
+    };
+  }, [status]);
 
   return (
-    <WebSocketContext.Provider value={socket}>
+    <WebSocketContext.Provider
+      value={{
+        readyState,
+      }}
+    >
       {children}
     </WebSocketContext.Provider>
   );

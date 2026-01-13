@@ -1,5 +1,7 @@
 import { type NextAuthConfig } from "next-auth";
-import { sign } from "jsonwebtoken";
+import { db } from "@/db/index";
+import { eq } from "drizzle-orm";
+import { teams } from "@/db/schema";
 
 export const authConfig = {
   session: { strategy: "jwt" },
@@ -13,34 +15,22 @@ export const authConfig = {
     // The jwt callback is called whenever a token is created
     // (i.e. at sign-in) or updated (i.e. `useSession`).
     // The returned value is encrypted and stored in a cookie.
-    jwt: async ({ token, user, trigger, session }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user) {
         token.id = user.id;
         token.displayName = user.displayName;
         token.role = user.role;
         token.interactionMode = user.interactionMode;
-
-        // Manually sign JWT with user info for websockets
-        token.accessToken = sign(
-          {
-            id: user.id,
-            displayName: user.displayName,
-            role: user.role,
-            interactionMode: user.interactionMode,
-          },
-          process.env.AUTH_SECRET!,
-          { expiresIn: "98h" },
-        );
       }
-      if (trigger === "update") {
-        if (session?.displayName !== undefined) {
-          token.displayName = session.displayName;
-        }
-        if (session?.role !== undefined) {
-          token.role = session.role;
-        }
-        if (session?.interactionMode !== undefined) {
-          token.interactionMode = session.interactionMode;
+      if (trigger === "update" && typeof token.id === "string") {
+        const team = await db.query.teams.findFirst({
+          where: eq(teams.id, token.id),
+        });
+
+        if (team) {
+          token.displayName = team.displayName;
+          token.role = team.role;
+          token.interactionMode = team.interactionMode;
         }
       }
       return token;
@@ -58,7 +48,6 @@ export const authConfig = {
           role: token.role as string,
           interactionMode: token.interactionMode as string,
         };
-        session.accessToken = token.accessToken as string;
       }
       return session;
     },

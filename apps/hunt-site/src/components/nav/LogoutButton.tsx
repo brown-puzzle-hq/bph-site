@@ -1,14 +1,10 @@
 "use client";
-import { logout } from "../../app/(hunt)/login/actions";
+
+import { signOut } from "next-auth/react";
 
 export function LogoutButton() {
   return (
-    <p
-      className="px-1.5 py-1"
-      onClick={async () => {
-        await logout();
-      }}
-    >
+    <p className="px-1.5 py-1" onClick={() => signOut({ redirectTo: "/" })}>
       Logout
     </p>
   );
