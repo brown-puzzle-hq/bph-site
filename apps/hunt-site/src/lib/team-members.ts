@@ -1,3 +1,5 @@
+/** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
+
 export type Member = {
   id?: number;
   name: string | undefined;
@@ -19,4 +21,10 @@ export function deserializeMembers(memberString: string): Member[] {
     name,
     email,
   }));
+}
+
+export function extractEmails(memberString: string): string[] {
+  return JSON.parse(memberString)
+    .map(([_, email]: [string, string]) => email)
+    .filter(Boolean);
 }

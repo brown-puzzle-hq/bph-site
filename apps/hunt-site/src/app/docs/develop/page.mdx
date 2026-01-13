@@ -96,6 +96,7 @@ POSTGRES_USER=""
 
 # Communication (optional)
 # https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
+# Remember to configure role IDs in "src/lib/comms.ts" if using mentions
 DISCORD_WEBHOOK_URL=""
 DISCORD_WEBHOOK_URL_HINT=""
 DISCORD_WEBHOOK_URL_GUESS=""
@@ -110,6 +111,10 @@ RESEND_API_KEY=""
 # Websocket
 # Needs to be NEXT_PUBLIC_ so that it is exposed to the client
 NEXT_PUBLIC_WEBSOCKET_SERVER="localhost:1030"
+# Use "ws:" for development and "wss:" for production
+NEXT_PUBLIC_WEBSOCKET_PROTOCOL="ws:"
+# Use "http:" for development and "https:" for production
+BROADCAST_PROTOCOL="http:"
 ```
 
 2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.

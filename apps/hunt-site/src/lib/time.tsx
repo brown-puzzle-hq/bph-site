@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 
 type Time = {
   days: number;
@@ -8,7 +7,7 @@ type Time = {
   seconds: number;
 };
 
-export function formatTime(time: string | Date | null) {
+function formatTime(time: string | Date | null) {
   const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "short",
     timeStyle: "short",
@@ -41,7 +40,7 @@ function getTimeDifference(date1: Date, date2: Date) {
   return { days, hours, minutes, seconds };
 }
 
-export function getTimeDifferenceString(time: Time) {
+function getTimeDifferenceString(time: Time) {
   if (time.days > 0) {
     return `${time.days} ${time.days === 1 ? "day" : "days"}`;
   } else if (time.hours > 0) {

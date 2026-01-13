@@ -1,36 +1,24 @@
 "use client";
 
-import { sendToWebsocketServer } from "~/lib/comms";
-import { useSession } from "next-auth/react";
+import { sendWebsocketMessage } from "./actions";
+import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 
 export default function Page() {
-  const { data } = useSession();
-  const teamId = data?.user.id;
-
-  if (!teamId) {
-    console.error("No teamId found");
-    return;
-  }
-
-  const handleClick = async (
-    msg: Parameters<typeof sendToWebsocketServer>[1],
-  ) => {
-    await sendToWebsocketServer(teamId, msg);
-  };
+  const { readyState } = useWebSocket();
 
   return (
     <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
       <h1 className="text-2xl font-bold">Websockets</h1>
-      <p className="mb-4 text-gray-600">
+      <p className="text-gray-600">
         Test whether the websocket server is working correctly.
       </p>
 
-      <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+      <div className="my-4 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "Toast",
               title: "Hi",
               description: "Hello",
@@ -43,7 +31,7 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "UnlockedPuzzle",
               puzzleId: "example",
               puzzleName: "Example",
@@ -56,7 +44,7 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "SolvedPuzzle",
               puzzleId: "example",
               puzzleName: "Example",
@@ -69,13 +57,28 @@ export default function Page() {
         <Button
           className="w-full sm:w-auto"
           onClick={() =>
-            handleClick({
+            sendWebsocketMessage({
               type: "FinishedHunt",
             })
           }
         >
           🏆 Finish Hunt
         </Button>
+      </div>
+
+      <div className="flex items-center space-x-1">
+        <p className="text-gray-600">Socket status: </p>
+        {readyState === WebSocket.CONNECTING ? (
+          <p className="text-yellow-500">CONNECTING</p>
+        ) : readyState === WebSocket.OPEN ? (
+          <p className="text-lime-600">OPEN</p>
+        ) : readyState === WebSocket.CLOSING ? (
+          <p className="text-yellow-500">CLOSING</p>
+        ) : readyState === WebSocket.CLOSED ? (
+          <p className="text-red-500">CLOSED</p>
+        ) : (
+          <p className="text-red-500">NOT CONNECTED</p>
+        )}
       </div>
     </div>
   );

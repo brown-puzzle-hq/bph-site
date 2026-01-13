@@ -38,7 +38,6 @@ import { AlertCircle, X } from "lucide-react";
 
 // Other
 import { deleteTeam, updateTeam } from "../actions";
-import { logout } from "../../login/actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { IN_PERSON } from "~/hunt.config";
 import {
@@ -46,6 +45,7 @@ import {
   deserializeMembers,
   serializeMembers,
 } from "~/lib/team-members";
+import { signOut } from "next-auth/react";
 
 export const profileFormSchema = z
   .object({
@@ -145,16 +145,14 @@ export default function ProfileForm({
     }
 
     if (session?.user?.id === id) {
-      if (data.displayName != form.formState.defaultValues?.displayName) {
-        update({ displayName: data.displayName });
-      }
-      if (data.role != form.formState.defaultValues?.role) {
-        update({ role: data.role });
-      }
-      if (
-        data.interactionMode != form.formState.defaultValues?.interactionMode
-      ) {
-        update({ interactionMode: data.interactionMode });
+      // updateTeam drives changes, this pulls from the database
+      const session = await update(null);
+      // Check for external updates
+      if (session?.user) {
+        data.displayName = session.user.displayName;
+        data.interactionMode = session.user
+          .interactionMode as typeof data.interactionMode;
+        data.role = session.user.role as typeof data.role;
       }
     }
 
@@ -169,16 +167,16 @@ export default function ProfileForm({
   };
 
   const onDelete = async () => {
-    const result = await deleteTeam(id, form.watch("displayName"));
-    if (result.error) {
+    const { error } = await deleteTeam(id);
+    if (error) {
       toast("Deletion failed", {
-        description: result.error,
+        description: error,
       });
     } else {
       if (session?.user?.id !== id && session?.user?.role === "admin") {
         router.push("/admin/teams");
       } else {
-        await logout();
+        signOut();
       }
     }
   };

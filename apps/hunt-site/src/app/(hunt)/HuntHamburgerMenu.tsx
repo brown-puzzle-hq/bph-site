@@ -1,4 +1,4 @@
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { LogoutButton } from "@/components/nav/LogoutButton";
 import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
 import Countdown from "@/components/nav/Countdown";

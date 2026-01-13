@@ -4,10 +4,9 @@ import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
 import { hashSync } from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { login } from "../login/actions";
 import { IN_PERSON, HUNT_DOMAIN } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError } from "~/lib/server";
 
 export type TeamProperties = {
   id: string;
@@ -45,19 +44,12 @@ export async function insertTeam(teamProperties: TeamProperties) {
     // Message registration channel
     const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.${HUNT_DOMAIN}/teams/${teamProperties.id}))`;
     await sendBotMessage(teamMessage, "team");
-
-    // Automatically log in the user
-    const { error, session } = await login(
-      teamProperties.id,
-      teamProperties.password,
-    );
-    return { error, session };
+    return { error: null };
   } catch (e) {
     // Message dev channel
     const error = ensureError(e);
-    const errorMessage = `🐛 Registration for ${teamProperties.id} failed: ${error.message} <@&1287563929282678795>`;
-    await sendBotMessage(errorMessage, "dev");
-
+    const errorMessage = `🐛 Registration for ${teamProperties.id} failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { error: "An unexpected error occurred." };
   }
 }

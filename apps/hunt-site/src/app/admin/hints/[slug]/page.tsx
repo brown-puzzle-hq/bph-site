@@ -1,10 +1,10 @@
 import { db } from "@/db/index";
 import { replies, guesses, hints, unlocks } from "@/db/schema";
 import { and, asc, eq } from "drizzle-orm";
-import Toast from "./Toast";
 import AdminHintThread from "./AdminHintThread";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
@@ -18,12 +18,7 @@ export default async function Page({
   const reply = searchParams?.reply;
   const hintId = Number(slug);
   if (isNaN(hintId)) {
-    return (
-      <Toast
-        title={"Invalid path"}
-        description={`${slug} is not a valid hint ID.`}
-      />
-    );
+    notFound();
   }
 
   // Get hint data
@@ -58,12 +53,7 @@ export default async function Page({
   });
 
   if (!hint) {
-    return (
-      <Toast
-        title={"Hint not found"}
-        description={`No hint with ID ${slug} was found.`}
-      />
-    );
+    notFound();
   }
 
   // If there is no unlock, the unlock time is the start of the hunt
