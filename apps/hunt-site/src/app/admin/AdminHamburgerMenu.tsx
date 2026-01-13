@@ -55,7 +55,7 @@ export default async function AdminHamburgerMenu() {
     },
     {
       title: "Teams",
-      href: "/admin/teams",
+      href: "/admin/team",
       type: "link",
     },
     {
@@ -96,7 +96,7 @@ export default async function AdminHamburgerMenu() {
     },
     {
       title: "Teams",
-      href: "/admin/teams",
+      href: "/admin/team",
       type: "link",
     },
     {

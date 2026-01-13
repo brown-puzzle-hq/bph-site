@@ -73,7 +73,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
       <div className="flex w-[200px] items-center space-x-1">
         <a
           className="truncate text-blue-500 hover:underline"
-          href={`/teams/${row.getValue("id")}`}
+          href={`/team/${row.getValue("id")}`}
         >
           {row.getValue("id")}
         </a>

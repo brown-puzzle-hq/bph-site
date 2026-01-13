@@ -24,5 +24,5 @@ export async function updateTeam(edits: Record<string, EditedTeam>) {
       await db.update(teams).set(fields).where(eq(teams.id, teamId));
     }),
   );
-  revalidatePath("/admin/teams");
+  revalidatePath("/admin/team");
 }
