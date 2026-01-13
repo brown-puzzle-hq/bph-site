@@ -92,7 +92,10 @@ export function NavBar({
             <Menu />
           </button>
         </SheetTrigger>
-        <SheetContent side="top" className={cn("border-0 shadow-none", style.sheet)}>
+        <SheetContent
+          side="top"
+          className={cn("border-0 shadow-none", style.sheet)}
+        >
           <ul className="flex list-none flex-col items-center space-y-2">
             {hamburgerMenuItems.map((item) => (
               <SheetTrigger asChild key={item.title}>

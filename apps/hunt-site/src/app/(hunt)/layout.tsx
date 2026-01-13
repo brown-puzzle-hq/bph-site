@@ -6,7 +6,7 @@ import { type Metadata } from "next";
 import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "~/hunt.config";
-import { HuntNavBar } from "./HuntNavBar"
+import { HuntNavBar } from "./HuntNavBar";
 import { HuntNavBarSpacer } from "@/components/nav/HuntNavBarSpacer";
 
 export const metadata: Metadata = {
