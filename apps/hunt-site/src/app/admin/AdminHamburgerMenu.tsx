@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import { LogoutButton } from "@/components/nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
+import { NavBar, MenuItem } from "@/components/nav/NavBar";
 
 export default async function AdminHamburgerMenu() {
   const OtherMenuItems = () => {
@@ -137,7 +137,7 @@ export default async function AdminHamburgerMenu() {
   ];
 
   return (
-    <HamburgerMenu
+    <NavBar
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}

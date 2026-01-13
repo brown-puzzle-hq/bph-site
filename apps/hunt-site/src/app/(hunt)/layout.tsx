@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "~/hunt.config";
 import { HuntHamburgerMenu } from "./HuntHamburgerMenu";
-import { HuntTopNavSpacer } from "@/components/nav/HuntTopNavSpacer";
+import { HuntNavBarSpacer } from "@/components/nav/HuntNavBarSpacer";
 
 export const metadata: Metadata = {
   title: HUNT_NAME,
@@ -32,7 +32,7 @@ export default async function RootLayout({
             </div>
 
             {/* Navbar spacer */}
-            <HuntTopNavSpacer />
+            <HuntNavBarSpacer />
             <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
             <footer className="min-h-1rem bg-footer-bg py-2 text-center text-xs">
               Powered by{" "}

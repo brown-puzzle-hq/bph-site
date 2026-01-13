@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { LogoutButton } from "@/components/nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
+import { NavBar, MenuItem } from "@/components/nav/NavBar";
 import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 
@@ -92,7 +92,7 @@ export async function HuntHamburgerMenu() {
   ) : undefined;
 
   return (
-    <HamburgerMenu
+    <NavBar
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}

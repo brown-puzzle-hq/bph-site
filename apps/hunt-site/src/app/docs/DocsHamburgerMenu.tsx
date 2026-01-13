@@ -1,4 +1,4 @@
-import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
+import { NavBar, MenuItem } from "@/components/nav/NavBar";
 
 export default async function DocsHamburgerMenu() {
   const leftMenuItems: MenuItem[] = [
@@ -61,7 +61,7 @@ export default async function DocsHamburgerMenu() {
   ];
 
   return (
-    <HamburgerMenu
+    <NavBar
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}

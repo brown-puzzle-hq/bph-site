@@ -32,7 +32,7 @@ type Props = {
   middleElement?: JSX.Element;
 };
 
-export function HamburgerMenu({
+export function NavBar({
   leftMenuItems,
   rightMenuItems,
   middleElement,
