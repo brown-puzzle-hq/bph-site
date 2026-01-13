@@ -31,6 +31,21 @@ export async function HuntNavBar() {
     },
   ];
 
+  const middleMenuItems: MenuItem[] = [];
+
+  if (session?.user) {
+    const targetDate =
+      session.user.interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME;
+
+    middleMenuItems.push({
+      title: "",
+      element: <Countdown targetDate={targetDate} />,
+      type: "element",
+    });
+  }
+
   const rightMenuItems: MenuItem[] = [];
 
   if (now > REMOTE.WRAPUP_TIME) {
@@ -79,24 +94,12 @@ export async function HuntNavBar() {
 
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
-  const middleElement = session?.user?.id ? (
-    <div>
-      <Countdown
-        targetDate={
-          session.user.interactionMode === "in-person"
-            ? IN_PERSON.START_TIME
-            : REMOTE.START_TIME
-        }
-      />
-    </div>
-  ) : undefined;
-
   return (
     <NavBar
       leftMenuItems={leftMenuItems}
+      middleMenuItems={middleMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}
-      middleElement={middleElement}
       side="hunt"
     />
   );

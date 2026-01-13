@@ -1,13 +1,9 @@
 "use client";
+
 import * as React from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
@@ -26,16 +22,16 @@ const colorMap: Record<string, string> = {
 
 type Props = {
   leftMenuItems: MenuItem[];
+  middleMenuItems?: MenuItem[];
   rightMenuItems: MenuItem[];
   hamburgerMenuItems: MenuItem[];
   side: "hunt" | "admin";
-  middleElement?: JSX.Element;
 };
 
 export function NavBar({
   leftMenuItems,
+  middleMenuItems = [],
   rightMenuItems,
-  middleElement,
   hamburgerMenuItems,
   side,
 }: Props) {
@@ -56,62 +52,44 @@ export function NavBar({
           : "bg-opacity-15"
         : "",
     );
+
+  const buildMenu = (items: MenuItem[]) => {
+    return (
+      <ul className="flex list-none items-center space-x-2">
+        {items.map((item) => (
+          <li key={item.title}>
+            {item.type === "element" ? (
+              <div className={elementClassName}>{item.element!}</div>
+            ) : (
+              <Link
+                href={item.href!}
+                prefetch={false}
+                className={linkClassName(item.href)}
+                onClick={() => handleClick(item.href!)}
+              >
+                {item.title}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <nav
-      className={`fixed z-50 flex w-full items-center justify-between ${colorMap[side]} bg-opacity-30 p-[10px] backdrop-blur-md backdrop-filter md:p-3`}
+      className={`fixed z-50 flex w-full items-center justify-between ${colorMap[side]} h-14 bg-opacity-30 p-3 backdrop-blur-md backdrop-filter`}
     >
       {/* Left menu items */}
-      <div className="hidden md:block">
-        <NavigationMenu>
-          <NavigationMenuList className="flex h-[32px] space-x-2">
-            {leftMenuItems.map((item) => (
-              <NavigationMenuItem key={item.title}>
-                {item.type == "element" ? (
-                  <div className={elementClassName}>{item.element!}</div>
-                ) : (
-                  <Link
-                    href={item.href!}
-                    prefetch={false}
-                    className={linkClassName(item.href)}
-                    onClick={() => handleClick(item.href!)}
-                  >
-                    {item.title}
-                  </Link>
-                )}
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
+      <div className="hidden md:block">{buildMenu(leftMenuItems)}</div>
 
-      {/* Middle element */}
+      {/* Middle menu items */}
       <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
-        {middleElement}
+        {buildMenu(middleMenuItems)}
       </div>
 
       {/* Right menu items */}
-      <div className="hidden md:block">
-        <NavigationMenu>
-          <NavigationMenuList className="flex h-[32px] space-x-2">
-            {rightMenuItems.map((item) => (
-              <NavigationMenuItem key={item.title}>
-                {item.type == "element" ? (
-                  <div className={elementClassName}>{item.element!}</div>
-                ) : (
-                  <Link
-                    href={item.href!}
-                    prefetch={false}
-                    className={linkClassName(item.href)}
-                    onClick={() => handleClick(item.href!)}
-                  >
-                    {item.title}
-                  </Link>
-                )}
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
+      <div className="hidden md:block">{buildMenu(rightMenuItems)}</div>
 
       {/* Hamburger */}
       <Sheet>
@@ -126,23 +104,21 @@ export function NavBar({
         </SheetTrigger>
         <SheetContent
           side="top"
-          className={`w-full ${colorMap[side]} border-0 ${side === "hunt" && "bg-opacity-30 backdrop-blur-md backdrop-filter"}`}
+          className={`w-full ${colorMap[side]} border-0`}
         >
-          <nav className="flex flex-col items-center space-y-2">
+          <ul className="flex list-none flex-col items-center space-y-2">
             {hamburgerMenuItems.map((item) => (
-              <React.Fragment key={item.title}>
-                <SheetTrigger asChild>
-                  {item.type == "element" ? (
-                    item.element!
-                  ) : (
-                    <Link href={item.href!} prefetch={false}>
-                      {item.title}
-                    </Link>
-                  )}
-                </SheetTrigger>
-              </React.Fragment>
+              <SheetTrigger asChild key={item.title}>
+                {item.type === "element" ? (
+                  item.element!
+                ) : (
+                  <Link href={item.href!} prefetch={false}>
+                    {item.title}
+                  </Link>
+                )}
+              </SheetTrigger>
             ))}
-          </nav>
+          </ul>
         </SheetContent>
       </Sheet>
     </nav>
