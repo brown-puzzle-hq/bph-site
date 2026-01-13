@@ -1,12 +1,20 @@
 import { auth } from "@/auth";
 import { LogoutButton } from "@/components/nav/LogoutButton";
-import { NavBar, MenuItem } from "@/components/nav/NavBar";
+import { NavBar, MenuItem, NavBarStyle } from "@/components/nav/NavBar";
 import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { cn } from "~/lib/utils";
 
 export async function HuntNavBar() {
   const session = await auth();
   const now = new Date();
+
+  const style: NavBarStyle = {
+    item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-all",
+    bar: "bg-nav-bg/30 backdrop-blur-md backdrop-filter",
+    sheet: "bg-nav-bg",
+  };
+  const logoutSizing = "cursor-pointer rounded-md px-[6px] py-[4px]";
 
   const leftMenuItems: MenuItem[] = [
     {
@@ -40,7 +48,7 @@ export async function HuntNavBar() {
         : REMOTE.START_TIME;
 
     middleMenuItems.push({
-      title: "",
+      title: "countdown",
       element: <Countdown targetDate={targetDate} />,
       type: "element",
     });
@@ -81,7 +89,7 @@ export async function HuntNavBar() {
 
     rightMenuItems.push({
       title: "Logout",
-      element: <LogoutButton />,
+      element: <LogoutButton className={cn(logoutSizing, style.item)} />,
       type: "element",
     });
   } else {
@@ -94,13 +102,21 @@ export async function HuntNavBar() {
 
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
+  if (session?.user?.id) {
+    hamburgerMenuItems.splice(-1, 1, {
+      title: "Logout",
+      element: <LogoutButton className="hover:cursor-pointer" />,
+      type: "element",
+    });
+  }
+
   return (
     <NavBar
       leftMenuItems={leftMenuItems}
       middleMenuItems={middleMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}
-      side="hunt"
+      style={style}
     />
   );
 }

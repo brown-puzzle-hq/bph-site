@@ -2,9 +2,10 @@
 
 import { signOut } from "next-auth/react";
 
-export function LogoutButton() {
+export function LogoutButton({ className }: { className?: string }) {
+  // NB: using <p> instead of <button> so text leading matches
   return (
-    <p className="px-1.5 py-1" onClick={() => signOut({ redirectTo: "/" })}>
+    <p className={className} onClick={() => signOut({ redirectTo: "/" })}>
       Logout
     </p>
   );
