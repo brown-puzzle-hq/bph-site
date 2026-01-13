@@ -283,7 +283,7 @@ export default function AdminHintThread({
           <div className="flex w-full flex-row items-center space-x-1 truncate text-ellipsis">
             <span className="font-semibold">Team:</span>
             <Link
-              href={`/teams/${hint.team.id}`}
+              href={`/team/${hint.team.id}`}
               className="text-blue-500 hover:underline"
               prefetch={false}
             >

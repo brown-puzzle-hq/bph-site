@@ -38,7 +38,7 @@ const huntItems = [
   // },
   {
     title: "Leaderboard",
-    href: "/teams",
+    href: "/team",
     icon: <Trophy className="text-red-500" />,
   },
   // {
@@ -61,7 +61,7 @@ const adminItems = [
   },
   {
     title: "Teams",
-    href: "/admin/teams",
+    href: "/admin/team",
     icon: <UsersRound className="text-blue-500" />,
   },
   {

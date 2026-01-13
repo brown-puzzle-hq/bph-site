@@ -26,7 +26,7 @@ export async function HuntHamburgerMenu() {
     },
     {
       title: "Teams",
-      href: "/teams",
+      href: "/team",
       type: "link",
     },
   ];
@@ -52,7 +52,7 @@ export async function HuntHamburgerMenu() {
 
     rightMenuItems.push({
       title: "Profile",
-      href: `/teams/${session.user.id}`,
+      href: `/team/${session.user.id}`,
       type: "link",
     });
 
