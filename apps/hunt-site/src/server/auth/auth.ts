@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
 import { object, string } from "zod";
-import { compare } from "bcryptjs";
+import { compareSync } from "bcryptjs";
 
 import { authConfig } from "./auth.config";
 
@@ -26,13 +26,9 @@ export const signInSchema = object({
  * object and keep type safety.
  */
 declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-    user: User & DefaultSession["user"];
-  }
-
+  interface Session extends DefaultSession {}
   interface User {
-    id?: string | undefined;
+    id?: string;
     displayName: string;
     role: string;
     interactionMode: string;
@@ -51,8 +47,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       authorize: async (credentials) => {
         try {
           // Get id and password
-          if (!credentials?.id || !credentials?.password) return null;
-          const { id, password } = await signInSchema.parseAsync(credentials);
+          const { id, password } = signInSchema.parse(credentials);
 
           // Get user
           const user = await db.query.teams.findFirst({
@@ -61,17 +56,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           if (!user) return null;
 
           // Check if credentials are valid
-          const validCredentials = await compare(password, user.password);
+          const validCredentials = compareSync(password, user.password);
           if (!validCredentials) return null;
 
-          return {
-            id: user.id,
-            displayName: user.displayName,
-            role: user.role,
-            interactionMode: user.interactionMode,
-          };
+          return user;
         } catch (error) {
-          console.error(error);
           return null;
         }
       },

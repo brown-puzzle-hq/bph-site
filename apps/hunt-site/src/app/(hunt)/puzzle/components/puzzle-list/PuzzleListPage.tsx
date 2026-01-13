@@ -1,35 +1,12 @@
 import PuzzleTable from "./PuzzleTable";
 import EventTable from "./event/EventTable";
 import { IN_PERSON, Round } from "~/hunt.config";
-
-export type AvailablePuzzle = {
-  unlockTime: Date | null;
-  id: string;
-  name: string;
-  answer: string;
-};
-
-export type SolvedPuzzle = { puzzleId: string };
-
-export type AvailableEvent = {
-  id: string;
-  name: string;
-  answer: string;
-  description: string;
-  startTime: string;
-};
-
-export type FinishedEvent = {
-  eventId: string;
-  puzzleId: string | null;
-};
+import { AvailablePuzzle, AvailableEvent } from "@/puzzle/page";
 
 type PuzzleListPageProps = {
   availablePuzzles: AvailablePuzzle[];
-  solvedPuzzles: SolvedPuzzle[];
   availableRounds: Round[];
   availableEvents: AvailableEvent[];
-  finishedEvents: FinishedEvent[];
   hasEventInputBox: boolean;
   hasFinishedHunt: boolean;
   isInPerson: boolean;
@@ -37,10 +14,8 @@ type PuzzleListPageProps = {
 
 export default function PuzzleListPage({
   availablePuzzles,
-  solvedPuzzles,
   availableRounds,
   availableEvents,
-  finishedEvents,
   hasEventInputBox,
   hasFinishedHunt,
   isInPerson,
@@ -53,7 +28,6 @@ export default function PuzzleListPage({
         <PuzzleTable
           availableRounds={availableRounds}
           availablePuzzles={availablePuzzles}
-          solvedPuzzles={solvedPuzzles}
         />
       </div>
 
@@ -63,7 +37,6 @@ export default function PuzzleListPage({
           <h1 className="mb-2 mt-4">Events</h1>
           <EventTable
             availableEvents={availableEvents}
-            finishedEvents={finishedEvents}
             inputBox={hasEventInputBox}
           />
         </>

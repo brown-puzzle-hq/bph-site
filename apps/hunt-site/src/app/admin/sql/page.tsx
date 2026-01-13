@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,7 +8,7 @@ import { EnlargedImage } from "~/components/ui/enlarged-component";
 
 import { queryDatabase } from "./actions";
 import CopyButton from "../puzzle/CopyButton";
-import { extractEmails } from "~/lib/comms";
+import { extractEmails } from "~/lib/team-members";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("emails");

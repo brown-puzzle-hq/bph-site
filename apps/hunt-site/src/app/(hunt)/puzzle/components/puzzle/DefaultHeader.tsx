@@ -1,4 +1,4 @@
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
 import { puzzles } from "~/server/db/schema";

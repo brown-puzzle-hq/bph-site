@@ -23,21 +23,8 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { IN_PERSON, HUNT_NAME } from "~/hunt.config";
-import { useSession } from "next-auth/react";
-
-export type Member = {
-  id?: number;
-  name: string | undefined;
-  email: string | undefined;
-};
-
-export function serializeMembers(members: Member[]): string {
-  return JSON.stringify(
-    members
-      .filter((person) => person.name || person.email)
-      .map((person) => [person.name, person.email]),
-  );
-}
+import { signIn } from "next-auth/react";
+import { Member, serializeMembers } from "~/lib/team-members";
 
 export const registerFormSchema = z
   .object({
@@ -79,7 +66,6 @@ type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 export function RegisterForm({}: RegisterFormProps) {
-  const { update } = useSession();
   const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
@@ -113,7 +99,7 @@ export function RegisterForm({}: RegisterFormProps) {
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    const { error, session } = await insertTeam({
+    const { error } = await insertTeam({
       id: data.id,
       displayName: data.displayName,
       password: data.password,
@@ -125,14 +111,25 @@ export function RegisterForm({}: RegisterFormProps) {
       toast.error("Register failed", {
         description: error,
       });
-    } else {
-      update(session);
-      toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
-        description: "Your team has been registered.",
-      });
-      router.push("/");
-      router.refresh();
+      return;
     }
+
+    const result = await signIn("credentials", {
+      id: data.id,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (!result?.ok || result?.code === "credentials") {
+      alert("An unexpected error occurred. Please try again.");
+      return;
+    }
+
+    toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
+      description: "Your team has been registered.",
+    });
+    router.push("/");
+    router.refresh();
   };
 
   return (

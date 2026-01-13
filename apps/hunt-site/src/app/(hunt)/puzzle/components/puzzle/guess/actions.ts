@@ -21,7 +21,7 @@ import {
   HUNT_DOMAIN,
 } from "~/hunt.config";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -135,8 +135,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
     });
   } catch (e) {
     const error = ensureError(e);
+    // PostgreSQL error code 23505 is a unique constraint violation
+    // This occurs when a team tries to submit the same guess twice
+    if ("code" in error && error.code === "23505") {
+      return { error: "Already guessed!" };
+    }
     const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
-    console.error(errorMessage);
     sendBotMessage(errorMessage, "dev");
     // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to submit the same guess twice

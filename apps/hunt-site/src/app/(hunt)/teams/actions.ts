@@ -4,9 +4,10 @@ import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hashSync } from "bcryptjs";
-import { auth } from "~/server/auth/auth";
+import { auth } from "@/auth";
 import { IN_PERSON } from "~/hunt.config";
 import { sendBotMessage } from "~/lib/comms";
+import { ensureError } from "~/lib/server";
 
 export type TeamProperties = {
   displayName?: string;
@@ -61,24 +62,38 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
       return { error: "No team matching the given ID was found." };
     }
     return { error: null };
-  } catch (error) {
+  } catch (e) {
+    const error = ensureError(e);
+    const errorMessage = `🐛 Update for ${id} failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { error: "An unexpected error occurred." };
   }
 }
 
-export async function deleteTeam(id: string, displayName: string) {
+export async function deleteTeam(id: string) {
+  // Check that the user is either an admin or the user being updated
+  const session = await auth();
+  if (session?.user?.id !== id && session?.user?.role !== "admin") {
+    return {
+      error: "You are not authorized to delete this team.",
+    };
+  }
+
   try {
     const result = await db
       .delete(teams)
       .where(eq(teams.id, id))
-      .returning({ id: teams.id });
+      .returning({ displayName: teams.displayName });
     if (result.length === 0) {
       return { error: "No team matching the given ID was found." };
     }
-    const teamMessage = `:skull: **Deleted Team**: ${displayName}`;
+    const teamMessage = `:skull: **Deleted Team**: ${result[0]?.displayName}`;
     await sendBotMessage(teamMessage, "team");
     return { error: null };
-  } catch (error) {
+  } catch (e) {
+    const error = ensureError(e);
+    const errorMessage = `🐛 Deletion for ${id} failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { error: "An unexpected error occurred." };
   }
 }

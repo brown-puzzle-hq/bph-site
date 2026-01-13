@@ -1,10 +1,12 @@
 "use server";
+
 import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { getNumberOfHintsRemaining } from "~/hunt.config";
-import { sendBotMessage, sendEmail, extractEmails } from "~/lib/comms";
+import { sendBotMessage, sendEmail } from "~/lib/comms";
+import { extractEmails } from "~/lib/team-members";
 import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
@@ -68,8 +70,8 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     };
   }
 
-  const hintMessage = `🙏 **Hint** [request](https://www.${HUNT_DOMAIN}/admin/hints/${result.id}) by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId}) on [${puzzleId}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${hint} <@&1310029428864057504>`;
-  await sendBotMessage(hintMessage, "hint");
+  const hintMessage = `🙏 **Hint** [request](https://www.${HUNT_DOMAIN}/admin/hints/${result.id}) by [${teamId}](https://www.${HUNT_DOMAIN}/teams/${teamId}) on [${puzzleId}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${hint}`;
+  await sendBotMessage(hintMessage, "hint", "@hint");
 
   return { error: null, id: result.id };
 }
@@ -156,8 +158,8 @@ export async function insertReply({
       }
       // Otherwise, notify admin on Discord that there is a reply
       else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [reply](https://www.${HUNT_DOMAIN}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.${HUNT_DOMAIN}/teams/${teamId}) on [${puzzleName}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${message} <@&1310029428864057504>`;
-        await sendBotMessage(hintMessage, "hint");
+        const hintMessage = `🙏 **Hint** [reply](https://www.${HUNT_DOMAIN}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.${HUNT_DOMAIN}/teams/${teamId}) on [${puzzleName}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${message}`;
+        await sendBotMessage(hintMessage, "hint", "@hint");
       }
       return result[0].id;
     }

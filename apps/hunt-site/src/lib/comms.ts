@@ -1,8 +1,11 @@
+import "server-only";
+
 import axios from "axios";
 import { Resend } from "resend";
 import { ReactNode } from "react";
-import { ensureError } from "./utils";
+import { ensureError } from "./server";
 import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "~/hunt.config";
+import { sign } from "jsonwebtoken";
 
 /** Discord integration */
 
@@ -25,9 +28,18 @@ const channelToWebhookURL: Record<Channel, string | undefined> = {
   dev: process.env.DISCORD_WEBHOOK_URL_DEV,
 };
 
+type Mention = "@hint" | "@HQ" | "@tech";
+
+const mentionToRoleId: Record<Mention, string> = {
+  "@hint": "<@&1310029428864057504>",
+  "@HQ": "<@&900958940475559969>",
+  "@tech": "<@&1287563929282678795>",
+};
+
 export async function sendBotMessage(
   message: string,
   channel: Channel = "general",
+  mention?: Mention,
 ) {
   // Use the general channel if the other channels are not set
   const webhookURL =
@@ -35,6 +47,12 @@ export async function sendBotMessage(
 
   // Disable the webhook by not including it in the env file
   if (!webhookURL) return;
+
+  // Append mention if provided
+  if (mention) {
+    const roleId = mentionToRoleId[mention];
+    message += " " + roleId;
+  }
 
   if (message.length > 2000) {
     const chunks = message.match(/[\s\S]{1,2000}/g);
@@ -53,12 +71,6 @@ export async function sendBotMessage(
 }
 
 /** Email integration */
-
-export function extractEmails(memberString: string): string[] {
-  return JSON.parse(memberString)
-    .map(([_, email]: [string, string]) => email)
-    .filter(Boolean);
-}
 
 export async function sendEmail(
   to: string[],
@@ -81,10 +93,8 @@ export async function sendEmail(
     return { success: true, response };
   } catch (e) {
     const error = ensureError(e);
-    await sendBotMessage(
-      `✉️ Email send failed: ${error.message} <@&1287563929282678795>`,
-      "dev",
-    );
+    const errorMessage = `✉️ Email send failed: ${error.message}`;
+    await sendBotMessage(errorMessage, "dev", "@tech");
     return { success: false, error: error.message };
   }
 }
@@ -101,14 +111,32 @@ export async function sendToWebsocketServer(
   msg: SocketMessage,
 ) {
   const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
-  if (!wsServer) return;
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const protocol = process.env.BROADCAST_PROTOCOL;
+  if (!wsServer || !protocol) return;
+
+  const token = sign(
+    {
+      iss: "hunt-site",
+      sub: "hunt-site",
+      aud: "ws-server",
+      scope: "broadcast",
+    },
+    process.env.AUTH_SECRET!,
+    { expiresIn: "30s" },
+  );
 
   try {
-    await axios.post(`${protocol}://${wsServer}/broadcast`, {
-      teamId,
-      ...msg,
-    });
+    const url = new URL("/broadcast", `${protocol}//${wsServer}`);
+    await axios.post(
+      url.toString(),
+      {
+        teamId,
+        ...msg,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
   } catch (err) {
     console.error("WebSocket server unreachable:", err);
   }

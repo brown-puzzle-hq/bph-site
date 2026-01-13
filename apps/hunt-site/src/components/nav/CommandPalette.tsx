@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 import {
   CommandDialog,
@@ -93,17 +92,12 @@ const adminItems = [
 ];
 
 export function CommandPalette() {
-  const session = useSession();
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (
-        session.data?.user?.role === "admin" &&
-        e.key === "k" &&
-        (e.metaKey || e.ctrlKey)
-      ) {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         e.stopPropagation();
         setOpen((open) => !open);
