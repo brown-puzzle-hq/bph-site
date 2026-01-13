@@ -1,12 +1,14 @@
-import { auth } from "@/auth";
+"use client";
+
 import { LogoutButton } from "@/components/nav/LogoutButton";
 import { NavBar, MenuItem, NavBarStyle } from "@/components/nav/NavBar";
 import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
 import { cn } from "~/lib/utils";
+import { useSession } from "next-auth/react";
 
-export async function HuntNavBar() {
-  const session = await auth();
+export function HuntNavBar() {
+  const { data: session } = useSession();
   const now = new Date();
 
   const style: NavBarStyle = {
@@ -79,7 +81,7 @@ export async function HuntNavBar() {
       type: "link",
     });
 
-    if (session?.user?.role == "admin") {
+    if (session?.user?.role === "admin") {
       rightMenuItems.push({
         title: "Admin",
         href: "/admin",
