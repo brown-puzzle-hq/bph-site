@@ -6,7 +6,7 @@ import { type Metadata } from "next";
 import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "~/hunt.config";
-import AdminHamburgerMenu from "./AdminHamburgerMenu";
+import AdminNavBar from "./AdminNavBar";
 
 export const metadata: Metadata = {
   title: `${HUNT_NAME}`,
@@ -24,7 +24,7 @@ export default async function RootLayout({
         <Providers session={session}>
           <CommandPalette />
           <Toaster expand={true} visibleToasts={10} />
-          <AdminHamburgerMenu />
+          <AdminNavBar />
           <div className="min-h-[56px]" />
           {/* TODO: get rid of flex and pt-6 */}
           <main className="flex min-h-[calc(100vh-56px)] pt-6">{children}</main>

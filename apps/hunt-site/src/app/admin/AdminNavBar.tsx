@@ -7,40 +7,41 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import { LogoutButton } from "@/components/nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
+import { NavBar, MenuItem, NavBarStyle } from "@/components/nav/NavBar";
+import { cn } from "~/lib/utils";
 
-export default async function AdminHamburgerMenu() {
-  const OtherMenuItems = () => {
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger className="px-1.5 py-1 align-middle">
-          <Ellipsis className="mb-0.5 h-[20px]" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <Link href="/admin/errata" prefetch={false}>
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Errata
-            </DropdownMenuItem>
-          </Link>
-          <Link href="/admin/feedback" prefetch={false}>
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Feedback
-            </DropdownMenuItem>
-          </Link>
-          <Link href="/admin/graph" prefetch={false}>
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Graph
-            </DropdownMenuItem>
-          </Link>
-          <Link href="/admin/sql" prefetch={false}>
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Queries
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
+export default async function AdminNavBar() {
+  const style: NavBarStyle = {
+    item: "data-[active=true]:bg-slate-400/15 hover:!bg-slate-400/20 transition-all",
+    bar: "bg-white/30 backdrop-blur-md backdrop-filter",
+    sheet: "bg-white",
   };
+  const logoutSizing = "cursor-pointer rounded-md px-[6px] py-[4px]";
+
+  const otherLinks = {
+    Errata: "/admin/errata",
+    Feedback: "/admin/feedback",
+    Graph: "/admin/graph",
+    Queries: "/admin/sql",
+    Websockets: "/admin/websockets",
+  };
+
+  const OtherMenuItems = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="rounded-md p-1.5 align-middle hover:bg-slate-400/20">
+        <Ellipsis className="h-[20px]" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {Object.entries(otherLinks).map(([title, href]) => (
+          <Link key={title} href={href} prefetch={false}>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              {title}
+            </DropdownMenuItem>
+          </Link>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   const leftMenuItems: MenuItem[] = [
     {
@@ -78,7 +79,7 @@ export default async function AdminHamburgerMenu() {
     },
     {
       title: "Logout",
-      element: <LogoutButton />,
+      element: <LogoutButton className={cn(logoutSizing, style.item)} />,
       type: "element",
     },
   ];
@@ -125,23 +126,28 @@ export default async function AdminHamburgerMenu() {
       type: "link",
     },
     {
+      title: "Websockets",
+      href: "/admin/websockets",
+      type: "link",
+    },
+    {
       title: "Hunt",
       href: "/",
       type: "link",
     },
     {
       title: "Logout",
-      element: <LogoutButton />,
+      element: <LogoutButton className="hover:cursor-pointer" />,
       type: "element",
     },
   ];
 
   return (
-    <HamburgerMenu
+    <NavBar
       leftMenuItems={leftMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}
-      side="admin"
+      style={style}
     />
   );
 }

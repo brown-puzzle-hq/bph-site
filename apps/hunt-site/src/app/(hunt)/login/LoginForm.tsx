@@ -52,7 +52,6 @@ export function LoginForm() {
       setTimeout(() => setShaking(false), 200);
     } else if (result?.ok) {
       router.push("/");
-      router.refresh();
     } else {
       alert("An unexpected error occurred. Please try again.");
     }

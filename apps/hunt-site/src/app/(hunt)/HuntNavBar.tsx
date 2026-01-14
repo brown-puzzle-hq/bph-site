@@ -1,12 +1,22 @@
-import { auth } from "@/auth";
+"use client";
+
 import { LogoutButton } from "@/components/nav/LogoutButton";
-import { HamburgerMenu, MenuItem } from "@/components/nav/HamburgerMenu";
+import { NavBar, MenuItem, NavBarStyle } from "@/components/nav/NavBar";
 import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { cn } from "~/lib/utils";
+import { useSession } from "next-auth/react";
 
-export async function HuntHamburgerMenu() {
-  const session = await auth();
+export function HuntNavBar() {
+  const { data: session } = useSession();
   const now = new Date();
+
+  const style: NavBarStyle = {
+    item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-all",
+    bar: "bg-nav-bg/30 backdrop-blur-md backdrop-filter",
+    sheet: "bg-nav-bg",
+  };
+  const logoutSizing = "cursor-pointer rounded-md px-[6px] py-[4px]";
 
   const leftMenuItems: MenuItem[] = [
     {
@@ -30,6 +40,21 @@ export async function HuntHamburgerMenu() {
       type: "link",
     },
   ];
+
+  const middleMenuItems: MenuItem[] = [];
+
+  if (session?.user) {
+    const targetDate =
+      session.user.interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME;
+
+    middleMenuItems.push({
+      title: "countdown",
+      element: <Countdown targetDate={targetDate} />,
+      type: "element",
+    });
+  }
 
   const rightMenuItems: MenuItem[] = [];
 
@@ -56,7 +81,7 @@ export async function HuntHamburgerMenu() {
       type: "link",
     });
 
-    if (session?.user?.role == "admin") {
+    if (session?.user?.role === "admin") {
       rightMenuItems.push({
         title: "Admin",
         href: "/admin",
@@ -66,7 +91,7 @@ export async function HuntHamburgerMenu() {
 
     rightMenuItems.push({
       title: "Logout",
-      element: <LogoutButton />,
+      element: <LogoutButton className={cn(logoutSizing, style.item)} />,
       type: "element",
     });
   } else {
@@ -79,25 +104,21 @@ export async function HuntHamburgerMenu() {
 
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
-  const middleElement = session?.user?.id ? (
-    <div>
-      <Countdown
-        targetDate={
-          session.user.interactionMode === "in-person"
-            ? IN_PERSON.START_TIME
-            : REMOTE.START_TIME
-        }
-      />
-    </div>
-  ) : undefined;
+  if (session?.user?.id) {
+    hamburgerMenuItems.splice(-1, 1, {
+      title: "Logout",
+      element: <LogoutButton className="hover:cursor-pointer" />,
+      type: "element",
+    });
+  }
 
   return (
-    <HamburgerMenu
+    <NavBar
       leftMenuItems={leftMenuItems}
+      middleMenuItems={middleMenuItems}
       rightMenuItems={rightMenuItems}
       hamburgerMenuItems={hamburgerMenuItems}
-      middleElement={middleElement}
-      side="hunt"
+      style={style}
     />
   );
 }

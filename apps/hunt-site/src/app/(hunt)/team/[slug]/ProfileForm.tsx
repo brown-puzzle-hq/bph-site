@@ -163,7 +163,6 @@ export default function ProfileForm({
     });
     document.activeElement instanceof HTMLElement &&
       document.activeElement.blur();
-    router.refresh(); // Ideally we remove this but seems like still necessary in some cases
   };
 
   const onDelete = async () => {
