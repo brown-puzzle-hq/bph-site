@@ -86,11 +86,3 @@ export async function getNumberOfHintsRemaining(
   const usedHints = query[0]?.count ? query[0].count : 0;
   return totalHints - usedHints;
 }
-
-/** ENUMS AND TYPES */
-
-export const SOLVE_TYPE_VALUES = ["guess", "answer_token"] as const;
-export type SolveType = (typeof SOLVE_TYPE_VALUES)[number];
-
-export const UNLOCK_TYPE_VALUES = ["guess"] as const;
-export type UnlockType = (typeof UNLOCK_TYPE_VALUES)[number];

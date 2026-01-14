@@ -56,3 +56,9 @@ export const HINT_STATUS_VALUES = [
   "refunded",
 ] as const;
 export type HintStatus = (typeof HINT_STATUS_VALUES)[number];
+
+export const SOLVE_TYPE_VALUES = ["guess", "answer_token"] as const;
+export type SolveType = (typeof SOLVE_TYPE_VALUES)[number];
+
+export const UNLOCK_TYPE_VALUES = ["guess"] as const;
+export type UnlockType = (typeof UNLOCK_TYPE_VALUES)[number];

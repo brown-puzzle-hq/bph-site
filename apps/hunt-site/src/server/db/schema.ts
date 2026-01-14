@@ -1,5 +1,3 @@
-import "server-only";
-
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -16,8 +14,9 @@ import {
   ROLE_VALUES,
   INTERACTION_MODE_VALUES,
   HINT_STATUS_VALUES,
+  SOLVE_TYPE_VALUES,
+  UNLOCK_TYPE_VALUES,
 } from "@/config/client";
-import { SOLVE_TYPE_VALUES, UNLOCK_TYPE_VALUES } from "@/config/server";
 
 /* Naming conventions:
 - Table names in TS are pluralized and camelCase (`teamRelations`)
