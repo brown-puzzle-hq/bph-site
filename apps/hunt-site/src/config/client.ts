@@ -8,6 +8,7 @@ export const HUNT_DOMAIN = "puzzlehunt.com";
 export const HUNT_EMAIL = "puzzlehunt@gmail.com";
 
 /** TIMING */
+
 export const REGISTRATION_START_TIME = new Date("2024-11-17T17:00:00.000Z");
 export const REGISTRATION_END_TIME = new Date("2030-11-24T17:00:00Z");
 
@@ -27,6 +28,7 @@ export const REMOTE = {
 };
 
 /** GUESSES */
+
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
 /** Uppercase string and strip all characters except A-Z and 0-9 */
@@ -35,3 +37,22 @@ export function sanitizeAnswer(answer: any) {
     ? answer.toUpperCase().replace(/[^A-Z0-9]/g, "")
     : "";
 }
+
+/** ENUMS AND TYPES */
+
+/** BEGIN_SNIPPET:ROLE_ENUM */
+export const ROLE_VALUES = ["admin", "user", "testsolver"] as const;
+/** END_SNIPPET:ROLE_ENUM */
+export type Role = (typeof ROLE_VALUES)[number];
+
+/** BEGIN_SNIPPET:INTERACTION_MODE_ENUM */
+export const INTERACTION_MODE_VALUES = ["in-person", "remote"] as const;
+/** END_SNIPPET:INTERACTION_MODE_ENUM */
+export type InteractionMode = (typeof INTERACTION_MODE_VALUES)[number];
+
+export const HINT_STATUS_VALUES = [
+  "no_response",
+  "answered",
+  "refunded",
+] as const;
+export type HintStatus = (typeof HINT_STATUS_VALUES)[number];

@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { hints, replies, hintStatusEnum } from "@/db/schema";
+import { hints, replies } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -12,14 +12,11 @@ import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
 } from "~/lib/email-template";
-import { HUNT_DOMAIN } from "@/config/client";
+import { HintStatus, HUNT_DOMAIN } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
 
-export async function editHintStatus(
-  hintId: number,
-  status: (typeof hintStatusEnum.enumValues)[number],
-) {
+export async function editHintStatus(hintId: number, status: HintStatus) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");

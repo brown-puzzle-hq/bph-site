@@ -38,8 +38,11 @@ import { AlertCircle, X } from "lucide-react";
 
 // Other
 import { deleteTeam, updateTeam } from "../actions";
-import { roleEnum, interactionModeEnum } from "~/server/db/schema";
-import { IN_PERSON } from "@/config/client";
+import {
+  IN_PERSON,
+  INTERACTION_MODE_VALUES,
+  ROLE_VALUES,
+} from "@/config/client";
 import {
   Member,
   deserializeMembers,
@@ -64,8 +67,8 @@ export const profileFormSchema = z
       .refine((members) => members.some((member) => member?.email), {
         message: "At least one email required",
       }),
-    interactionMode: z.enum(interactionModeEnum.enumValues),
-    role: z.enum(roleEnum.enumValues),
+    interactionMode: z.enum(INTERACTION_MODE_VALUES),
+    role: z.enum(ROLE_VALUES),
     password: z
       .string()
       .min(8, { message: "Min 8 characters" })

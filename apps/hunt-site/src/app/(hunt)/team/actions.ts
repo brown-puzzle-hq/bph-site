@@ -1,20 +1,20 @@
 "use server";
 
-import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
+import { teams } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hashSync } from "bcryptjs";
 import { auth } from "@/auth";
-import { IN_PERSON } from "@/config/client";
+import { IN_PERSON, type InteractionMode, type Role } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 
 export type TeamProperties = {
   displayName?: string;
   password?: string;
-  role?: (typeof roleEnum.enumValues)[number];
+  role?: Role;
   members?: string;
-  interactionMode?: (typeof interactionModeEnum.enumValues)[number];
+  interactionMode?: InteractionMode;
 };
 
 export async function updateTeam(id: string, teamProperties: TeamProperties) {

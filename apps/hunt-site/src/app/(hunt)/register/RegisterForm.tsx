@@ -19,10 +19,9 @@ import {
 } from "~/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { insertTeam } from "./actions";
-import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { IN_PERSON, HUNT_NAME } from "@/config/client";
+import { IN_PERSON, HUNT_NAME, INTERACTION_MODE_VALUES } from "@/config/client";
 import { signIn } from "next-auth/react";
 import { Member, serializeMembers } from "~/lib/team-members";
 
@@ -55,7 +54,7 @@ export const registerFormSchema = z
       .refine((members) => members.some((member) => member?.email), {
         message: "At least one email required",
       }),
-    interactionMode: z.enum(interactionModeEnum.enumValues),
+    interactionMode: z.enum(INTERACTION_MODE_VALUES),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

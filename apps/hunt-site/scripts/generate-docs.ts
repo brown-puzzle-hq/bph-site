@@ -50,11 +50,11 @@ async function main() {
     "TEAM_SCHEMA",
   );
   const role_enum = await extractSnippet(
-    "src/server/db/schema.ts",
+    "src/config/client.ts",
     "ROLE_ENUM",
   );
   const interaction_mode_enum = await extractSnippet(
-    "src/server/db/schema.ts",
+    "src/config/client.ts",
     "INTERACTION_MODE_ENUM",
   );
   const discord_message = await extractSnippet(
