@@ -12,7 +12,7 @@ import { db } from "~/server/db";
 import { count, max, sql } from "drizzle-orm";
 import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, solves } from "~/server/db/schema";
-import { IN_PERSON, REMOTE } from "~/config/client";
+import { IN_PERSON, REMOTE } from "@/config/client";
 import { FormattedTime } from "~/lib/time";
 import { Lock } from "lucide-react";
 

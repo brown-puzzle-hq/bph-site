@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/config/server";
+import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "@/config/server";
 
 export type GraphConfig = {
   puzzleUnlockMap: typeof PUZZLE_UNLOCK_MAP;

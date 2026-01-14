@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { META_PUZZLES, type Round } from "~/config/server";
+import { META_PUZZLES, type Round } from "@/config/server";
 import { AvailablePuzzle } from "@/puzzle/page";
 
 export default function PuzzleTable({

@@ -14,8 +14,8 @@ import {
   answerTokens,
   solveTypeEnum,
 } from "@/db/schema";
-import { NUMBER_OF_GUESSES_PER_PUZZLE, HUNT_DOMAIN } from "~/config/client";
-import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "~/config/server";
+import { NUMBER_OF_GUESSES_PER_PUZZLE, HUNT_DOMAIN } from "@/config/client";
+import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 

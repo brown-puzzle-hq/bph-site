@@ -3,7 +3,7 @@
 import { LogoutButton } from "@/components/nav/LogoutButton";
 import { NavBar, MenuItem, NavBarStyle } from "@/components/nav/NavBar";
 import Countdown from "@/components/nav/Countdown";
-import { IN_PERSON, REMOTE } from "~/config/client";
+import { IN_PERSON, REMOTE } from "@/config/client";
 import { cn } from "~/lib/utils";
 import { useSession } from "next-auth/react";
 

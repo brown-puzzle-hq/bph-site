@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form";
 import { NumberOfGuesses } from "./DefaultPuzzlePage";
 import { Infinity } from "lucide-react";
-import { sanitizeAnswer } from "~/config/client";
+import { sanitizeAnswer } from "@/config/client";
 
 type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;

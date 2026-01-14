@@ -4,7 +4,7 @@ import { TeamTable } from "./TeamTable";
 import { count, sql } from "drizzle-orm";
 import { and, asc, desc, eq, ne } from "drizzle-orm/expressions";
 import { teams, solves } from "~/server/db/schema";
-import { IN_PERSON, REMOTE } from "~/config/client";
+import { IN_PERSON, REMOTE } from "@/config/client";
 
 export const revalidate = 300;
 

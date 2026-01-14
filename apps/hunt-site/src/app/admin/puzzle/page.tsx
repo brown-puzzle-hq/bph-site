@@ -1,5 +1,5 @@
 import { db } from "@/db/index";
-import { INITIAL_PUZZLES, ROUNDS, META_PUZZLES } from "~/config/server";
+import { INITIAL_PUZZLES, ROUNDS, META_PUZZLES } from "@/config/server";
 import {
   Table,
   TableBody,

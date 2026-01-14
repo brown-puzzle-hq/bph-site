@@ -50,7 +50,7 @@ export const META_PUZZLES: string[] = ["example-1"];
  */
 
 /** Calculates the total number of hints given to a team */
-export function getTotalHints(role: string, interactionMode: string) {
+function getTotalHints(role: string, interactionMode: string) {
   const initialNumberOfHints =
     role == "admin" || role == "testsolver" ? 1e6 : 1;
 

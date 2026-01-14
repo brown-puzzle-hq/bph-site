@@ -5,7 +5,7 @@ import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hashSync } from "bcryptjs";
 import { auth } from "@/auth";
-import { IN_PERSON } from "~/config/client";
+import { IN_PERSON } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 

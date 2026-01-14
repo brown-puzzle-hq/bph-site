@@ -39,7 +39,7 @@ import { AlertCircle, X } from "lucide-react";
 // Other
 import { deleteTeam, updateTeam } from "../actions";
 import { roleEnum, interactionModeEnum } from "~/server/db/schema";
-import { IN_PERSON } from "~/config/client";
+import { IN_PERSON } from "@/config/client";
 import {
   Member,
   deserializeMembers,

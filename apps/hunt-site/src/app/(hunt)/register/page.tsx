@@ -1,4 +1,4 @@
-import { REGISTRATION_START_TIME, REGISTRATION_END_TIME } from "~/config/client";
+import { REGISTRATION_START_TIME, REGISTRATION_END_TIME } from "@/config/client";
 import { RegisterForm } from "./RegisterForm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";

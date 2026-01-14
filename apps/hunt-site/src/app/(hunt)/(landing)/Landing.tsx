@@ -1,5 +1,5 @@
 "use client";
-import { IN_PERSON, REMOTE } from "~/config/client";
+import { IN_PERSON, REMOTE } from "@/config/client";
 import Link from "next/link";
 
 const formatter = new Intl.DateTimeFormat("en-US", {
