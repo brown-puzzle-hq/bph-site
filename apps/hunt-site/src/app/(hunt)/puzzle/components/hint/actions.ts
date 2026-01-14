@@ -4,7 +4,7 @@ import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
-import { getNumberOfHintsRemaining } from "~/config/client";
+import { getNumberOfHintsRemaining } from "~/config/server";
 import { sendBotMessage, sendEmail } from "~/lib/comms";
 import { extractEmails } from "~/lib/team-members";
 import {

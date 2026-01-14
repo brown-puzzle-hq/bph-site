@@ -19,8 +19,8 @@ import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   IN_PERSON,
   REMOTE,
-  INITIAL_PUZZLES,
 } from "~/config/client";
+import { INITIAL_PUZZLES } from "~/config/server";
 import { cn } from "~/lib/utils";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 
