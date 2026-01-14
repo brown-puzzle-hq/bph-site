@@ -49,7 +49,7 @@ export async function sendBotMessage(
   if (!webhookURL) return;
 
   // Append mention if provided
-  if (mention) {
+  if (mention && mentionToRoleId[mention]) {
     const roleId = mentionToRoleId[mention];
     message += " " + roleId;
   }
