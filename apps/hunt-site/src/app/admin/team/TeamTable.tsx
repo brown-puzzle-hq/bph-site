@@ -34,8 +34,13 @@ import {
 } from "@/components/ui/table";
 
 import { getCookie, setCookie } from "typescript-cookie";
-import { roleEnum, interactionModeEnum } from "~/server/db/schema";
-import { type EditedTeam, type Role, type InteractionMode } from "./actions";
+import { type EditedTeam } from "./actions";
+import {
+  type Role,
+  type InteractionMode,
+  ROLE_VALUES,
+  INTERACTION_MODE_VALUES,
+} from "@/config/client";
 import { cn } from "~/lib/utils";
 import { Checkbox } from "~/components/ui/checkbox";
 import { updateTeam } from "./actions";
@@ -47,10 +52,10 @@ export type ClientEditableFields = {
   interactionMode: InteractionMode;
 };
 
-const fieldToOptions: Record<keyof ClientEditableFields, string[]> = {
-  role: roleEnum.enumValues,
-  interactionMode: interactionModeEnum.enumValues,
-};
+const fieldToOptions = {
+  role: ROLE_VALUES,
+  interactionMode: INTERACTION_MODE_VALUES,
+} as const;
 
 export type ClientEditedRow = {
   [K in keyof ClientEditableFields]?: {

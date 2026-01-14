@@ -3,7 +3,7 @@ import path from "path";
 import { db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
-import { HUNT_NAME } from "~/hunt.config";
+import { HUNT_NAME } from "@/config/client";
 
 const PUZZLE_DIR = path.join(process.cwd(), "src/app/(hunt)/puzzle");
 

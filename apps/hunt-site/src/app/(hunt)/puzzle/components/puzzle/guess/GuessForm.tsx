@@ -18,7 +18,7 @@ import { handleGuess } from "./actions";
 import { toast } from "sonner";
 import { NumberOfGuesses } from "../DefaultPuzzlePage";
 import { Infinity } from "lucide-react";
-import { sanitizeAnswer } from "@/hunt.config";
+import { sanitizeAnswer } from "@/config/client";
 
 const formSchema = z.object({
   guess: z.preprocess(

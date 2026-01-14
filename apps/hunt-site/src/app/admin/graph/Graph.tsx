@@ -1,10 +1,10 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useMemo, useRef } from "react";
 import ForceGraph from "react-force-graph-2d";
 import { LinkObject, NodeObject } from "react-force-graph-2d";
-import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/hunt.config";
 import {
   CaseUpper,
   Waypoints,
@@ -24,6 +24,7 @@ import { teams } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
 import { deserializeMembers } from "~/lib/team-members";
 import { cn } from "~/lib/utils";
+import { type GraphConfig } from "./page";
 
 const roundTextColor: Record<string, string> = {};
 
@@ -46,7 +47,11 @@ export type SearchedPuzzle = {
   round: string;
 };
 
-export default function Graph() {
+export default function Graph({
+  puzzleUnlockMap,
+  rounds,
+  metaPuzzles,
+}: GraphConfig) {
   const NODE_R = 8;
   const fgRef = useRef<any>(null);
   const router = useRouter();
@@ -100,7 +105,7 @@ export default function Graph() {
       setSearchedPuzzle({
         ...res,
         round:
-          ROUNDS.find((round) => round.puzzles.includes(puzzleId))?.name || "",
+          rounds.find((round) => round.puzzles.includes(puzzleId))?.name || "",
       });
       setTeamSidebar(false);
 
@@ -200,7 +205,7 @@ export default function Graph() {
           setSearchedPuzzle({
             ...res,
             round:
-              ROUNDS.find((round) => round.puzzles.includes(puzzle))?.name ||
+              rounds.find((round) => round.puzzles.includes(puzzle))?.name ||
               "",
           });
         }
@@ -246,17 +251,17 @@ export default function Graph() {
   const [showWords, setShowWords] = useState(false);
 
   const nodes = useMemo(() => {
-    return Object.keys(PUZZLE_UNLOCK_MAP).map((puzzle) => ({
+    return Object.keys(puzzleUnlockMap).map((puzzle) => ({
       id: puzzle,
       name: puzzle,
-      round: ROUNDS.find((round) => round.puzzles.includes(puzzle))?.name,
+      round: rounds.find((round) => round.puzzles.includes(puzzle))?.name,
       neighbors: [],
       links: [],
     })) as NodeObject[];
   }, []);
 
   const links = useMemo(() => {
-    return Object.entries(PUZZLE_UNLOCK_MAP).flatMap(([puzzle, adjPuzzles]) =>
+    return Object.entries(puzzleUnlockMap).flatMap(([puzzle, adjPuzzles]) =>
       adjPuzzles.map((adjPuzzle) => ({
         source: puzzle,
         target: adjPuzzle,
@@ -336,7 +341,7 @@ export default function Graph() {
           ? amber400
           : neutral400
       : roundNodeColor[
-          ROUNDS.find((round) => round.puzzles.includes(node.name))?.name ||
+          rounds.find((round) => round.puzzles.includes(node.name))?.name ||
             "Default"
         ] || "oklch(0.708 0 0)";
 
@@ -640,7 +645,7 @@ export default function Graph() {
                 <span className="font-semibold">Solved metas:</span>{" "}
                 {
                   searchedTeam.solves.filter((solve) =>
-                    META_PUZZLES.includes(solve),
+                    metaPuzzles.includes(solve),
                   ).length
                 }
               </p>
@@ -669,7 +674,7 @@ export default function Graph() {
                   </button>
                 )}
               </div>
-              {ROUNDS.map((round) => (
+              {rounds.map((round) => (
                 <>
                   <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                     {round.name}
@@ -677,7 +682,7 @@ export default function Graph() {
                   {round.puzzles.map((puzzle) => {
                     const isSolve = searchedTeam?.solves.includes(puzzle);
                     const isUnlock = searchedTeam?.unlocks.includes(puzzle);
-                    const isMeta = META_PUZZLES.includes(puzzle);
+                    const isMeta = metaPuzzles.includes(puzzle);
                     return (
                       <div>
                         <button
@@ -716,7 +721,7 @@ export default function Graph() {
                 </button>
                 <p
                   className={`text-base ${
-                    META_PUZZLES.includes(searchedPuzzle.puzzleId)
+                    metaPuzzles.includes(searchedPuzzle.puzzleId)
                       ? "font-bold"
                       : ""
                   } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : roundTextColor[searchedPuzzle.round]}`}

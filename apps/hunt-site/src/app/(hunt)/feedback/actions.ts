@@ -4,7 +4,7 @@ import { feedback } from "@/db/schema";
 import { db } from "@/db/index";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
-import { HUNT_DOMAIN } from "~/hunt.config";
+import { HUNT_DOMAIN } from "@/config/client";
 
 export async function insertFeedback(description: string, timestamp: Date) {
   const session = await auth();

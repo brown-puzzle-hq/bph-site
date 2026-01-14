@@ -30,7 +30,7 @@
       "@/auth": ["./src/server/auth/auth.ts"],
       "@/auth.config": ["./src/server/auth/auth.config.ts"],
       "@/components/*": ["./src/components/*"],
-      "@/hunt.config": ["./src/hunt.config.ts"],
+      "@/config/*": ["./src/config/*"],
       "@/db/*": ["./src/server/db/*"],
       "@/puzzle/*": ["./src/app/(hunt)/puzzle/*"]
     }

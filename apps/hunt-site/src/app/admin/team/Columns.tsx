@@ -9,7 +9,7 @@ import {
   Puzzle,
 } from "lucide-react";
 import { FormattedTime } from "~/lib/time";
-import { Role, InteractionMode } from "./actions";
+import { type Role, type InteractionMode } from "@/config/client";
 
 export type TeamTableRow = {
   rank: number | null;

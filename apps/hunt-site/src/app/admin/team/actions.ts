@@ -3,11 +3,8 @@
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { teams } from "~/server/db/schema";
-import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
-
-export type Role = (typeof roleEnum.enumValues)[number];
-export type InteractionMode = (typeof interactionModeEnum.enumValues)[number];
+import { type Role, type InteractionMode } from "@/config/client";
 
 export type EditableFields = {
   role: Role;

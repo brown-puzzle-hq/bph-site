@@ -11,7 +11,7 @@ import {
   RefreshCcw,
   X,
 } from "lucide-react";
-import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "@/config/client";
 import {
   editMessage,
   insertReply,
@@ -20,7 +20,7 @@ import {
 } from "./actions";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { hintStatusEnum } from "~/server/db/schema";
+import { type HintStatus } from "@/config/client";
 
 type TableProps = {
   previousHints: PreviousHints;
@@ -36,7 +36,7 @@ type PreviousHints = {
   id: number;
   request: string;
   response: string | null;
-  status: (typeof hintStatusEnum.enumValues)[number];
+  status: HintStatus;
   team: {
     id: string;
     displayName: string;
