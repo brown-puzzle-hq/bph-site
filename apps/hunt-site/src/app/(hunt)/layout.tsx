@@ -5,7 +5,7 @@ import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
 import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
-import { HUNT_NAME } from "~/hunt.config";
+import { HUNT_NAME } from "~/config/client";
 import { HuntNavBar } from "./HuntNavBar";
 import { HuntNavBarSpacer } from "@/components/nav/HuntNavBarSpacer";
 

@@ -17,7 +17,7 @@ import { ActivityItem, ActivityChart } from "./ActivityChart";
 import { db } from "~/server/db/index";
 import { guesses, hints, teams } from "~/server/db/schema";
 import { count, eq, isNull, not, sql } from "drizzle-orm";
-import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/config/client";
 
 type hintLeaderboardItem = {
   id: string;

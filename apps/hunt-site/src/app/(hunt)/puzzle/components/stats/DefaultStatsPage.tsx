@@ -7,7 +7,7 @@ import { columns } from "./Columns";
 import { db } from "~/server/db";
 import { and, or, eq, desc, count, lte } from "drizzle-orm";
 import { puzzles, teams, solves, guesses, unlocks, hints } from "@/db/schema";
-import { REMOTE, IN_PERSON, INITIAL_PUZZLES } from "~/hunt.config";
+import { REMOTE, IN_PERSON, INITIAL_PUZZLES } from "~/config/client";
 
 export default async function DefaultStatsPage({
   puzzleId,

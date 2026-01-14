@@ -11,7 +11,7 @@ import {
   RefreshCcw,
   X,
 } from "lucide-react";
-import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/config/client";
 import {
   editMessage,
   insertReply,

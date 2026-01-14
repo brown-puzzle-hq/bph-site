@@ -19,7 +19,7 @@ import {
   PUZZLE_UNLOCK_MAP,
   META_PUZZLES,
   HUNT_DOMAIN,
-} from "~/hunt.config";
+} from "~/config/client";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 

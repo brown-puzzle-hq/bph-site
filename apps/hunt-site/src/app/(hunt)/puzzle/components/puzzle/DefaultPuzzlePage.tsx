@@ -20,7 +20,7 @@ import {
   IN_PERSON,
   REMOTE,
   INITIAL_PUZZLES,
-} from "~/hunt.config";
+} from "~/config/client";
 import { cn } from "~/lib/utils";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 

@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { IN_PERSON, REMOTE } from "@/hunt.config";
+import { IN_PERSON, REMOTE } from "~/config/client";
 
 export default auth(async (req) => {
   // Allow admins to access all pages

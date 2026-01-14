@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { unlocks, puzzles, solves } from "@/db/schema";
 import { sendEmail } from "~/lib/comms";
 import { extractEmails } from "~/lib/team-members";
-import { INITIAL_PUZZLES, HUNT_EMAIL } from "~/hunt.config";
+import { INITIAL_PUZZLES, HUNT_EMAIL } from "~/config/client";
 import { ErratumEmailTemplate } from "~/lib/email-template";
 
 export async function insertErratum(puzzleId: string, description: string) {

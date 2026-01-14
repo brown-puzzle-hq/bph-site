@@ -1,6 +1,6 @@
 import "server-only";
 
-import { HUNT_DOMAIN } from "~/hunt.config";
+import { HUNT_DOMAIN } from "~/config/client";
 
 export interface HintEmailTemplateProps {
   teamDisplayName: string;

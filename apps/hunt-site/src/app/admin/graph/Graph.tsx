@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useMemo, useRef } from "react";
 import ForceGraph from "react-force-graph-2d";
 import { LinkObject, NodeObject } from "react-force-graph-2d";
-import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/hunt.config";
+import { PUZZLE_UNLOCK_MAP, ROUNDS, META_PUZZLES } from "~/config/client";
 import {
   CaseUpper,
   Waypoints,

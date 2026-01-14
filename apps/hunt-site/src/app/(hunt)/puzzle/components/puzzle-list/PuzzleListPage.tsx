@@ -1,6 +1,6 @@
 import PuzzleTable from "./PuzzleTable";
 import EventTable from "./event/EventTable";
-import { IN_PERSON, Round } from "~/hunt.config";
+import { IN_PERSON, Round } from "~/config/client";
 import { AvailablePuzzle, AvailableEvent } from "@/puzzle/page";
 
 type PuzzleListPageProps = {

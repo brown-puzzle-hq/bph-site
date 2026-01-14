@@ -2,7 +2,7 @@
 import { db } from "~/server/db";
 import { teams, puzzles, guesses, hints } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { INITIAL_PUZZLES } from "~/hunt.config";
+import { INITIAL_PUZZLES } from "~/config/client";
 
 export async function getSearchedTeam(teamId: string) {
   const result = await db.query.teams.findFirst({

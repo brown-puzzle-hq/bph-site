@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { HUNT_EMAIL } from "~/hunt.config";
+import { HUNT_EMAIL } from "~/config/client";
 
 import Link from "next/link";
 import { signIn, signOut } from "next-auth/react";

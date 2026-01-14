@@ -15,7 +15,7 @@ import {
   REMOTE,
   ROUNDS,
   Round,
-} from "@/hunt.config";
+} from "~/config/client";
 import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
 
 export type AvailablePuzzle = {

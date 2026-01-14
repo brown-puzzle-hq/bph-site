@@ -1,5 +1,5 @@
-import { db } from "./server/db";
-import { hints } from "./server/db/schema";
+import { db } from "@/db/index";
+import { hints } from "@/db/schema";
 import { and, count, eq, ne } from "drizzle-orm";
 
 // TOOD: Change me!

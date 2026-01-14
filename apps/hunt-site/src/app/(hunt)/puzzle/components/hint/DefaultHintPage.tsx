@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and, asc } from "drizzle-orm";
 import { replies, solves, hints, puzzles } from "~/server/db/schema";
-import { getNumberOfHintsRemaining } from "~/hunt.config";
+import { getNumberOfHintsRemaining } from "~/config/client";
 import HuntHintThreads from "./HuntHintThreads";
 import { canViewPuzzle } from "@/puzzle/actions";
 

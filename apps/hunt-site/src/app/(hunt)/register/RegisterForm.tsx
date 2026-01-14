@@ -22,7 +22,7 @@ import { insertTeam } from "./actions";
 import { interactionModeEnum } from "~/server/db/schema";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { IN_PERSON, HUNT_NAME } from "~/hunt.config";
+import { IN_PERSON, HUNT_NAME } from "~/config/client";
 import { signIn } from "next-auth/react";
 import { Member, serializeMembers } from "~/lib/team-members";
 

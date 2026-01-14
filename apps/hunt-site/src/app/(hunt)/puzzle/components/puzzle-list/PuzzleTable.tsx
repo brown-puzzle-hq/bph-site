@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Round, META_PUZZLES } from "~/hunt.config";
+import { Round, META_PUZZLES } from "~/config/client";
 import { AvailablePuzzle } from "@/puzzle/page";
 
 export default function PuzzleTable({

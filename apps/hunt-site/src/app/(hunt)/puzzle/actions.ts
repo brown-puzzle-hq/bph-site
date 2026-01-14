@@ -3,7 +3,7 @@ import { Session } from "next-auth";
 import { db } from "@/db/index";
 import { solves, unlocks } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { IN_PERSON, REMOTE, INITIAL_PUZZLES } from "~/hunt.config";
+import { IN_PERSON, REMOTE, INITIAL_PUZZLES } from "~/config/client";
 
 // TODO: the canView functions should return a more specific type.
 // They also do not need to be async functions, so we can put them in

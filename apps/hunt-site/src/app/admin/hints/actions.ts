@@ -12,7 +12,7 @@ import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
 } from "~/lib/email-template";
-import { HUNT_DOMAIN } from "~/hunt.config";
+import { HUNT_DOMAIN } from "~/config/client";
 
 export type MessageType = "request" | "response" | "reply";
 

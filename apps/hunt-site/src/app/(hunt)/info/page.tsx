@@ -8,7 +8,7 @@ import {
   TableOfContents,
 } from "@/components/toc/TableOfContents";
 import Timeline from "./Timeline";
-import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "~/config/client";
 
 const formatter = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
