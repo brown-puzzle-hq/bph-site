@@ -108,14 +108,16 @@ export default function ProfileForm({
     }
   }, []);
 
+  const defaultMembers = (memberString: string) =>
+    memberString === "[]"
+      ? [{ name: "", email: "" }]
+      : deserializeMembers(memberString);
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       ...teamProperties,
-      members:
-        teamProperties.members === "[]"
-          ? [{ name: "", email: "" }]
-          : deserializeMembers(teamProperties.members),
+      members: defaultMembers(teamProperties.members),
       password: "",
       confirmPassword: "",
     },
@@ -155,7 +157,7 @@ export default function ProfileForm({
 
     form.reset({
       ...result.updatedTeam,
-      members: deserializeMembers(result.updatedTeam.members),
+      members: defaultMembers(result.updatedTeam.members),
       password: "",
       confirmPassword: "",
     });
