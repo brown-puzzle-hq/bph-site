@@ -122,7 +122,7 @@ export async function sendToWebsocketServer(
       scope: "broadcast",
     },
     process.env.AUTH_SECRET!,
-    { expiresIn: "30s" },
+    { expiresIn: "90s" },
   );
 
   try {
