@@ -248,6 +248,7 @@ export function RegisterForm() {
                         autoComplete="off"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
+                            e.preventDefault();
                             const idx = e.shiftKey ? index - 1 : index;
                             focusAtEnd(memberRefs.current[idx]?.email);
                           }
@@ -281,6 +282,7 @@ export function RegisterForm() {
                         autoComplete="off"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
+                            e.preventDefault();
                             if (e.shiftKey) {
                               focusAtEnd(memberRefs.current[index]?.name);
                             } else if (index === fields.length - 1) {

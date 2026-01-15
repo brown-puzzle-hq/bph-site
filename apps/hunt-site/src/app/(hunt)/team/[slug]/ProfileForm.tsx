@@ -97,6 +97,17 @@ export default function ProfileForm({
   const { data: session, update } = useSession();
   const [teamProperties, setTeamProperties] = useState(initialProperties);
 
+  // TODO: remove when we switch to database strategy
+  useEffect(() => {
+    if (
+      session?.user?.displayName !== initialProperties.displayName ||
+      session?.user?.interactionMode !== initialProperties.interactionMode ||
+      session?.user?.role !== initialProperties.role
+    ) {
+      update(null);
+    }
+  }, []);
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
