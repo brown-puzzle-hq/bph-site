@@ -1,11 +1,16 @@
 "use client";
 
 // Hooks
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { useFieldArray, useForm } from "react-hook-form";
+import {
+  useFieldArray,
+  useForm,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -43,13 +48,10 @@ import {
   INTERACTION_MODE_VALUES,
   ROLE_VALUES,
 } from "@/config/client";
-import {
-  Member,
-  deserializeMembers,
-  serializeMembers,
-} from "~/lib/team-members";
+import { deserializeMembers, serializeMembers } from "~/lib/team-members";
 import { signOut } from "next-auth/react";
 import { Team } from "@/db/types";
+import { focusAtEnd, cn } from "~/lib/utils";
 
 export const profileFormSchema = z
   .object({
@@ -57,17 +59,12 @@ export const profileFormSchema = z
       .string()
       .min(1, { message: "Required" })
       .max(50, { message: "Max 50 characters" }),
-    members: z
-      .array(
-        z.object({
-          id: z.number().optional(),
-          name: z.string().or(z.literal("")),
-          email: z.string().email().or(z.literal("")),
-        }),
-      )
-      .refine((members) => members.some((member) => member?.email), {
-        message: "At least one email required",
+    members: z.array(
+      z.object({
+        name: z.string().or(z.literal("")),
+        email: z.string().email().or(z.literal("")),
       }),
+    ),
     interactionMode: z.enum(INTERACTION_MODE_VALUES),
     role: z.enum(ROLE_VALUES),
     password: z
@@ -104,7 +101,10 @@ export default function ProfileForm({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       ...teamProperties,
-      members: deserializeMembers(teamProperties.members),
+      members:
+        teamProperties.members === "[]"
+          ? [{ name: "", email: "" }]
+          : deserializeMembers(teamProperties.members),
       password: "",
       confirmPassword: "",
     },
@@ -117,16 +117,10 @@ export default function ProfileForm({
   });
 
   useEffect(() => {
-    if (form.getValues("members").length === 0) {
+    if (fields.length === 0) {
       append({ name: "", email: "" });
     }
-    if (
-      form.getValues("members").some((member: Member) => member?.email) &&
-      form.formState.errors.members?.message === "At least one email required"
-    ) {
-      form.trigger("members");
-    }
-  });
+  }, [fields.length, append]);
 
   const onSubmit = async (data: ProfileFormValues) => {
     const result = await updateTeam(id, {
@@ -162,35 +156,28 @@ export default function ProfileForm({
       toast("Deletion failed", {
         description: error,
       });
+      return;
+    }
+
+    if (session?.user?.id !== id) {
+      router.push("/admin/team");
     } else {
-      if (session?.user?.id !== id && session?.user?.role === "admin") {
-        router.push("/admin/team");
-      } else {
-        signOut();
-      }
+      signOut();
     }
   };
 
-  const isDirty = () => {
-    const currentValues = form.getValues();
-    return Object.keys(currentValues).some((key) => {
-      switch (key) {
-        case "members":
-          return (
-            serializeMembers(currentValues[key]) !== teamProperties.members
-          );
-        default:
-          return (
-            (currentValues as ProfileFormValues)[
-              key as keyof ProfileFormValues
-            ] !=
-            (form.formState.defaultValues as ProfileFormValues)[
-              key as keyof ProfileFormValues
-            ]
-          );
-      }
-    });
-  };
+  const { isDirty, errors } = useFormState({ control: form.control });
+  const members = useWatch({ control: form.control, name: "members" });
+
+  const memberRefs = useRef<
+    {
+      name?: HTMLInputElement | null;
+      email?: HTMLInputElement | null;
+    }[]
+  >([]);
+
+  const inPersonEnded = new Date() > IN_PERSON.END_TIME;
+  const inPersonStarted = new Date() > IN_PERSON.START_TIME;
 
   return (
     <div>
@@ -233,16 +220,7 @@ export default function ProfileForm({
 
           <div className="mb-8">
             <FormLabel className="flex flex-row justify-between">
-              <span className="mb-1.5 text-main-header">
-                Team members <span className="text-error">*</span>
-              </span>
-              {!form
-                .getValues("members")
-                .some((member: Member) => member?.email) && (
-                <span className="text-[0.8rem] font-medium text-error">
-                  At least one email required
-                </span>
-              )}
+              <span className="mb-1.5 text-main-header">Team members</span>
             </FormLabel>
             {fields.map((field, index) => (
               <div className="flex items-center space-x-2" key={field.id}>
@@ -256,32 +234,18 @@ export default function ProfileForm({
                         <Input
                           className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
                           {...field}
-                          value={field.value ?? ""}
+                          ref={(el) => {
+                            field.ref(el);
+                            memberRefs.current[index] ??= {};
+                            memberRefs.current[index].name = el;
+                          }}
+                          value={field.value}
                           placeholder="Name"
                           autoComplete="off"
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              e.preventDefault();
-                              if (e.shiftKey) {
-                                const prevField = document.querySelector(
-                                  `[name="members.${index - 1}.email"]`,
-                                ) as HTMLInputElement;
-                                prevField?.focus();
-                              } else {
-                                const nextField = document.querySelector(
-                                  `[name="members.${index}.email"]`,
-                                ) as HTMLInputElement;
-                                nextField?.focus();
-                              }
-                            } else if (e.key === "Backspace" && !field.value) {
-                              remove(index);
-                              // Move focus back to the previous field
-                              setTimeout(() => {
-                                const prevField = document.querySelector(
-                                  `[name="members.${index - 1}.email"]`,
-                                ) as HTMLInputElement;
-                                prevField?.focus();
-                              }, 0);
+                              const idx = e.shiftKey ? index - 1 : index;
+                              focusAtEnd(memberRefs.current[idx]?.email);
                             }
                           }}
                         />
@@ -298,32 +262,28 @@ export default function ProfileForm({
                     <FormItem className="w-1/2">
                       <FormControl className="text-main-text placeholder:text-white/40">
                         <Input
-                          className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "border-red-300" : ""} text-current shadow-none focus-visible:ring-transparent`}
+                          className={cn(
+                            "rounded-none border-0 border-b p-0 text-current shadow-none focus-visible:ring-transparent",
+                            errors.members?.[index] && "border-red-300",
+                          )}
                           {...field}
-                          value={field.value ?? ""}
+                          ref={(el) => {
+                            field.ref(el);
+                            memberRefs.current[index] ??= {};
+                            memberRefs.current[index].email = el;
+                          }}
+                          value={field.value}
                           placeholder="Email"
                           autoComplete="off"
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              e.preventDefault();
                               if (e.shiftKey) {
-                                const prevField = document.querySelector(
-                                  `[name="members.${index}.name"]`,
-                                ) as HTMLInputElement;
-                                prevField?.focus();
+                                focusAtEnd(memberRefs.current[index]?.name);
                               } else if (index === fields.length - 1) {
                                 append({ email: "", name: "" });
                               } else {
-                                const nextField = document.querySelector(
-                                  `[name="members.${index + 1}.name"]`,
-                                ) as HTMLInputElement;
-                                nextField?.focus();
+                                focusAtEnd(memberRefs.current[index + 1]?.name);
                               }
-                            } else if (e.key === "Backspace" && !field.value) {
-                              const prevField = document.querySelector(
-                                `[name="members.${index}.name"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
                             }
                           }}
                         />
@@ -339,9 +299,9 @@ export default function ProfileForm({
                   size="sm"
                   className="h-7 w-7 p-1 hover:bg-black/20 focus-visible:bg-black/20 focus-visible:ring-0"
                   disabled={
-                    fields.length == 1 &&
-                    form.watch("members")[0]?.name === "" &&
-                    form.watch("members")[0]?.email === ""
+                    fields.length === 1 &&
+                    !members[0]?.name &&
+                    !members[0]?.email
                   }
                   onClick={() => remove(index)}
                 >
@@ -372,10 +332,13 @@ export default function ProfileForm({
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <RadioGroupItem
                         value="in-person"
-                        disabled={new Date() > IN_PERSON.END_TIME}
+                        disabled={inPersonEnded}
                       />
                       <FormLabel
-                        className={`font-normal text-main-text opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                        className={cn(
+                          "font-normal text-main-text",
+                          inPersonEnded && "opacity-50",
+                        )}
                       >
                         In-person
                       </FormLabel>
@@ -384,19 +347,17 @@ export default function ProfileForm({
                       <RadioGroupItem
                         value="remote"
                         disabled={
-                          new Date() > IN_PERSON.END_TIME ||
-                          (new Date() > IN_PERSON.START_TIME &&
-                            field.value === "in-person")
+                          inPersonEnded ||
+                          (inPersonStarted && field.value === "in-person")
                         }
                       />
                       <FormLabel
-                        className={`font-normal text-main-text opacity-${
-                          new Date() > IN_PERSON.END_TIME ||
-                          (new Date() > IN_PERSON.START_TIME &&
-                            field.value === "in-person")
-                            ? 50
-                            : 100
-                        }`}
+                        className={cn(
+                          "font-normal text-main-text",
+                          (inPersonEnded ||
+                            (inPersonStarted && field.value === "in-person")) &&
+                            "opacity-50",
+                        )}
                       >
                         Remote
                       </FormLabel>
@@ -485,9 +446,10 @@ export default function ProfileForm({
           </div>
 
           <div
-            className={`fixed bottom-3 left-1/2 z-10 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300 ${
-              isDirty() ? "translate-y-0" : "translate-y-[5rem]"
-            }`}
+            className={cn(
+              "fixed bottom-3 left-1/2 z-10 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300",
+              isDirty ? "translate-y-0" : "translate-y-[5rem]",
+            )}
           >
             <Alert className="w-full border-0 bg-slate-700/50 p-2 shadow-lg backdrop-blur-md backdrop-filter">
               <div className="flex items-center justify-between">
@@ -505,24 +467,14 @@ export default function ProfileForm({
                   >
                     Reset
                   </button>
-                  <Button
-                    type="submit"
-                    disabled={
-                      !!Object.keys(form.formState.errors).length ||
-                      !form
-                        .watch("members")
-                        .some((member: Member) => member?.email) ||
-                      form.watch("password") !== form.watch("confirmPassword")
-                    }
-                  >
-                    Save
-                  </Button>
+                  <Button type="submit">Save</Button>
                 </div>
               </div>
             </Alert>
           </div>
         </form>
       </Form>
+
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="destructive">Delete Account</Button>
