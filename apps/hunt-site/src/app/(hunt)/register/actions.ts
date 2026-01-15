@@ -7,14 +7,12 @@ import { eq } from "drizzle-orm";
 import { IN_PERSON, HUNT_DOMAIN, type InteractionMode } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
+import { type Team } from "@/db/types";
 
-export type TeamProperties = {
-  id: string;
-  displayName: string;
-  password: string;
-  members: string;
-  interactionMode: InteractionMode;
-};
+type TeamProperties = Pick<
+  Team,
+  "id" | "displayName" | "members" | "interactionMode" | "password"
+>;
 
 export async function insertTeam(teamProperties: TeamProperties) {
   teamProperties.id = teamProperties.id.toLowerCase();

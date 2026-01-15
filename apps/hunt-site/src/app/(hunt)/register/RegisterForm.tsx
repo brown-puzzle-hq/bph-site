@@ -61,10 +61,9 @@ export const registerFormSchema = z
     path: ["confirmPassword"],
   });
 
-type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-export function RegisterForm({}: RegisterFormProps) {
+export function RegisterForm() {
   const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
@@ -99,11 +98,8 @@ export function RegisterForm({}: RegisterFormProps) {
 
   const onSubmit = async (data: RegisterFormValues) => {
     const { error } = await insertTeam({
-      id: data.id,
-      displayName: data.displayName,
-      password: data.password,
+      ...data,
       members: serializeMembers(data.members),
-      interactionMode: data.interactionMode,
     });
 
     if (error) {

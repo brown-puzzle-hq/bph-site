@@ -1,7 +1,7 @@
 "use client";
 
 // Hooks
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -49,6 +49,7 @@ import {
   serializeMembers,
 } from "~/lib/team-members";
 import { signOut } from "next-auth/react";
+import { Team } from "@/db/types";
 
 export const profileFormSchema = z
   .object({
@@ -81,33 +82,29 @@ export const profileFormSchema = z
     path: ["confirmPassword"],
   });
 
-type TeamInfoFormProps = {
-  id: string;
-  displayName: string;
-  role: "admin" | "user" | "testsolver";
-  memberString: string;
-  interactionMode: "in-person" | "remote";
-};
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+type TeamProperties = Pick<
+  Team,
+  "displayName" | "role" | "members" | "interactionMode"
+>;
 
 export default function ProfileForm({
   id,
-  displayName,
-  role,
-  memberString,
-  interactionMode,
-}: TeamInfoFormProps) {
+  initialProperties,
+}: {
+  id: string;
+  initialProperties: TeamProperties;
+}) {
   const router = useRouter();
   const { data: session, update } = useSession();
-  const members = deserializeMembers(memberString);
+  const [teamProperties, setTeamProperties] = useState(initialProperties);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      displayName,
-      role,
-      members,
-      interactionMode,
+      ...teamProperties,
+      members: deserializeMembers(teamProperties.members),
       password: "",
       confirmPassword: "",
     },
@@ -133,39 +130,30 @@ export default function ProfileForm({
 
   const onSubmit = async (data: ProfileFormValues) => {
     const result = await updateTeam(id, {
-      displayName: data.displayName,
-      role: data.role,
+      ...data,
       members: serializeMembers(data.members),
-      interactionMode: data.interactionMode,
-      password: data.password,
     });
 
-    if (result.error) {
+    if (result.error !== null) {
       toast("Update failed", {
         description: result.error,
       });
       return;
     }
 
+    setTeamProperties(result.updatedTeam);
+
     if (session?.user?.id === id) {
-      // updateTeam drives changes, this pulls from the database
-      const session = await update(null);
-      // Check for external updates
-      if (session?.user) {
-        data.displayName = session.user.displayName;
-        data.interactionMode = session.user
-          .interactionMode as typeof data.interactionMode;
-        data.role = session.user.role as typeof data.role;
-      }
+      // updateTeam drives changes, this just updates JWT
+      await update(null);
     }
 
     form.reset({
-      ...data,
+      ...result.updatedTeam,
+      members: deserializeMembers(result.updatedTeam.members),
       password: "",
       confirmPassword: "",
     });
-    document.activeElement instanceof HTMLElement &&
-      document.activeElement.blur();
   };
 
   const onDelete = async () => {
@@ -188,7 +176,9 @@ export default function ProfileForm({
     return Object.keys(currentValues).some((key) => {
       switch (key) {
         case "members":
-          return serializeMembers(currentValues[key]) !== memberString;
+          return (
+            serializeMembers(currentValues[key]) !== teamProperties.members
+          );
         default:
           return (
             (currentValues as ProfileFormValues)[
@@ -204,6 +194,12 @@ export default function ProfileForm({
 
   return (
     <div>
+      <h1 className="w-full truncate text-ellipsis px-4 text-center">
+        Welcome, {teamProperties.displayName}!
+      </h1>
+      <p className="mb-6 text-center">
+        {id} • {teamProperties.interactionMode}
+      </p>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
