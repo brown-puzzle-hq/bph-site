@@ -36,7 +36,7 @@ export function useWebSocket() {
 }
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
-  const { status } = useSession();
+  const { data: session } = useSession();
   const socketRef = useRef<WebSocket | null>(null);
   const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
 
@@ -123,7 +123,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   // Try to create a websocket
   useEffect(() => {
     // Check that the user is logged in
-    if (status !== "authenticated") return;
+    if (session?.user?.id === undefined) return;
 
     // Check that websocket server exists
     const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
@@ -175,7 +175,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       socketRef.current?.close(1000);
       cancelled = true;
     };
-  }, [status]);
+  }, [session?.user?.id]);
 
   return (
     <WebSocketContext.Provider

@@ -9,6 +9,7 @@ import { IN_PERSON } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 import { type Team } from "@/db/types";
+import { revalidatePath } from "next/cache";
 
 type TeamProperties = Partial<
   Pick<
@@ -62,6 +63,7 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
     if (result.length === 0) {
       return { error: "No team matching the given ID was found." };
     }
+    revalidatePath(`/team/${id}`, "page");
     return { error: null, updatedTeam: result[0]! };
   } catch (e) {
     const error = ensureError(e);

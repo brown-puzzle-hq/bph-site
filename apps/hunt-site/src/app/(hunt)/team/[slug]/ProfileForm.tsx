@@ -1,7 +1,7 @@
 "use client";
 
 // Hooks
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -95,15 +95,16 @@ export default function ProfileForm({
 }) {
   const router = useRouter();
   const { data: session, update } = useSession();
-  const [teamProperties, setTeamProperties] = useState(initialProperties);
 
   // TODO: remove when we switch to database strategy
   useEffect(() => {
     if (
-      session?.user?.displayName !== initialProperties.displayName ||
-      session?.user?.interactionMode !== initialProperties.interactionMode ||
-      session?.user?.role !== initialProperties.role
+      session?.user?.id === id &&
+      (session?.user?.displayName !== initialProperties.displayName ||
+        session?.user?.interactionMode !== initialProperties.interactionMode ||
+        session?.user?.role !== initialProperties.role)
     ) {
+      // TODO: might be a race condition
       update(null);
     }
   }, []);
@@ -116,8 +117,8 @@ export default function ProfileForm({
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      ...teamProperties,
-      members: defaultMembers(teamProperties.members),
+      ...initialProperties,
+      members: defaultMembers(initialProperties.members),
       password: "",
       confirmPassword: "",
     },
@@ -148,11 +149,10 @@ export default function ProfileForm({
       return;
     }
 
-    setTeamProperties(result.updatedTeam);
-
     if (session?.user?.id === id) {
       // updateTeam drives changes, this just updates JWT
-      await update(null);
+      // TODO: might be a race condition
+      update(null);
     }
 
     form.reset({
@@ -195,10 +195,10 @@ export default function ProfileForm({
   return (
     <div>
       <h1 className="w-full truncate text-ellipsis px-4 text-center">
-        Welcome, {teamProperties.displayName}!
+        Welcome, {initialProperties.displayName}!
       </h1>
       <p className="mb-6 text-center">
-        {id} • {teamProperties.interactionMode}
+        {id} • {initialProperties.interactionMode}
       </p>
       <Form {...form}>
         <form
