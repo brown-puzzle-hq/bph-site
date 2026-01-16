@@ -12,14 +12,13 @@ import {
   teams,
   events,
   answerTokens,
-  solveTypeEnum,
 } from "@/db/schema";
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
-  PUZZLE_UNLOCK_MAP,
-  META_PUZZLES,
-  HUNT_DOMAIN,
-} from "~/hunt.config";
+  HUNT_URL,
+  type SolveType,
+} from "@/config/client";
+import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 
@@ -66,7 +65,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
   // Check if the puzzle was solved by being the right string
   // or by using an answer token
   var isCorrect = puzzle.answer === guess;
-  var solveType: (typeof solveTypeEnum.enumValues)[number] = "guess";
+  var solveType: SolveType = "guess";
 
   if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
     // If the answer is an answer token answer, check if the
@@ -152,14 +151,14 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
   // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId}) on [${puzzleId}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+  const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
   await sendBotMessage(guessMessage, "guess");
   /** END_SNIPPET:DISCORD_MESSAGE */
 
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt
   if (finishedHunt) {
-    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId})`;
+    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](${HUNT_URL}/team/${teamId})`;
     sendBotMessage(finishMessage, "general");
   }
 
@@ -226,7 +225,7 @@ export async function handleSolve(
   tx: TxType,
   teamId: string,
   puzzleId: string,
-  type: (typeof solveTypeEnum.enumValues)[number],
+  type: SolveType,
 ): Promise<SolveOutcome> {
   // Insert the solve into the solve table
   const currDate = new Date();

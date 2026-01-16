@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { hints, replies, hintStatusEnum } from "@/db/schema";
+import { hints, replies } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -12,14 +12,11 @@ import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
 } from "~/lib/email-template";
-import { HUNT_DOMAIN } from "~/hunt.config";
+import { HintStatus, HUNT_URL } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
 
-export async function editHintStatus(
-  hintId: number,
-  status: (typeof hintStatusEnum.enumValues)[number],
-) {
+export async function editHintStatus(hintId: number, status: HintStatus) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");
@@ -279,7 +276,7 @@ export async function insertReply({
       }
       // Otherwise, notify admin on Discord that there is a reply
       else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [reply](https://www.${HUNT_DOMAIN}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.${HUNT_DOMAIN}/team/${teamId}) on [${puzzleName}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${message}`;
+        const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](${HUNT_URL}/team/${teamId}) on [${puzzleName}](${HUNT_URL}/puzzle/${puzzleId} ): ${message}`;
         await sendBotMessage(hintMessage, "hint", "@hint");
       }
       return result[0].id;

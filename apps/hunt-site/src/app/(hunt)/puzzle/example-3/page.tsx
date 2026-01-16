@@ -10,7 +10,6 @@ export default async function Page({
     <DefaultPuzzlePage
       puzzleId={data.puzzleId}
       inPersonBody={data.inPersonBody}
-      remoteBoxBody={data.remoteBoxBody}
       remoteBody={data.remoteBody}
       copyText={data.copyText}
       partialSolutions={data.partialSolutions}

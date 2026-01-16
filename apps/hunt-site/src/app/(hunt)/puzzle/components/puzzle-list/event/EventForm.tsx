@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { insertAnswerToken } from "./actions";
 import { SquareCheckBig } from "lucide-react";
-import { sanitizeAnswer } from "@/hunt.config";
+import { sanitizeAnswer } from "@/config/client";
 
 const formSchema = z.object({
   answer: z.preprocess(

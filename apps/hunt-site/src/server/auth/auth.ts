@@ -9,6 +9,7 @@ import { object, string } from "zod";
 import { compareSync } from "bcryptjs";
 
 import { authConfig } from "./auth.config";
+import { type InteractionMode, type Role } from "@/config/client";
 
 export const signInSchema = object({
   id: string({ required_error: "Team name is required" }).min(
@@ -30,8 +31,8 @@ declare module "next-auth" {
   interface User {
     id?: string;
     displayName: string;
-    role: string;
-    interactionMode: string;
+    role: Role;
+    interactionMode: InteractionMode;
   }
 }
 

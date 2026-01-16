@@ -9,13 +9,8 @@ import {
   solves,
   answerTokens,
 } from "~/server/db/schema";
-import {
-  IN_PERSON,
-  INITIAL_PUZZLES,
-  REMOTE,
-  ROUNDS,
-  Round,
-} from "@/hunt.config";
+import { IN_PERSON, REMOTE } from "@/config/client";
+import { ROUNDS, INITIAL_PUZZLES, type Round } from "@/config/server";
 import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
 
 export type AvailablePuzzle = {

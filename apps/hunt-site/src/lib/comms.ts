@@ -4,7 +4,7 @@ import axios from "axios";
 import { Resend } from "resend";
 import { ReactNode } from "react";
 import { ensureError } from "./server";
-import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "~/hunt.config";
+import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "@/config/client";
 import { sign } from "jsonwebtoken";
 
 /** Discord integration */
@@ -49,7 +49,7 @@ export async function sendBotMessage(
   if (!webhookURL) return;
 
   // Append mention if provided
-  if (mention) {
+  if (mention && mentionToRoleId[mention]) {
     const roleId = mentionToRoleId[mention];
     message += " " + roleId;
   }
@@ -122,7 +122,7 @@ export async function sendToWebsocketServer(
       scope: "broadcast",
     },
     process.env.AUTH_SECRET!,
-    { expiresIn: "30s" },
+    { expiresIn: "90s" },
   );
 
   try {

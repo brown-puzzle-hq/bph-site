@@ -1,14 +1,14 @@
 "use client";
 
 import { ColumnDef, SortingFnOption } from "@tanstack/react-table";
-import { hints } from "~/server/db/schema";
+import { type Hint } from "@/db/types";
 import HintStatusBox from "./HintStatusBox";
 import { ChevronsUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 export type HintClaimer = { id: string; displayName: string } | null;
 export type Reply = { id: number; userId: string } | null;
 
-export type HintWithRelations = typeof hints.$inferSelect & {
+export type HintWithRelations = Hint & {
   team: { displayName: string };
   claimer: HintClaimer;
   replies: Reply[];

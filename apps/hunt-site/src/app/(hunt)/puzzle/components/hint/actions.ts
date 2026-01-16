@@ -4,14 +4,14 @@ import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
-import { getNumberOfHintsRemaining } from "~/hunt.config";
+import { getNumberOfHintsRemaining } from "@/config/server";
 import { sendBotMessage, sendEmail } from "~/lib/comms";
 import { extractEmails } from "~/lib/team-members";
 import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
 } from "~/lib/email-template";
-import { HUNT_DOMAIN } from "~/hunt.config";
+import { HUNT_URL } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
 
@@ -70,7 +70,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     };
   }
 
-  const hintMessage = `🙏 **Hint** [request](https://www.${HUNT_DOMAIN}/admin/hints/${result.id}) by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId}) on [${puzzleId}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${hint}`;
+  const hintMessage = `🙏 **Hint** [request](${HUNT_URL}/admin/hints/${result.id}) by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): ${hint}`;
   await sendBotMessage(hintMessage, "hint", "@hint");
 
   return { error: null, id: result.id };
@@ -158,7 +158,7 @@ export async function insertReply({
       }
       // Otherwise, notify admin on Discord that there is a reply
       else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [reply](https://www.${HUNT_DOMAIN}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](https://www.${HUNT_DOMAIN}/team/${teamId}) on [${puzzleName}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): ${message}`;
+        const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](${HUNT_URL}/team/${teamId}) on [${puzzleName}](${HUNT_URL}/puzzle/${puzzleId} ): ${message}`;
         await sendBotMessage(hintMessage, "hint", "@hint");
       }
       return result[0].id;

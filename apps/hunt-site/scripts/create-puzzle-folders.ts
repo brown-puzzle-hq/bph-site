@@ -3,7 +3,7 @@ import path from "path";
 import { db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
-import { HUNT_NAME } from "~/hunt.config";
+import { HUNT_NAME } from "@/config/client";
 
 const TEMPLATE_DIR = path.join(
   process.cwd(),
@@ -11,18 +11,19 @@ const TEMPLATE_DIR = path.join(
   "example",
 );
 const PUZZLE_DIR = path.join(process.cwd(), "src/app/(hunt)/puzzle");
+const IGNORE = new Set(["example", "components"]);
 
 async function main() {
   console.log("📥 Fetching puzzles from DB...");
   const puzzleRows = await db.select().from(puzzles);
 
-  const idsFromDB = puzzleRows.map((p) => p.id);
+  const idsFromDB = puzzleRows.map((p) => p.id).filter((id) => !IGNORE.has(id));
   const namesFromDB = Object.fromEntries(puzzleRows.map((p) => [p.id, p.name]));
 
   const foldersOnDisk = (await fs.readdir(PUZZLE_DIR, { withFileTypes: true }))
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
-    .filter((name) => name !== "example");
+    .filter((name) => !IGNORE.has(name));
 
   const idsOnDisk = new Set(foldersOnDisk);
 
@@ -53,8 +54,8 @@ async function main() {
 
   // Warn about extraneous folders
   for (const diskId of idsOnDisk) {
-    if (!idsFromDB.includes(diskId) && diskId !== "components") {
-      console.warn(`⚠️  Folder "${diskId}" exists but is not in the database.`);
+    if (!idsFromDB.includes(diskId)) {
+      console.warn(`⚠️ Folder "${diskId}" exists but is not in the database.`);
     }
   }
 
