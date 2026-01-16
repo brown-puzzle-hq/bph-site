@@ -97,6 +97,7 @@ const fetchRemoteUsers = async () =>
     ...team,
     rank: team.solves > 0 ? i + 1 : null,
   }));
+
 const fetchNonUsers = async () =>
   (
     await db.query.teams.findMany({

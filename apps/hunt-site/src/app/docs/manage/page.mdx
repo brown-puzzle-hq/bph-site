@@ -52,7 +52,7 @@ Team roles can be toggled on the [teams table](/admin/team).
 The current role enum in this codebase is:
 
 ```ts file=src/config/client.ts:43-45
-export const ROLE_VALUES = ["admin", "user", "testsolver"] as const;
+export const ROLE_VALUES = ["user", "admin", "testsolver"] as const;
 ```
 
 By default, teams have either an "in-person" or "remote" `interactionMode`

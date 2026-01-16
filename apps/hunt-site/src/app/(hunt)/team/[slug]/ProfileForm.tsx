@@ -107,7 +107,7 @@ export default function ProfileForm({
       // TODO: might be a race condition
       update(null);
     }
-  }, []);
+  }, [initialProperties]);
 
   const defaultMembers = (memberString: string) =>
     memberString === "[]"
@@ -147,12 +147,6 @@ export default function ProfileForm({
         description: result.error,
       });
       return;
-    }
-
-    if (session?.user?.id === id) {
-      // updateTeam drives changes, this just updates JWT
-      // TODO: might be a race condition
-      update(null);
     }
 
     form.reset({

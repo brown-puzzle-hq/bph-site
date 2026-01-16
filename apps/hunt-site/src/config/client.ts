@@ -41,7 +41,7 @@ export function sanitizeAnswer(answer: any) {
 /** ENUMS AND TYPES */
 
 /** BEGIN_SNIPPET:ROLE_ENUM */
-export const ROLE_VALUES = ["admin", "user", "testsolver"] as const;
+export const ROLE_VALUES = ["user", "admin", "testsolver"] as const;
 /** END_SNIPPET:ROLE_ENUM */
 export type Role = (typeof ROLE_VALUES)[number];
 
