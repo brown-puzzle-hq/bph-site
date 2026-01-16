@@ -253,6 +253,13 @@ export default function ProfileForm({
                             if (e.key === "Enter") {
                               const idx = e.shiftKey ? index - 1 : index;
                               focusAtEnd(memberRefs.current[idx]?.email);
+                            } else if (
+                              e.key === "Backspace" &&
+                              !(field.value || members[index]?.email)
+                            ) {
+                              e.preventDefault();
+                              remove(index);
+                              focusAtEnd(memberRefs.current[index - 1]?.email);
                             }
                           }}
                         />
@@ -291,6 +298,9 @@ export default function ProfileForm({
                               } else {
                                 focusAtEnd(memberRefs.current[index + 1]?.name);
                               }
+                            } else if (e.key === "Backspace" && !field.value) {
+                              e.preventDefault();
+                              focusAtEnd(memberRefs.current[index]?.name);
                             }
                           }}
                         />
