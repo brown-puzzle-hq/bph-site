@@ -29,7 +29,6 @@ export type NumberOfGuesses = number | "infinity";
 type DefaultPuzzlePageProps = {
   puzzleId: string;
   inPersonBody: React.ReactNode;
-  remoteBoxBody: React.ReactNode;
   remoteBody: React.ReactNode;
   copyText: string | null;
   partialSolutions: Record<string, string>;
@@ -40,7 +39,6 @@ type DefaultPuzzlePageProps = {
 export default async function DefaultPuzzlePage({
   puzzleId,
   inPersonBody,
-  remoteBoxBody,
   remoteBody,
   copyText,
   partialSolutions,
@@ -70,7 +68,6 @@ export default async function DefaultPuzzlePage({
       <DefaultPostHuntPuzzlePage
         puzzleAnswer={puzzleAnswer}
         inPersonBody={inPersonBody}
-        remoteBoxBody={remoteBoxBody}
         remoteBody={remoteBody}
         copyText={copyText}
         partialSolutions={partialSolutions}
