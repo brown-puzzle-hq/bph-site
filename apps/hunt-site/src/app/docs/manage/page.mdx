@@ -51,7 +51,7 @@ Generally, admins can access every part of the site (including `/admin`), testso
 Team roles can be toggled on the [teams table](/admin/team).
 The current role enum in this codebase is:
 
-```ts file=src/config/client.ts:43-45
+```ts file=src/config/client.ts:44-46
 export const ROLE_VALUES = ["user", "admin", "testsolver"] as const;
 ```
 
@@ -60,7 +60,7 @@ In-person and remote teams are on separate leaderboards and may see different ve
 Team interaction modes can be toggled on the [teams table](/admin/team).
 The current enum in this codebase is:
 
-```ts file=src/config/client.ts:48-50
+```ts file=src/config/client.ts:49-51
 export const INTERACTION_MODE_VALUES = ["in-person", "remote"] as const;
 ```
 

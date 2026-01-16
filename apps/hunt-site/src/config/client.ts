@@ -2,6 +2,7 @@
 
 export const HUNT_NAME = "Puzzlehunt";
 export const HUNT_DOMAIN = "puzzlehunt.com";
+export const HUNT_URL = `https://www.${HUNT_DOMAIN}`;
 
 // This is for Resend, the emailing service
 // Check /src/lib/comms.ts

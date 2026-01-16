@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { type SocketMessage } from "~/lib/comms";
 import Link from "next/link";
-import { HUNT_DOMAIN } from "@/config/client";
+import { HUNT_URL } from "@/config/client";
 import { CheckCircle, Unlock, Trophy } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -46,7 +46,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
       const puzzleLink = (id: string, name: string) => (
         <Link
-          href={`https://www.${HUNT_DOMAIN}/puzzle/${id}`}
+          href={`/puzzle/${id}`}
           className="font-semibold text-white underline hover:text-purple-200"
         >
           {name}
