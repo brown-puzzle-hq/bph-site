@@ -9,16 +9,18 @@ import {
   Puzzle,
 } from "lucide-react";
 import { FormattedTime } from "~/lib/time";
-import { type Role, type InteractionMode } from "@/config/client";
+import { type Team } from "@/db/types";
 
-export type TeamTableRow = {
+export type TeamTableRow = Pick<
+  Team,
+  | "id"
+  | "displayName"
+  | "role"
+  | "interactionMode"
+  | "createTime"
+  | "finishTime"
+> & {
   rank: number | null;
-  id: string;
-  displayName: string;
-  role: Role;
-  interactionMode: InteractionMode;
-  createTime: Date;
-  finishTime: Date | null;
 };
 
 // Define the columns for the table using TanStack

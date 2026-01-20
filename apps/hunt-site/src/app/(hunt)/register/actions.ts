@@ -4,17 +4,15 @@ import { db } from "@/db/index";
 import { teams } from "@/db/schema";
 import { hashSync } from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { IN_PERSON, HUNT_DOMAIN, type InteractionMode } from "@/config/client";
+import { IN_PERSON, HUNT_URL } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
+import { type Team } from "@/db/types";
 
-export type TeamProperties = {
-  id: string;
-  displayName: string;
-  password: string;
-  members: string;
-  interactionMode: InteractionMode;
-};
+type TeamProperties = Pick<
+  Team,
+  "id" | "displayName" | "members" | "interactionMode" | "password"
+>;
 
 export async function insertTeam(teamProperties: TeamProperties) {
   teamProperties.id = teamProperties.id.toLowerCase();
@@ -42,7 +40,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
     });
 
     // Message registration channel
-    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](https://www.${HUNT_DOMAIN}/team/${teamProperties.id}))`;
+    const teamMessage = `:busts_in_silhouette: **New Team**: ${teamProperties.displayName} ([${teamProperties.id}](${HUNT_URL}/team/${teamProperties.id}))`;
     await sendBotMessage(teamMessage, "team");
     return { error: null };
   } catch (e) {

@@ -5,17 +5,18 @@ import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hashSync } from "bcryptjs";
 import { auth } from "@/auth";
-import { IN_PERSON, type InteractionMode, type Role } from "@/config/client";
+import { IN_PERSON } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
+import { type Team } from "@/db/types";
+import { revalidatePath } from "next/cache";
 
-export type TeamProperties = {
-  displayName?: string;
-  password?: string;
-  role?: Role;
-  members?: string;
-  interactionMode?: InteractionMode;
-};
+type TeamProperties = Partial<
+  Pick<
+    Team,
+    "displayName" | "role" | "members" | "interactionMode" | "password"
+  >
+>;
 
 export async function updateTeam(id: string, teamProperties: TeamProperties) {
   // Check that the user is either an admin or the user being updated
@@ -37,15 +38,11 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
     (new Date() > IN_PERSON.START_TIME &&
       teamProperties.interactionMode === "remote")
   ) {
-    teamProperties.interactionMode = undefined;
+    delete teamProperties.interactionMode;
   }
 
   // Update the password
-  if (
-    (session?.user?.role === "admin" || session?.user?.id === id) &&
-    teamProperties.password &&
-    teamProperties.password.length >= 8
-  ) {
+  if (teamProperties.password && teamProperties.password.length >= 8) {
     const hashedPassword = hashSync(teamProperties.password, 10);
     teamProperties.password = hashedPassword;
   } else {
@@ -57,11 +54,17 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
       .update(teams)
       .set(teamProperties)
       .where(eq(teams.id, id))
-      .returning({ id: teams.id });
+      .returning({
+        displayName: teams.displayName,
+        role: teams.role,
+        members: teams.members,
+        interactionMode: teams.interactionMode,
+      });
     if (result.length === 0) {
       return { error: "No team matching the given ID was found." };
     }
-    return { error: null };
+    revalidatePath(`/team/${id}`, "page");
+    return { error: null, updatedTeam: result[0]! };
   } catch (e) {
     const error = ensureError(e);
     const errorMessage = `🐛 Update for ${id} failed: ${error.message}`;

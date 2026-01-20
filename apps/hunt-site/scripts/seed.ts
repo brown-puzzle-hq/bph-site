@@ -1,14 +1,28 @@
 import { db } from "@/db/index";
 import { faker } from "@faker-js/faker";
 import { teams, puzzles } from "@/db/schema";
+import readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
 async function seed() {
   console.log("🌱 Seeding started...");
 
+  const rl = readline.createInterface({ input, output });
+  const answer = await rl.question(
+    "⚠️  This will OVERWRITE all teams and puzzles. Type 'yes' to continue: ",
+  );
+  rl.close();
+
+  if (answer !== "yes") {
+    throw new Error("Seeding aborted by user.");
+  }
+
   await db.delete(teams);
   await db.delete(puzzles);
+
+  console.log("✅ Database cleared.");
 
   // Fake puzzles
   const fakePuzzles = Array.from({ length: 5 }).map((_, i) => ({
@@ -74,6 +88,6 @@ seed()
     process.exit(0);
   })
   .catch((err) => {
-    console.error("❌ Seeding failed:", err);
+    console.error("❌ Seeding failed:", err.message);
     process.exit(1);
   });

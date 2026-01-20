@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import {
+  useFieldArray,
+  useForm,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -23,7 +28,8 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { IN_PERSON, HUNT_NAME, INTERACTION_MODE_VALUES } from "@/config/client";
 import { signIn } from "next-auth/react";
-import { Member, serializeMembers } from "~/lib/team-members";
+import { serializeMembers } from "~/lib/team-members";
+import { focusAtEnd, cn } from "~/lib/utils";
 
 export const registerFormSchema = z
   .object({
@@ -43,17 +49,12 @@ export const registerFormSchema = z
       .min(8, { message: "Min 8 characters" })
       .max(50, { message: "Max 50 characters" }),
     confirmPassword: z.string(),
-    members: z
-      .array(
-        z.object({
-          id: z.number().optional(),
-          name: z.string().or(z.literal("")),
-          email: z.string().email().or(z.literal("")),
-        }),
-      )
-      .refine((members) => members.some((member) => member?.email), {
-        message: "At least one email required",
+    members: z.array(
+      z.object({
+        name: z.string().or(z.literal("")),
+        email: z.string().email().or(z.literal("")),
       }),
+    ),
     interactionMode: z.enum(INTERACTION_MODE_VALUES),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -61,10 +62,9 @@ export const registerFormSchema = z
     path: ["confirmPassword"],
   });
 
-type RegisterFormProps = {};
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-export function RegisterForm({}: RegisterFormProps) {
+export function RegisterForm() {
   const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
@@ -85,25 +85,15 @@ export function RegisterForm({}: RegisterFormProps) {
   });
 
   useEffect(() => {
-    if (form.getValues("members").length === 0) {
+    if (fields.length === 0) {
       append({ name: "", email: "" });
     }
-    if (
-      form.getValues("members").some((member: Member) => member?.email) &&
-      form.formState.errors.members?.root?.message ===
-        "At least one email required"
-    ) {
-      form.trigger("members");
-    }
-  });
+  }, [fields.length, append]);
 
   const onSubmit = async (data: RegisterFormValues) => {
     const { error } = await insertTeam({
-      id: data.id,
-      displayName: data.displayName,
-      password: data.password,
+      ...data,
       members: serializeMembers(data.members),
-      interactionMode: data.interactionMode,
     });
 
     if (error) {
@@ -129,6 +119,19 @@ export function RegisterForm({}: RegisterFormProps) {
     });
     router.push("/");
   };
+
+  const { errors } = useFormState({ control: form.control });
+  const members = useWatch({ control: form.control, name: "members" });
+
+  const memberRefs = useRef<
+    {
+      name?: HTMLInputElement | null;
+      email?: HTMLInputElement | null;
+    }[]
+  >([]);
+
+  const inPersonEnded = new Date() > IN_PERSON.END_TIME;
+  const inPersonStarted = new Date() > IN_PERSON.START_TIME;
 
   return (
     <Form {...form}>
@@ -221,12 +224,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
         <div className="mb-8">
           <FormLabel className="flex flex-row justify-between">
-            <span className="mb-1.5 text-main-header">
-              Team members <span className="text-error">*</span>
-            </span>
-            <span className="text-[0.8rem] font-medium text-error">
-              {form.formState.errors.members?.root?.message}
-            </span>
+            <span className="mb-1.5 text-main-header">Team members</span>
           </FormLabel>
           {fields.map((field, index) => (
             <div className="flex items-center space-x-2" key={field.id}>
@@ -240,32 +238,19 @@ export function RegisterForm({}: RegisterFormProps) {
                       <Input
                         className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
                         {...field}
-                        value={field.value ?? ""}
+                        ref={(el) => {
+                          field.ref(el);
+                          memberRefs.current[index] ??= {};
+                          memberRefs.current[index].name = el;
+                        }}
+                        value={field.value}
                         placeholder="Name"
                         autoComplete="off"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
-                            if (e.shiftKey) {
-                              const prevField = document.querySelector(
-                                `[name="members.${index - 1}.email"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
-                            } else {
-                              const nextField = document.querySelector(
-                                `[name="members.${index}.email"]`,
-                              ) as HTMLInputElement;
-                              nextField?.focus();
-                            }
-                          } else if (e.key === "Backspace" && !field.value) {
-                            remove(index);
-                            // Move focus back to the previous field
-                            setTimeout(() => {
-                              const prevField = document.querySelector(
-                                `[name="members.${index - 1}.email"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
-                            }, 0);
+                            const idx = e.shiftKey ? index - 1 : index;
+                            focusAtEnd(memberRefs.current[idx]?.email);
                           }
                         }}
                       />
@@ -282,32 +267,29 @@ export function RegisterForm({}: RegisterFormProps) {
                   <FormItem className="w-1/2">
                     <FormControl className="text-main-text placeholder:text-white/40">
                       <Input
-                        className={`rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent ${form.formState.errors.members?.[index] ? "border-red-300" : ""} text-current shadow-none`}
+                        className={cn(
+                          "rounded-none border-0 border-b p-0 text-current shadow-none focus-visible:ring-transparent",
+                          errors.members?.[index] && "border-red-300",
+                        )}
                         {...field}
-                        value={field.value ?? ""}
+                        ref={(el) => {
+                          field.ref(el);
+                          memberRefs.current[index] ??= {};
+                          memberRefs.current[index].email = el;
+                        }}
+                        value={field.value}
                         placeholder="Email"
                         autoComplete="off"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
                             if (e.shiftKey) {
-                              const prevField = document.querySelector(
-                                `[name="members.${index}.name"]`,
-                              ) as HTMLInputElement;
-                              prevField?.focus();
+                              focusAtEnd(memberRefs.current[index]?.name);
                             } else if (index === fields.length - 1) {
                               append({ email: "", name: "" });
                             } else {
-                              const nextField = document.querySelector(
-                                `[name="members.${index + 1}.name"]`,
-                              ) as HTMLInputElement;
-                              nextField?.focus();
+                              focusAtEnd(memberRefs.current[index + 1]?.name);
                             }
-                          } else if (e.key === "Backspace" && !field.value) {
-                            const prevField = document.querySelector(
-                              `[name="members.${index}.name"]`,
-                            ) as HTMLInputElement;
-                            prevField?.focus();
                           }
                         }}
                       />
@@ -323,9 +305,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 size="sm"
                 className="h-7 w-7 p-1 hover:bg-black/20 focus-visible:bg-black/20 focus-visible:ring-0"
                 disabled={
-                  fields.length == 1 &&
-                  form.watch("members")[0]?.name === "" &&
-                  form.watch("members")[0]?.email === ""
+                  fields.length === 1 && !members[0]?.name && !members[0]?.email
                 }
                 onClick={() => remove(index)}
               >
@@ -359,17 +339,20 @@ export function RegisterForm({}: RegisterFormProps) {
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <RadioGroupItem
                       value="in-person"
-                      disabled={new Date() > IN_PERSON.END_TIME}
+                      disabled={inPersonEnded}
                     />
                     <FormLabel
-                      className={`font-normal text-main-header opacity-${new Date() > IN_PERSON.END_TIME ? 50 : 100}`}
+                      className={cn(
+                        "font-normal text-main-text",
+                        inPersonEnded && "opacity-50",
+                      )}
                     >
                       In-person
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <RadioGroupItem value="remote" />
-                    <FormLabel className="font-normal text-main-header">
+                    <FormLabel className="font-normal text-main-text">
                       Remote
                     </FormLabel>
                   </FormItem>

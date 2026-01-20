@@ -17,7 +17,7 @@ export async function POST() {
       scope: "ws-connect",
     },
     process.env.AUTH_SECRET!,
-    { expiresIn: "30s" },
+    { expiresIn: "90s" },
   );
 
   return NextResponse.json({ token });

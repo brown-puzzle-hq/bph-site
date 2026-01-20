@@ -21,8 +21,6 @@ export const inPersonBody = (
   </div>
 );
 
-export const remoteBoxBody = inPersonBody;
-
 export const remoteBody = inPersonBody;
 
 /**

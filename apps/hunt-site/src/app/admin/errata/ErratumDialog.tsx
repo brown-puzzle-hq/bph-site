@@ -1,11 +1,11 @@
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { FormattedTime } from "~/lib/time";
-import { errata } from "~/server/db/schema";
+import { Erratum } from "@/db/types";
 
 export default function ErratumDialog({
   errataList,
 }: {
-  errataList: (typeof errata.$inferSelect)[];
+  errataList: Erratum[];
 }) {
   if (errataList.length > 0) {
     return (

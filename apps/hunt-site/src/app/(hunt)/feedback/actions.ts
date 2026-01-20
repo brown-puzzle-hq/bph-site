@@ -4,7 +4,7 @@ import { feedback } from "@/db/schema";
 import { db } from "@/db/index";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
-import { HUNT_DOMAIN } from "@/config/client";
+import { HUNT_URL } from "@/config/client";
 
 export async function insertFeedback(description: string, timestamp: Date) {
   const session = await auth();
@@ -28,7 +28,7 @@ export async function insertFeedback(description: string, timestamp: Date) {
   }
 
   // Message the feedback channel and ping HQ
-  const feedbackMessage = `📝 **Feedback** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId} ): ${description}`;
+  const feedbackMessage = `📝 **Feedback** by [${teamId}](${HUNT_URL}/team/${teamId} ): ${description}`;
   await sendBotMessage(feedbackMessage, "feedback", "@HQ");
   return { error: null };
 }

@@ -2,6 +2,7 @@ import { type NextAuthConfig } from "next-auth";
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
 import { teams } from "@/db/schema";
+import { type InteractionMode, type Role } from "@/config/client";
 
 export const authConfig = {
   session: { strategy: "jwt" },
@@ -45,8 +46,8 @@ export const authConfig = {
           ...session.user,
           id: token.id as string,
           displayName: token.displayName as string,
-          role: token.role as string,
-          interactionMode: token.interactionMode as string,
+          role: token.role as Role,
+          interactionMode: token.interactionMode as InteractionMode,
         };
       }
       return session;

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { HUNT_DOMAIN } from "@/config/client";
+import { HUNT_URL } from "@/config/client";
 
 export interface HintEmailTemplateProps {
   teamDisplayName: string;
@@ -67,10 +67,10 @@ export const HintEmailTemplate: React.FC<Readonly<HintEmailTemplateProps>> = ({
     <p style={{ color: "#333 !important" }}>
       You can view it at{" "}
       <a
-        href={`https://www.${HUNT_DOMAIN}/puzzle/${puzzleId}/hint`}
+        href={`${HUNT_URL}/puzzle/${puzzleId}/hint`}
         style={{ color: "#1a73e8", textDecoration: "none", fontWeight: "bold" }}
       >
-        https://www.{HUNT_DOMAIN}/puzzle/{puzzleId}/hint
+        {HUNT_URL}/puzzle/{puzzleId}/hint
       </a>
       .
     </p>
@@ -128,10 +128,10 @@ export const ReplyEmailTemplate: React.FC<
     <p style={{ color: "#333 !important" }}>
       You can view it at{" "}
       <a
-        href={`https://www.${HUNT_DOMAIN}/puzzle/${puzzleId}/hint`}
+        href={`${HUNT_URL}/puzzle/${puzzleId}/hint`}
         style={{ color: "#1a73e8", textDecoration: "none", fontWeight: "bold" }}
       >
-        https://www.{HUNT_DOMAIN}/puzzle/{puzzleId}/hint
+        {HUNT_URL}/puzzle/{puzzleId}/hint
       </a>
       .
     </p>
@@ -184,10 +184,10 @@ export const ErratumEmailTemplate: React.FC<
     <p style={{ color: "#333 !important" }}>
       You can view it at{" "}
       <a
-        href={`https://www.${HUNT_DOMAIN}/puzzle/${puzzleId}`}
+        href={`${HUNT_URL}/puzzle/${puzzleId}`}
         style={{ color: "#1a73e8", textDecoration: "none", fontWeight: "bold" }}
       >
-        https://www.{HUNT_DOMAIN}/puzzle/{puzzleId}
+        {HUNT_URL}/puzzle/{puzzleId}
       </a>
       .
     </p>

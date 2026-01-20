@@ -167,6 +167,10 @@ export function TeamTable<TData, TValue>({
     }
   }, [interactionModeFilters]);
 
+  useEffect(() => {
+    setEditedRows({});
+  }, [data]);
+
   function handleEditRow<F extends keyof ClientEditableFields>(
     teamId: string,
     field: F,
@@ -237,8 +241,6 @@ export function TeamTable<TData, TValue>({
     }
 
     await updateTeam(editedTeams);
-    // TODO: avoid flash some other way
-    setTimeout(() => setEditedRows({}), 30);
   };
 
   return (

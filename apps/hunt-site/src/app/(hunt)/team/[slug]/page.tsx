@@ -19,31 +19,22 @@ export default async function Page({
   // Check if slug is a valid id
   const { slug } = await params;
   const team = await db.query.teams.findFirst({
+    columns: {
+      displayName: true,
+      role: true,
+      members: true,
+      interactionMode: true,
+    },
     where: eq(teams.id, slug),
   });
 
-  if (
-    !team ||
-    (team.id != session.user.id && !(session.user.role === "admin"))
-  ) {
+  if (!team || (slug !== session.user.id && session.user.role !== "admin")) {
     notFound();
   }
 
   return (
     <div className="mx-auto mb-12 w-full max-w-xl px-4 pt-6">
-      <h1 className="w-full truncate text-ellipsis px-4 text-center">
-        Welcome, {team.displayName}!
-      </h1>
-      <p className="mb-6 text-center">
-        {team.id} • {team.interactionMode}
-      </p>
-      <ProfileForm
-        id={slug}
-        displayName={team.displayName}
-        role={team.role}
-        memberString={team.members}
-        interactionMode={team.interactionMode}
-      />
+      <ProfileForm id={slug} initialProperties={team} />
     </div>
   );
 }

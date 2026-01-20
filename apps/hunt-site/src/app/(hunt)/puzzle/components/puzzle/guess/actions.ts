@@ -15,7 +15,7 @@ import {
 } from "@/db/schema";
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
-  HUNT_DOMAIN,
+  HUNT_URL,
   type SolveType,
 } from "@/config/client";
 import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
@@ -151,14 +151,14 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
   // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId}) on [${puzzleId}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+  const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
   await sendBotMessage(guessMessage, "guess");
   /** END_SNIPPET:DISCORD_MESSAGE */
 
   // If the team has finished the hunt, message the finish channel
   // Only ping the HQ role if it is the in-person hunt
   if (finishedHunt) {
-    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId})`;
+    const finishMessage = `🏆 **Hunt Finish** by [${teamId}](${HUNT_URL}/team/${teamId})`;
     sendBotMessage(finishMessage, "general");
   }
 

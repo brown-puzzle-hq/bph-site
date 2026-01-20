@@ -28,7 +28,6 @@ import { sanitizeAnswer } from "@/config/client";
 type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;
   inPersonBody: React.ReactNode;
-  remoteBoxBody: React.ReactNode;
   remoteBody: React.ReactNode;
   copyText: string | null;
   partialSolutions: Record<string, string>;
@@ -43,7 +42,6 @@ type FormProps = {
 export default function DefaultPostHuntPuzzlePage({
   puzzleAnswer,
   inPersonBody,
-  remoteBoxBody,
   remoteBody,
   copyText,
   partialSolutions,
@@ -174,11 +172,7 @@ export default function DefaultPostHuntPuzzlePage({
   const actualInteractionMode = interactionMode ?? "remote";
 
   const puzzleBody =
-    actualInteractionMode === "remote-box"
-      ? remoteBoxBody
-      : actualInteractionMode === "in-person"
-        ? inPersonBody
-        : remoteBody;
+    actualInteractionMode === "in-person" ? inPersonBody : remoteBody;
 
   return (
     <div className="w-full px-4">

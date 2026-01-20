@@ -22,12 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { errata } from "@/db/schema";
 import { insertErratum } from "./actions";
+import { Erratum } from "@/db/types";
 
 type FormProps = {
   puzzleList: { id: string; name: string }[];
-  errataList: (typeof errata.$inferSelect)[];
+  errataList: Erratum[];
 };
 
 const formSchema = z.object({

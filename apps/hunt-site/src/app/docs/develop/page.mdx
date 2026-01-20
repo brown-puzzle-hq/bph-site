@@ -274,7 +274,7 @@ The site uses Discord for admin messages and Resend for automated hunt emails. D
 
 ```ts file=src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts:152-156
 // Message the guess channel
-const guessMessage = `🧩 **Guess** by [${teamId}](https://www.${HUNT_DOMAIN}/team/${teamId}) on [${puzzleId}](https://www.${HUNT_DOMAIN}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
 await sendBotMessage(guessMessage, "guess");
 ```
 

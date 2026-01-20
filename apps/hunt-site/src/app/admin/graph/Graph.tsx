@@ -19,21 +19,17 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
-import { InferSelectModel } from "drizzle-orm";
-import { teams } from "~/server/db/schema";
 import { FormattedTime } from "~/lib/time";
 import { deserializeMembers } from "~/lib/team-members";
 import { cn } from "~/lib/utils";
 import { type GraphConfig } from "./page";
+import { type Team } from "@/db/types";
 
 const roundTextColor: Record<string, string> = {};
 
 const roundNodeColor: Record<string, string> = {};
 
-export type SearchedTeam = Omit<
-  InferSelectModel<typeof teams>,
-  "password" | "roomNeeded"
-> & {
+export type SearchedTeam = Omit<Team, "password" | "roomNeeded"> & {
   unlocks: string[];
   solves: string[];
 };
