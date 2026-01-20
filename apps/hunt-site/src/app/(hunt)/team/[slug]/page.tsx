@@ -21,6 +21,7 @@ export default async function Page({
   const team = await db.query.teams.findFirst({
     columns: {
       displayName: true,
+      primaryEmail: true,
       role: true,
       members: true,
       interactionMode: true,
