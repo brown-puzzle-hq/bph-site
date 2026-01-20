@@ -28,11 +28,14 @@ import {
 
 export const createTable = pgTableCreator((name) => `hunt_site_${name}`);
 
-const roleEnum = pgEnum("role", ROLE_VALUES);
-const interactionModeEnum = pgEnum("interaction_type", INTERACTION_MODE_VALUES);
-const hintStatusEnum = pgEnum("status", HINT_STATUS_VALUES);
-const solveTypeEnum = pgEnum("solve_type", SOLVE_TYPE_VALUES);
-const unlockTypeEnum = pgEnum("unlock_type", UNLOCK_TYPE_VALUES);
+export const roleEnum = pgEnum("role", ROLE_VALUES);
+export const interactionModeEnum = pgEnum(
+  "interaction_type",
+  INTERACTION_MODE_VALUES,
+);
+export const hintStatusEnum = pgEnum("status", HINT_STATUS_VALUES);
+export const solveTypeEnum = pgEnum("solve_type", SOLVE_TYPE_VALUES);
+export const unlockTypeEnum = pgEnum("unlock_type", UNLOCK_TYPE_VALUES);
 
 // NOTE: If you change the team schema, remember to update seed.ts
 /** BEGIN_SNIPPET:TEAM_SCHEMA */
