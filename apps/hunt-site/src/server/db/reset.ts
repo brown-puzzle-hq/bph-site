@@ -3,10 +3,10 @@ import { sql } from "drizzle-orm";
 import { db } from "@/db/index";
 
 async function reset() {
-	console.log("⏳ Resetting database...");
-	const start = Date.now();
+  console.log("⏳ Resetting database...");
+  const start = Date.now();
 
-	const query = sql`
+  const query = sql`
 		-- Delete all tables
 		DO $$ DECLARE
 		    r RECORD;
@@ -31,16 +31,16 @@ async function reset() {
 		
 		`;
 
-	await db.execute(query);
+  await db.execute(query);
 
-	const end = Date.now();
-	console.log(`✅ Reset end & took ${end - start}ms`);
-	console.log("");
-	process.exit(0);
+  const end = Date.now();
+  console.log(`✅ Reset end & took ${end - start}ms`);
+  console.log("");
+  process.exit(0);
 }
 
 reset().catch((err) => {
-	console.error("❌ Reset failed");
-	console.error(err);
-	process.exit(1);
+  console.error("❌ Reset failed");
+  console.error(err);
+  process.exit(1);
 });
