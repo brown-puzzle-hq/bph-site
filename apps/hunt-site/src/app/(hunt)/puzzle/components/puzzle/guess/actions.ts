@@ -12,14 +12,13 @@ import {
   teams,
   events,
   answerTokens,
-  solveTypeEnum,
 } from "@/db/schema";
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
-  PUZZLE_UNLOCK_MAP,
-  META_PUZZLES,
   HUNT_DOMAIN,
-} from "~/hunt.config";
+  type SolveType,
+} from "@/config/client";
+import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 
@@ -66,7 +65,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
   // Check if the puzzle was solved by being the right string
   // or by using an answer token
   var isCorrect = puzzle.answer === guess;
-  var solveType: (typeof solveTypeEnum.enumValues)[number] = "guess";
+  var solveType: SolveType = "guess";
 
   if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
     // If the answer is an answer token answer, check if the
@@ -226,7 +225,7 @@ export async function handleSolve(
   tx: TxType,
   teamId: string,
   puzzleId: string,
-  type: (typeof solveTypeEnum.enumValues)[number],
+  type: SolveType,
 ): Promise<SolveOutcome> {
   // Insert the solve into the solve table
   const currDate = new Date();

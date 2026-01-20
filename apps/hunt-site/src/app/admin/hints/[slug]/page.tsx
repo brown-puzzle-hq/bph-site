@@ -3,7 +3,7 @@ import { replies, guesses, hints, unlocks } from "@/db/schema";
 import { and, asc, eq } from "drizzle-orm";
 import AdminHintThread from "./AdminHintThread";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
-import { IN_PERSON, REMOTE } from "~/hunt.config";
+import { IN_PERSON, REMOTE } from "@/config/client";
 import { notFound } from "next/navigation";
 
 export default async function Page({

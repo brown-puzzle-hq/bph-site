@@ -1,47 +1,9 @@
-import { db } from "./server/db";
-import { hints } from "./server/db/schema";
+import "server-only";
+
+import { db } from "@/db/index";
+import { hints } from "@/db/schema";
 import { and, count, eq, ne } from "drizzle-orm";
-
-// TOOD: Change me!
-// This is for Resend, the emailing service
-// Check /src/lib/comms.ts
-export const HUNT_NAME = "Puzzlehunt";
-export const HUNT_DOMAIN = "puzzlehunt.com";
-export const HUNT_EMAIL = "puzzlehunt@gmail.com";
-
-/** REGISTRATION AND HUNT START */
-export const REGISTRATION_START_TIME = new Date("2024-11-17T17:00:00.000Z");
-export const REGISTRATION_END_TIME = new Date("2030-11-24T17:00:00Z");
-
-export const IN_PERSON = {
-  KICKOFF_DOOR_TIME: new Date("2024-04-12T15:30:00.000Z"),
-  KICKOFF_TIME: new Date("2024-04-12T16:00:00.000Z"),
-  START_TIME: new Date("2024-04-12T17:30:00.000Z"),
-  END_TIME: new Date("2030-04-13T23:00:00.000Z"),
-  WRAPUP_DOOR_TIME: new Date("2030-04-13T23:30:00.000Z"),
-  WRAPUP_TIME: new Date("2030-04-14T00:00:00Z"),
-};
-
-export const REMOTE = {
-  START_TIME: new Date("2024-04-19T16:00:00.000Z"),
-  END_TIME: new Date("2030-04-25T16:00:00.000Z"),
-  WRAPUP_TIME: new Date("2030-04-30T17:00:00.000Z"),
-};
-
-export type Round = {
-  name: string;
-  puzzles: string[];
-};
-
-/** GUESSES */
-export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
-
-/** Uppercase string and strip all characters except A-Z and 0-9 */
-export function sanitizeAnswer(answer: any) {
-  return typeof answer === "string"
-    ? answer.toUpperCase().replace(/[^A-Z0-9]/g, "")
-    : "";
-}
+import { IN_PERSON, REMOTE } from "./client";
 
 /** PUZZLE UNLOCK SYSTEM
  * WARNING: make sure that everything here is a valid puzzle ID.
@@ -49,7 +11,11 @@ export function sanitizeAnswer(answer: any) {
  */
 
 /** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team. */
-export const INITIAL_PUZZLES: string[] = ["example-1"];
+export const INITIAL_PUZZLES: string[] = [
+  "example-1",
+  "example-2",
+  "example-3",
+];
 
 /** Adjacency list for puzzles */
 // NOTE: every puzzle must be listed here and be associated with a round
@@ -60,6 +26,11 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "example-3": ["example-4", "example-5"],
   "example-4": ["example-4", "example-5"],
   "example-5": ["example-4", "example-5"],
+};
+
+export type Round = {
+  name: string;
+  puzzles: string[];
 };
 
 /** List of puzzles in each round. Each puzzle must be in a round. **/
@@ -79,7 +50,7 @@ export const META_PUZZLES: string[] = ["example-1"];
  */
 
 /** Calculates the total number of hints given to a team */
-export function getTotalHints(role: string, interactionMode: string) {
+function getTotalHints(role: string, interactionMode: string) {
   const initialNumberOfHints =
     role == "admin" || role == "testsolver" ? 1e6 : 1;
 

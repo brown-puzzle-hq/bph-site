@@ -4,14 +4,14 @@ import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
-import { getNumberOfHintsRemaining } from "~/hunt.config";
+import { getNumberOfHintsRemaining } from "@/config/server";
 import { sendBotMessage, sendEmail } from "~/lib/comms";
 import { extractEmails } from "~/lib/team-members";
 import {
   ReplyEmailTemplate,
   ReplyEmailTemplateProps,
 } from "~/lib/email-template";
-import { HUNT_DOMAIN } from "~/hunt.config";
+import { HUNT_DOMAIN } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
 

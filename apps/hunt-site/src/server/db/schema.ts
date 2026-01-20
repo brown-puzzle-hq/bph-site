@@ -10,6 +10,13 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
+import {
+  ROLE_VALUES,
+  INTERACTION_MODE_VALUES,
+  HINT_STATUS_VALUES,
+  SOLVE_TYPE_VALUES,
+  UNLOCK_TYPE_VALUES,
+} from "@/config/client";
 
 /* Naming conventions:
 - Table names in TS are pluralized and camelCase (`teamRelations`)
@@ -21,33 +28,11 @@ import {
 
 export const createTable = pgTableCreator((name) => `hunt_site_${name}`);
 
-/** BEGIN_SNIPPET:ROLE_ENUM */
-export const roleEnum = pgEnum("role", ["admin", "user", "testsolver"]);
-/** END_SNIPPET:ROLE_ENUM */
-
-/** BEGIN_SNIPPET:INTERACTION_MODE_ENUM */
-export const interactionModeEnum = pgEnum("interaction_type", [
-  "in-person",
-  "remote",
-]);
-/** END_SNIPPET:INTERACTION_MODE_ENUM */
-
-export const hintStatusEnum = pgEnum("status", [
-  "no_response",
-  "answered",
-  "refunded",
-]);
-
-export const solveTypeEnum = pgEnum("solve_type", [
-  "guess",
-  "answer_token",
-  /* time_solve */
-]);
-
-export const unlockTypeEnum = pgEnum("unlock_type", [
-  "guess",
-  /* "time_unlock" */
-]);
+const roleEnum = pgEnum("role", ROLE_VALUES);
+const interactionModeEnum = pgEnum("interaction_type", INTERACTION_MODE_VALUES);
+const hintStatusEnum = pgEnum("status", HINT_STATUS_VALUES);
+const solveTypeEnum = pgEnum("solve_type", SOLVE_TYPE_VALUES);
+const unlockTypeEnum = pgEnum("unlock_type", UNLOCK_TYPE_VALUES);
 
 // NOTE: If you change the team schema, remember to update seed.ts
 /** BEGIN_SNIPPET:TEAM_SCHEMA */

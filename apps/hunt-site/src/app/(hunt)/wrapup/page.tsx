@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { REMOTE } from "~/hunt.config";
+import { REMOTE } from "@/config/client";
 import WrapUp from "./WrapUp";
 import { redirect } from "next/navigation";
 

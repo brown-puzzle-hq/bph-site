@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/db/index";
-import { teams, type interactionModeEnum } from "@/db/schema";
+import { teams } from "@/db/schema";
 import { hashSync } from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { IN_PERSON, HUNT_DOMAIN } from "~/hunt.config";
+import { IN_PERSON, HUNT_DOMAIN, type InteractionMode } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { ensureError } from "~/lib/server";
 
@@ -13,7 +13,7 @@ export type TeamProperties = {
   displayName: string;
   password: string;
   members: string;
-  interactionMode: (typeof interactionModeEnum.enumValues)[number];
+  interactionMode: InteractionMode;
 };
 
 export async function insertTeam(teamProperties: TeamProperties) {
