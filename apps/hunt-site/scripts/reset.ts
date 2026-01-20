@@ -1,9 +1,22 @@
-import "dotenv/config";
+import readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 import { sql } from "drizzle-orm";
 import { db } from "@/db/index";
+import "dotenv/config";
 
 async function reset() {
   console.log("⏳ Resetting database...");
+
+  const rl = readline.createInterface({ input, output });
+  const answer = await rl.question(
+    "⚠️  This will DELETE all tables. Type 'yes' to continue: ",
+  );
+  rl.close();
+
+  if (answer !== "yes") {
+    throw new Error("Reset aborted by user.");
+  }
+
   const start = Date.now();
 
   const query = sql`

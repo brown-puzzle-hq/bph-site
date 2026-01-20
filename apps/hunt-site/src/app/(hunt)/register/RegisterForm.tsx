@@ -154,7 +154,7 @@ export function RegisterForm() {
               </FormControl>
               <FormDescription>
                 This is the private username your team will use to log in.
-                Please only use <u>alphanumeric</u> characters.
+                Please <u>avoid</u> spaces or special characters.
               </FormDescription>
             </FormItem>
           )}

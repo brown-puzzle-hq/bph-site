@@ -11,7 +11,12 @@ import { type Team } from "@/db/types";
 
 type TeamProperties = Pick<
   Team,
-  "id" | "displayName" | "members" | "interactionMode" | "password"
+  | "id"
+  | "displayName"
+  | "primaryEmail"
+  | "members"
+  | "interactionMode"
+  | "password"
 >;
 
 export async function insertTeam(teamProperties: TeamProperties) {
