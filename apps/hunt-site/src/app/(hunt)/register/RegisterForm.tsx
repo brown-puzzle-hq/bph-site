@@ -49,6 +49,7 @@ export const registerFormSchema = z
       .min(8, { message: "Min 8 characters" })
       .max(50, { message: "Max 50 characters" }),
     confirmPassword: z.string(),
+    primaryEmail: z.string().email({ message: "Invalid email address" }),
     members: z.array(
       z.object({
         name: z.string().or(z.literal("")),
@@ -152,8 +153,8 @@ export function RegisterForm() {
                 <Input placeholder="jcarberr" autoComplete="on" {...field} />
               </FormControl>
               <FormDescription>
-                This is the private username your team will use when logging in.
-                Please <u>avoid</u> spaces or special characters.
+                This is the private username your team will use to log in.
+                Please only use <u>alphanumeric</u> characters.
               </FormDescription>
             </FormItem>
           )}
@@ -175,7 +176,29 @@ export function RegisterForm() {
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
-                This name will be displayed on the leaderboard.
+                This will be displayed on the leaderboard.
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+
+        {/* Primary email */}
+        <FormField
+          control={form.control}
+          name="primaryEmail"
+          render={({ field }) => (
+            <FormItem className="mb-8">
+              <FormLabel className="flex flex-row justify-between">
+                <span className="text-main-header">
+                  Primary Email <span className="text-error">*</span>
+                </span>
+                <FormMessage className="text-error" />
+              </FormLabel>
+              <FormControl className="text-main-text placeholder:text-white/40">
+                <Input placeholder="jcarberr@brown.edu" {...field} />
+              </FormControl>
+              <FormDescription>
+                This will be used for important hunt-related communication.
               </FormDescription>
             </FormItem>
           )}
@@ -197,7 +220,8 @@ export function RegisterForm() {
                 <Input type="password" {...field} />
               </FormControl>
               <FormDescription>
-                You'll probably share this with your team. Write it down!
+                You'll probably want to share this with your team. Write it
+                down!
               </FormDescription>
             </FormItem>
           )}

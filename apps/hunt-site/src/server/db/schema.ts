@@ -44,6 +44,7 @@ export const teams = createTable("team", {
   displayName: varchar("display_name", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
+  primaryEmail: varchar("primary_email", { length: 255 }).notNull(),
   members: text("members").notNull().default("[]"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
   createTime: timestamp("create_time", { withTimezone: true })
