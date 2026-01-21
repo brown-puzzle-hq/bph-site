@@ -8,10 +8,7 @@ import { revalidatePath } from "next/cache";
 import { sendBotMessage, sendEmail } from "~/lib/comms";
 import { extractEmails } from "~/lib/team-members";
 import { HintEmailTemplate } from "~/lib/email-template";
-import {
-  ReplyEmailTemplate,
-  ReplyEmailTemplateProps,
-} from "~/lib/email-template";
+import { ReplyEmailTemplate } from "~/lib/email-template";
 import { HintStatus, HUNT_URL } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
@@ -231,24 +228,42 @@ export async function editMessage(
   }
 }
 
-export async function insertReply({
-  hintId,
-  members,
-  teamId,
-  teamDisplayName,
-  puzzleId,
-  puzzleName,
-  message,
-}: ReplyEmailTemplateProps & {
-  hintId: number;
-  teamId?: string;
-  members: string;
-}) {
+export async function insertAdminReply(
+  hintId: number,
+  message: string,
+  emailTeam: boolean,
+) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Not logged in");
   }
+
   try {
+    // Query the hint with team and puzzle relations to get all needed data
+    const hint = await db.query.hints.findFirst({
+      where: eq(hints.id, hintId),
+      with: {
+        team: {
+          columns: {
+            id: true,
+            displayName: true,
+            primaryEmail: true,
+            members: true,
+          },
+        },
+        puzzle: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!hint) {
+      return null;
+    }
+
     const result = await db
       .insert(replies)
       .values({
@@ -260,23 +275,25 @@ export async function insertReply({
       .returning({ id: replies.id });
 
     if (result[0]?.id) {
-      // If there are members, then this is a reply by a team
-      // So send an email
-      if (members) {
+      if (emailTeam) {
+        let emails = [
+          hint.team.primaryEmail,
+          ...extractEmails(hint.team.members),
+        ];
         await sendEmail(
-          extractEmails(members),
-          `Reply [${puzzleName}]`,
+          emails,
+          `Reply [${hint.puzzle.name}]`,
           ReplyEmailTemplate({
-            teamDisplayName,
-            puzzleId,
-            puzzleName,
+            teamDisplayName: hint.team.displayName,
+            puzzleId: hint.puzzle.id,
+            puzzleName: hint.puzzle.name,
             message,
           }),
         );
       }
       // Otherwise, notify admin on Discord that there is a reply
       else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](${HUNT_URL}/team/${teamId}) on [${puzzleName}](${HUNT_URL}/puzzle/${puzzleId} ): ${message}`;
+        const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${hint.team.displayName}](${HUNT_URL}/team/${hint.team.id}) on [${hint.puzzle.name}](${HUNT_URL}/puzzle/${hint.puzzle.id} ): ${message}`;
         await sendBotMessage(hintMessage, "hint", "@hint");
       }
       return result[0].id;
@@ -287,13 +304,7 @@ export async function insertReply({
   }
 }
 
-export async function insertHintResponse(
-  hintId: number,
-  teamDisplayName: string,
-  puzzleName: string,
-  response: string,
-  members: string,
-) {
+export async function insertHintResponse(hintId: number, response: string) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");
@@ -303,6 +314,34 @@ export async function insertHintResponse(
     return {
       title: "Error responding to hint",
       error: "Response is empty",
+    };
+  }
+
+  let hint = await db.query.hints.findFirst({
+    where: eq(hints.id, hintId),
+    with: {
+      team: {
+        columns: {
+          id: true,
+          displayName: true,
+          primaryEmail: true,
+          members: true,
+        },
+      },
+      puzzle: {
+        columns: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!hint) {
+    return {
+      title: "Error responding to hint",
+      error: "Hint entry not found",
+      response: response,
     };
   }
 
@@ -335,27 +374,19 @@ export async function insertHintResponse(
 
   // Error-handling
   if (!result) {
-    let hintSearch = await db.query.hints.findFirst({
-      where: eq(hints.id, hintId),
-    });
-    if (!hintSearch) {
+    if (hint.claimer !== user) {
       return {
         title: "Error responding to hint",
-        error: "Hint entry not found",
-        response: response,
-      };
-    } else if (hintSearch.claimer !== user) {
-      return {
-        title: "Error responding to hint",
-        error: hintSearch.claimer
-          ? `Hint claimed by ${hintSearch.claimer}.`
+        error: hint.claimer
+          ? `Hint claimed by ${hint.claimer}.`
           : "Hint is currently unclaimed.",
         response: response,
       };
-    } else if (hintSearch.status != "no_response") {
+    }
+    if (hint.status != "no_response") {
       return {
         title: "Error responding to hint",
-        error: `Hint status is not no_response. It is ${hintSearch.status}.`,
+        error: `Hint status is not no_response. It is ${hint.status}.`,
         response: response,
       };
     } else {
@@ -368,12 +399,13 @@ export async function insertHintResponse(
   }
 
   // Send email
+  let emails = [hint.team.primaryEmail, ...extractEmails(hint.team.members)];
   await sendEmail(
-    extractEmails(members),
-    `Hint Answered [${puzzleName}]`,
+    emails,
+    `Hint Answered [${hint.puzzle.name}]`,
     HintEmailTemplate({
-      teamDisplayName: teamDisplayName,
-      puzzleName: puzzleName,
+      teamDisplayName: hint.team.displayName,
+      puzzleName: hint.puzzle.name,
       puzzleId: result.puzzleId,
       request: result.request,
       response,

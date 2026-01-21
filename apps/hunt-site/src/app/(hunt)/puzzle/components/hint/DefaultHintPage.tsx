@@ -58,7 +58,7 @@ export default async function DefaultHintPage({
       status: true,
     },
     with: {
-      team: { columns: { id: true, displayName: true, members: true } },
+      team: { columns: { id: true, displayName: true } },
       claimer: { columns: { id: true, displayName: true } },
       replies: {
         columns: { id: true, message: true, userId: true, time: true },
@@ -104,9 +104,6 @@ export default async function DefaultHintPage({
       <HuntHintThreads
         previousHints={previousHints}
         hintRequestState={hintState}
-        teamDisplayName={session.user?.displayName}
-        puzzleId={puzzleId}
-        puzzleName={puzzle.name}
       />
     </div>
   );

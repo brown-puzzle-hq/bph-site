@@ -36,14 +36,16 @@ export async function insertErratum(puzzleId: string, description: string) {
   });
 
   const unlockedTeams = INITIAL_PUZZLES.includes(puzzleId)
-    ? await db.query.teams.findMany({ columns: { id: true, members: true } })
+    ? await db.query.teams.findMany({
+        columns: { id: true, primaryEmail: true, members: true },
+      })
     : (
         await db.query.unlocks.findMany({
           columns: {},
           where: eq(unlocks.puzzleId, puzzleId),
           with: {
             team: {
-              columns: { id: true, members: true },
+              columns: { id: true, primaryEmail: true, members: true },
             },
           },
         })
@@ -65,9 +67,10 @@ export async function insertErratum(puzzleId: string, description: string) {
     (team) => !solvedTeamIds.has(team.id),
   );
 
-  const emails: string[] = activeTeams.flatMap((team) =>
-    extractEmails(team.members),
-  );
+  const emails: string[] = [
+    ...activeTeams.flatMap((team) => extractEmails(team.members)),
+    ...activeTeams.map((team) => team.primaryEmail),
+  ];
 
   sendEmail(
     [`${HUNT_EMAIL}`],
