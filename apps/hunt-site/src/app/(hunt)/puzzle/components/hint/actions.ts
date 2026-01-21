@@ -171,4 +171,3 @@ export async function insertTeamReply(hintId: number, message: string) {
     return null;
   }
 }
-
