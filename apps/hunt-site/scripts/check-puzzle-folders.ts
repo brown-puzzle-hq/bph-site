@@ -4,37 +4,22 @@ import { db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 import { HUNT_NAME } from "@/config/client";
+import { locations } from "~/generated/puzzle-locations.json";
 
-const PUZZLE_DIR = path.join(process.cwd(), "src/app/(hunt)/puzzle");
+const PUZZLE_ROOT = path.join(process.cwd(), "src/app/(hunt)/puzzle");
 const IGNORE = new Set(["example", "components"]);
 
 async function main() {
   console.log("📥 Fetching puzzles from DB...");
   const puzzleRows = await db.select().from(puzzles);
-
-  const idsFromDB = puzzleRows.map((p) => p.id).filter((id) => !IGNORE.has(id));
   const namesFromDB = Object.fromEntries(puzzleRows.map((p) => [p.id, p.name]));
 
-  console.log("🔎 Checking puzzle folders against DB...");
-
-  const foldersOnDisk = (await fs.readdir(PUZZLE_DIR, { withFileTypes: true }))
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name)
-    .filter((name) => !IGNORE.has(name));
-
-  const idsOnDisk = new Set(foldersOnDisk);
-
+  console.log("🔎 Checking puzzle folders...");
   let hadError = false;
 
-  for (const id of idsFromDB) {
-    const targetDir = path.join(PUZZLE_DIR, id);
-    const title = `${namesFromDB[id]} - ${HUNT_NAME}`;
-
-    if (!idsOnDisk.has(id)) {
-      console.error(`❌ Missing folder for DB puzzle id: ${id}`);
-      hadError = true;
-      continue;
-    }
+  for (const [puzzleId, rel] of Object.entries(locations)) {
+    const targetDir = path.join(PUZZLE_ROOT, rel);
+    const title = `${namesFromDB[puzzleId]} - ${HUNT_NAME}`;
 
     // Check metadata title line in layout.tsx
     const titleLine = await findLineMatching(
@@ -43,18 +28,18 @@ async function main() {
     );
 
     if (titleLine === null) {
-      console.error(`❌ ${id}: missing "title:" line in layout.tsx`);
+      console.error(`❌ ${puzzleId}: missing "title:" line in layout.tsx`);
       hadError = true;
     } else {
       const actualTitle = extractQuotedValue(titleLine, "title:");
       if (actualTitle === null) {
         console.error(
-          `❌ ${id}: couldn't parse title string from line: ${titleLine.trim()}`,
+          `❌ ${puzzleId}: couldn't parse title string from line: ${titleLine.trim()}`,
         );
         hadError = true;
       } else if (actualTitle !== title) {
         console.error(
-          `❌ ${id}: metadata title mismatch. Expected "${title}", got "${actualTitle}"`,
+          `❌ ${puzzleId}: metadata title mismatch. Expected "${title}", got "${actualTitle}"`,
         );
         hadError = true;
       }
@@ -67,31 +52,24 @@ async function main() {
     );
 
     if (puzzleIdLine === null) {
-      console.error(`❌ ${id}: missing export for puzzleId in data.tsx`);
+      console.error(`❌ ${puzzleId}: missing export for puzzleId in data.tsx`);
       hadError = true;
     } else {
       const actualPuzzleId = extractQuotedValue(
         puzzleIdLine,
-        "export const puzzleId = ",
+        "export const puzzleId =",
       );
       if (actualPuzzleId === null) {
         console.error(
-          `❌ ${id}: couldn't parse puzzleId from line: ${puzzleIdLine.trim()}`,
+          `❌ ${puzzleId}: couldn't parse puzzleId from line: ${puzzleIdLine.trim()}`,
         );
         hadError = true;
-      } else if (actualPuzzleId !== id) {
+      } else if (actualPuzzleId !== puzzleId) {
         console.error(
-          `❌ ${id}: puzzleId mismatch. Expected "${id}", got "${actualPuzzleId}"`,
+          `❌ ${puzzleId}: puzzleId mismatch. Expected "${puzzleId}", got "${actualPuzzleId}"`,
         );
         hadError = true;
       }
-    }
-  }
-
-  // Warn about extraneous folders
-  for (const diskId of idsOnDisk) {
-    if (!idsFromDB.includes(diskId)) {
-      console.warn(`⚠️ Folder "${diskId}" exists but is not in the database.`);
     }
   }
 

@@ -1,0 +1,13 @@
+{
+  "root": "src/app/(hunt)/puzzle",
+  "locations": {
+    "example-1": "example-1",
+    "example-2": "example-2",
+    "example-3": "example-3",
+    "example-4": "example-4",
+    "example-5": "example-5"
+  },
+  "missing": [],
+  "extraneous": [],
+  "duplicate": {}
+}
