@@ -4,9 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prebuild": "pnpm run generate:docs && pnpm run check:folders",
     "build": "next build",
-    "predev": "pnpm run generate:docs && pnpm run check:folders",
+    "predev": "pnpm run generate:docs && pnpm run generate:puzzle-locations && pnpm run check:folders",
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +15,7 @@
     "db:studio": "drizzle-kit studio",
     "db:dbml": "tsx src/server/db/dbml.ts",
     "generate:docs": "tsx scripts/generate-docs.ts",
+    "generate:puzzle-locations": "tsx scripts/generate-puzzle-locations.ts",
     "check:folders": "tsx scripts/check-puzzle-folders.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:folders": "tsx scripts/create-puzzle-folders.ts"
