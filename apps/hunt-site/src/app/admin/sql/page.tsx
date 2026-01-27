@@ -39,9 +39,10 @@ export default function Page() {
           return "No emails found.";
         }
         return parsedResult.rows
-          .flatMap(
-            (row: any) => row.primary_email + "\n" + extractEmails(row.members),
-          )
+          .flatMap((row: any) => [
+            row.primary_email,
+            ...extractEmails(row.members),
+          ])
           .join("\n");
       } catch (error) {
         return "SQL error";
