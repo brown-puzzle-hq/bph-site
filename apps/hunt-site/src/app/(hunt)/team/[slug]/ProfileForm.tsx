@@ -59,6 +59,7 @@ export const profileFormSchema = z
       .string()
       .min(1, { message: "Required" })
       .max(50, { message: "Max 50 characters" }),
+    primaryEmail: z.string().email({ message: "Invalid email address" }),
     members: z.array(
       z.object({
         name: z.string().or(z.literal("")),
@@ -83,7 +84,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 type TeamProperties = Pick<
   Team,
-  "displayName" | "role" | "members" | "interactionMode"
+  "displayName" | "primaryEmail" | "role" | "members" | "interactionMode"
 >;
 
 export default function ProfileForm({
@@ -220,6 +221,29 @@ export default function ProfileForm({
                 </FormControl>
                 <FormDescription>
                   This name will be displayed on the leaderboard.
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+
+          {/* Display name field */}
+          <FormField
+            control={form.control}
+            name="primaryEmail"
+            render={({ field }) => (
+              <FormItem className="mb-8">
+                <FormLabel className="flex flex-row justify-between">
+                  <span className="text-main-header">
+                    Primary Email <span className="text-error">*</span>
+                  </span>
+                  <FormMessage className="text-error" />
+                </FormLabel>
+                <FormControl className="placeholder:text-white/40">
+                  <Input placeholder="jcarberr@brown.edu" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This email will be used for important hunt-related
+                  communication.
                 </FormDescription>
               </FormItem>
             )}

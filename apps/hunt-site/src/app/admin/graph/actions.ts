@@ -10,6 +10,7 @@ export async function getSearchedTeam(teamId: string) {
     columns: {
       id: true,
       displayName: true,
+      primaryEmail: true,
       role: true,
       createTime: true,
       finishTime: true,

@@ -612,6 +612,10 @@ export default function Graph({
                 <span className="font-semibold"> Mode: </span>
                 {searchedTeam.interactionMode}
               </p>
+              <p>
+                <span className="font-semibold"> Primary email: </span>
+                {searchedTeam.primaryEmail}
+              </p>
               <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                 Members
               </p>

@@ -14,7 +14,12 @@ import { revalidatePath } from "next/cache";
 type TeamProperties = Partial<
   Pick<
     Team,
-    "displayName" | "role" | "members" | "interactionMode" | "password"
+    | "displayName"
+    | "primaryEmail"
+    | "role"
+    | "members"
+    | "interactionMode"
+    | "password"
   >
 >;
 
@@ -56,6 +61,7 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
       .where(eq(teams.id, id))
       .returning({
         displayName: teams.displayName,
+        primaryEmail: teams.primaryEmail,
         role: teams.role,
         members: teams.members,
         interactionMode: teams.interactionMode,

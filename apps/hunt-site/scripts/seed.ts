@@ -49,6 +49,7 @@ async function seed() {
         .join(" "),
       password: hashedPassword,
       role: "user" as "user" | "admin",
+      primaryEmail: "user@gmail.com",
       members: JSON.stringify([
         [faker.person.fullName(), "user@gmail.com"],
         [faker.person.fullName(), ""],
@@ -67,6 +68,7 @@ async function seed() {
     // TODO: use common imported hash function
     password: bcrypt.hashSync("admin123", 10),
     role: "admin",
+    primaryEmail: "admin@gmail.com",
     members: JSON.stringify([
       [faker.person.fullName(), "admin@gmail.com"],
       [faker.person.fullName(), ""],
