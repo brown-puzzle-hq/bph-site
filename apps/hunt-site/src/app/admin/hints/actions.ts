@@ -5,11 +5,11 @@ import { hints, replies } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq, and, isNull, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { sendBotMessage, sendEmail } from "~/lib/comms";
+import { sendEmail } from "~/lib/comms";
 import { extractEmails } from "~/lib/team-members";
 import { HintEmailTemplate } from "~/lib/email-template";
 import { ReplyEmailTemplate } from "~/lib/email-template";
-import { HintStatus, HUNT_URL } from "@/config/client";
+import { HintStatus } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
 
@@ -291,11 +291,6 @@ export async function insertAdminReply(
           }),
         );
       }
-      // Otherwise, notify admin on Discord that there is a reply
-      else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${hint.team.displayName}](${HUNT_URL}/team/${hint.team.id}) on [${hint.puzzle.name}](${HUNT_URL}/puzzle/${hint.puzzle.id} ): ${message}`;
-        await sendBotMessage(hintMessage, "hint", "@hint");
-      }
       return result[0].id;
     }
     return null;
@@ -380,20 +375,20 @@ export async function insertHintResponse(hintId: number, response: string) {
         error: hint.claimer
           ? `Hint claimed by ${hint.claimer}.`
           : "Hint is currently unclaimed.",
-        response: response,
+        response,
       };
     }
     if (hint.status != "no_response") {
       return {
         title: "Error responding to hint",
         error: `Hint status is not no_response. It is ${hint.status}.`,
-        response: response,
+        response,
       };
     } else {
       return {
         title: "Error responding to hint",
         error: "Unexpected error occured",
-        response: response,
+        response,
       };
     }
   }

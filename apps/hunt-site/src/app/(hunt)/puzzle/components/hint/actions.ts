@@ -5,9 +5,7 @@ import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { getNumberOfHintsRemaining } from "@/config/server";
-import { sendBotMessage, sendEmail } from "~/lib/comms";
-import { extractEmails } from "~/lib/team-members";
-import { ReplyEmailTemplate } from "~/lib/email-template";
+import { sendBotMessage } from "~/lib/comms";
 import { HUNT_URL } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
@@ -151,22 +149,11 @@ export async function insertTeamReply(hintId: number, message: string) {
       .returning({ id: replies.id });
 
     if (result[0]?.id) {
-      let emails = [
-        hint.team.primaryEmail,
-        ...extractEmails(hint.team.members),
-      ];
-      await sendEmail(
-        emails,
-        `Reply [${hint.puzzle.name}]`,
-        ReplyEmailTemplate({
-          teamDisplayName: hint.team.displayName,
-          puzzleId: hint.puzzle.id,
-          puzzleName: hint.puzzle.name,
-          message,
-        }),
-      );
+      const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${hint.team.displayName}](${HUNT_URL}/team/${hint.team.id}) on [${hint.puzzle.name}](${HUNT_URL}/puzzle/${hint.puzzle.id} ): ${message}`;
+      await sendBotMessage(hintMessage, "hint", "@hint");
+      return result[0].id;
     }
-    return result?.[0]?.id ?? null;
+    return null;
   } catch (_) {
     return null;
   }
