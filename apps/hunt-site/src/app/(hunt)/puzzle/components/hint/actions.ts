@@ -5,12 +5,7 @@ import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { getNumberOfHintsRemaining } from "@/config/server";
-import { sendBotMessage, sendEmail } from "~/lib/comms";
-import { extractEmails } from "~/lib/team-members";
-import {
-  ReplyEmailTemplate,
-  ReplyEmailTemplateProps,
-} from "~/lib/email-template";
+import { sendBotMessage } from "~/lib/comms";
 import { HUNT_URL } from "@/config/client";
 
 export type MessageType = "request" | "response" | "reply";
@@ -112,25 +107,37 @@ export async function editMessage(
   }
 }
 
-/** Inserts a reply into the reply table */
-export async function insertReply({
-  hintId,
-  members,
-  teamId,
-  teamDisplayName,
-  puzzleId,
-  puzzleName,
-  message,
-}: ReplyEmailTemplateProps & {
-  hintId: number;
-  teamId?: string;
-  members: string;
-}) {
+/** Handles a reply from a team */
+export async function insertTeamReply(hintId: number, message: string) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Not logged in");
   }
   try {
+    const hint = await db.query.hints.findFirst({
+      where: eq(hints.id, hintId),
+      with: {
+        team: {
+          columns: {
+            id: true,
+            displayName: true,
+            members: true,
+            primaryEmail: true,
+          },
+        },
+        puzzle: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!hint) {
+      return null;
+    }
+
     const result = await db
       .insert(replies)
       .values({
@@ -142,25 +149,8 @@ export async function insertReply({
       .returning({ id: replies.id });
 
     if (result[0]?.id) {
-      // If there are members, then this is a reply by a team
-      // So send an email
-      if (members) {
-        await sendEmail(
-          extractEmails(members),
-          `Reply [${puzzleName}]`,
-          ReplyEmailTemplate({
-            teamDisplayName,
-            puzzleId,
-            puzzleName,
-            message,
-          }),
-        );
-      }
-      // Otherwise, notify admin on Discord that there is a reply
-      else if (message !== "[Claimed]") {
-        const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${teamDisplayName}](${HUNT_URL}/team/${teamId}) on [${puzzleName}](${HUNT_URL}/puzzle/${puzzleId} ): ${message}`;
-        await sendBotMessage(hintMessage, "hint", "@hint");
-      }
+      const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${hint.team.displayName}](${HUNT_URL}/team/${hint.team.id}) on [${hint.puzzle.name}](${HUNT_URL}/puzzle/${hint.puzzle.id} ): ${message}`;
+      await sendBotMessage(hintMessage, "hint", "@hint");
       return result[0].id;
     }
     return null;

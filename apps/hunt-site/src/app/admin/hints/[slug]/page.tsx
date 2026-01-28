@@ -29,7 +29,6 @@ export default async function Page({
         columns: {
           displayName: true,
           id: true,
-          members: true,
           interactionMode: true,
         },
       },

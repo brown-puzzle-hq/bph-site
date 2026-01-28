@@ -13,7 +13,7 @@ import {
   editHintStatus,
   insertHintResponse,
   editMessage,
-  insertReply,
+  insertAdminReply,
   MessageType,
 } from "../actions";
 import {
@@ -44,7 +44,6 @@ type Hint = {
   team: {
     id: string;
     displayName: string;
-    members: string;
     interactionMode: string;
   };
   claimer: {
@@ -159,13 +158,7 @@ export default function AdminHintThread({
     setResponse("");
 
     startTransition(async () => {
-      const { error, title, id } = await insertHintResponse(
-        hint.id,
-        hint.team.displayName,
-        hint.puzzle.name,
-        message,
-        hint.team.members,
-      );
+      const { error, title, id } = await insertHintResponse(hint.id, message);
       if (error) {
         toast.error(title, {
           description: response
@@ -206,7 +199,7 @@ export default function AdminHintThread({
   const handleSubmitReply = async (
     hintId: number,
     message: string,
-    members: string,
+    emailTeam: boolean,
   ) => {
     // Optimistic update
     setOptimisticHint((hint) => ({
@@ -225,18 +218,7 @@ export default function AdminHintThread({
     if (message !== "[Claimed]") setNewReply(null);
 
     startTransition(async () => {
-      // TODO: is there a better option than passing a ton of arguments?
-      // wondering if we should have centralized hint types, same goes for inserting/emailing normal hint responses
-      // Also might be more efficient to only pass team members once instead of storing in each hint
-      const replyId = await insertReply({
-        hintId,
-        members,
-        teamId: session?.user?.id,
-        teamDisplayName: hint.team.displayName,
-        puzzleId: hint.puzzle.id,
-        puzzleName: hint.puzzle.name,
-        message,
-      });
+      const replyId = await insertAdminReply(hintId, message, emailTeam);
 
       if (replyId === null) {
         // Revert optimistic update
@@ -594,7 +576,7 @@ export default function AdminHintThread({
                             handleSubmitReply(
                               optimisticHint.id,
                               "[Claimed]",
-                              "",
+                              false,
                             )
                           }
                           className="text-blue-500 hover:underline"
@@ -703,7 +685,7 @@ export default function AdminHintThread({
                       handleSubmitReply(
                         optimisticHint.id,
                         newReply.message,
-                        optimisticHint.team.members,
+                        true,
                       )
                     }
                   >

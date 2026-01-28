@@ -14,7 +14,7 @@ import {
 import { IN_PERSON, REMOTE } from "@/config/client";
 import {
   editMessage,
-  insertReply,
+  insertTeamReply,
   insertHintRequest,
   MessageType,
 } from "./actions";
@@ -25,10 +25,7 @@ import { type HintStatus } from "@/config/client";
 type TableProps = {
   previousHints: PreviousHints;
   hintRequestState: HintRequestState;
-  teamDisplayName?: string;
   reply?: number;
-  puzzleId?: string;
-  puzzleName?: string;
 };
 
 // Intitial state
@@ -40,7 +37,6 @@ type PreviousHints = {
   team: {
     id: string;
     displayName: string;
-    members: string;
   };
   claimer: {
     id: string;
@@ -81,10 +77,7 @@ const DURATION = 0.15;
 export default function HuntHintThreads({
   previousHints,
   hintRequestState,
-  teamDisplayName,
   reply,
-  puzzleId,
-  puzzleName,
 }: TableProps) {
   const { data: session } = useSession();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
@@ -103,7 +96,6 @@ export default function HuntHintThreads({
         team: {
           displayName: session?.user?.displayName!,
           id: session?.user?.id!,
-          members: "",
         },
         claimer: null,
         request,
@@ -181,11 +173,7 @@ export default function HuntHintThreads({
     setEdit(null);
   };
 
-  const handleSubmitReply = async (
-    hintId: number,
-    message: string,
-    members: string,
-  ) => {
+  const handleSubmitReply = async (hintId: number, message: string) => {
     // Optimistic update
     setOptimisticHints((prev) =>
       prev.map((hint) =>
@@ -209,18 +197,7 @@ export default function HuntHintThreads({
     setNewReply(null);
 
     startTransition(async () => {
-      // TODO: is there a better option than passing a ton of arguments?
-      // wondering if we should have centralized hint types, same goes for inserting/emailing normal hint responses
-      // Also might be more efficient to only pass team members once instead of storing in each hint
-      const replyId = await insertReply({
-        hintId,
-        members,
-        teamId: session?.user?.id,
-        teamDisplayName,
-        puzzleId,
-        puzzleName,
-        message,
-      });
+      const replyId = await insertTeamReply(hintId, message);
 
       if (replyId === null) {
         // Revert optimistic update
@@ -660,8 +637,7 @@ export default function HuntHintThreads({
                   <div className="mb-1 mt-2 flex items-center space-x-2">
                     <button
                       onClick={() =>
-                        // TODO: kinda jank to use empty team members as signal to not send email
-                        handleSubmitReply(hint.id, newReply.message, "")
+                        handleSubmitReply(hint.id, newReply.message)
                       }
                       disabled={!newReply.message}
                       className="rounded-sm bg-black/30 px-2.5 py-1.5 font-medium text-main-text hover:opacity-85 disabled:opacity-50"

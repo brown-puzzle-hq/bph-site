@@ -35,12 +35,15 @@ export default function Page() {
     } else {
       try {
         const parsedResult = JSON.parse(result);
-        if (parsedResult?.rows?.[0]?.members) {
-          return parsedResult.rows
-            .flatMap((row: any) => extractEmails(row.members))
-            .join("\n");
+        if (!parsedResult?.rows?.[0]) {
+          return "No emails found.";
         }
-        return "No emails found.";
+        return parsedResult.rows
+          .flatMap((row: any) => [
+            row.primary_email,
+            ...extractEmails(row.members),
+          ])
+          .join("\n");
       } catch (error) {
         return "SQL error";
       }
