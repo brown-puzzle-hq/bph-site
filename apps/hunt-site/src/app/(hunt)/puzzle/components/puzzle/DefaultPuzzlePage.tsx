@@ -63,7 +63,7 @@ export default async function DefaultPuzzlePage({
   }))!.answer;
 
   // If user is not logged in, show puzzle without errata or guesses
-  if (!session?.user?.id) {
+  if (!session) {
     return (
       <DefaultPostHuntPuzzlePage
         puzzleAnswer={puzzleAnswer}
@@ -85,7 +85,7 @@ export default async function DefaultPuzzlePage({
   //    a. If the puzzle can be unlocked, then use the unlock time
   //    b. If the puzzle is an INITIAL_PUZZLE, then take MIN(teamCreateTime, huntStartTime)
   var unlockTime;
-  if (!session.user) unlockTime = new Date();
+  if (!session) unlockTime = new Date();
   else if (session.user.role === "admin") unlockTime = new Date(0);
   else if (INITIAL_PUZZLES.includes(puzzleId)) {
     const teamCreateTime =
@@ -97,7 +97,7 @@ export default async function DefaultPuzzlePage({
       )?.createTime ?? new Date();
 
     const huntStartTime =
-      session.user?.interactionMode === "in-person"
+      session.user.interactionMode === "in-person"
         ? IN_PERSON.START_TIME
         : REMOTE.START_TIME;
 

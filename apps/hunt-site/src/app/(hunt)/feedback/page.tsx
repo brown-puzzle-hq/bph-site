@@ -7,7 +7,7 @@ import FeedbackForm from "./FeedbackForm";
 
 export default async function Home() {
   const session = await auth();
-  if (!session?.user?.id) {
+  if (!session) {
     return (
       <div className="mb-12 px-4 pt-6 text-center">
         <h1 className="mb-2">Feedback</h1>

@@ -100,10 +100,10 @@ export default function ProfileForm({
   // TODO: remove when we switch to database strategy
   useEffect(() => {
     if (
-      session?.user?.id === id &&
-      (session?.user?.displayName !== initialProperties.displayName ||
-        session?.user?.interactionMode !== initialProperties.interactionMode ||
-        session?.user?.role !== initialProperties.role)
+      session?.user.id === id &&
+      (session.user.displayName !== initialProperties.displayName ||
+        session.user.interactionMode !== initialProperties.interactionMode ||
+        session.user.role !== initialProperties.role)
     ) {
       // TODO: might be a race condition
       update(null);
@@ -167,7 +167,7 @@ export default function ProfileForm({
       return;
     }
 
-    if (session?.user?.id !== id) {
+    if (session?.user.id !== id) {
       router.push("/admin/team");
     } else {
       signOut();
@@ -411,7 +411,7 @@ export default function ProfileForm({
 
           {/* Team permissions */}
           <div className="mb-8 space-y-8">
-            {session?.user?.role === "admin" && (
+            {session?.user.role === "admin" && (
               <FormField
                 control={form.control}
                 name="role"

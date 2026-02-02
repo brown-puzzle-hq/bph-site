@@ -9,7 +9,7 @@ import { useTransition } from "react";
 
 export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const { data: session } = useSession();
-  const userId = session?.user?.id as string;
+  const userId = session?.user.id;
   const hintId = row.getValue("id") as number;
   const claimer: HintClaimer = row.getValue("claimer");
   const status = row.getValue("status");

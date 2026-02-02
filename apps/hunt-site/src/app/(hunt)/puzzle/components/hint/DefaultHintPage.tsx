@@ -26,7 +26,7 @@ export default async function DefaultHintPage({
       redirect("/puzzle");
   }
 
-  const teamId = session?.user?.id;
+  const teamId = session?.user.id;
   if (!teamId) {
     return (
       <div>
@@ -71,8 +71,8 @@ export default async function DefaultHintPage({
 
   const hintsRemaining = await getNumberOfHintsRemaining(
     teamId,
-    session!.user!.role,
-    session!.user!.interactionMode,
+    session!.user.role,
+    session!.user.interactionMode,
   );
 
   const query = await db.query.hints.findFirst({

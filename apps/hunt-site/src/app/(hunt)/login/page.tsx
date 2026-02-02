@@ -6,9 +6,9 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-[calc(100vh-56px-32px)] grow flex-col items-center justify-center">
-      {session?.user?.displayName ? (
+      {session ? (
         <>
-          <p className="p-4">Welcome, {session?.user?.displayName}!</p>
+          <p className="p-4">Welcome, {session.user.displayName}!</p>
           <LogoutForm />
         </>
       ) : (

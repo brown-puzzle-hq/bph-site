@@ -94,8 +94,8 @@ export default function HuntHintThreads({
       {
         id: 0,
         team: {
-          displayName: session?.user?.displayName!,
-          id: session?.user?.id!,
+          displayName: session!.user.displayName,
+          id: session!.user.id,
         },
         claimer: null,
         request,
@@ -184,8 +184,8 @@ export default function HuntHintThreads({
                 id: 0,
                 message,
                 user: {
-                  displayName: session!.user!.displayName,
-                  id: session!.user!.id!,
+                  displayName: session!.user.displayName,
+                  id: session!.user.id,
                 },
                 time: new Date(),
               }),
@@ -250,7 +250,7 @@ export default function HuntHintThreads({
       hintRequestState;
     if (
       new Date() >
-      (session?.user?.interactionMode === "in-person"
+      (session?.user.interactionMode === "in-person"
         ? IN_PERSON.END_TIME
         : REMOTE.END_TIME)
     ) {
@@ -321,7 +321,7 @@ export default function HuntHintThreads({
             hintRequestState.hintsRemaining < 1 ||
             optimisticHints.some((hint) => !hint.response) ||
             new Date() >
-              (session?.user?.interactionMode === "in-person"
+              (session?.user.interactionMode === "in-person"
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME)
           }
@@ -342,7 +342,7 @@ export default function HuntHintThreads({
             hintRequestState.hintsRemaining < 1 ||
             optimisticHints.some((hint) => !hint.response) ||
             new Date() >
-              (session?.user?.interactionMode === "in-person"
+              (session?.user.interactionMode === "in-person"
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME)
           }
@@ -357,7 +357,7 @@ export default function HuntHintThreads({
           ).getHours();
           return (
             now <
-              (session?.user?.interactionMode === "in-person"
+              (session?.user.interactionMode === "in-person"
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME) &&
             hour >= 0 &&
@@ -379,7 +379,7 @@ export default function HuntHintThreads({
             <div className="relative flex justify-between">
               <b>Team</b>
               {/* If the hint request was made by the current user, allow edits */}
-              {hint.team.id === session?.user?.id && (
+              {hint.team.id === session?.user.id && (
                 <div className="absolute -top-5 right-0">
                   {edit?.id === hint.id && edit.type === "request" ? (
                     <div className="space-x-0.5">
@@ -547,7 +547,7 @@ export default function HuntHintThreads({
                           )}
 
                         {/* If the previous hint reply was made by user, allow edits */}
-                        {reply.user.id === session?.user?.id &&
+                        {reply.user.id === session?.user.id &&
                           (edit?.type === "reply" && edit.id === reply.id ? (
                             <div className="space-x-0.5">
                               <button

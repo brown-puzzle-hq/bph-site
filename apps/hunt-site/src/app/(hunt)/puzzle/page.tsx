@@ -36,10 +36,10 @@ export default async function Home() {
   var availablePuzzles: AvailablePuzzle[] = [];
   var availableEvents: AvailableEvent[] = [];
   var hasFinishedHunt = false;
-  const isInPerson = session?.user?.interactionMode === "in-person";
+  const isInPerson = session?.user.interactionMode === "in-person";
 
   // Not logged in
-  if (!session?.user?.id) {
+  if (!session) {
     // If the hunt has not ended, tell them to log in
     if (currDate < REMOTE.END_TIME) {
       return (
@@ -71,7 +71,7 @@ export default async function Home() {
   else {
     // If the hunt has not yet started for users or admin, display a message
     if (
-      (session.user.role === "user" || session.user.role === "admin") &&
+      session.user.role !== "testsolver" &&
       currDate <
         (session.user.interactionMode === "in-person"
           ? IN_PERSON.START_TIME
@@ -125,7 +125,7 @@ export default async function Home() {
 
     // Hide answers for unfinished events
     const finishedEvents = await db.query.answerTokens.findMany({
-      where: eq(answerTokens.teamId, session.user?.id!),
+      where: eq(answerTokens.teamId, session.user.id),
     });
 
     availableEvents = events.map((event) => {
@@ -159,7 +159,7 @@ export default async function Home() {
       availablePuzzles={availablePuzzles}
       availableRounds={availableRounds}
       availableEvents={availableEvents}
-      hasEventInputBox={!!session?.user}
+      hasEventInputBox={!!session}
       hasFinishedHunt={hasFinishedHunt}
       isInPerson={isInPerson}
     />

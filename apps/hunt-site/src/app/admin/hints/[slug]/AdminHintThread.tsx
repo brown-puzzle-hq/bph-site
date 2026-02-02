@@ -112,7 +112,7 @@ export default function AdminHintThread({
   const handleClaim = async () => {
     setOptimisticHint((prev) => ({
       ...prev,
-      claimer: { id: session!.user!.id!, displayName: session!.user!.name! },
+      claimer: { id: session!.user.id, displayName: session!.user.displayName },
     }));
 
     startTransition(async () => {
@@ -149,8 +149,8 @@ export default function AdminHintThread({
     setOptimisticHint((hint) => ({
       ...hint,
       claimer: {
-        id: session!.user!.id!,
-        displayName: session!.user!.displayName!,
+        id: session!.user.id,
+        displayName: session!.user.displayName,
       },
       response: response,
       status: "answered",
@@ -208,8 +208,8 @@ export default function AdminHintThread({
         id: 0,
         message,
         user: {
-          displayName: session!.user!.displayName,
-          id: session!.user!.id!,
+          displayName: session!.user.displayName,
+          id: session!.user.id,
         },
         time: new Date(),
       }),
@@ -398,7 +398,7 @@ export default function AdminHintThread({
                     className="resize-none focus-visible:ring-0"
                     value={response}
                     onChange={(e) => setResponse(e.target.value)}
-                    disabled={optimisticHint.claimer?.id !== session?.user?.id}
+                    disabled={optimisticHint.claimer?.id !== session?.user.id}
                   />
                 </div>
 
@@ -412,7 +412,7 @@ export default function AdminHintThread({
                       Claim
                     </Button>
                   </div>
-                ) : optimisticHint.claimer.id === session?.user?.id ? (
+                ) : optimisticHint.claimer.id === session?.user.id ? (
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => handleSubmitResponse(response)}
@@ -476,7 +476,7 @@ export default function AdminHintThread({
 
                     {/* If the response was made by the current user, allow edits */}
                     {optimisticHint.response !== null &&
-                      optimisticHint.claimer?.id === session?.user?.id && (
+                      optimisticHint.claimer?.id === session?.user.id && (
                         <div>
                           {edit?.id === optimisticHint.id &&
                           edit.type === "response" ? (
@@ -609,7 +609,7 @@ export default function AdminHintThread({
                       ))}
 
                     {/* If the previous hint reply was made by user, allow edits */}
-                    {reply.user.id === session?.user?.id &&
+                    {reply.user.id === session?.user.id &&
                       reply.message !== "[Claimed]" && (
                         <div>
                           {edit?.type === "reply" && edit.id === reply.id ? (
