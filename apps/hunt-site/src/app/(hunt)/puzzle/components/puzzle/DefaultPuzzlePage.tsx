@@ -64,7 +64,7 @@ export default async function DefaultPuzzlePage({
   const { error, user } = await checkPermissions({ level: "userAny" });
 
   // If user is not logged in, show puzzle without errata or guesses
-  if (error !== null) {
+  if (error) {
     return (
       <DefaultPostHuntPuzzlePage
         puzzleAnswer={puzzleAnswer}

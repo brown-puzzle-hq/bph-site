@@ -26,7 +26,7 @@ export async function canViewPuzzle(puzzleId: string) {
 
   // Otherwise, they must be signed in
   const { error, user } = await checkPermissions({ level: "userAny" });
-  if (error !== null) return "not_authenticated";
+  if (error) return "not_authenticated";
   const { id: teamId, role, interactionMode } = user;
 
   // Admin can always view the puzzle
@@ -88,7 +88,7 @@ export async function canViewSolution(puzzleId: string): Promise<viewStatus> {
 
   // If the hunt has not ended, users must be signed-in
   const { error, user } = await checkPermissions({ level: "userAny" });
-  if (error !== null) return "not_authenticated";
+  if (error) return "not_authenticated";
   const { id: teamId, role } = user;
 
   // Admin can always view the solution

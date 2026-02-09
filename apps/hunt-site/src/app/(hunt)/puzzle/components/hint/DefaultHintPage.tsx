@@ -24,7 +24,7 @@ export default async function DefaultHintPage({
   }
 
   const { error, user } = await checkPermissions({ level: "userAny" });
-  if (error !== null) {
+  if (error) {
     return (
       <div>
         <Link
