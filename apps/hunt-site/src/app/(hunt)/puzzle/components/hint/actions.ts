@@ -10,7 +10,7 @@ import { HUNT_URL } from "@/config/client";
 import { assertPermissions } from "~/lib/server";
 import { canViewPuzzle } from "../../actions";
 
-export type MessageType = "request" | "response" | "reply";
+export type MessageType = "request" | "reply";
 
 /** Inserts a hint request into the hint table */
 export async function insertHintRequest(puzzleId: string, hint: string) {
@@ -68,7 +68,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
 }
 
 /** Edits a hint */
-export async function editMessage(
+export async function editTeamMessage(
   id: number,
   message: string,
   type: MessageType,
@@ -81,12 +81,6 @@ export async function editMessage(
         .update(hints)
         .set({ request: message })
         .where(and(eq(hints.id, id), eq(hints.teamId, teamId)));
-      break;
-    case "response":
-      await db
-        .update(hints)
-        .set({ response: message })
-        .where(and(eq(hints.id, id), eq(hints.claimer, teamId)));
       break;
     case "reply":
       await db

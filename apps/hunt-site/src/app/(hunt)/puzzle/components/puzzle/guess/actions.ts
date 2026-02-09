@@ -207,6 +207,13 @@ export async function handleGuess(puzzleId: string, guess: string) {
   }
 
   revalidatePath(`/puzzle/${puzzleId}`);
+
+  const results = await Promise.allSettled(notifications);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      console.error("Websocket send failed:", r.reason);
+    }
+  }
 }
 
 /** Handles a solve for a puzzle. Returns whether the hunt was finished. */

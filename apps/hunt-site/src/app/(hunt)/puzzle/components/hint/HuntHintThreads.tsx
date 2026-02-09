@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import {
-  editMessage,
+  editTeamMessage,
   insertTeamReply,
   insertHintRequest,
   MessageType,
@@ -138,8 +138,6 @@ export default function HuntHintThreads({
         switch (type) {
           case "request":
             return hint.id === id ? { ...hint, request: value } : hint;
-          case "response":
-            return hint.id === id ? { ...hint, response: value } : hint;
           case "reply":
             return {
               ...hint,
@@ -155,7 +153,7 @@ export default function HuntHintThreads({
     setEdit(null);
     startTransition(async () => {
       try {
-        await editMessage(id, value, type);
+        await editTeamMessage(id, value, type);
       } catch {
         setOptimisticHints(optimisticHints);
         setEdit(edit);

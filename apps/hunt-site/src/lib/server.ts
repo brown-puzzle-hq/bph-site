@@ -7,6 +7,7 @@ type PermissionRequirement =
   | { level: "userExact"; teamId: string }
   | { level: "userAny" };
 
+// Throws on failure. Use in server actions.
 export async function assertPermissions(req: PermissionRequirement) {
   const session = await auth();
 
@@ -27,4 +28,27 @@ export async function assertPermissions(req: PermissionRequirement) {
   }
 
   return session.user;
+}
+
+// Returns an error on failure. Use in server components.
+export async function checkPermissions(req: PermissionRequirement) {
+  const session = await auth();
+
+  if (!session) {
+    return { error: "Not authenticated." as const };
+  }
+
+  if (session.user.role === "admin") {
+    return { error: null, ...session.user };
+  }
+
+  if (req.level === "admin") {
+    return { error: "Not authorized." as const };
+  }
+
+  if (req.level === "userExact" && session.user.id !== req.teamId) {
+    return { error: "Not authorized." as const };
+  }
+
+  return { error: null, ...session.user };
 }

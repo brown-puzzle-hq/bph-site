@@ -67,7 +67,7 @@ export async function insertErratum(puzzleId: string, description: string) {
     ...activeTeams.map((team) => team.primaryEmail),
   ];
 
-  sendEmail(
+  await sendEmail(
     [`${HUNT_EMAIL}`],
     `Erratum Issued [${puzzleName}]`,
     ErratumEmailTemplate({ puzzleName, puzzleId, erratum: description }),

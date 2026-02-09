@@ -12,7 +12,7 @@ import {
   unclaimHint,
   editHintStatus,
   insertHintResponse,
-  editMessage,
+  editAdminMessage,
   insertAdminReply,
   MessageType,
 } from "../actions";
@@ -165,17 +165,17 @@ export default function AdminHintThread({
     setResponse("");
 
     startTransition(async () => {
-      const { error, title, id } = await insertHintResponse(hint.id, message);
-      if (error) {
-        toast.error(title, {
+      try {
+        await insertHintResponse(hint.id, message);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to submit response.", {
           description: response
-            ? error + " Response copied to clipboard."
-            : error,
+            ? error.message + " Response copied to clipboard."
+            : error.message,
         });
         if (response) navigator.clipboard.writeText(response);
         setOptimisticHint(optimisticHint);
-      } else {
-        setOptimisticHint((hint) => ({ ...hint, id: id! }));
       }
     });
   };
@@ -184,8 +184,6 @@ export default function AdminHintThread({
     setOptimisticHint((hint) => {
       if (!hint) return hint;
       switch (type) {
-        case "request":
-          return hint.id === id ? { ...hint, request: value } : hint;
         case "response":
           return hint.id === id ? { ...hint, response: value } : hint;
         case "reply":
@@ -200,7 +198,18 @@ export default function AdminHintThread({
       }
     });
     setEdit(null);
-    startTransition(async () => await editMessage(id, value, type));
+    startTransition(async () => {
+      try {
+        await editAdminMessage(id, value, type);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to edit message.", {
+          description: error.message,
+        });
+        setOptimisticHint(optimisticHint);
+        setEdit(edit);
+      }
+    });
   };
 
   const handleSubmitReply = async (

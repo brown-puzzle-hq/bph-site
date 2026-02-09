@@ -3,7 +3,6 @@ import "server-only";
 import axios from "axios";
 import { Resend } from "resend";
 import { ReactNode } from "react";
-import { ensureError } from "./utils";
 import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "@/config/client";
 import { sign } from "jsonwebtoken";
 
@@ -46,7 +45,10 @@ export async function sendBotMessage(
     channelToWebhookURL[channel] || process.env.DISCORD_WEBHOOK_URL;
 
   // Disable the webhook by not including it in the env file
-  if (!webhookURL) return;
+  if (!webhookURL) {
+    console.warn("No webhook URL configured.");
+    return;
+  }
 
   // Append mention if provided
   if (mention && mentionToRoleId[mention]) {
@@ -54,19 +56,23 @@ export async function sendBotMessage(
     message += " " + roleId;
   }
 
-  if (message.length > 2000) {
-    const chunks = message.match(/[\s\S]{1,2000}/g);
-    if (chunks) {
-      for (const chunk of chunks) {
-        await axios.post(webhookURL, {
-          content: chunk,
-        });
+  try {
+    if (message.length > 2000) {
+      const chunks = message.match(/[\s\S]{1,2000}/g);
+      if (chunks) {
+        for (const chunk of chunks) {
+          await axios.post(webhookURL, {
+            content: chunk,
+          });
+        }
       }
+    } else {
+      await axios.post(webhookURL, {
+        content: message,
+      });
     }
-  } else {
-    await axios.post(webhookURL, {
-      content: message,
-    });
+  } catch (e) {
+    console.error("Failed to send Discord message:", e);
   }
 }
 
@@ -78,24 +84,24 @@ export async function sendEmail(
   react: ReactNode,
   bcc?: string[],
 ) {
-  if (!process.env.RESEND_API_KEY)
-    return { success: false, error: "No API key" };
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("No Resend API key configured.");
+    return;
+  }
+
   const resend = new Resend(process.env.RESEND_API_KEY);
-  try {
-    const response = await resend.emails.send({
-      from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
-      replyTo: `"Puzzle HQ" <${HUNT_EMAIL}>`,
-      to,
-      bcc,
-      subject,
-      react,
-    });
-    return { success: true, response };
-  } catch (e) {
-    const error = ensureError(e);
-    const errorMessage = `✉️ Email send failed: ${error.message}`;
+  const response = await resend.emails.send({
+    from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
+    replyTo: `"Puzzle HQ" <${HUNT_EMAIL}>`,
+    to,
+    bcc,
+    subject,
+    react,
+  });
+
+  if (response.error) {
+    const errorMessage = `✉️ Email send failed: ${response.error.message}`;
     await sendBotMessage(errorMessage, "dev", "@tech");
-    return { success: false, error: error.message };
   }
 }
 
@@ -137,7 +143,7 @@ export async function sendToWebsocketServer(
         headers: { Authorization: `Bearer ${token}` },
       },
     );
-  } catch (err) {
-    console.error("WebSocket server unreachable:", err);
+  } catch (e) {
+    console.error("Failed to send websocket message:", e);
   }
 }

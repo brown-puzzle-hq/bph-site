@@ -12,7 +12,7 @@ import { ReplyEmailTemplate } from "~/lib/email-template";
 import { HintStatus } from "@/config/client";
 import { assertPermissions } from "~/lib/server";
 
-export type MessageType = "request" | "response" | "reply";
+export type MessageType = "response" | "reply";
 
 export async function editHintStatus(hintId: number, status: HintStatus) {
   await assertPermissions({ level: "admin" });
@@ -101,101 +101,42 @@ export async function unclaimHint(hintId: number) {
   }
 }
 
-export async function refundHint(hintId: number) {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    throw new Error("Not authorized");
-  }
-
-  // For a hint to be refunded, the claimer must be the user
-  // And the hint status must not be "no_response"
-  let user = session.user.id ? session.user.id : "";
-  let result = await db
-    .update(hints)
-    .set({ status: "refunded" })
-    .where(
-      and(
-        eq(hints.id, hintId),
-        eq(hints.claimer, user),
-        ne(hints.status, "no_response"),
-      ),
-    )
-    .returning({ id: hints.id });
-
-  revalidatePath("/admin/hints");
-
-  if (result.length != 1) {
-    let hint = await db.query.hints.findFirst({ where: eq(hints.id, hintId) });
-    if (!hint) {
-      return {
-        title: "Error refunding hint",
-        error: "Hint entry not found",
-      };
-    } else if (hint.claimer !== user) {
-      return {
-        title: "Error refunding hint",
-        error: "Hint not currently claimed by user",
-      };
-    } else if (hint.status === "no_response") {
-      return {
-        title: "Error refunding hint",
-        error: "Hint status is no_response",
-      };
-    } else {
-      return {
-        title: "Error refunding hint",
-        error: "Unexpected error occured",
-      };
-    }
-  }
-
-  return { error: null };
-}
-
-export async function editMessage(
+export async function editAdminMessage(
   id: number,
   message: string,
   type: MessageType,
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Not logged in");
-  }
+  const { id: teamId } = await assertPermissions({ level: "admin" });
 
+  let result;
   switch (type) {
-    case "request":
-      await db
-        .update(hints)
-        .set({ request: message })
-        .where(and(eq(hints.id, id), eq(hints.teamId, session.user.id)))
-        .returning({ id: hints.id });
-      break;
     case "response":
-      await db
+      [result] = await db
         .update(hints)
         .set({ response: message })
-        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)))
+        .where(and(eq(hints.id, id), eq(hints.claimer, teamId)))
         .returning({ id: hints.id });
       break;
     case "reply":
-      await db
+      [result] = await db
         .update(replies)
         .set({ message })
-        .where(and(eq(replies.id, id), eq(replies.userId, session.user.id)))
+        .where(and(eq(replies.id, id), eq(replies.userId, teamId)))
         .returning({ id: hints.id });
       break;
   }
+
+  if (!result) throw new Error("Message not found.");
 }
 
+// TODO: not gonna do much error-handling here for now
+// this function should be gone once we fix hinting
 export async function insertAdminReply(
   hintId: number,
   message: string,
   emailTeam: boolean,
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Not logged in");
-  }
+  const { id: teamId } = await assertPermissions({ level: "admin" });
 
   try {
     // Query the hint with team and puzzle relations to get all needed data
@@ -227,7 +168,7 @@ export async function insertAdminReply(
       .insert(replies)
       .values({
         hintId,
-        userId: session.user.id,
+        userId: teamId,
         message,
         time: new Date(),
       })
@@ -259,19 +200,11 @@ export async function insertAdminReply(
 }
 
 export async function insertHintResponse(hintId: number, response: string) {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    throw new Error("Not authorized");
-  }
+  const { id: teamId } = await assertPermissions({ level: "admin" });
 
-  if (!response) {
-    return {
-      title: "Error responding to hint",
-      error: "Response is empty",
-    };
-  }
+  if (!response) throw new Error("Response is empty.");
 
-  let hint = await db.query.hints.findFirst({
+  const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
     with: {
       team: {
@@ -291,69 +224,48 @@ export async function insertHintResponse(hintId: number, response: string) {
     },
   });
 
-  if (!hint) {
-    return {
-      title: "Error responding to hint",
-      error: "Hint entry not found",
-      response: response,
-    };
-  }
+  if (!hint) throw new Error(`Hint ${hintId} not found.`);
 
   // For a response to go through, the hint claimer must be the user and
   // the hint status must be no_response
-  let user = session.user.id ? session.user.id : "";
-  let result = (
-    await db
-      .update(hints)
-      .set({
-        response,
-        responseTime: new Date(),
-        status: "answered",
-      })
-      .where(
-        and(
-          eq(hints.id, hintId),
-          eq(hints.claimer, user),
-          eq(hints.status, "no_response"),
-        ),
-      )
-      .returning({
-        id: hints.id,
-        request: hints.request,
-        puzzleId: hints.puzzleId,
-      })
-  )?.[0];
+  const [result] = await db
+    .update(hints)
+    .set({
+      response,
+      responseTime: new Date(),
+      status: "answered",
+    })
+    .where(
+      and(
+        eq(hints.id, hintId),
+        eq(hints.claimer, teamId),
+        eq(hints.status, "no_response"),
+      ),
+    )
+    .returning({
+      id: hints.id,
+      request: hints.request,
+      puzzleId: hints.puzzleId,
+    });
 
   revalidatePath("/admin/");
 
   // Error-handling
   if (!result) {
-    if (hint.claimer !== user) {
-      return {
-        title: "Error responding to hint",
-        error: hint.claimer
-          ? `Hint claimed by ${hint.claimer}.`
-          : "Hint is currently unclaimed.",
-        response,
-      };
+    if (hint.claimer === null) {
+      throw new Error(`Hint ${hintId} is unclaimed.`);
     }
-    if (hint.status != "no_response") {
-      return {
-        title: "Error responding to hint",
-        error: `Hint status is not no_response. It is ${hint.status}.`,
-        response,
-      };
-    } else {
-      return {
-        title: "Error responding to hint",
-        error: "Unexpected error occured",
-        response,
-      };
+    if (hint.claimer !== teamId) {
+      throw new Error(`Hint ${hintId} claimed by ${hint.claimer}.`);
     }
+    if (hint.status !== "no_response") {
+      throw new Error(`Hint ${hintId} has status ${hint.status}`);
+    }
+    throw new Error("An unexpected error occurred.");
   }
 
   // Send email
-  let emails = [hint.team.primaryEmail, ...extractEmails(hint.team.members)];
+  const emails = [hint.team.primaryEmail, ...extractEmails(hint.team.members)];
   await sendEmail(
     emails,
     `Hint Answered [${hint.puzzle.name}]`,
@@ -365,6 +277,4 @@ export async function insertHintResponse(hintId: number, response: string) {
       response,
     }),
   );
-
-  return { error: null, id: result.id };
 }
