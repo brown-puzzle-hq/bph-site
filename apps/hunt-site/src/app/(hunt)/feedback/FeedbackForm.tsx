@@ -55,26 +55,20 @@ export default function FeedbackForm({
   });
 
   const onSubmit = async (data: z.infer<typeof feedbackFormSchema>) => {
-    const timestamp = new Date();
-    const result = await insertFeedback(data.description, timestamp);
-    if (result.error) {
-      toast("Submission failed", {
-        description: result.error,
-      });
-    } else {
-      const newFeedback = {
+    try {
+      const { timestamp } = await insertFeedback(data.description);
+      toast("Feedback submitted. Thank you!");
+      feedbackList.push({
         id: feedbackList.length,
-        teamId: teamId,
+        teamId,
         description: data.description,
         timestamp,
-      };
-      feedbackList.push(newFeedback);
-      toast("", {
-        description: "Feedback submitted. Thank you!",
       });
+      setPreview(false);
       form.reset();
+    } catch {
+      toast("Submission failed. Please try again.");
     }
-    setPreview(false);
   };
 
   return (
@@ -88,11 +82,9 @@ export default function FeedbackForm({
               <>
                 <FormItem className="mb-4">
                   <FormDescription className="text-main-text">
-                    <p>
-                      Notice puzzle errata, website bugs, or anything else we
-                      should be aware of? Send us feedback here.
-                    </p>
-                    <p>This text box supports Markdown.</p>
+                    Notice puzzle errata, website bugs, or anything else we
+                    should be aware of? Send us feedback here. This text box
+                    supports Markdown.
                   </FormDescription>
                   <FormControl>
                     {preview ? (

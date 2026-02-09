@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { NumberOfGuesses } from "../DefaultPuzzlePage";
 import { Infinity } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
+import { ensureError } from "~/lib/utils";
 
 const formSchema = z.object({
   guess: z.preprocess(
@@ -41,6 +42,7 @@ export default function GuessForm({
   numberOfGuessesLeft,
   isSolved,
 }: FormProps) {
+  // TODO: refactor form code?
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
@@ -50,15 +52,15 @@ export default function GuessForm({
   });
 
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     startTransition(async () => {
-      setError(null);
-      const result = await handleGuess(puzzleId, data.guess);
-      if (result && result.error) {
-        toast.error("Error", {
-          description: result.error,
+      try {
+        await handleGuess(puzzleId, data.guess);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Unable to submit guess.", {
+          description: error.message,
         });
       }
       form.reset();
@@ -81,7 +83,6 @@ export default function GuessForm({
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
-                    setError(null);
                   }}
                   onBlur={() => {
                     const cleaned = sanitizeAnswer(form.getValues("guess"));
@@ -115,7 +116,7 @@ export default function GuessForm({
                     "You have no guesses left. Please contact HQ for help."
                   )}
                 </FormDescription>
-                <FormMessage className="text-error">{error}</FormMessage>
+                <FormMessage className="text-error" />
               </div>
             </FormItem>
           )}

@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormattedTime, ElapsedTime } from "~/lib/time";
+import { ensureError } from "~/lib/utils";
 
 type TableProps = {
   hint: Hint;
@@ -91,11 +92,13 @@ export default function AdminHintThread({
     }));
     setStatusLoading(true);
     startTransition(async () => {
-      const { error, title } = await editHintStatus(hint.id, selectedStatus);
-      setStatusLoading(false);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await editHintStatus(hint.id, selectedStatus);
+        setStatusLoading(false);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to update status.", {
+          description: error.message,
         });
         setOptimisticHint(optimisticHint);
       }
@@ -116,10 +119,12 @@ export default function AdminHintThread({
     }));
 
     startTransition(async () => {
-      const { error, title } = await claimHint(hint.id);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await claimHint(hint.id);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to claim hint.", {
+          description: error.message,
         });
         setOptimisticHint(optimisticHint);
       }
@@ -134,10 +139,12 @@ export default function AdminHintThread({
     setResponse("");
 
     startTransition(async () => {
-      const { error, title } = await unclaimHint(hint.id);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await unclaimHint(hint.id);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to unclaim hint.", {
+          description: error.message,
         });
         setOptimisticHint(optimisticHint);
         setResponse(response);
@@ -227,7 +234,7 @@ export default function AdminHintThread({
           replies: hint.replies.filter((reply) => reply.id !== 0),
         }));
         setNewReply(newReply); // Works since variable changes are not instant
-        toast.error("Failed to submit reply", {
+        toast.error("Failed to submit reply.", {
           description:
             "Please try again. If the problem persists, contact HQ or use the feedback form.",
         });

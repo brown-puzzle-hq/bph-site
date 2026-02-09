@@ -27,9 +27,9 @@ export async function canViewPuzzle(
   // If the hunt has ended for everyone, anyone can view the puzzle
   if (currentTime > REMOTE.END_TIME) return "success";
   // Otherwise, they must be signed in
-  if (!session?.user?.id) return "not_authenticated";
+  if (!session) return "not_authenticated";
   // Admin can always view the puzzle
-  if (session.user.role == "admin") return "success";
+  if (session.user.role === "admin") return "success";
 
   // If the hunt has ended for in-person teams
   // In-person teams can view puzzles

@@ -41,9 +41,10 @@ import {
   ROLE_VALUES,
   INTERACTION_MODE_VALUES,
 } from "@/config/client";
-import { cn } from "~/lib/utils";
+import { cn, ensureError } from "~/lib/utils";
 import { Checkbox } from "~/components/ui/checkbox";
-import { updateTeam } from "./actions";
+import { updateTeams } from "./actions";
+import { toast } from "sonner";
 
 export const clientEditableFieldKeys = ["role", "interactionMode"];
 
@@ -240,7 +241,14 @@ export function TeamTable<TData, TValue>({
       }
     }
 
-    await updateTeam(editedTeams);
+    try {
+      await updateTeams(editedTeams);
+    } catch (e) {
+      const error = ensureError(e);
+      toast("Failed to save edits.", {
+        description: error.message,
+      });
+    }
   };
 
   return (

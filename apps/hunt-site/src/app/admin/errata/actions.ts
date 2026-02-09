@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/auth";
 import { errata } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
@@ -10,14 +9,10 @@ import { extractEmails } from "~/lib/team-members";
 import { HUNT_EMAIL } from "@/config/client";
 import { INITIAL_PUZZLES } from "@/config/server";
 import { ErratumEmailTemplate } from "~/lib/email-template";
+import { assertPermissions } from "~/lib/server";
 
 export async function insertErratum(puzzleId: string, description: string) {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    return {
-      error: "Not authenticated, please ensure you're on an admin account.",
-    };
-  }
+  await assertPermissions({ level: "admin" });
 
   const puzzleName = (
     await db.query.puzzles.findFirst({
@@ -26,7 +21,7 @@ export async function insertErratum(puzzleId: string, description: string) {
   )?.name;
 
   if (!puzzleName) {
-    return { error: "Puzzle not found." };
+    throw new Error("Puzzle not found.");
   }
 
   await db.insert(errata).values({
@@ -78,6 +73,4 @@ export async function insertErratum(puzzleId: string, description: string) {
     ErratumEmailTemplate({ puzzleName, puzzleId, erratum: description }),
     emails,
   );
-
-  return { error: null };
 }

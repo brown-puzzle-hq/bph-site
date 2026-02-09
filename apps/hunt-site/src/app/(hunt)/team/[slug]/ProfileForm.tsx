@@ -51,7 +51,7 @@ import {
 import { deserializeMembers, serializeMembers } from "~/lib/team-members";
 import { signOut } from "next-auth/react";
 import { Team } from "@/db/types";
-import { focusAtEnd, cn } from "~/lib/utils";
+import { focusAtEnd, cn, ensureError } from "~/lib/utils";
 
 export const profileFormSchema = z
   .object({
@@ -138,39 +138,40 @@ export default function ProfileForm({
   }, [fields.length, append]);
 
   const onSubmit = async (data: ProfileFormValues) => {
-    const result = await updateTeam(id, {
-      ...data,
-      members: serializeMembers(data.members),
-    });
-
-    if (result.error !== null) {
-      toast("Update failed", {
-        description: result.error,
+    try {
+      const { updatedTeam } = await updateTeam(id, {
+        ...data,
+        members: serializeMembers(data.members),
       });
-      return;
-    }
 
-    form.reset({
-      ...result.updatedTeam,
-      members: defaultMembers(result.updatedTeam.members),
-      password: "",
-      confirmPassword: "",
-    });
+      form.reset({
+        ...updatedTeam,
+        members: defaultMembers(updatedTeam.members),
+        password: "",
+        confirmPassword: "",
+      });
+    } catch (e) {
+      const error = ensureError(e);
+      toast("Failed to update team.", {
+        description: error.message,
+      });
+    }
   };
 
   const onDelete = async () => {
-    const { error } = await deleteTeam(id);
-    if (error) {
-      toast("Deletion failed", {
-        description: error,
-      });
-      return;
-    }
+    try {
+      await deleteTeam(id);
 
-    if (session?.user.id !== id) {
-      router.push("/admin/team");
-    } else {
-      signOut();
+      if (session?.user.id !== id) {
+        router.push("/admin/team");
+      } else {
+        signOut();
+      }
+    } catch (e) {
+      const error = ensureError(e);
+      toast("Failed to delete team.", {
+        description: error.message,
+      });
     }
   };
 
