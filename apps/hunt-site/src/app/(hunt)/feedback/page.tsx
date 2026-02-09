@@ -7,7 +7,7 @@ import { checkPermissions } from "~/lib/server";
 
 export default async function Home() {
   const { error, user } = await checkPermissions({ level: "userAny" });
-  
+
   if (error) {
     return (
       <div className="mb-12 px-4 pt-6 text-center">
