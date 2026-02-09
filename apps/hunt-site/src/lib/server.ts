@@ -35,20 +35,20 @@ export async function checkPermissions(req: PermissionRequirement) {
   const session = await auth();
 
   if (!session) {
-    return { error: "Not authenticated." as const };
+    return { error: "Not authenticated." as const, user: null };
   }
 
   if (session.user.role === "admin") {
-    return { error: null, ...session.user };
+    return { error: null, user: session.user };
   }
 
   if (req.level === "admin") {
-    return { error: "Not authorized." as const };
+    return { error: "Not authorized." as const, user: null };
   }
 
   if (req.level === "userExact" && session.user.id !== req.teamId) {
-    return { error: "Not authorized." as const };
+    return { error: "Not authorized." as const, user: null };
   }
 
-  return { error: null, ...session.user };
+  return { error: null, user: session.user };
 }

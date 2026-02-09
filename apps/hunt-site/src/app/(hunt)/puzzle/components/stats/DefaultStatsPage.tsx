@@ -15,9 +15,7 @@ export default async function DefaultStatsPage({
 }: {
   puzzleId: string;
 }) {
-  // Check if user can view stats
-  const session = await auth();
-  switch (await canViewStats(session)) {
+  switch (await canViewStats(puzzleId)) {
     case "success":
       break;
     case "not_authenticated":

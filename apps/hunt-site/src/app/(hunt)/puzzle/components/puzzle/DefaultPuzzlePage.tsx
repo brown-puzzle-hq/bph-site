@@ -23,6 +23,7 @@ import {
 import { INITIAL_PUZZLES } from "@/config/server";
 import { cn } from "~/lib/utils";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
+import { checkPermissions } from "~/lib/server";
 
 export type NumberOfGuesses = number | "infinity";
 
@@ -45,9 +46,7 @@ export default async function DefaultPuzzlePage({
   tasks,
   interactionMode,
 }: DefaultPuzzlePageProps) {
-  // Authentication
-  const session = await auth();
-  switch (await canViewPuzzle(puzzleId, session)) {
+  switch (await canViewPuzzle(puzzleId)) {
     case "success":
       break;
     case "not_authenticated":
@@ -62,8 +61,10 @@ export default async function DefaultPuzzlePage({
     columns: { answer: true },
   }))!.answer;
 
+  const { error, user } = await checkPermissions({ level: "userAny" });
+
   // If user is not logged in, show puzzle without errata or guesses
-  if (!session) {
+  if (error !== null) {
     return (
       <DefaultPostHuntPuzzlePage
         puzzleAnswer={puzzleAnswer}
@@ -76,28 +77,29 @@ export default async function DefaultPuzzlePage({
       />
     );
   }
+  const { id: teamId, role, interactionMode: actualInteractionMode } = user;
 
   // Get errata if the errata timestamp is greater than the unlockTime.
   // Here is how to think about the unlockTime:
-  // 1. If user is not logged in, unlockTime is now, and they will never see errata.
+  // 1. If user is not logged in, they'll have returned above.
   // 2. If user is admin, unlockTime is 0, and they will see all errata.
   // 3. If user is team or testsolver, then:
   //    a. If the puzzle can be unlocked, then use the unlock time
   //    b. If the puzzle is an INITIAL_PUZZLE, then take MIN(teamCreateTime, huntStartTime)
-  var unlockTime;
-  if (!session) unlockTime = new Date();
-  else if (session.user.role === "admin") unlockTime = new Date(0);
-  else if (INITIAL_PUZZLES.includes(puzzleId)) {
+  let unlockTime;
+  if (role === "admin") {
+    unlockTime = new Date(0);
+  } else if (INITIAL_PUZZLES.includes(puzzleId)) {
     const teamCreateTime =
       (
         await db.query.teams.findFirst({
-          where: eq(teams.id, session.user.id),
+          where: eq(teams.id, teamId),
           columns: { createTime: true },
         })
       )?.createTime ?? new Date();
 
     const huntStartTime =
-      session.user.interactionMode === "in-person"
+      actualInteractionMode === "in-person"
         ? IN_PERSON.START_TIME
         : REMOTE.START_TIME;
 
@@ -106,10 +108,7 @@ export default async function DefaultPuzzlePage({
     );
   } else {
     unlockTime = (await db.query.unlocks.findFirst({
-      where: and(
-        eq(unlocks.teamId, session.user.id),
-        eq(unlocks.puzzleId, puzzleId),
-      ),
+      where: and(eq(unlocks.teamId, teamId), eq(unlocks.puzzleId, puzzleId)),
       columns: { unlockTime: true },
     }))!.unlockTime;
   }
@@ -130,17 +129,11 @@ export default async function DefaultPuzzlePage({
 
   // Get previous guesses
   const previousGuesses = await db.query.guesses.findMany({
-    where: and(
-      eq(guesses.teamId, session.user.id),
-      eq(guesses.puzzleId, puzzleId),
-    ),
+    where: and(eq(guesses.teamId, teamId), eq(guesses.puzzleId, puzzleId)),
   });
 
   const isSolved = !!(await db.query.solves.findFirst({
-    where: and(
-      eq(solves.teamId, session.user.id),
-      eq(solves.puzzleId, puzzleId),
-    ),
+    where: and(eq(solves.teamId, teamId), eq(solves.puzzleId, puzzleId)),
   }));
 
   // Get the number of guesses left
@@ -153,16 +146,15 @@ export default async function DefaultPuzzlePage({
 
   // If there is an URL query, use that for admins and after the hunt ends
   // Otherwise, use the session interaction mode
+  const huntEnded =
+    actualInteractionMode === "in-person"
+      ? new Date() > IN_PERSON.END_TIME
+      : new Date() > REMOTE.END_TIME;
+  const canOverrideInteractionMode = role === "admin" || huntEnded;
   const puzzleInteractionMode =
-    interactionMode &&
-    (session.user.role === "admin" ||
-      (session.user.interactionMode === "in-person" &&
-        new Date() > IN_PERSON.END_TIME) ||
-      new Date() > REMOTE.END_TIME)
+    interactionMode && canOverrideInteractionMode
       ? interactionMode
-      : session.user.interactionMode === "in-person"
-        ? "in-person"
-        : "remote";
+      : actualInteractionMode;
 
   const puzzleBody =
     puzzleInteractionMode === "remote" ? remoteBody : inPersonBody;

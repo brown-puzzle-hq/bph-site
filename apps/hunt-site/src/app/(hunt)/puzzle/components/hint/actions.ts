@@ -3,12 +3,11 @@
 import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { auth } from "@/auth";
 import { getNumberOfHintsRemaining } from "@/config/server";
 import { sendBotMessage } from "~/lib/comms";
 import { HUNT_URL } from "@/config/client";
 import { assertPermissions } from "~/lib/server";
-import { canViewPuzzle } from "../../actions";
+import { assertCanViewPuzzle } from "../../actions";
 
 export type MessageType = "request" | "reply";
 
@@ -42,11 +41,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     );
   }
 
-  const session = await auth();
-
-  if ((await canViewPuzzle(puzzleId, session)) !== "success") {
-    throw new Error("Puzzle not found.");
-  }
+  assertCanViewPuzzle(puzzleId);
 
   const [request] = await db
     .insert(hints)
@@ -59,7 +54,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     })
     .returning({ id: hints.id });
 
-  if (!request) throw new Error("Unable to insert request.");
+  if (!request) throw new Error("An unexpected error occurred.");
 
   const hintMessage = `🙏 **Hint** [request](${HUNT_URL}/admin/hints/${request.id}) by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): ${hint}`;
   await sendBotMessage(hintMessage, "hint", "@hint");
@@ -98,7 +93,7 @@ export async function insertTeamReply(hintId: number, message: string) {
   });
 
   const hint = await db.query.hints.findFirst({
-    where: eq(hints.id, hintId),
+    where: and(eq(hints.id, hintId), eq(hints.teamId, teamId)),
     with: {
       team: {
         columns: {

@@ -135,7 +135,6 @@ export function RegisterForm() {
   >([]);
 
   const inPersonEnded = new Date() > IN_PERSON.END_TIME;
-  const inPersonStarted = new Date() > IN_PERSON.START_TIME;
 
   return (
     <Form {...form}>
