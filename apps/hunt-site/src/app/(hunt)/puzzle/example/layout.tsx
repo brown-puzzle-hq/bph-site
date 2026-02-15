@@ -5,7 +5,7 @@ export const metadata = {
   title: "Example - Brown Puzzlehunt 2026",
 };
 
-export default async function RootLayout({
+export default async function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const hasSolution = !!solutionBody;
