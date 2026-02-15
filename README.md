@@ -1,50 +1,33 @@
 ## README
 
-The monorepo has two applications:
+To get started with the main site, see the [README](/apps/hunt-site/README.md).
 
-- `app/hunt-site`: a Next.js application that contains the main hunt logic
-- `app/ws-server`: an express server that handles WebSocket connections
+## Milestones
 
-The monorepo is managed with **turborepo**. It is recommended to install it globally.
+**Before registration**
 
-```bash
-pnpm add turbo --global
-```
+- [x] Hunt config (dates, hunt name)
+- [x] Colors
+- [x] Landing page art
+- [x] Favicon
+- [ ] Landing page gate animation
+- [ ] Landing page parallax
+- [ ] Registration requirements (name, number of members)
+- [ ] Info page
 
-**Getting started**
+**Interactive puzzles**
 
-1. Run `pnpm i` in the root directory to install all dependencies across the workspace
-2. Then run `turbo dev` to start both `hunt-site` and `ws-server`
+- [ ] [One Guard No Doors](http://github.com/brown-puzzle-hq/2026-bph-site/issues/4l)
+- [ ] [Moveable jigsaw pieces](https://github.com/brown-puzzle-hq/2026-bph-site/issues/3)
 
-## hunt-site
+**Other improvements**
 
-`hunt-site` is the primary web application and can be run as a standalone hunt site (without websockets). See the [README](/apps/hunt-site/README.md) for details.
+See: [BPH 2026 Milestone](https://github.com/brown-puzzle-hq/bph-site/milestone/4)
 
-## ws-server
-
-Since `hunt-site` is hosted serverlessly on Vercel (which does not support websocket connections), a separate server is required for handling websockets. This is the purpose of `ws-server`.
-
-**Migration**
-
-To transition an existing `hunt-site` application to use websockets, do the following:
-
-1. Clone this repository and replace `apps/hunt-site` with your `hunt-site` application
-2. Set up websocket environment variables for `apps/hunt-site` (i.e. `NEXT_PUBLIC_WEBSOCKET_SERVER`)
-3. Set up websocket environment variables for `apps/ws-server` (i.e. `AUTH_SECRET`)
-4. In the Vercel deployment, set the root directory to `apps/hunt-site`
-5. Deploy `apps/ws-server` in Fly.io
-6. Relog to refresh your tokens.
-
-Notes:
-
-- This repo is primarily set up for `pnpm`. If you prefer to use `npm`, make sure to declare the workspaces in `package.json` like so:
-
-  ```json
-  {
-    "workspaces": ["apps/*"]
-  }
-  ```
-
-- Environment variables and `package.json` commands (such as `build` or `db:push`) need to be specified in `turbo.json`
-
-- For local development, you'll need to move your `.env` file into `apps/hunt-site`. Hidden files and directories such as `.next` and `next-env.d.ts` can be deleted from the root directory.
+- [ ] Fix hinting system
+  - [Hint response suggestions](https://github.com/brown-puzzle-hq/bph-site/issues/222)
+  - [Show previous hint responses directly on the hint page (sidebar?)](https://github.com/brown-puzzle-hq/bph-site/issues/235)
+  - [Admin: Have option to resolve hints without replying](https://github.com/brown-puzzle-hq/bph-site/issues/266)
+  - [Make hint follow-up/reply more visible](https://github.com/brown-puzzle-hq/bph-site/issues/281)
+- [ ] [Avoid hardcoding moduleMap in admin puzzle list](https://github.com/brown-puzzle-hq/bph-site/issues/245)
+- [ ] ["Visible to admins only" gets clipped](https://github.com/brown-puzzle-hq/bph-site/issues/263)
