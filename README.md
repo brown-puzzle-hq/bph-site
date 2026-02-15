@@ -17,7 +17,7 @@ To get started with the main site, see the [README](/apps/hunt-site/README.md).
 
 **Interactive puzzles**
 
-- [ ] [One Guard No Doors](http://github.com/brown-puzzle-hq/2026-bph-site/issues/4l)
+- [ ] [One Guard No Doors](http://github.com/brown-puzzle-hq/2026-bph-site/issues/4)
 - [ ] [Moveable jigsaw pieces](https://github.com/brown-puzzle-hq/2026-bph-site/issues/3)
 
 **Other improvements**
