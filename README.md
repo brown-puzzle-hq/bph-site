@@ -15,12 +15,14 @@ To get started with the main site, see the [README](/apps/hunt-site/README.md).
 - [ ] Registration requirements (name, number of members)
 - [ ] Info page
 
-**Interactive puzzles**
+**Before the hunt**
 
+- [ ] Round pages
+- [ ] Meta pages
 - [ ] [One Guard No Doors](http://github.com/brown-puzzle-hq/2026-bph-site/issues/4)
 - [ ] [Moveable jigsaw pieces](https://github.com/brown-puzzle-hq/2026-bph-site/issues/3)
 
-**Other improvements**
+**Misc improvements**
 
 See: [BPH 2026 Milestone](https://github.com/brown-puzzle-hq/bph-site/milestone/4)
 
