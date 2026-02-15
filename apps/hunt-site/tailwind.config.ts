@@ -31,7 +31,7 @@ export default {
 
         // Other backgrounds
         "footer-bg": "#76AADD",
-        "nav-bg": "#3C73D4",
+        "nav-bg": "#1335B5",
         "tooltip-bg": colors.gray[900],
 
         // Other text colors

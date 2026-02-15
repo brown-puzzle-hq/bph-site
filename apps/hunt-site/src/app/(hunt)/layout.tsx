@@ -27,9 +27,7 @@ export default async function RootLayout({
           <Toaster expand={true} visibleToasts={10} />
           <div className="bg-main-bg bg-gradient-to-t from-main-bottom to-main-bg">
             {/* Navbar */}
-            <div className="bg-nav-bg">
-              <HuntNavBar />
-            </div>
+            <HuntNavBar />
 
             {/* Navbar spacer */}
             <HuntNavBarSpacer />
