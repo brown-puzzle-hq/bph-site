@@ -75,10 +75,10 @@ async function main() {
 
   if (hadError) {
     console.error("\n❌ Puzzle folder check failed.");
-    process.exit(1);
+  } else {
+    console.log("🎉 Puzzle folder check passed.");
   }
 
-  console.log("🎉 Puzzle folder check passed.");
   process.exit(0);
 }
 
