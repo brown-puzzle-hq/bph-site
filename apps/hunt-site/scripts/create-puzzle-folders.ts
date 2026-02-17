@@ -10,7 +10,7 @@ const TEMPLATE_DIR = path.join(
   "src/app/(hunt)/puzzle",
   "example",
 );
-const PUZZLE_DIR = path.join(process.cwd(), "src/app/(hunt)/puzzle");
+const PUZZLE_ROOT = path.join(process.cwd(), "src/app/(hunt)/puzzle");
 const IGNORE = new Set(["example", "components"]);
 
 async function main() {
@@ -20,7 +20,7 @@ async function main() {
   const idsFromDB = puzzleRows.map((p) => p.id).filter((id) => !IGNORE.has(id));
   const namesFromDB = Object.fromEntries(puzzleRows.map((p) => [p.id, p.name]));
 
-  const foldersOnDisk = (await fs.readdir(PUZZLE_DIR, { withFileTypes: true }))
+  const foldersOnDisk = (await fs.readdir(PUZZLE_ROOT, { withFileTypes: true }))
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
     .filter((name) => !IGNORE.has(name));
@@ -29,7 +29,7 @@ async function main() {
 
   // Create missing folders
   for (const id of idsFromDB) {
-    const targetDir = path.join(PUZZLE_DIR, id);
+    const targetDir = path.join(PUZZLE_ROOT, id);
     const title = `${namesFromDB[id]} - ${HUNT_NAME}`;
 
     if (idsOnDisk.has(id)) {
@@ -100,7 +100,13 @@ async function replaceLineMatching(
   await fs.writeFile(filePath, lines.join("\n"), "utf-8");
 }
 
-main().catch((err) => {
-  console.error("❌ Folder generation failed:", err);
-  process.exit(1);
-});
+main()
+  .catch((err) => {
+    console.error("❌ Folder generation failed:", err);
+    process.exit(1);
+  })
+  .then(() => {
+    console.log(
+      "📁 Consider running `pnpm generate:puzzle-locations` if you haven't already.",
+    );
+  });
