@@ -109,7 +109,3 @@ export function LoginForm() {
     </Form>
   );
 }
-
-export function LogoutForm() {
-  return <Button onClick={() => signOut()}>Logout</Button>;
-}

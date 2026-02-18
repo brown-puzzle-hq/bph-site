@@ -13,3 +13,19 @@ export function focusAtEnd(input?: HTMLInputElement | null) {
   const len = input.value.length;
   input.setSelectionRange(len, len);
 }
+
+export function ensureError(value: unknown): Error {
+  if (value instanceof Error) return value;
+
+  let stringified;
+  try {
+    stringified = JSON.stringify(value);
+  } catch {
+    stringified = "[Unable to stringify the thrown value]";
+  }
+
+  const error = new Error(
+    `This value was thrown as is, not through an Error: ${stringified}`,
+  );
+  return error;
+}

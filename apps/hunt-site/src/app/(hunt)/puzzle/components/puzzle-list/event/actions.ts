@@ -3,15 +3,12 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
 import { events, answerTokens } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { auth } from "@/auth";
+import { assertPermissions } from "~/lib/server";
 
 /** Inserts an answer token into the token table */
 export async function insertAnswerToken(eventId: string, guess: string) {
   // Check that the user is logged in
-  const session = await auth();
-  if (!session?.user?.id) return { error: "Not logged in!" };
-
-  const teamId = session.user.id;
+  const { id: teamId } = await assertPermissions({ level: "userAny" });
   const currDate = new Date();
 
   // Check that the team has not already had a token
@@ -22,16 +19,16 @@ export async function insertAnswerToken(eventId: string, guess: string) {
     ),
   });
   if (token) {
-    revalidatePath(`/puzzle`);
-    return { error: "Token already used!" };
+    revalidatePath("/puzzle");
+    throw new Error("Token already used!");
   }
 
   // Check that the token is valid
   const event = await db.query.events.findFirst({
     where: eq(events.id, eventId),
   });
-  if (!event) return { error: "Event not found!" };
-  if (event.answer !== guess) return { error: "Incorrect token!" };
+  if (!event) throw new Error("Event not found!");
+  if (event.answer !== guess) throw new Error("Incorrect token!");
 
   // Insert a token into the token table
   await db.insert(answerTokens).values({
@@ -40,6 +37,5 @@ export async function insertAnswerToken(eventId: string, guess: string) {
     timestamp: currDate,
   });
 
-  revalidatePath(`/puzzle`);
-  return { error: null };
+  revalidatePath("/puzzle");
 }

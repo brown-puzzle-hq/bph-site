@@ -30,20 +30,23 @@ export function HuntNavBar() {
       type: "link",
     },
     {
-      title: "Puzzles",
-      href: "/puzzle",
-      type: "link",
-    },
-    {
       title: "Teams",
       href: "/team",
       type: "link",
     },
   ];
 
+  if (session || now > REMOTE.END_TIME) {
+    leftMenuItems.splice(2, 0, {
+      title: "Puzzles",
+      href: "/puzzle",
+      type: "link",
+    });
+  }
+
   const middleMenuItems: MenuItem[] = [];
 
-  if (session?.user) {
+  if (session) {
     const targetDate =
       session.user.interactionMode === "in-person"
         ? IN_PERSON.START_TIME
@@ -66,7 +69,7 @@ export function HuntNavBar() {
     });
   }
 
-  if (session?.user?.id) {
+  if (session) {
     if (now < REMOTE.WRAPUP_TIME) {
       leftMenuItems.push({
         title: "Feedback",
@@ -81,7 +84,7 @@ export function HuntNavBar() {
       type: "link",
     });
 
-    if (session?.user?.role === "admin") {
+    if (session.user.role === "admin") {
       rightMenuItems.push({
         title: "Admin",
         href: "/admin",
@@ -104,7 +107,7 @@ export function HuntNavBar() {
 
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
 
-  if (session?.user?.id) {
+  if (session) {
     hamburgerMenuItems.splice(-1, 1, {
       title: "Logout",
       element: <LogoutButton className="hover:cursor-pointer" />,

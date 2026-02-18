@@ -1,9 +1,11 @@
 "use client";
+
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import {
@@ -24,6 +26,7 @@ import {
 
 import { insertErratum } from "./actions";
 import { Erratum } from "@/db/types";
+import { ensureError } from "~/lib/utils";
 
 type FormProps = {
   puzzleList: { id: string; name: string }[];
@@ -45,30 +48,34 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const result = await insertErratum(data.puzzleId, data.description);
-    if (result.error) {
-      toast("Submission failed", {
-        description: result.error,
-      });
-    } else {
-      const newErrata = {
+    try {
+      await insertErratum(data.puzzleId, data.description);
+
+      const newErratum = {
         puzzleId: data.puzzleId,
         id: errataList.length,
         description: data.description,
         timestamp: new Date(),
       };
-      errataList.push(newErrata);
-      toast("", {
-        description: "Erratum submitted for " + data.puzzleId + ".",
+      errataList.push(newErratum);
+
+      toast("Erratum submitted.", {
+        description: "See " + data.puzzleId + ".",
         action: (
-          <Button
-            onClick={() => (window.location.href = `/puzzle/${data.puzzleId}`)}
-          >
-            View
+          <Button asChild className="ml-auto">
+            <Link href={`/puzzle/${data.puzzleId}`} target="_blank">
+              View
+            </Link>
           </Button>
         ),
       });
+
       form.setValue("description", "");
+    } catch (e) {
+      const error = ensureError(e);
+      toast("Failed to submit erratum.", {
+        description: error.message,
+      });
     }
   };
 

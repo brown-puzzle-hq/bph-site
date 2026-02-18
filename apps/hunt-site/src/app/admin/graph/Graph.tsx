@@ -21,9 +21,10 @@ import {
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
 import { FormattedTime } from "~/lib/time";
 import { deserializeMembers } from "~/lib/team-members";
-import { cn } from "~/lib/utils";
+import { cn, ensureError } from "~/lib/utils";
 import { type GraphConfig } from "./page";
 import { type Team } from "@/db/types";
+import { toast } from "sonner";
 
 const roundTextColor: Record<string, string> = {};
 
@@ -53,6 +54,7 @@ export default function Graph({
   const router = useRouter();
 
   // Guesses and hints for a puzzle
+  const puzzleQueryRef = useRef<HTMLInputElement | null>(null);
   const [puzzleQuery, setPuzzleQuery] = useState("");
   const [puzzleQueryShaking, setPuzzleQueryShaking] = useState(false);
   const [searchedPuzzle, setSearchedPuzzle] = useState<null | SearchedPuzzle>(
@@ -60,6 +62,7 @@ export default function Graph({
   );
 
   // Individual team's solves and unlocks
+  const teamQueryRef = useRef<HTMLInputElement | null>(null);
   const [teamQuery, setTeamQuery] = useState("");
   const [teamQueryShaking, setTeamQueryShaking] = useState(false);
   const [searchedTeam, setSearchedTeam] = useState<SearchedTeam | null>(null);
@@ -76,10 +79,7 @@ export default function Graph({
       data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
       null;
     if (!node) {
-      const input = document.querySelector(
-        "input[name='puzzleQuery']",
-      ) as HTMLInputElement;
-      input?.select();
+      puzzleQueryRef.current?.select();
       setPuzzleQueryShaking(true);
       setTimeout(() => setPuzzleQueryShaking(false), 200);
       return;
@@ -94,12 +94,16 @@ export default function Graph({
   };
 
   const handlePuzzleSidebar = async (puzzleId: string) => {
-    const res = await getSearchedPuzzle(searchedTeam?.id || null, puzzleId);
-    if ("error" in res) return;
-    if ("guesses" in res && "requestedHints" in res) {
+    try {
+      const result = await getSearchedPuzzle(
+        searchedTeam?.id || null,
+        puzzleId,
+      );
+
       // Set searched puzzle and remove team sidebar
       setSearchedPuzzle({
-        ...res,
+        puzzleId,
+        ...result,
         round:
           rounds.find((round) => round.puzzles.includes(puzzleId))?.name || "",
       });
@@ -109,36 +113,39 @@ export default function Graph({
       const params = new URLSearchParams();
       const prevTeam = searchParams.get("team");
       if (prevTeam) params.set("team", prevTeam);
-      params.set("puzzle", res.puzzleId);
+      params.set("puzzle", puzzleId);
       router.push(`?${params.toString()}`);
+
+      setPuzzleQuery("");
+    } catch (e) {
+      const error = ensureError(e);
+      toast.error("Failed to fetch.", {
+        description: error.message,
+      });
     }
-    setPuzzleQuery("");
   };
 
   const handleSearchTeam = async () => {
     const cleanedQuery = teamQuery.replace(/[^\w]/g, "").toLowerCase();
-    const res = await getSearchedTeam(cleanedQuery);
-    if ("error" in res) {
-      const input = document.querySelector(
-        "input[name='teamQuery']",
-      ) as HTMLInputElement;
-      input?.select();
-      setTeamQueryShaking(true);
-      setTimeout(() => setTeamQueryShaking(false), 200);
-      setSearchedTeam(null);
-      return;
-    }
-    if ("solves" in res && "unlocks" in res) {
-      setTeamQuery(res.id);
-      setSearchedTeam(res);
+    try {
+      const result = await getSearchedTeam(cleanedQuery);
+
+      setTeamQuery(result.id);
+      setSearchedTeam(result);
       setTeamSidebar(true);
 
       // Set search params
       const params = new URLSearchParams();
       const prevPuzzle = searchParams.get("puzzle");
       if (prevPuzzle) params.set("puzzle", prevPuzzle);
-      params.set("team", res.id);
+      params.set("team", result.id);
       router.push(`?${params.toString()}`);
+    } catch (e) {
+      teamQueryRef.current?.select();
+      setTeamQueryShaking(true);
+      setTimeout(() => setTeamQueryShaking(false), 200);
+      setSearchedTeam(null);
+      return;
     }
   };
 
@@ -165,28 +172,35 @@ export default function Graph({
 
   useEffect(() => {
     const run = async () => {
-      const team = searchParams.get("team");
-      const puzzle = searchParams.get("puzzle");
+      let teamId = searchParams.get("team");
+      const puzzleId = searchParams.get("puzzle");
 
       // Get team
-      if (team) {
-        const res = await getSearchedTeam(team);
-        if ("error" in res) {
-          setSearchedTeam(null);
-          return;
-        }
-        if ("solves" in res && "unlocks" in res) {
-          setTeamQuery(team);
-          setSearchedTeam(res);
-          if (!puzzle) setTeamSidebar(true);
+      if (teamId) {
+        try {
+          const result = await getSearchedTeam(teamId);
+          setTeamQuery(teamId);
+          setSearchedTeam(result);
+          setTeamSidebar(!puzzleId);
+        } catch (e) {
+          const error = ensureError(e);
+          toast.error("Failed to fetch.", {
+            description: error.message,
+          });
+          teamId = null;
         }
       }
 
       // Get puzzle
-      if (puzzle) {
+      if (puzzleId) {
         // Find node and center on it
-        const node = data.nodes.find((node) => node.id === puzzle);
-        if (!node) return;
+        const node = data.nodes.find((node) => node.id === puzzleId);
+        if (!node) {
+          toast.error("Failed to fetch.", {
+            description: `Puzzle ${puzzleId} not found.`,
+          });
+          return;
+        }
         if (fgRef.current) fgRef.current.centerAt(node.x, node.y, 1000);
         setClickedNode(node);
         setHighlightedNodes(
@@ -195,14 +209,20 @@ export default function Graph({
         setHighlightedLinks((prev) => new Set([...prev, ...node.links]));
 
         // Search for puzzle info
-        const res = await getSearchedPuzzle(team || null, puzzle);
-        if ("error" in res) return;
-        if ("guesses" in res && "requestedHints" in res) {
+        try {
+          const result = await getSearchedPuzzle(teamId || null, puzzleId);
+
           setSearchedPuzzle({
-            ...res,
+            puzzleId,
+            ...result,
             round:
-              rounds.find((round) => round.puzzles.includes(puzzle))?.name ||
+              rounds.find((round) => round.puzzles.includes(puzzleId))?.name ||
               "",
+          });
+        } catch (e) {
+          const error = ensureError(e);
+          toast.error("Failed to fetch.", {
+            description: error.message,
           });
         }
       }
@@ -479,7 +499,7 @@ export default function Graph({
             <User className="size-5" />
           </div>
           <input
-            name="teamQuery"
+            ref={teamQueryRef}
             placeholder="jcarberr"
             value={teamQuery}
             onChange={(e) => setTeamQuery(e.target.value)}
@@ -520,7 +540,7 @@ export default function Graph({
             <Puzzle className="size-5" />
           </div>
           <input
-            name="puzzleQuery"
+            ref={puzzleQueryRef}
             placeholder="example"
             value={puzzleQuery}
             onChange={(e) => setPuzzleQuery(e.target.value)}

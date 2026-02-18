@@ -12,7 +12,6 @@ import {
 import { toast } from "sonner";
 import { type SocketMessage } from "~/lib/comms";
 import Link from "next/link";
-import { HUNT_URL } from "@/config/client";
 import { CheckCircle, Unlock, Trophy } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -123,7 +122,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   // Try to create a websocket
   useEffect(() => {
     // Check that the user is logged in
-    if (session?.user?.id === undefined) return;
+    if (!session) return;
 
     // Check that websocket server exists
     const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
@@ -175,7 +174,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       socketRef.current?.close(1000);
       cancelled = true;
     };
-  }, [session?.user?.id]);
+  }, [session]);
 
   return (
     <WebSocketContext.Provider

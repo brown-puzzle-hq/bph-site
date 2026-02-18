@@ -6,10 +6,11 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { Reply, HintClaimer } from "./Columns";
 import { useTransition } from "react";
+import { ensureError } from "~/lib/utils";
 
 export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const { data: session } = useSession();
-  const userId = session?.user?.id as string;
+  const userId = session?.user.id;
   const hintId = row.getValue("id") as number;
   const claimer: HintClaimer = row.getValue("claimer");
   const status = row.getValue("status");
@@ -19,23 +20,26 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
 
   const handleClaim = () => {
     startTransition(async () => {
-      const { error, title } = await claimHint(hintId);
-      if (error) {
-        toast.error(title, {
-          description: error,
-        });
-      } else {
+      try {
+        await claimHint(hintId);
         window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to claim hint.", {
+          description: error.message,
+        });
       }
     });
   };
 
   const handleUnclaim = () => {
     startTransition(async () => {
-      const { error, title } = await unclaimHint(hintId);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await unclaimHint(hintId);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to unclaim hint.", {
+          description: error.message,
         });
       }
     });

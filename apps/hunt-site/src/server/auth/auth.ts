@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { type DefaultSession } from "next-auth";
 
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
@@ -27,12 +26,19 @@ export const signInSchema = object({
  * object and keep type safety.
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {}
+  interface Session {
+    user: {
+      id: string;
+      displayName: string;
+      role: Role;
+      interactionMode: InteractionMode;
+    };
+  }
   interface User {
     id?: string;
-    displayName: string;
-    role: Role;
-    interactionMode: InteractionMode;
+    displayName?: string;
+    role?: Role;
+    interactionMode?: InteractionMode;
   }
 }
 

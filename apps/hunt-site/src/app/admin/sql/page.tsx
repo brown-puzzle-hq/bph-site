@@ -19,11 +19,11 @@ export default function Page() {
 
   async function executeQuery() {
     try {
-      const res = await queryDatabase(query);
-      setResult(res);
-    } catch (error) {
-      console.error("SQL Execution Error:", error);
-      setResult({ error: "Failed to execute query." });
+      const result = await queryDatabase(query);
+      setResult(result);
+    } catch (e) {
+      console.error(e);
+      setResult({ error: "Failed to execute query. See console for details." });
     }
   }
 
@@ -45,7 +45,7 @@ export default function Page() {
           ])
           .join("\n");
       } catch (error) {
-        return "SQL error";
+        return "SQL error.";
       }
     }
   };
