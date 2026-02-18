@@ -33,7 +33,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="mx-auto mb-12 w-full max-w-xl px-4 pt-6">
+    <div className="mx-auto mb-12 w-full max-w-2xl px-4 pt-6">
       <h1 className="mb-6 text-center">Register</h1>
       <RegisterForm />
     </div>

@@ -10,10 +10,10 @@ To get started with the main site, see the [README](/apps/hunt-site/README.md).
 - [x] Colors
 - [x] Landing page art
 - [x] Favicon
-- [ ] Landing page gate animation
+- [x] Landing page gate animation
 - [ ] Landing page parallax
-- [ ] Registration requirements (name, number of members)
-- [ ] Info page
+- [x] Registration requirements (name, number of members)
+- [x] Info page
 
 **Before the hunt**
 

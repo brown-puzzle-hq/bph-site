@@ -634,7 +634,8 @@ export default function RegisterForm() {
             only be visible to BPH staff and your team and will not be used for
             other purposes. The roster may be updated on the team profile page
             up to 24 hours before kickoff. For questions or concerns, please
-            email us at <u>brownpuzzleHQ [at] gmail [dot] com</u>.
+            email us at <u>brownpuzzleHQ [at] gmail [dot] com</u>.{" "}
+            <i>Press ENTER to add entries.</i>
           </FormDescription>
         </div>
 

@@ -631,7 +631,8 @@ export default function ProfileForm({
               be used for other purposes. The roster may be updated on the team
               profile page up to 24 hours before kickoff. For questions or
               concerns, please email us at{" "}
-              <u>brownpuzzleHQ [at] gmail [dot] com</u>.
+              <u>brownpuzzleHQ [at] gmail [dot] com</u>.{" "}
+              <i>Press ENTER to add entries.</i>
             </FormDescription>
           </div>
 
