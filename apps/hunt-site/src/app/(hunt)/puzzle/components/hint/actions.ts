@@ -41,7 +41,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     );
   }
 
-  assertCanViewPuzzle(puzzleId);
+  await assertCanViewPuzzle(puzzleId);
 
   const [request] = await db
     .insert(hints)

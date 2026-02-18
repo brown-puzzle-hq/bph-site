@@ -36,7 +36,8 @@ export default async function Home() {
   var availablePuzzles: AvailablePuzzle[] = [];
   var availableEvents: AvailableEvent[] = [];
   var hasFinishedHunt = false;
-  const isInPerson = user?.interactionMode === "in-person";
+  const hasEventInputBox =
+    user?.interactionMode === "in-person" && currDate < IN_PERSON.END_TIME;
 
   // Not logged in
   if (error) {
@@ -65,6 +66,18 @@ export default async function Home() {
         columns: { id: true, name: true },
       })
     ).map((puzzle) => ({ ...puzzle, unlockTime: null, answer: null }));
+
+    // ...and all events without answers
+    // TODO: not a great way to order events
+    availableEvents = (
+      await db.query.events.findMany({
+        orderBy: (events, { asc }) => [asc(events.startTime)],
+      })
+    ).map((event) => ({
+      ...event,
+      answer: null,
+      spent: false,
+    }));
   }
 
   // Logged in
@@ -119,26 +132,28 @@ export default async function Home() {
         : null,
     }));
 
-    // TODO: not a great way to order events
-    const events = await db.query.events.findMany({
-      orderBy: (events, { asc }) => [asc(events.startTime)],
-    });
+    if (interactionMode === "in-person") {
+      // TODO: not a great way to order events
+      const events = await db.query.events.findMany({
+        orderBy: (events, { asc }) => [asc(events.startTime)],
+      });
 
-    // Hide answers for unfinished events
-    const finishedEvents = await db.query.answerTokens.findMany({
-      where: eq(answerTokens.teamId, teamId),
-    });
+      // Hide answers for unfinished events
+      const finishedEvents = await db.query.answerTokens.findMany({
+        where: eq(answerTokens.teamId, teamId),
+      });
 
-    availableEvents = events.map((event) => {
-      const finishedEvent = finishedEvents.find(
-        (fe) => fe.eventId === event.id,
-      );
-      return {
-        ...event,
-        answer: finishedEvent ? event.answer : null,
-        spent: !!finishedEvent && finishedEvent.puzzleId !== null,
-      };
-    });
+      availableEvents = events.map((event) => {
+        const finishedEvent = finishedEvents.find(
+          (fe) => fe.eventId === event.id,
+        );
+        return {
+          ...event,
+          answer: finishedEvent ? event.answer : null,
+          spent: !!finishedEvent && finishedEvent.puzzleId !== null,
+        };
+      });
+    }
 
     // Check if the user has finished the hunt
     const finishTime = await db.query.teams.findFirst({
@@ -160,9 +175,8 @@ export default async function Home() {
       availablePuzzles={availablePuzzles}
       availableRounds={availableRounds}
       availableEvents={availableEvents}
-      hasEventInputBox={error !== null}
       hasFinishedHunt={hasFinishedHunt}
-      isInPerson={isInPerson}
+      hasEventInputBox={hasEventInputBox}
     />
   );
 }
