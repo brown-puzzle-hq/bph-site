@@ -103,6 +103,11 @@ export function HuntNavBar() {
       href: "/login",
       type: "link",
     });
+    rightMenuItems.push({
+      title: "Register",
+      href: "/register",
+      type: "link",
+    });
   }
 
   const hamburgerMenuItems = [...leftMenuItems, ...rightMenuItems];
