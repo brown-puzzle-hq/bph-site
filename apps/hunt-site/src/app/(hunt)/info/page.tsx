@@ -345,8 +345,7 @@ export default function Page() {
               <p>
                 If you need a place for your team to work during the hunt, let
                 us know during the registration process and we will try to
-                accommodate you. We have limited classroom space, particularly
-                with the closure of Barus and Holley, so our ability to allocate
+                accommodate you. We have limited classroom space, so our ability to allocate
                 classrooms like this will be limited. We will prioritize teams
                 which do not have other spaces available and who register in
                 advance.
@@ -406,15 +405,22 @@ export default function Page() {
                 any time.
               </p>
             </TOCSection>
-            <TOCSection sectionId={7} tocTitle="What else?">
-              <h2>What else?</h2>
+            <TOCSection sectionId={7} tocTitle="What can I use to solve the hunt?">
+              <h2>What can I use to solve the hunt?</h2>
               <p>
-                You may use any external sources for help, including other
-                people, as long as they are not helping other teams and are not
-                actively participating in the hunt.
+                This hunt was made by humans, for humans. We <strong>strongly 
+                discourage</strong> the use of LLMs or other AI models to solve 
+                puzzles. We've spent the last few months writing these puzzles for 
+                you to enjoy; we firmly believe that the best way for you to enjoy 
+                them is to solve them yourself. 
               </p>
               <p>
-                Use of Google is not only permitted, but essential. You may also
+                Other than LLMs, you may use any external sources for help, including other
+                people (as long as they are not helping other teams and are not
+                actively participating in the hunt).
+              </p>
+              <p>
+                Use of Google search is not only permitted, but essential. You may also
                 benefit from other online tools, such as:
               </p>
               <ul>
@@ -467,6 +473,9 @@ export default function Page() {
                   </Link>
                 </li>
               </ul>
+            </TOCSection>
+            <TOCSection sectionId={7} tocTitle="What else?">
+              <h2>What else?</h2>
               <p>
                 You may not publicly stream a solve of our hunt when the hunt is
                 live. We reserve the right to disqualify any team for
@@ -488,16 +497,13 @@ export default function Page() {
                 <br />
                 <strong>Club President</strong>: Erin Finn ('27)
                 <br />
-                <strong>Editors-in-Chief</strong>: Thomas Gordon ('26), Arnav
-                Singhal ('26)
+                <strong>Editor-in-Chief</strong>: Thomas Gordon ('26)
                 <br />
-                <strong>Editors</strong>: Nate Chinman ('28), Nicholas Cressman
-                ('28), Jack de Haan ('28), Kevin Jaeger ('28), Thea
-                Miller-Priddy ('29), Gabriel Nelkin ('28)
+                <strong>Editor-in-Chief</strong>: Arnav Singhal ('26)
                 <br />
-                <strong>Tech Director</strong>: Alex Wang ('27)
+                <strong>Technical Director</strong>: Alex Wang ('27)
                 <br />
-                <strong>Tech Director</strong>: Chloe Qiao ('27)
+                <strong>Technical Director</strong>: Chloe Qiao ('27)
                 <br />
                 <strong>Art Director</strong>: Bailey Merlino ('26)
                 <br />
@@ -515,6 +521,24 @@ export default function Page() {
                 <br />
                 <strong>Solutions Director</strong>: Thea Miller-Priddy ('29)
                 <br />
+              </p>
+              <h3 className="text-center">Editors</h3>
+              <p className="text-center">
+                Thomas Gordon ('26)*
+                <br />
+                Arnav Singhal ('26)*
+                <br />
+                Nate Chinman ('28)
+                <br />
+                Nicholas Cressman ('28)
+                <br />
+                Jack de Haan ('28)
+                <br />
+                Kevin Jaeger ('28)
+                <br />
+                Gabriel Nelkin ('28)
+                <br />
+                Thea Miller-Priddy ('29)
               </p>
               <h3 className="text-center">Puzzle Writers</h3>
               <p className="text-center">
