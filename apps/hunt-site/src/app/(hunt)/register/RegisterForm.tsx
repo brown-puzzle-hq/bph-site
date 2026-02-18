@@ -287,7 +287,7 @@ export default function RegisterForm() {
             <FormItem className="mb-8">
               <FormLabel className="flex flex-row justify-between">
                 <span className="text-main-header">
-                  Primary Email <span className="text-error">*</span>
+                  Primary email <span className="text-error">*</span>
                 </span>
                 <FormMessage className="text-error" />
               </FormLabel>
