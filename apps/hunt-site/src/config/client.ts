@@ -10,8 +10,8 @@ export const HUNT_EMAIL = "brownpuzzlehq@gmail.com";
 
 /** TIMING */
 
-export const REGISTRATION_START_TIME = new Date("2026-01-01T17:00:00.000Z");
-export const REGISTRATION_END_TIME = new Date("2030-01-01T17:00:00Z");
+export const REGISTRATION_START_TIME = new Date("2026-02-18T15:00:00.000Z");
+export const REGISTRATION_END_TIME = new Date("2030-01-01T16:00:00.000Z");
 
 export const IN_PERSON = {
   KICKOFF_DOOR_TIME: new Date("2026-04-11T15:30:00.000Z"),

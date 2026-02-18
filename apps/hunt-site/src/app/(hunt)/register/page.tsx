@@ -5,6 +5,7 @@ import {
 import RegisterForm from "./RegisterForm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { FormattedTime } from "~/lib/time";
 
 export default async function Home() {
   // Redirect register page to home page if the user is logged in
@@ -16,7 +17,9 @@ export default async function Home() {
   if (new Date() < REGISTRATION_START_TIME) {
     return (
       <div className="flex min-h-[calc(100vh-56px-32px)] grow flex-col items-center justify-center">
-        <p>Registration has not started yet.</p>
+        <p>
+          Registration starts <FormattedTime time={REGISTRATION_START_TIME} />.
+        </p>
       </div>
     );
   }
