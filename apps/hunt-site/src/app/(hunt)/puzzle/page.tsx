@@ -12,6 +12,7 @@ import { IN_PERSON, REMOTE } from "@/config/client";
 import { ROUNDS, INITIAL_PUZZLES, type Round } from "@/config/server";
 import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
 import { checkPermissions } from "~/lib/server";
+import { redirect } from "next/navigation";
 
 export type AvailablePuzzle = {
   unlockTime: Date | null;
@@ -43,21 +44,7 @@ export default async function Home() {
   if (error) {
     // If the hunt has not ended, tell them to log in
     if (currDate < REMOTE.END_TIME) {
-      return (
-        <div className="mb-12 px-4 pt-6 text-center">
-          <h1 className="mb-2">Puzzles</h1>
-          <p>
-            <Link
-              href="/login"
-              className="text-link hover:underline"
-              prefetch={false}
-            >
-              Login
-            </Link>{" "}
-            to access puzzles
-          </p>
-        </div>
-      );
+      redirect("/login");
     }
 
     // Otherwise, let them see all puzzles without answers

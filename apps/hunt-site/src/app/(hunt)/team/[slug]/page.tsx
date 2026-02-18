@@ -1,5 +1,4 @@
 import ProfileForm from "./ProfileForm";
-import { auth } from "@/auth";
 import { db } from "@/db/index";
 import { teams } from "@/db/schema";
 import { eq } from "drizzle-orm";

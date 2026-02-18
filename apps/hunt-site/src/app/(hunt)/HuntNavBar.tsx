@@ -30,16 +30,19 @@ export function HuntNavBar() {
       type: "link",
     },
     {
-      title: "Puzzles",
-      href: "/puzzle",
-      type: "link",
-    },
-    {
       title: "Teams",
       href: "/team",
       type: "link",
     },
   ];
+
+  if (session || now > REMOTE.END_TIME) {
+    leftMenuItems.splice(2, 0, {
+      title: "Puzzles",
+      href: "/puzzle",
+      type: "link",
+    });
+  }
 
   const middleMenuItems: MenuItem[] = [];
 

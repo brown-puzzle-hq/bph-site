@@ -1,6 +1,5 @@
 import PuzzleTable from "./PuzzleTable";
 import EventTable from "./event/EventTable";
-import { IN_PERSON } from "@/config/client";
 import { type Round } from "@/config/server";
 import { AvailablePuzzle, AvailableEvent } from "@/puzzle/page";
 
