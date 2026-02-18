@@ -11,10 +11,14 @@ type TeamProperties = Pick<
   Team,
   | "id"
   | "displayName"
+  | "password"
   | "primaryEmail"
   | "members"
   | "interactionMode"
-  | "password"
+  | "numCommunity"
+  | "phoneNumber"
+  | "roomNeeded"
+  | "solvingLocation"
 >;
 
 export async function insertTeam(teamProperties: TeamProperties) {

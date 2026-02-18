@@ -39,7 +39,7 @@ export default {
         "correct-guess": colors.emerald[300],
         "partial-guess": colors.yellow[300],
         "incorrect-guess": colors.rose[300],
-        error: colors.red[300],
+        error: colors.red[200],
       },
       typography: ({ theme }: { theme: any }) => ({
         wrapup: {

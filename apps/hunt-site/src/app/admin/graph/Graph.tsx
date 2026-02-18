@@ -644,7 +644,8 @@ export default function Graph({
                   (member, index) => (
                     <tr className="w-full align-top">
                       <td className="text-center">{index + 1}</td>
-                      <td className="break-words pl-2">{member.name}</td>
+                      <td className="break-words pl-2">{member.firstName}</td>
+                      <td className="break-words pl-2">{member.lastName}</td>
                       <td className="break-words pl-2">{member.email}</td>
                     </tr>
                   ),

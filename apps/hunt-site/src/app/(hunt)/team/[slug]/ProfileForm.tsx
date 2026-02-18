@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   useFieldArray,
   useForm,
@@ -12,7 +13,6 @@ import {
   useWatch,
 } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 // UI components
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -27,17 +27,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import {
+  Form,
+  FormLabel,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+  FormDescription,
+} from "~/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AlertCircle, X } from "lucide-react";
 
@@ -52,39 +53,62 @@ import { deserializeMembers, serializeMembers } from "~/lib/team-members";
 import { signOut } from "next-auth/react";
 import { Team } from "@/db/types";
 import { focusAtEnd, cn, ensureError } from "~/lib/utils";
+import { AsYouType } from "libphonenumber-js";
+import { formatPhoneNumber, zPhone, memberSchema } from "~/lib/team-members";
 
 export const profileFormSchema = z
   .object({
     displayName: z
       .string()
+      .trim()
       .min(1, { message: "Required" })
       .max(50, { message: "Max 50 characters" }),
-    primaryEmail: z.string().email({ message: "Invalid email address" }),
-    members: z.array(
-      z.object({
-        name: z.string().or(z.literal("")),
-        email: z.string().email().or(z.literal("")),
-      }),
-    ),
-    interactionMode: z.enum(INTERACTION_MODE_VALUES),
-    role: z.enum(ROLE_VALUES),
     password: z
       .string()
+      .trim()
       .min(8, { message: "Min 8 characters" })
       .max(50, { message: "Max 50 characters" })
       .or(z.literal("")),
-    confirmPassword: z.string().or(z.literal("")),
+    confirmPassword: z.string().trim().or(z.literal("")),
+    primaryEmail: z.string().email({ message: "Invalid email address" }),
+    // If in-person, must have at least one team member.
+    members: z.array(memberSchema),
+    interactionMode: z.enum(INTERACTION_MODE_VALUES),
+    numCommunity: z.string().max(30, { message: "Max 30 characters" }),
+    phoneNumber: zPhone,
+    roomNeeded: z.boolean(),
+    solvingLocation: z.string().max(255, { message: "Max 255 characters" }),
+    role: z.enum(ROLE_VALUES),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
+  .refine(
+    (data) =>
+      !(data.interactionMode === "in-person" && data.phoneNumber === ""),
+    {
+      message: "Required",
+      path: ["phoneNumber"],
+    },
+  )
+  .refine(
+    (data) =>
+      data.interactionMode !== "in-person" ||
+      data.members.some(
+        (m) => m.firstName.trim() || m.lastName.trim() || m.email.trim(),
+      ),
+    {
+      message: "At least one team member required",
+      path: ["members"],
+    },
+  );
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-type TeamProperties = Pick<
+type TeamProperties = Omit<
   Team,
-  "displayName" | "primaryEmail" | "role" | "members" | "interactionMode"
+  "id" | "password" | "createTime" | "finishTime"
 >;
 
 export default function ProfileForm({
@@ -97,7 +121,6 @@ export default function ProfileForm({
   const router = useRouter();
   const { data: session, update } = useSession();
 
-  // TODO: remove when we switch to database strategy
   useEffect(() => {
     if (
       session?.user.id === id &&
@@ -105,21 +128,22 @@ export default function ProfileForm({
         session.user.interactionMode !== initialProperties.interactionMode ||
         session.user.role !== initialProperties.role)
     ) {
-      // TODO: might be a race condition
       update(null);
     }
   }, [initialProperties]);
 
-  const defaultMembers = (memberString: string) =>
-    memberString === "[]"
-      ? [{ name: "", email: "" }]
-      : deserializeMembers(memberString);
+  const defaultMembers = (memberString: string) => {
+    if (memberString === "[]")
+      return [{ firstName: "", lastName: "", email: "" }];
+    return deserializeMembers(memberString);
+  };
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       ...initialProperties,
       members: defaultMembers(initialProperties.members),
+      phoneNumber: formatPhoneNumber(initialProperties.phoneNumber),
       password: "",
       confirmPassword: "",
     },
@@ -133,7 +157,7 @@ export default function ProfileForm({
 
   useEffect(() => {
     if (fields.length === 0) {
-      append({ name: "", email: "" });
+      append({ firstName: "", lastName: "", email: "" });
     }
   }, [fields.length, append]);
 
@@ -147,6 +171,7 @@ export default function ProfileForm({
       form.reset({
         ...updatedTeam,
         members: defaultMembers(updatedTeam.members),
+        phoneNumber: formatPhoneNumber(updatedTeam.phoneNumber),
         password: "",
         confirmPassword: "",
       });
@@ -176,11 +201,16 @@ export default function ProfileForm({
   };
 
   const { isDirty, errors } = useFormState({ control: form.control });
+  const interactionMode = useWatch({
+    control: form.control,
+    name: "interactionMode",
+  });
   const members = useWatch({ control: form.control, name: "members" });
 
   const memberRefs = useRef<
     {
-      name?: HTMLInputElement | null;
+      firstName?: HTMLInputElement | null;
+      lastName?: HTMLInputElement | null;
       email?: HTMLInputElement | null;
     }[]
   >([]);
@@ -199,6 +229,7 @@ export default function ProfileForm({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
+          autoComplete="off"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -213,21 +244,25 @@ export default function ProfileForm({
               <FormItem className="mb-8">
                 <FormLabel className="flex flex-row justify-between">
                   <span className="text-main-header">
-                    Display name <span className="text-error">*</span>
+                    Team display name <span className="text-error">*</span>
                   </span>
                   <FormMessage className="text-error" />
                 </FormLabel>
                 <FormControl className="placeholder:text-white/40">
-                  <Input placeholder="Josiah Carberry" {...field} />
+                  <Input
+                    className="focus-visible:ring-transparent"
+                    placeholder="Josiah Carberry"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
-                  This name will be displayed on the leaderboard.
+                  This will be displayed on the leaderboard.
                 </FormDescription>
               </FormItem>
             )}
           />
 
-          {/* Display name field */}
+          {/* Primary email field */}
           <FormField
             control={form.control}
             name="primaryEmail"
@@ -240,7 +275,12 @@ export default function ProfileForm({
                   <FormMessage className="text-error" />
                 </FormLabel>
                 <FormControl className="placeholder:text-white/40">
-                  <Input placeholder="jcarberr@brown.edu" {...field} />
+                  <Input
+                    autoComplete="one-time-code"
+                    className="focus-visible:ring-transparent"
+                    placeholder="jcarberr@brown.edu"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   This email will be used for important hunt-related
@@ -249,112 +289,6 @@ export default function ProfileForm({
               </FormItem>
             )}
           />
-
-          <div className="mb-8">
-            <FormLabel className="flex flex-row justify-between">
-              <span className="mb-1.5 text-main-header">Team members</span>
-            </FormLabel>
-            {fields.map((field, index) => (
-              <div className="flex items-center space-x-2" key={field.id}>
-                {/* Field for member name */}
-                <FormField
-                  control={form.control}
-                  name={`members.${index}.name`}
-                  render={({ field }) => (
-                    <FormItem className="w-1/2">
-                      <FormControl className="text-main-text placeholder:text-white/40">
-                        <Input
-                          className="rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent"
-                          {...field}
-                          ref={(el) => {
-                            field.ref(el);
-                            memberRefs.current[index] ??= {};
-                            memberRefs.current[index].name = el;
-                          }}
-                          value={field.value}
-                          placeholder="Name"
-                          autoComplete="off"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              const idx = e.shiftKey ? index - 1 : index;
-                              focusAtEnd(memberRefs.current[idx]?.email);
-                            } else if (
-                              e.key === "Backspace" &&
-                              !(field.value || members[index]?.email)
-                            ) {
-                              e.preventDefault();
-                              remove(index);
-                              focusAtEnd(memberRefs.current[index - 1]?.email);
-                            }
-                          }}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Field for member email */}
-                <FormField
-                  control={form.control}
-                  name={`members.${index}.email`}
-                  render={({ field }) => (
-                    <FormItem className="w-1/2">
-                      <FormControl className="text-main-text placeholder:text-white/40">
-                        <Input
-                          className={cn(
-                            "rounded-none border-0 border-b p-0 text-current shadow-none focus-visible:ring-transparent",
-                            errors.members?.[index] && "border-red-300",
-                          )}
-                          {...field}
-                          ref={(el) => {
-                            field.ref(el);
-                            memberRefs.current[index] ??= {};
-                            memberRefs.current[index].email = el;
-                          }}
-                          value={field.value}
-                          placeholder="Email"
-                          autoComplete="off"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              if (e.shiftKey) {
-                                focusAtEnd(memberRefs.current[index]?.name);
-                              } else if (index === fields.length - 1) {
-                                append({ email: "", name: "" });
-                              } else {
-                                focusAtEnd(memberRefs.current[index + 1]?.name);
-                              }
-                            } else if (e.key === "Backspace" && !field.value) {
-                              e.preventDefault();
-                              focusAtEnd(memberRefs.current[index]?.name);
-                            }
-                          }}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                {/* X button */}
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-1 hover:bg-black/20 focus-visible:bg-black/20 focus-visible:ring-0"
-                  disabled={
-                    fields.length === 1 &&
-                    !members[0]?.name &&
-                    !members[0]?.email
-                  }
-                  onClick={() => remove(index)}
-                >
-                  <X className="text-main-text" />
-                </Button>
-              </div>
-            ))}
-            <FormDescription className="pt-2">
-              We recommend 6-8 members. Press ENTER to add entries.
-            </FormDescription>
-          </div>
 
           {/* Interaction mode field */}
           <FormField
@@ -410,82 +344,376 @@ export default function ProfileForm({
             )}
           />
 
-          {/* Team permissions */}
-          <div className="mb-8 space-y-8">
-            {session?.user.role === "admin" && (
+          {/* Other fields */}
+          {interactionMode === "in-person" && (
+            <div className="mb-8 space-y-8">
               <FormField
                 control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem className="mb-8 space-y-3">
-                    <FormLabel className="text-main-header">
-                      Team permissions
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="flex flex-col space-y-1"
-                      >
-                        {[
-                          { value: "user", label: "User" },
-                          { value: "admin", label: "Admin" },
-                          { value: "testsolver", label: "Testsolver" },
-                        ].map(({ value, label }) => (
-                          <FormItem
-                            key={value}
-                            className="flex items-center space-x-3 space-y-0"
-                          >
-                            <RadioGroupItem value={value} />
-                            <FormLabel className="font-normal">
-                              {label}
-                            </FormLabel>
-                          </FormItem>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {/* Password fields */}
-            <div className="space-y-6">
-              <FormField
-                control={form.control}
-                name="password"
+                name="numCommunity"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex flex-row justify-between">
-                      <span className="text-main-header">New password</span>
+                      <span className="text-main-header">
+                        Brown/RISD team members
+                      </span>
                       <FormMessage className="text-error" />
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
+                      <Input
+                        className="focus-visible:ring-transparent"
+                        type="number"
+                        min="0"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
-                      Leave blank to keep the current password.
+                      Number of current undergraduate or graduate students on
+                      campus. Must have at least one to win.
                     </FormDescription>
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="confirmPassword"
+                name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex flex-row justify-between">
-                      <span className="text-main-header">Confirm password</span>
+                      <span className="text-main-header">
+                        Phone number <span className="text-error">*</span>
+                      </span>
                       <FormMessage className="text-error" />
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
+                      <Input
+                        {...field}
+                        className="focus-visible:ring-transparent"
+                        value={field.value}
+                        onChange={(e) => {
+                          const formattedNumber = new AsYouType("US").input(
+                            e.target.value,
+                          );
+                          field.onChange(formattedNumber);
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Primary method of communication, required for in-person
+                      teams.
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="roomNeeded"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between space-x-1">
+                    <div>
+                      <FormLabel className="text-main-header">
+                        Room needed
+                      </FormLabel>
+                      <FormDescription>
+                        Hunt weekend will be busy. Select this if you'll need a
+                        room.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        className="focus-visible:ring-offset-0 data-[state=checked]:bg-white/50 data-[state=unchecked]:bg-black/50"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="solvingLocation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex flex-row justify-between">
+                      <span className="text-main-header">Solving location</span>
+                      <FormMessage className="text-error" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="focus-visible:ring-transparent"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Where can we best find you? (e.g. Barus & Holley 123,
+                      Discord, etc.)
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
             </div>
+          )}
+
+          {/* Team members field */}
+          <div className="mb-8">
+            <FormLabel className="flex flex-row justify-between">
+              <span className="mb-1 text-main-header">
+                Team members
+                {interactionMode === "in-person" && (
+                  <span className="text-error"> *</span>
+                )}
+              </span>
+              <span className="text-[0.8rem] font-medium text-error">
+                {errors.members?.root?.message || errors.members?.message}
+              </span>
+            </FormLabel>
+            {fields.map((field, index) => (
+              <div className="flex items-center space-x-2" key={field.id}>
+                {/* First name */}
+                <FormField
+                  control={form.control}
+                  name={`members.${index}.firstName`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl className="text-main-text placeholder:text-white/40">
+                        <Input
+                          className={cn(
+                            "rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent",
+                            errors.members?.[index]?.firstName &&
+                              "border-red-300",
+                          )}
+                          {...field}
+                          ref={(el) => {
+                            field.ref(el);
+                            memberRefs.current[index] ??= {};
+                            memberRefs.current[index].firstName = el;
+                          }}
+                          value={field.value}
+                          placeholder="First name"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              const idx = e.shiftKey ? index - 1 : index;
+                              focusAtEnd(memberRefs.current[idx]?.lastName);
+                            } else if (
+                              e.key === "Backspace" &&
+                              !(
+                                field.value ||
+                                memberRefs.current[index]?.lastName?.value ||
+                                memberRefs.current[index]?.email?.value
+                              )
+                            ) {
+                              e.preventDefault();
+                              remove(index);
+                              focusAtEnd(memberRefs.current[index - 1]?.email);
+                            }
+                          }}
+                          autoComplete="one-time-code"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {/* Last name */}
+                <FormField
+                  control={form.control}
+                  name={`members.${index}.lastName`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl className="text-main-text placeholder:text-white/40">
+                        <Input
+                          className={cn(
+                            "rounded-none border-0 border-b p-0 shadow-none focus-visible:ring-transparent",
+                            errors.members?.[index]?.lastName &&
+                              "border-red-300",
+                          )}
+                          {...field}
+                          ref={(el) => {
+                            field.ref(el);
+                            memberRefs.current[index] ??= {};
+                            memberRefs.current[index].lastName = el;
+                          }}
+                          value={field.value}
+                          placeholder="Last name"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              if (e.shiftKey) {
+                                focusAtEnd(
+                                  memberRefs.current[index]?.firstName,
+                                );
+                              } else {
+                                focusAtEnd(memberRefs.current[index]?.email);
+                              }
+                            } else if (e.key === "Backspace" && !field.value) {
+                              e.preventDefault();
+                              focusAtEnd(memberRefs.current[index]?.firstName);
+                            }
+                          }}
+                          autoComplete="one-time-code"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {/* Member email */}
+                <FormField
+                  control={form.control}
+                  name={`members.${index}.email`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl className="text-main-text placeholder:text-white/40">
+                        <Input
+                          className={cn(
+                            "rounded-none border-0 border-b p-0 text-current shadow-none focus-visible:ring-transparent",
+                            errors.members?.[index]?.email && "border-red-300",
+                          )}
+                          {...field}
+                          ref={(el) => {
+                            field.ref(el);
+                            memberRefs.current[index] ??= {};
+                            memberRefs.current[index].email = el;
+                          }}
+                          value={field.value}
+                          placeholder="Email"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              if (e.shiftKey) {
+                                focusAtEnd(memberRefs.current[index]?.lastName);
+                              } else if (index === fields.length - 1) {
+                                append({
+                                  firstName: "",
+                                  lastName: "",
+                                  email: "",
+                                });
+                              } else {
+                                focusAtEnd(
+                                  memberRefs.current[index + 1]?.firstName,
+                                );
+                              }
+                            } else if (e.key === "Backspace" && !field.value) {
+                              e.preventDefault();
+                              focusAtEnd(memberRefs.current[index]?.lastName);
+                            }
+                          }}
+                          autoComplete="one-time-code"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                {/* X button */}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-1 hover:bg-black/20 focus-visible:bg-black/20 focus-visible:ring-transparent"
+                  disabled={
+                    fields.length === 1 &&
+                    !members[0]?.firstName &&
+                    !members[0]?.lastName &&
+                    !members[0]?.email
+                  }
+                  onClick={() => remove(index)}
+                >
+                  <X className="text-main-text" />
+                </Button>
+              </div>
+            ))}
+            <FormDescription className="pt-2">
+              In-person teams: please list all team members, which will be
+              checked against valid government-issued ID for security reasons.
+              Names will only be visible to BPH staff and your team and will not
+              be used for other purposes. The roster may be updated on the team
+              profile page up to 24 hours before kickoff. For questions or
+              concerns, please email us at{" "}
+              <u>brownpuzzleHQ [at] gmail [dot] com</u>.
+            </FormDescription>
           </div>
+
+          {/* Team permissions */}
+          {session?.user.role === "admin" && (
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="mb-8 space-y-3">
+                  <FormLabel className="text-main-header">
+                    Team permissions
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      {[
+                        { value: "user", label: "User" },
+                        { value: "admin", label: "Admin" },
+                        { value: "testsolver", label: "Testsolver" },
+                      ].map(({ value, label }) => (
+                        <FormItem
+                          key={value}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
+                          <RadioGroupItem value={value} />
+                          <FormLabel className="font-normal">{label}</FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Password fields */}
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="mb-6">
+                <FormLabel className="flex flex-row justify-between">
+                  <span className="text-main-header">New password</span>
+                  <FormMessage className="text-error" />
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    className="focus-visible:ring-transparent"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Leave blank to keep the current password.
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem className="mb-8">
+                <FormLabel className="flex flex-row justify-between">
+                  <span className="text-main-header">Confirm password</span>
+                  <FormMessage className="text-error" />
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="focus-visible:ring-transparent"
+                    type="password"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
           <div
             className={cn(

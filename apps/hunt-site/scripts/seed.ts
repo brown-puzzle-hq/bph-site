@@ -39,7 +39,7 @@ async function seed() {
     const username = faker.lorem.slug(2);
     // TODO: use common imported hash function
     const hashedPassword = bcrypt.hashSync(username, 10);
-    // const phoneNumber = faker.phone.number({ style: "national" });
+    const phoneNumber = faker.phone.number({ style: "national" });
 
     return {
       id: username,
@@ -51,14 +51,18 @@ async function seed() {
       role: "user" as "user" | "admin",
       primaryEmail: "user@gmail.com",
       members: JSON.stringify([
-        [faker.person.fullName(), "user@gmail.com"],
-        [faker.person.fullName(), ""],
+        [faker.person.firstName(), faker.person.lastName(), "user@gmail.com"],
+        [faker.person.firstName(), faker.person.lastName(), "user@gmail.com"],
       ]),
       interactionMode: inPerson
         ? "in-person"
         : ("remote" as "in-person" | "remote"),
       createTime: faker.date.recent(),
       finishTime: null,
+      numCommunity: inPerson ? "1" : undefined,
+      phoneNumber: inPerson ? phoneNumber : undefined,
+      roomNeeded: inPerson ? false : undefined,
+      solvingLocation: inPerson ? "" : undefined,
     };
   });
 
@@ -70,12 +74,16 @@ async function seed() {
     role: "admin",
     primaryEmail: "admin@gmail.com",
     members: JSON.stringify([
-      [faker.person.fullName(), "admin@gmail.com"],
-      [faker.person.fullName(), ""],
+      [faker.person.firstName(), faker.person.lastName(), "admin@gmail.com"],
+      [faker.person.firstName(), faker.person.lastName(), "admin@gmail.com"],
     ]),
     interactionMode: "in-person",
     createTime: faker.date.recent(),
     finishTime: null,
+    numCommunity: "1",
+    phoneNumber: faker.phone.number({ style: "national" }),
+    roomNeeded: false,
+    solvingLocation: faker.location.city(),
   });
 
   await db.insert(teams).values(fakeTeams);

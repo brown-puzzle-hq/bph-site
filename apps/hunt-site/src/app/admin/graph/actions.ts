@@ -20,6 +20,10 @@ export async function getSearchedTeam(teamId: string) {
       finishTime: true,
       members: true,
       interactionMode: true,
+      numCommunity: true,
+      phoneNumber: true,
+      roomNeeded: true,
+      solvingLocation: true,
     },
     with: {
       unlocks: {

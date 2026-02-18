@@ -27,6 +27,10 @@ export default async function Page({
       role: true,
       members: true,
       interactionMode: true,
+      numCommunity: true,
+      phoneNumber: true,
+      roomNeeded: true,
+      solvingLocation: true,
     },
     where: eq(teams.id, teamId),
   });
