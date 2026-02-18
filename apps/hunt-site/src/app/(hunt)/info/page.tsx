@@ -27,6 +27,10 @@ const timeOnly = new Intl.DateTimeFormat("en-US", {
 
 const InPersonTimeline = [
   {
+    title: "Kickoff",
+    description: `Kickoff will start promptly on ${formatter.format(IN_PERSON.KICKOFF_TIME)}, in MacMillan 117, with doors opening at ${timeOnly.format(IN_PERSON.KICKOFF_DOOR_TIME)}. We will collect waivers from all participants.`,
+  },
+  {
     title: "Hunt Begins",
     description: `Puzzles for in-person teams will be released on ${formatter.format(IN_PERSON.START_TIME)}.`,
   },
@@ -36,7 +40,7 @@ const InPersonTimeline = [
   },
   {
     title: "Wrap-Up",
-    description: `Wrap-up will be held on ${formatter.format(IN_PERSON.WRAPUP_TIME)}, with doors opening at ${timeOnly.format(IN_PERSON.WRAPUP_DOOR_TIME)}.`,
+    description: `Wrap-up will be held on ${formatter.format(IN_PERSON.WRAPUP_TIME)} in MacMillan 117, with doors opening at ${timeOnly.format(IN_PERSON.WRAPUP_DOOR_TIME)}.`,
   },
 ];
 
@@ -68,17 +72,62 @@ export default function Page() {
             <h1>Hunt Information</h1>
             <TOCSection
               sectionId={0}
-              tocTitle="What is this Puzzlehunt?"
+              tocTitle="What is Brown Puzzlehunt?"
               isFirst
             >
-              <h2>What is this Puzzlehunt?</h2>
+              <h2>What is Brown Puzzlehunt?</h2>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                Brown Puzzlehunt 2026 is the fourth annual puzzlehunt run by
+                current Brown and RISD students.
+              </p>
+              <p>
+                In a puzzlehunt, participants compete in teams to solve puzzles.
+                Puzzles can come in many different forms; the only commonality
+                is that there are usually no direct instructions, so it is up to
+                you to extract an English word or phrase from the information
+                given. You can read a longer introduction to puzzlehunts{" "}
+                <Link
+                  href="https://blog.vero.site/post/puzzlehunts"
+                  className="no-underline hover:underline"
+                >
+                  here
+                </Link>
+                .
+              </p>
+              <p>
+                This hunt is designed to be a relatively easy introduction to
+                puzzlehunting for beginner teams. We expect this year's Brown
+                Puzzlehunt to be roughly the same length and difficulty as last
+                year's{" "}
+                <Link
+                  href="https://2025.brownpuzzlehunt.com/"
+                  className="no-underline hover:underline"
+                >
+                  hunt
+                </Link>
+                . If you are looking for some practice, we recommend looking at
+                puzzles from other online hunts such as{" "}
+                <Link
+                  href="https://galacticpuzzlehunt.com/"
+                  className="no-underline hover:underline"
+                >
+                  Galactic Puzzle Hunt
+                </Link>
+                ,{" "}
+                <Link
+                  href="https://teammatehunt.com/"
+                  className="no-underline hover:underline"
+                >
+                  Teammate Hunt
+                </Link>
+                , or{" "}
+                <Link
+                  href="https://puzzlepotluck.com/"
+                  className="no-underline hover:underline"
+                >
+                  Puzzle Potluck
+                </Link>
+                .
               </p>
             </TOCSection>
             <TOCSection
@@ -87,101 +136,100 @@ export default function Page() {
             >
               <h2>When and where is this happening?</h2>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                This year, Brown Puzzlehunt is offering two different ways to
+                participate across two weekends. You can hunt in-person or fully
+                remotely.
               </p>
               <h3>In-Person Event</h3>
               <Timeline timeline={InPersonTimeline} />
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                If you come to campus, you'll get to do events, physical
+                puzzles, interactions, and the in-person runaround! The
+                In-Person Event will run from{" "}
+                {formatter.format(IN_PERSON.KICKOFF_TIME)} to{" "}
+                {formatter.format(IN_PERSON.END_TIME)}, at{" "}
+                <strong>Brown University</strong> in{" "}
+                <strong>Providence, Rhode Island</strong>.
+              </p>
+              <p>
+                <strong>All in-person participants </strong>
+                need to print and fill out{" "}
+                <Link
+                  href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf"
+                  className="no-underline hover:underline"
+                >
+                  this waiver
+                </Link>{" "}
+                ahead of time in order to come to campus. We will collect these
+                at kickoff.
+              </p>
+              <p>
+                You don't need every person on your team to come to campus to be
+                an In-Person team. One is fine (although they might have their
+                hands full going to every event and doing every physical
+                puzzle!) If you are part of an In-Person team but aren't
+                on-campus, you'll still be able to access the non-physical
+                puzzles through the website.
               </p>
               <h3>Remote Event</h3>
               <Timeline timeline={OnlineTimeline} />
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                If you can't come to Brown's campus, you can do our online-only
+                event. This runs from {formatter.format(REMOTE.START_TIME)} to{" "}
+                {formatter.format(REMOTE.END_TIME)}. (This is a different
+                weekend than the In-Person Event!)
+              </p>
+              <h4>Remote</h4>
+              <p>
+                If you don't come in-person, we will provide fully
+                remote-accessible versions of all physical puzzles.{" "}
+                <strong>
+                  You will be able to solve every puzzle in the hunt even if you
+                  are fully remote.
+                </strong>
               </p>
 
               <h3>Which experience should I sign up for?</h3>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                If you can make it to the In-Person Event, we highly recommend
+                you do so. You'll get to do all of the physical puzzles,
+                in-person interactions, events, and the in-person runaround.
               </p>
-              <table>
-                <thead>
-                  <tr>
-                    <th className="w-1/4"></th>
-                    <th className="w-1/4 text-center">In-Person</th>
-                    <th className="w-1/4 text-center">Remote</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Final runaround</td>
-                    <td className="text-center">✅</td>
-                    <td className="text-center">❌</td>
-                  </tr>
-                  <tr>
-                    <td>Events and interactions</td>
-                    <td className="text-center">✅</td>
-                    <td className="text-center">❌</td>
-                  </tr>
-                  <tr>
-                    <td>Physical puzzles</td>
-                    <td className="text-center">✅</td>
-                    <td className="text-center">❌</td>
-                  </tr>
-                  <tr>
-                    <td>Hunt merch</td>
-                    <td className="text-center">✅</td>
-                    <td className="text-center">❌</td>
-                  </tr>
-                  <tr>
-                    <td>Full puzzle accessibility</td>
-                    <td className="text-center">✅</td>
-                    <td className="text-center">✅</td>
-                  </tr>
-                </tbody>
-              </table>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                If you participate as a fully remote team, you'll still be able
+                to solve every puzzle in the hunt. This experience will be
+                similar to other online-only hunts that don't expect any
+                in-person involvement.
               </p>
             </TOCSection>
-
             <TOCSection
               sectionId={3}
               tocTitle="Who can participate in the hunt?"
             >
               <h2>Who can participate in the hunt?</h2>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                Brown Puzzlehunt is open to anyone, anywhere in the world. We've
+                taken steps to ensure that every puzzle is accessible to remote
+                solvers, except for the final runaround. Teams familiar with
+                Brown/RISD culture may have some advantage in solving puzzles.
+              </p>
+              <p>
+                We recommend teams to be <strong>around 6 to 8 people</strong>.
+                The maximum team size is 10 people, but there is no minimum team
+                size - you can still have fun with a team of 2! Students and
+                those new to hunting are encouraged to build teams on the larger
+                side.
+              </p>
+              <p>
+                Additionally, for your team to win the In-Person Event, you must
+                have at least one current Brown/RISD student on-campus. If you
+                do not have a current Brown/RISD student on your team, you will
+                be able to do the final runaround, but you will not be able to
+                win.
+              </p>
+              <p>
+                Any team can win the Remote Event, regardless of team
+                composition.
               </p>
             </TOCSection>
             <TOCSection
@@ -189,46 +237,379 @@ export default function Page() {
               tocTitle="I'm coming to campus. What do I need to know?"
             >
               <h2>I'm coming to campus. What do I need to know?</h2>
+
+              <h3>Security</h3>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                The Brown community is still healing from the tragic events of
+                last December. This impacts the ability of non-Brown guests to
+                access campus.{" "}
+                <strong>
+                  We will still be welcoming guests to campus, but policies will
+                  look slightly different than in past years as we navigate new
+                  security restrictions.
+                </strong>
+              </p>
+              <p>
+                It is more important this year than ever to accurately register
+                every member of your team. When you check-in with BPH staff
+                members at kickoff,{" "}
+                <strong>
+                  only those who have registered on our site will be allowed to
+                  participate.
+                </strong>{" "}
+                This means that we need{" "}
+                <strong>
+                  accurate first names, last names, and emails for every team
+                  member
+                </strong>
+                , regardless of Brown affiliation. You will be required to check
+                in with a BPH staff member by presenting an ID that matches the
+                registered name.
+              </p>
+              <p>
+                Once you've been checked off our roster, you will be given a
+                wristband. This wristband will identify you as a participant
+                throughout the weekend, so it is important that you do not
+                remove it before the event has concluded.
+              </p>
+              <p>
+                When you need to move between buildings, you will need to show
+                your wristband to a BPH staff member to gain access to
+                card-restricted buildings. BPH members will be on call all
+                weekend (sans quiet hours) to facilitate this.
+              </p>
+              <p>
+                We acknowledge that many community members may be uncomfortable
+                with the idea of ID checks. Brown University is requiring us to
+                match registered participants with legal identification, which
+                is out of our control.{" "}
+                <strong>
+                  The first and last name you use for registration will only be
+                  visible to BPH staff and your own team.
+                </strong>{" "}
+                Please do not use pseudonyms or online usernames in
+                registration, as we need something to compare to an ID. The
+                preferred name you include at registration will be
+                cross-referenced with your ID upon check-in by BPH staff. If you
+                are uncomfortable with the rest of your teammates having access
+                to your first and last names, please record whatever name you'd
+                prefer upon registration and email{" "}
+                <u>brownpuzzleHQ [at] gmail [dot] com</u> so we can record your
+                name on our internal records only.
+              </p>
+
+              <h3>Waivers</h3>
+              <p>
+                <strong>All in-person participants </strong>
+                need to print and fill out{" "}
+                <Link
+                  href="https://studentactivities.brown.edu/sites/default/files/safety/Physical%20Activity%20Release.pdf"
+                  className="no-underline hover:underline"
+                >
+                  this waiver
+                </Link>{" "}
+                ahead of time in order to come to campus. We will collect these
+                at kickoff.
+              </p>
+              <h3>Being Respectful</h3>
+              <p>
+                Brown University is not a playground for puzzlers; it is also a
+                live university, with classes, students, faculty, research, and
+                other events happening all the time. If you're going to be
+                on-site, please be respectful of both the community and the
+                campus.
+              </p>
+              <p>
+                Brown Puzzlehunt will not require you to do anything illegal,
+                immoral, or untoward, including accessing unauthorized spaces.
+                If you think that a puzzle is asking you to do something
+                dangerous, against the law, or disrespectful, stop and think. If
+                you're really not sure, please contact us and check.
+              </p>
+              <p>
+                This year, if a puzzle requires you to visit a
+                card-access-restricted space, the puzzle page will explicitly
+                tell you so. All scavenger-hunt components will be accessible
+                from outdoors unless otherwise stated.
+              </p>
+              <h3>Solving Spaces</h3>
+              <p>
+                If you are going to be on-campus, we will need you to let us
+                know where your HQ is. This is the location where you will be
+                spending most of your time solving puzzles while you're
+                on-campus. If you are a student team or have student members,
+                this might be a dorm common area or an apartment near campus, or
+                a noise-tolerant space like the Student Center or some floors of
+                the Sciences Library.
+              </p>
+              <p>
+                If you need a place for your team to work during the hunt, let
+                us know during the registration process and we will try to
+                accommodate you. We have limited classroom space, particularly
+                with the closure of Barus and Holley, so our ability to allocate
+                classrooms like this will be limited. We will prioritize teams
+                which do not have other spaces available and who register in
+                advance.
+              </p>
+              <h3>Minors</h3>
+              <p>
+                Unfortunately, we are not in a position to accommodate minors
+                on-campus (participants who are not Brown or RISD students and
+                who are under the age of 18). Sorry! However, minors are welcome
+                to participate remotely, and teams with minors can still send
+                other participants who are over the age of 18 to campus to
+                participate.
               </p>
             </TOCSection>
             <TOCSection sectionId={5} tocTitle="How do puzzles work?">
               <h2>How do puzzles work?</h2>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                All puzzles will be visible on the website. This is where you
+                will submit your answers and receive new puzzles. Some puzzles
+                will be available at the start of the hunt; solving puzzles will
+                unlock more puzzles.
+              </p>
+              <p>
+                Each answer is an English word or phrase. Answers are not case-
+                or space-sensitive.
+              </p>
+              <p>
+                You have 20 total guesses for each puzzle. If you run out of
+                guesses, contact us, and we would be happy to grant more. Random
+                guessing and brute-forcing are discouraged.
+              </p>
+              <p>
+                If something on-campus is part of a puzzle, the website will
+                direct you towards it first.
               </p>
             </TOCSection>
             <TOCSection sectionId={6} tocTitle="How do hints work?">
               <h2>How do hints work? </h2>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                You can use hint requests to ask for help on any puzzle. This
+                can be something like a nudge in the right direction (i.e. you
+                give us your progress on the puzzle and we will try to get you
+                unstuck) or an answer to a question (e.g. “Which answers to
+                these crossword clues are wrong?”). You can only have one open
+                hint request at a time. Teams will gain one hint request every 3
+                hours in the in-person event and one hint request every 6 hours
+                in the remote event.
+              </p>
+              <p>
+                If you are a beginner student team or a team with a strong
+                on-site presence that is not in the running to win, we will also
+                visit you frequently to check on your progress and help you
+                along. If you are struggling, even if you have no hints
+                available, do not hesitate to reach out — the event is meant to
+                be fun, and we want to ensure no hunter is left behind! If you
+                want someone on HQ to come and visit you, you can email us at
+                any time.
               </p>
             </TOCSection>
             <TOCSection sectionId={7} tocTitle="What else?">
               <h2>What else?</h2>
               <p>
-                Lorem ipsum dolor sit amet, mea at vide epicurei honestatis. Cu
-                malis epicurei eos. Mea ne diam enim, eam eu gubergren
-                appellantur, eam novum moderatius vituperatoribus in. Te usu
-                ponderum definiebas, usu ad tritani consetetur disputationi, sea
-                ad prima velit fastidii. Mei id corpora erroribus deterruisset,
-                eum ut latine appellantur.
+                You may use any external sources for help, including other
+                people, as long as they are not helping other teams and are not
+                actively participating in the hunt.
+              </p>
+              <p>
+                Use of Google is not only permitted, but essential. You may also
+                benefit from other online tools, such as:
+              </p>
+              <ul>
+                <li>
+                  Online wordplay solvers like{" "}
+                  <Link
+                    href="https://nutrimatic.org/"
+                    className="no-underline hover:underline"
+                  >
+                    nutrimatic
+                  </Link>
+                  ,{" "}
+                  <Link
+                    href="https://www.quinapalus.com/qat.html"
+                    className="no-underline hover:underline"
+                  >
+                    qat
+                  </Link>
+                  , or{" "}
+                  <Link
+                    href="https://onelook.com/"
+                    className="no-underline hover:underline"
+                  >
+                    OneLook
+                  </Link>
+                </li>
+                <li>
+                  Logic puzzle solvers like{" "}
+                  <Link
+                    href="https://www.noq.solutions/"
+                    className="no-underline hover:underline"
+                  >
+                    noq
+                  </Link>
+                </li>
+                <li>
+                  Reverse image searching tools like{" "}
+                  <Link
+                    href="https://lens.google/"
+                    className="no-underline hover:underline"
+                  >
+                    Google Lens
+                  </Link>{" "}
+                  or{" "}
+                  <Link
+                    href="https://tineye.com/"
+                    className="no-underline hover:underline"
+                  >
+                    Tineye
+                  </Link>
+                </li>
+              </ul>
+              <p>
+                You may not publicly stream a solve of our hunt when the hunt is
+                live. We reserve the right to disqualify any team for
+                unsportsmanlike conduct. We also reserve the right to change any
+                of these rules. If there is a big change, we will announce it to
+                all teams.
+              </p>
+              <p>
+                If you have any questions about these rules, or if you want to
+                contact us for any reason, feel free to email us at{" "}
+                <u>brownpuzzleHQ [at] gmail [dot] com</u>.
+              </p>
+            </TOCSection>
+            <TOCSection sectionId={8} tocTitle="Who's making this hunt?">
+              <h2>Who's making this hunt?</h2>
+              <h3 className="text-center">Officers</h3>
+              <p className="text-center">
+                <strong>Club President</strong>: Megan Carlson ('26)
+                <br />
+                <strong>Club President</strong>: Erin Finn ('27)
+                <br />
+                <strong>Editors-in-Chief</strong>: Thomas Gordon ('26), Arnav
+                Singhal ('26)
+                <br />
+                <strong>Editors</strong>: Nate Chinman ('28), Nicholas Cressman
+                ('28), Jack de Haan ('28), Kevin Jaeger ('28), Thea
+                Miller-Priddy ('29), Gabriel Nelkin ('28)
+                <br />
+                <strong>Tech Director</strong>: Alex Wang ('27)
+                <br />
+                <strong>Tech Director</strong>: Chloe Qiao ('27)
+                <br />
+                <strong>Art Director</strong>: Bailey Merlino ('26)
+                <br />
+                <strong>Art Director</strong>: Jaclyn Cohen ('26)
+                <br />
+                <strong>Art Shadow</strong>: Chloe Johnson ('28)
+                <br />
+                <strong>Events Director</strong>: Aren Guralp ('27)
+                <br />
+                <strong>Story Director</strong>: Kevin Jaeger ('28)
+                <br />
+                <strong>Story Director</strong>: Isaac McGreevy ('28)
+                <br />
+                <strong>Factchecking Director</strong>: Eno Thomson-Tribe ('29)
+                <br />
+                <strong>Solutions Director</strong>: Thea Miller-Priddy ('29)
+                <br />
+              </p>
+              <h3 className="text-center">Puzzle Writers</h3>
+              <p className="text-center">
+                Megan Carlson ('26)
+                <br />
+                Malcolm Certain ('26)
+                <br />
+                Kaylee Gallagher ('26)
+                <br />
+                Thomas Gordon* ('26)
+                <br />
+                Veronika Grytsai ('26)
+                <br />
+                Chai Harsha ('26)
+                <br />
+                Bailey Merlino ('26)
+                <br />
+                Arnav Singhal* ('26)
+                <br />
+                AJ Wu ('26)
+                <br />
+                Phil Avilov (RISD '27)
+                <br />
+                Audrey Feigin ('27)
+                <br />
+                Erin Finn ('27)
+                <br />
+                Aren Guralp ('27)
+                <br />
+                Chloe Qiao ('27)
+                <br />
+                Alex Wang ('27)
+                <br />
+                Nate Chinman ('28)
+                <br />
+                Nicholas Cressman ('28)
+                <br />
+                Jack de Haan ('28)
+                <br />
+                Noah Elbaum ('28)
+                <br />
+                Kevin Jaeger ('28)
+                <br />
+                Chloe Johnson ('28)
+                <br />
+                Isaac McGreevy ('28)
+                <br />
+                Gabriel Nelkin ('28)
+                <br />
+                Philip Yao ('28)
+                <br />
+                Amara Fuchs ('29)
+                <br />
+                Dylan Hunter ('29)
+                <br />
+                Madisyn Koza ('29)
+                <br />
+                Thea Miller-Priddy ('29)
+                <br />
+                Dylan Schenker ('29)
+                <br />
+                Eno Thomson-Tribe ('29)
+                <br />
+              </p>
+              <h3 className="text-center">Art Team</h3>
+              <p className="text-center">
+                Jaclyn Cohen* ('26)
+                <br />
+                Bailey Merlino* ('26)
+                <br />
+                Eliot Geer ('27)
+                <br />
+                Phil Avilov (RISD '27)
+                <br />
+                Chloe Johnson ('28)
+                <br />
+                Amara Fuchs ('29)
+                <br />
+                Thea Miller-Priddy ('29)
+                <br />
+              </p>
+              <h3 className="text-center">Technical Team</h3>
+              <p className="text-center">
+                Jaclyn Cohen ('26)
+                <br />
+                Thomas Gordon ('26)
+                <br />
+                Arnav Singhal ('26)
+                <br />
+                Alex Wang* ('27)
+                <br />
+                Chloe Qiao* ('27)
+                <br />
+                Jack de Haan ('28)
+                <br />
               </p>
             </TOCSection>
           </article>

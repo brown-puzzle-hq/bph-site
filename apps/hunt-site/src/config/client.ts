@@ -16,16 +16,16 @@ export const REGISTRATION_END_TIME = new Date("2030-01-01T17:00:00Z");
 export const IN_PERSON = {
   KICKOFF_DOOR_TIME: new Date("2026-04-11T15:30:00.000Z"),
   KICKOFF_TIME: new Date("2026-04-11T16:00:00.000Z"),
-  START_TIME: new Date("2026-04-11T16:00:00.000Z"), // April 11th, 12 PM
-  END_TIME: new Date("2026-04-12T23:00:00.000Z"), // April 12th,7 PM
+  START_TIME: new Date("2026-04-11T16:00:00.000Z"), // April 11th, 12 PM EDT
+  END_TIME: new Date("2026-04-12T23:00:00.000Z"), // April 12th, 7 PM EDT
   WRAPUP_DOOR_TIME: new Date("2026-04-12T23:30:00.000Z"),
   WRAPUP_TIME: new Date("2026-04-13T00:00:00Z"),
 };
 
 export const REMOTE = {
-  START_TIME: new Date("2026-04-18T16:00:00.000Z"), // April 18th
-  END_TIME: new Date("2026-04-24T16:00:00.000Z"), // April 24th
-  WRAPUP_TIME: new Date("2026-04-29T17:00:00.000Z"),
+  START_TIME: new Date("2026-04-18T16:00:00.000Z"), // April 18th, 12 PM EDT
+  END_TIME: new Date("2026-04-24T16:00:00.000Z"), // April 24th, 12 PM EDT
+  WRAPUP_TIME: new Date("2026-05-01T16:00:00.000Z"), // May 1st, 12 PM EDT
 };
 
 /** GUESSES */
