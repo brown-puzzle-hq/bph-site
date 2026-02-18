@@ -45,10 +45,10 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
       className="hidden w-full font-mono text-sm lg:block"
       suppressHydrationWarning
     >
-      ✨ {String(timeRemaining.days).padStart(2, "0")}:
+      {String(timeRemaining.days).padStart(2, "0")}:
       {String(timeRemaining.hours).padStart(2, "0")}:
       {String(timeRemaining.minutes).padStart(2, "0")}:
-      {String(timeRemaining.seconds).padStart(2, "0")} 'til hunt start ✨
+      {String(timeRemaining.seconds).padStart(2, "0")} until hunt
     </div>
   );
 }

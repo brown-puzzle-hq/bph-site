@@ -88,7 +88,7 @@ export default function GuessForm({
                     const cleaned = sanitizeAnswer(form.getValues("guess"));
                     form.setValue("guess", cleaned, { shouldValidate: true });
                   }}
-                  className="bg-secondary-bg uppercase text-secondary-accent"
+                  className="bg-secondary-bg uppercase text-secondary-text"
                   disabled={isSolved || !numberOfGuessesLeft || isPending}
                   autoComplete="off"
                 />

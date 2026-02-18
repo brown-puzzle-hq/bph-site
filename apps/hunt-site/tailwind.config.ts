@@ -21,25 +21,25 @@ export default {
       },
       colors: {
         // Main is the primary color of the site
-        "main-bg": "#3C73D4", // Background
-        "main-text": "#faf7fd", // Basic text
-        "main-header": "#faf7fd", // Header text
-        "main-bottom": "#76AADD", // Bottom gradient
+        "main-bg": "#1B3AB4", // Background
+        "main-text": "#FAF7FD", // Basic text
+        "main-header": "#FAF7FD", // Header text
+        "main-bottom": "#5673E6", // Bottom gradient
 
-        "secondary-bg": "#ffffff", // Background of text field
-        "secondary-text": colors.black, // Text color for text field
+        "secondary-bg": "#E0F2FE", // Background of text field
+        "secondary-text": colors.gray[900], // Text color for text field
 
         // Other backgrounds
-        "footer-bg": "#76AADD",
-        "nav-bg": "#1335B5",
+        "footer-bg": "#000042",
+        "nav-bg": "#1B3AB4",
         "tooltip-bg": colors.gray[900],
 
         // Other text colors
-        link: colors.blue[300],
+        link: colors.blue[200],
         "correct-guess": colors.emerald[300],
         "partial-guess": colors.yellow[300],
         "incorrect-guess": colors.rose[300],
-        error: colors.red[400],
+        error: colors.red[300],
       },
       typography: ({ theme }: { theme: any }) => ({
         wrapup: {

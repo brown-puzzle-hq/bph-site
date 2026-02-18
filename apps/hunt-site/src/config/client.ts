@@ -1,6 +1,6 @@
 /** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
 
-export const HUNT_NAME = "Brown Puzzlehunt 2026";
+export const HUNT_NAME = "Brown Puzzlehunt";
 export const HUNT_DOMAIN = "brownpuzzlehunt.com";
 export const HUNT_URL = `https://www.${HUNT_DOMAIN}`;
 

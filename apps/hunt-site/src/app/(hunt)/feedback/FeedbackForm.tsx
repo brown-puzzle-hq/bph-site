@@ -83,8 +83,10 @@ export default function FeedbackForm({
                 <FormItem className="mb-4">
                   <FormDescription className="text-main-text">
                     Notice puzzle errata, website bugs, or anything else we
-                    should be aware of? Send us feedback here. This text box
-                    supports Markdown.
+                    should be aware of? Send us feedback here.{" "}
+                    <span className="italic">
+                      This textbox supports Markdown.
+                    </span>
                   </FormDescription>
                   <FormControl>
                     {preview ? (
@@ -104,7 +106,7 @@ export default function FeedbackForm({
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-secondary-bg text-secondary-accent placeholder:text-white/40 focus-visible:ring-offset-0"
+                        className="bg-secondary-bg text-secondary-text placeholder:text-gray-600 focus-visible:ring-offset-0"
                         placeholder="No response yet"
                         {...field}
                       />

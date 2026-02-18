@@ -16,7 +16,7 @@ import { CheckCircle, Unlock, Trophy } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
-const TOAST_CLASS = "bg-[#703B50] text-white shadow-lg rounded-xl";
+const TOAST_CLASS = "bg-nav-bg text-main-text shadow-lg rounded-xl";
 
 type WebSocketContextValue = {
   readyState: number;
@@ -46,7 +46,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       const puzzleLink = (id: string, name: string) => (
         <Link
           href={`/puzzle/${id}`}
-          className="font-semibold text-white underline hover:text-purple-200"
+          className="font-semibold text-main-text underline hover:text-opacity-90"
         >
           {name}
         </Link>

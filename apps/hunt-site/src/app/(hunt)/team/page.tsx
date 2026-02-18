@@ -153,7 +153,7 @@ export default async function Home() {
         defaultValue={session?.user.interactionMode ?? "in-person"}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2 space-x-1 bg-footer-bg text-main-text">
+        <TabsList className="grid w-full grid-cols-2 space-x-1 bg-[#000080] text-main-text">
           <TabsTrigger
             className="data-[state=active]:bg-main-bg data-[state=active]:text-main-text"
             value="in-person"

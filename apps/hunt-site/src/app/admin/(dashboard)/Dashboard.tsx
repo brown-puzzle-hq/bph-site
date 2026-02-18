@@ -200,119 +200,111 @@ export async function Dashboard() {
   }
 
   return (
-    <div className="flex w-full flex-col">
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 md:pt-4">
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card x-chunk="dashboard-01-chunk-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Teams</CardTitle>
-              <UsersRound className="text-muted-foreground h-4 w-4" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalTeams}</div>
-              <p className="text-muted-foreground text-xs">
-                {remoteTeams} remote & {inPersonTeams} in-person
-              </p>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-1">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Guesses</CardTitle>
-              <Puzzle className="text-muted-foreground h-4 w-4" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalGuesses}</div>
-              <p className="text-muted-foreground text-xs">
-                {percentCorrectGuesses}% correct
-              </p>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-2">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Hints</CardTitle>
-              <MessageCircleQuestion className="text-muted-foreground h-4 w-4" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalHints}</div>
-              <p className="text-muted-foreground text-xs">
-                {percentAnsweredHints}% answered
-              </p>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Other</CardTitle>
-              <PackageOpen className="text-muted-foreground h-4 w-4" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">XX</div>
-              <p className="text-muted-foreground text-xs">XX</p>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
-            <CardHeader className="flex flex-row items-center">
-              <div className="grid gap-2">
-                <CardTitle>Activity</CardTitle>
-                <CardDescription>
-                  Hourly counts of guesses, hints, solves, and registrations
-                  since the start of the hunt.
-                </CardDescription>
-              </div>
-              {/* <Button asChild size="sm" className="ml-auto gap-1"> */}
-              {/*   <Link href="#"> */}
-              {/*     View All */}
-              {/*     <ArrowUpRight className="h-4 w-4" /> */}
-              {/*   </Link> */}
-              {/* </Button> */}
-            </CardHeader>
-            <CardContent>
-              <ActivityChart activityData={activityData} />
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-5">
-            <CardHeader>
-              <CardTitle>Hint Leaderboard</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div className="no-scrollbar overflow-auto lg:max-h-[75vh]">
-                {hintLeaderboard.map((user) => (
-                  <div className="mb-2 flex items-center gap-4" key={user.id}>
-                    <Avatar className="flex h-9 w-9">
-                      {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
-                      <AvatarFallback
-                        className={
-                          user.ranking === 1
-                            ? "bg-yellow-500 text-white"
-                            : user.ranking === 2
-                              ? "bg-slate-400 text-white"
-                              : user.ranking === 3
-                                ? "bg-yellow-800 text-white"
-                                : ""
-                        }
-                      >
-                        {user.ranking ?? ""}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user.displayName}
-                      </p>
-                      <p className="text-muted-foreground text-sm text-gray-500">
-                        {user.id}
-                      </p>
-                    </div>
-                    <div className="ml-auto font-medium">
-                      {user.hintsAnswered}
-                    </div>
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 md:gap-8 md:p-8 md:pt-0">
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <Card x-chunk="dashboard-01-chunk-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Teams</CardTitle>
+            <UsersRound className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalTeams}</div>
+            <p className="text-muted-foreground text-xs">
+              {remoteTeams} remote & {inPersonTeams} in-person
+            </p>
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-1">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Guesses</CardTitle>
+            <Puzzle className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalGuesses}</div>
+            <p className="text-muted-foreground text-xs">
+              {percentCorrectGuesses}% correct
+            </p>
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Hints</CardTitle>
+            <MessageCircleQuestion className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalHints}</div>
+            <p className="text-muted-foreground text-xs">
+              {percentAnsweredHints}% answered
+            </p>
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-3">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Other</CardTitle>
+            <PackageOpen className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">XX</div>
+            <p className="text-muted-foreground text-xs">XX</p>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+        <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+          <CardHeader className="flex flex-row items-center">
+            <div className="grid gap-2">
+              <CardTitle>Activity</CardTitle>
+              <CardDescription>
+                Hourly counts of guesses, hints, solves, and registrations since
+                the start of the hunt.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ActivityChart activityData={activityData} />
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-5">
+          <CardHeader>
+            <CardTitle>Hint Leaderboard</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-2">
+            <div className="no-scrollbar overflow-auto lg:max-h-[75vh]">
+              {hintLeaderboard.map((user) => (
+                <div className="mb-2 flex items-center gap-4" key={user.id}>
+                  <Avatar className="flex h-9 w-9">
+                    {/* <AvatarImage src="/avatars/01.png" alt="Avatar" /> */}
+                    <AvatarFallback
+                      className={
+                        user.ranking === 1
+                          ? "bg-yellow-500 text-white"
+                          : user.ranking === 2
+                            ? "bg-slate-400 text-white"
+                            : user.ranking === 3
+                              ? "bg-yellow-800 text-white"
+                              : ""
+                      }
+                    >
+                      {user.ranking ?? ""}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid gap-1">
+                    <p className="text-sm font-medium leading-none">
+                      {user.displayName}
+                    </p>
+                    <p className="text-muted-foreground text-sm text-gray-500">
+                      {user.id}
+                    </p>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+                  <div className="ml-auto font-medium">
+                    {user.hintsAnswered}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
