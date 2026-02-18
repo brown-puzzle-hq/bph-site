@@ -1,5 +1,4 @@
 "use server";
-import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
 import { and, count, eq, inArray } from "drizzle-orm";
@@ -20,17 +19,15 @@ import {
 } from "@/config/client";
 import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { ensureError } from "~/lib/server";
+import { ensureError } from "~/lib/utils";
+import { assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-/** Handles a guess for a puzzle. May call handleSolve.
- * Returns a { error: string } */
+/** Handles a guess for a puzzle. May call handleSolve. */
 export async function handleGuess(puzzleId: string, guess: string) {
   // Check that the user is logged in
-  const session = await auth();
-  if (!session?.user?.id) return { error: "Not logged in" };
-  const teamId = session.user.id;
+  const { id: teamId } = await assertPermissions({ level: "userAny" });
   const currDate = new Date();
 
   // Check that the guess does not exceed guess limits
@@ -43,8 +40,10 @@ export async function handleGuess(puzzleId: string, guess: string) {
       },
     },
   });
-  if (!puzzle) return { error: "Puzzle not found" };
 
+  if (!puzzle) throw new Error("Puzzle not found");
+
+  // TODO: can we eliminate this... also doesn't generalize to hunt structure
   const module = await import(`../../../${puzzleId}/data.tsx`).catch(
     () => null,
   );
@@ -59,7 +58,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
     ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
-    return { error: "You have no guesses left. Please contact HQ for help." };
+    throw new Error("You have no guesses left. Please contact HQ for help.");
   }
 
   // Check if the puzzle was solved by being the right string
@@ -137,16 +136,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
     // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to submit the same guess twice
     if ("code" in error && error.code === "23505") {
-      return { error: "Already guessed!" };
+      throw new Error("Already guessed!");
     }
+
     const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
     sendBotMessage(errorMessage, "dev");
-    // PostgreSQL error code 23505 is a unique constraint violation
-    // This occurs when a team tries to submit the same guess twice
-    if ("code" in error && error.code === "23505") {
-      return { error: "Already guessed!" };
-    }
-    return { error: "An unexpected error occurred. Please try again." };
+    throw error;
   }
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
@@ -212,7 +207,13 @@ export async function handleGuess(puzzleId: string, guess: string) {
   }
 
   revalidatePath(`/puzzle/${puzzleId}`);
-  return { error: null };
+
+  const results = await Promise.allSettled(notifications);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      console.error("Websocket send failed:", r.reason);
+    }
+  }
 }
 
 /** Handles a solve for a puzzle. Returns whether the hunt was finished. */
@@ -221,7 +222,7 @@ type SolveOutcome = {
   unlockedPuzzles: string[];
 };
 
-export async function handleSolve(
+async function handleSolve(
   tx: TxType,
   teamId: string,
   puzzleId: string,

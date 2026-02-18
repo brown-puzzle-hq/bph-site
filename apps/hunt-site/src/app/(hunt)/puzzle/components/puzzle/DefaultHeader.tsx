@@ -13,12 +13,10 @@ export default async function DefaultHeader({
   puzzleId: string;
   hasSolution: boolean;
 }) {
-  const session = await auth();
-
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
-  })!;
+  });
   if (!puzzle) redirect("/puzzle");
 
   return (
@@ -33,7 +31,7 @@ export default async function DefaultHeader({
           >
             Puzzle
           </Link>
-          {(await canViewHint(session)) === "success" && (
+          {(await canViewHint(puzzleId)) === "success" && (
             <>
               <span className="text-gray-500">|</span>
               <Link
@@ -45,20 +43,19 @@ export default async function DefaultHeader({
               </Link>
             </>
           )}
-          {hasSolution &&
-            (await canViewSolution(puzzleId, session)) === "success" && (
-              <>
-                <span className="text-gray-500">|</span>
-                <Link
-                  href={`/puzzle/${puzzleId}/solution`}
-                  className="text-link hover:underline"
-                  prefetch={false}
-                >
-                  Solution
-                </Link>
-              </>
-            )}
-          {(await canViewStats(session)) === "success" && (
+          {hasSolution && (await canViewSolution(puzzleId)) === "success" && (
+            <>
+              <span className="text-gray-500">|</span>
+              <Link
+                href={`/puzzle/${puzzleId}/solution`}
+                className="text-link hover:underline"
+                prefetch={false}
+              >
+                Solution
+              </Link>
+            </>
+          )}
+          {(await canViewStats(puzzleId)) === "success" && (
             <>
               <span className="text-gray-500">|</span>
               <Link

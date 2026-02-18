@@ -14,9 +14,7 @@ export default async function DefaultSolutionPage({
   solutionBody: React.ReactNode;
   authors: string | null;
 }) {
-  // Check if user can view solution
-  const session = await auth();
-  switch (await canViewSolution(puzzleId, session)) {
+  switch (await canViewSolution(puzzleId)) {
     case "success":
       break;
     case "not_authenticated":

@@ -66,7 +66,7 @@ export default function CopyButton({ copyText }: { copyText: string }) {
             ),
           });
         } catch (error) {
-          toast.error("Failed to copy", {
+          toast.error("Failed to copy.", {
             description: "An error occurred while copying.",
           });
         }

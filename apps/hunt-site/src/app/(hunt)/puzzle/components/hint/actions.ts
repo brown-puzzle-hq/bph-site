@@ -3,31 +3,27 @@
 import { db } from "@/db/index";
 import { hints, replies } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { auth } from "@/auth";
 import { getNumberOfHintsRemaining } from "@/config/server";
 import { sendBotMessage } from "~/lib/comms";
 import { HUNT_URL } from "@/config/client";
+import { assertPermissions } from "~/lib/server";
+import { assertCanViewPuzzle } from "../../actions";
 
-export type MessageType = "request" | "response" | "reply";
+export type MessageType = "request" | "reply";
 
 /** Inserts a hint request into the hint table */
 export async function insertHintRequest(puzzleId: string, hint: string) {
-  const session = await auth();
-  if (!session?.user?.id) throw new Error("Not logged in");
+  const {
+    id: teamId,
+    role,
+    interactionMode,
+  } = await assertPermissions({ level: "userAny" });
 
-  const teamId = session.user.id;
-  const role = session.user.role;
-  const interactionMode = session.user.interactionMode;
-
-  // Checks
+  // Check validity
   const hasHint =
     (await getNumberOfHintsRemaining(teamId, role, interactionMode)) > 0;
 
-  if (!hasHint) {
-    return {
-      error: "No hints remaining.",
-    };
-  }
+  if (!hasHint) throw new Error("No hints remaining.");
 
   const unansweredHint = await db.query.hints.findFirst({
     columns: { id: true },
@@ -40,121 +36,97 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
   });
 
   if (unansweredHint) {
-    return {
-      error: `You have an outstanding hint on the puzzle ${unansweredHint.puzzle.name}.`,
-    };
+    throw new Error(
+      `You have an outstanding hint on the puzzle ${unansweredHint.puzzle.name}.`,
+    );
   }
 
-  const result = (
-    await db
-      .insert(hints)
-      .values({
-        teamId: teamId,
-        puzzleId,
-        request: hint,
-        requestTime: new Date(),
-        status: "no_response",
-      })
-      .returning({ id: hints.id })
-  )?.[0];
+  await assertCanViewPuzzle(puzzleId);
 
-  if (!result) {
-    return {
-      error:
-        "Please try again. If the problem persists, contact HQ or use the feedback form.",
-    };
-  }
+  const [request] = await db
+    .insert(hints)
+    .values({
+      teamId,
+      puzzleId,
+      request: hint,
+      requestTime: new Date(),
+      status: "no_response",
+    })
+    .returning({ id: hints.id });
 
-  const hintMessage = `🙏 **Hint** [request](${HUNT_URL}/admin/hints/${result.id}) by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): ${hint}`;
+  if (!request) throw new Error("An unexpected error occurred.");
+
+  const hintMessage = `🙏 **Hint** [request](${HUNT_URL}/admin/hints/${request.id}) by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): ${hint}`;
   await sendBotMessage(hintMessage, "hint", "@hint");
 
-  return { error: null, id: result.id };
+  return request;
 }
 
 /** Edits a hint */
-export async function editMessage(
+export async function editTeamMessage(
   id: number,
   message: string,
   type: MessageType,
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Not logged in");
-  }
+  const { id: teamId } = await assertPermissions({ level: "userAny" });
 
   switch (type) {
     case "request":
       await db
         .update(hints)
         .set({ request: message })
-        .where(and(eq(hints.id, id), eq(hints.teamId, session.user.id)))
-        .returning({ id: hints.id });
-      break;
-    case "response":
-      await db
-        .update(hints)
-        .set({ response: message })
-        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)))
-        .returning({ id: hints.id });
+        .where(and(eq(hints.id, id), eq(hints.teamId, teamId)));
       break;
     case "reply":
       await db
         .update(replies)
         .set({ message })
-        .where(and(eq(replies.id, id), eq(replies.userId, session.user.id)))
-        .returning({ id: hints.id });
+        .where(and(eq(replies.id, id), eq(replies.userId, teamId)));
       break;
   }
 }
 
 /** Handles a reply from a team */
 export async function insertTeamReply(hintId: number, message: string) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Not logged in");
-  }
-  try {
-    const hint = await db.query.hints.findFirst({
-      where: eq(hints.id, hintId),
-      with: {
-        team: {
-          columns: {
-            id: true,
-            displayName: true,
-            members: true,
-            primaryEmail: true,
-          },
-        },
-        puzzle: {
-          columns: {
-            id: true,
-            name: true,
-          },
+  const { id: teamId, displayName } = await assertPermissions({
+    level: "userAny",
+  });
+
+  const hint = await db.query.hints.findFirst({
+    where: and(eq(hints.id, hintId), eq(hints.teamId, teamId)),
+    with: {
+      team: {
+        columns: {
+          id: true,
+          displayName: true,
+          members: true,
+          primaryEmail: true,
         },
       },
-    });
+      puzzle: {
+        columns: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
 
-    if (!hint) {
-      return null;
-    }
+  if (!hint) throw new Error("Hint not found.");
 
-    const result = await db
-      .insert(replies)
-      .values({
-        hintId,
-        userId: session.user.id,
-        message,
-        time: new Date(),
-      })
-      .returning({ id: replies.id });
+  const [reply] = await db
+    .insert(replies)
+    .values({
+      hintId,
+      userId: teamId,
+      message,
+      time: new Date(),
+    })
+    .returning({ id: replies.id });
 
-    if (result[0]?.id) {
-      const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${hint.team.displayName}](${HUNT_URL}/team/${hint.team.id}) on [${hint.puzzle.name}](${HUNT_URL}/puzzle/${hint.puzzle.id} ): ${message}`;
-      await sendBotMessage(hintMessage, "hint", "@hint");
-      return result[0].id;
-    }
-    return null;
-  } catch (_) {
-    return null;
-  }
+  if (!reply) throw new Error("Unable to insert reply.");
+
+  const hintMessage = `🙏 **Hint** [reply](${HUNT_URL}/admin/hints/${hintId}?reply=true) by [${displayName}](${HUNT_URL}/team/${teamId}) on [${hint.puzzle.name}](${HUNT_URL}/puzzle/${hint.puzzle.id} ): ${message}`;
+  await sendBotMessage(hintMessage, "hint", "@hint");
+  return { replyId: reply.id };
 }

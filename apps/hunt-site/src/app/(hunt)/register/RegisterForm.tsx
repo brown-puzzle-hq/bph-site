@@ -29,7 +29,7 @@ import Link from "next/link";
 import { IN_PERSON, HUNT_NAME, INTERACTION_MODE_VALUES } from "@/config/client";
 import { signIn } from "next-auth/react";
 import { serializeMembers } from "~/lib/team-members";
-import { focusAtEnd, cn } from "~/lib/utils";
+import { focusAtEnd, cn, ensureError } from "~/lib/utils";
 
 export const registerFormSchema = z
   .object({
@@ -92,33 +92,36 @@ export function RegisterForm() {
   }, [fields.length, append]);
 
   const onSubmit = async (data: RegisterFormValues) => {
-    const { error } = await insertTeam({
-      ...data,
-      members: serializeMembers(data.members),
-    });
-
-    if (error) {
-      toast.error("Register failed", {
-        description: error,
+    try {
+      await insertTeam({
+        ...data,
+        members: serializeMembers(data.members),
       });
-      return;
+
+      await signIn("credentials", {
+        id: data.id,
+        password: data.password,
+        redirect: false,
+      });
+
+      toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
+        description: "Your team has been registered.",
+      });
+      router.push("/");
+    } catch (e) {
+      const error = ensureError(e);
+      if (error.message.startsWith("duplicate key value")) {
+        form.setError("id", {
+          type: "server",
+          message: "Username already taken",
+        });
+        form.setFocus("id");
+      } else {
+        toast.error("Failed to register team.", {
+          description: "An unexpected error occurred. Please try again.",
+        });
+      }
     }
-
-    const result = await signIn("credentials", {
-      id: data.id,
-      password: data.password,
-      redirect: false,
-    });
-
-    if (!result?.ok || result?.code === "credentials") {
-      alert("An unexpected error occurred. Please try again.");
-      return;
-    }
-
-    toast("Welcome to " + HUNT_NAME + ", " + data.displayName + "!", {
-      description: "Your team has been registered.",
-    });
-    router.push("/");
   };
 
   const { errors } = useFormState({ control: form.control });
@@ -132,7 +135,6 @@ export function RegisterForm() {
   >([]);
 
   const inPersonEnded = new Date() > IN_PERSON.END_TIME;
-  const inPersonStarted = new Date() > IN_PERSON.START_TIME;
 
   return (
     <Form {...form}>

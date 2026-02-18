@@ -44,7 +44,7 @@ export function HintTable<TData, TValue>({
 }: HintTableProps<TData, TValue>) {
   const router = useRouter();
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userId = session?.user.id;
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([

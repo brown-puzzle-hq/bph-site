@@ -1,10 +1,14 @@
 "use server";
+
 import { db } from "~/server/db";
 import { teams, puzzles, guesses, hints } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { INITIAL_PUZZLES } from "@/config/server";
+import { assertPermissions } from "~/lib/server";
 
 export async function getSearchedTeam(teamId: string) {
+  await assertPermissions({ level: "admin" });
+
   const result = await db.query.teams.findFirst({
     where: eq(teams.id, teamId),
     columns: {
@@ -27,28 +31,28 @@ export async function getSearchedTeam(teamId: string) {
     },
   });
 
-  if (!result) {
-    return { error: "Team not found." };
-  }
+  if (!result) throw new Error(`Team ${teamId} not found.`);
 
-  const unlocks = result?.unlocks.map((u) => u.puzzleId) || [];
+  const unlocks = result.unlocks.map((u) => u.puzzleId);
   const unlocksAndInitialPuzzles = [...unlocks, ...INITIAL_PUZZLES];
-  const solves = result?.solves.map((s) => s.puzzleId) || [];
+  const solves = result.solves.map((s) => s.puzzleId);
 
   return {
     ...result,
     unlocks: unlocksAndInitialPuzzles,
-    solves: solves,
+    solves,
   };
 }
 
 export async function getSearchedPuzzle(
   teamId: string | null,
-  puzzleId: string,
+  puzzleId: string, // should be valid
 ) {
+  await assertPermissions({ level: "admin" });
+
   // If no teamId is provided, return all of the hints made on the puzzle
   if (!teamId) {
-    const result = await db.query.puzzles.findFirst({
+    const puzzle = await db.query.puzzles.findFirst({
       where: eq(puzzles.id, puzzleId),
       columns: {},
       with: {
@@ -57,13 +61,12 @@ export async function getSearchedPuzzle(
         },
       },
     });
-    if (!result) {
-      return { error: "Puzzle not found." };
-    }
+
+    if (!puzzle) throw new Error(`Puzzle ${puzzleId} not found.`);
+
     return {
-      puzzleId: puzzleId,
-      guesses: null,
-      requestedHints: result.hints,
+      guesses: [],
+      requestedHints: puzzle.hints,
     };
   }
 
@@ -85,13 +88,7 @@ export async function getSearchedPuzzle(
     },
   });
 
-  if (!result) {
-    return { error: "Puzzle not found." };
-  }
+  if (!result) throw new Error(`Team ${teamId} not found.`);
 
-  return {
-    puzzleId: puzzleId,
-    guesses: result.guesses,
-    requestedHints: result.requestedHints,
-  };
+  return result;
 }

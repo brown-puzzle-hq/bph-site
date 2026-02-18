@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import {
-  editMessage,
+  editTeamMessage,
   insertTeamReply,
   insertHintRequest,
   MessageType,
@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { type HintStatus } from "@/config/client";
+import { ensureError } from "~/lib/utils";
 
 type TableProps = {
   previousHints: PreviousHints;
@@ -94,8 +95,8 @@ export default function HuntHintThreads({
       {
         id: 0,
         team: {
-          displayName: session?.user?.displayName!,
-          id: session?.user?.id!,
+          displayName: session!.user.displayName,
+          id: session!.user.id,
         },
         claimer: null,
         request,
@@ -108,37 +109,19 @@ export default function HuntHintThreads({
     setRequest("");
 
     startTransition(async () => {
-      const { error, id } = await insertHintRequest(puzzleId, message);
-      if (error) {
-        // Revert optimistic update
+      try {
+        const { id } = await insertHintRequest(puzzleId, message);
+        setOptimisticHints((prev) =>
+          prev.map((hint) => (hint.id === 0 ? { ...hint, id } : hint)),
+        );
+      } catch (e) {
         setOptimisticHints((prev) => prev.filter((hint) => hint.id !== 0));
-        if (
-          error ===
-          "Please try again. If the problem persists, contact HQ or use the feedback form."
-        ) {
-          toast.error("Failed to request hint", {
-            description: error,
-          });
-          setRequest(request);
-        } else {
-          toast.error("Failed to request hint", {
-            description: error + " Request copied to clipboard.",
-          });
-          if (request) navigator.clipboard.writeText(request);
-        }
-      } else {
-        // Update reply id
-        startTransition(() => {
-          setOptimisticHints((prev) =>
-            prev.map((hint) =>
-              hint.id === 0
-                ? {
-                    ...hint,
-                    id: id!,
-                  }
-                : hint,
-            ),
-          );
+        // Don't revert request box in case hint limit was reached
+        navigator.clipboard.writeText(message);
+
+        const error = ensureError(e);
+        toast.error("Failed to request hint.", {
+          description: error.message + " Request copied to clipboard.",
         });
       }
     });
@@ -149,15 +132,12 @@ export default function HuntHintThreads({
     value: string,
     type: MessageType,
   ) => {
-    startTransition(async () => await editMessage(id, value, type));
     setOptimisticHints((prev) =>
       prev.map((hint) => {
         if (!hint) return hint;
         switch (type) {
           case "request":
             return hint.id === id ? { ...hint, request: value } : hint;
-          case "response":
-            return hint.id === id ? { ...hint, response: value } : hint;
           case "reply":
             return {
               ...hint,
@@ -171,10 +151,18 @@ export default function HuntHintThreads({
       }),
     );
     setEdit(null);
+    startTransition(async () => {
+      try {
+        await editTeamMessage(id, value, type);
+      } catch {
+        setOptimisticHints(optimisticHints);
+        setEdit(edit);
+        toast.error("Failed to edit message.");
+      }
+    });
   };
 
   const handleSubmitReply = async (hintId: number, message: string) => {
-    // Optimistic update
     setOptimisticHints((prev) =>
       prev.map((hint) =>
         hint.id === hintId
@@ -184,8 +172,8 @@ export default function HuntHintThreads({
                 id: 0,
                 message,
                 user: {
-                  displayName: session!.user!.displayName,
-                  id: session!.user!.id!,
+                  displayName: session!.user.displayName,
+                  id: session!.user.id,
                 },
                 time: new Date(),
               }),
@@ -193,31 +181,11 @@ export default function HuntHintThreads({
           : hint,
       ),
     );
-
     setNewReply(null);
 
     startTransition(async () => {
-      const replyId = await insertTeamReply(hintId, message);
-
-      if (replyId === null) {
-        // Revert optimistic update
-        setOptimisticHints((prev) =>
-          prev.map((hint) =>
-            hint.id === hintId
-              ? {
-                  ...hint,
-                  replies: hint.replies.filter((reply) => reply.id !== 0),
-                }
-              : hint,
-          ),
-        );
-        setNewReply(newReply); // Works since variable changes are not instant
-        toast.error("Failed to submit reply.", {
-          description:
-            "Please try again. If the problem persists, contact HQ or use the feedback form.",
-        });
-      } else {
-        // Update replyId
+      try {
+        const { replyId } = await insertTeamReply(hintId, message);
         setOptimisticHints((prev) =>
           prev.map((hint) =>
             hint.id === hintId
@@ -230,6 +198,10 @@ export default function HuntHintThreads({
               : hint,
           ),
         );
+      } catch {
+        setOptimisticHints(optimisticHints);
+        setNewReply(newReply);
+        toast.error("Failed to submit reply.");
       }
     });
   };
@@ -250,7 +222,7 @@ export default function HuntHintThreads({
       hintRequestState;
     if (
       new Date() >
-      (session?.user?.interactionMode === "in-person"
+      (session?.user.interactionMode === "in-person"
         ? IN_PERSON.END_TIME
         : REMOTE.END_TIME)
     ) {
@@ -321,7 +293,7 @@ export default function HuntHintThreads({
             hintRequestState.hintsRemaining < 1 ||
             optimisticHints.some((hint) => !hint.response) ||
             new Date() >
-              (session?.user?.interactionMode === "in-person"
+              (session?.user.interactionMode === "in-person"
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME)
           }
@@ -342,7 +314,7 @@ export default function HuntHintThreads({
             hintRequestState.hintsRemaining < 1 ||
             optimisticHints.some((hint) => !hint.response) ||
             new Date() >
-              (session?.user?.interactionMode === "in-person"
+              (session?.user.interactionMode === "in-person"
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME)
           }
@@ -357,7 +329,7 @@ export default function HuntHintThreads({
           ).getHours();
           return (
             now <
-              (session?.user?.interactionMode === "in-person"
+              (session?.user.interactionMode === "in-person"
                 ? IN_PERSON.END_TIME
                 : REMOTE.END_TIME) &&
             hour >= 0 &&
@@ -379,7 +351,7 @@ export default function HuntHintThreads({
             <div className="relative flex justify-between">
               <b>Team</b>
               {/* If the hint request was made by the current user, allow edits */}
-              {hint.team.id === session?.user?.id && (
+              {hint.team.id === session?.user.id && (
                 <div className="absolute -top-5 right-0">
                   {edit?.id === hint.id && edit.type === "request" ? (
                     <div className="space-x-0.5">
@@ -547,7 +519,7 @@ export default function HuntHintThreads({
                           )}
 
                         {/* If the previous hint reply was made by user, allow edits */}
-                        {reply.user.id === session?.user?.id &&
+                        {reply.user.id === session?.user.id &&
                           (edit?.type === "reply" && edit.id === reply.id ? (
                             <div className="space-x-0.5">
                               <button

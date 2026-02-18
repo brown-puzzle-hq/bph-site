@@ -150,7 +150,7 @@ export default async function Home() {
     <div className="mx-auto mb-12 max-w-2xl px-4 pt-6">
       <h1 className="mb-2 text-center">Leaderboard</h1>
       <Tabs
-        defaultValue={session?.user?.interactionMode ?? "in-person"}
+        defaultValue={session?.user.interactionMode ?? "in-person"}
         className="w-full"
       >
         <TabsList className="grid w-full grid-cols-2 space-x-1 bg-footer-bg text-[#6c518e]">

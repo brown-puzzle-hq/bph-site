@@ -1,23 +1,20 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and, asc } from "drizzle-orm";
 import { replies, solves, hints, puzzles } from "~/server/db/schema";
 import { getNumberOfHintsRemaining } from "@/config/server";
 import HuntHintThreads from "./HuntHintThreads";
 import { canViewPuzzle } from "@/puzzle/actions";
+import { checkPermissions } from "~/lib/server";
 
 export default async function DefaultHintPage({
   puzzleId,
 }: {
   puzzleId: string;
 }) {
-  // Get user
-  const session = await auth();
-
   // Check if user can view puzzle
-  switch (await canViewPuzzle(puzzleId, session)) {
+  switch (await canViewPuzzle(puzzleId)) {
     case "success":
       break;
     case "not_authenticated":
@@ -26,8 +23,8 @@ export default async function DefaultHintPage({
       redirect("/puzzle");
   }
 
-  const teamId = session?.user?.id;
-  if (!teamId) {
+  const { error, user } = await checkPermissions({ level: "userAny" });
+  if (error) {
     return (
       <div>
         <Link
@@ -41,6 +38,7 @@ export default async function DefaultHintPage({
       </div>
     );
   }
+  const { id: teamId, role, interactionMode } = user;
 
   // Check if puzzle is solved
   const isSolved = !!(await db.query.solves.findFirst({
@@ -71,8 +69,8 @@ export default async function DefaultHintPage({
 
   const hintsRemaining = await getNumberOfHintsRemaining(
     teamId,
-    session!.user!.role,
-    session!.user!.interactionMode,
+    role,
+    interactionMode,
   );
 
   const query = await db.query.hints.findFirst({

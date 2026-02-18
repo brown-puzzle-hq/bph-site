@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { insertAnswerToken } from "./actions";
 import { SquareCheckBig } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
+import { cn, ensureError } from "~/lib/utils";
 
 const formSchema = z.object({
   answer: z.preprocess(
@@ -33,13 +34,15 @@ export default function EventForm({ eventId }: FormProps) {
     },
   });
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<boolean>(false);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setError(null);
-    const result = await insertAnswerToken(eventId, data.answer);
-    if (result && result.error) {
-      setError(result.error);
+    setError(false);
+    try {
+      await insertAnswerToken(eventId, data.answer);
+    } catch (e) {
+      const error = ensureError(e);
+      setError(true);
       setShaking(true);
       setTimeout(() => setShaking(false), 200);
     }
@@ -61,7 +64,7 @@ export default function EventForm({ eventId }: FormProps) {
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
-                    setError(null);
+                    setError(false);
                   }}
                   onBlur={() => {
                     const cleaned = sanitizeAnswer(form.getValues("answer"));
@@ -69,7 +72,11 @@ export default function EventForm({ eventId }: FormProps) {
                   }}
                   placeholder="TOKEN"
                   autoComplete="off"
-                  className={`w-full bg-inherit uppercase placeholder:text-white/40 ${error ? "text-incorrect-guess" : "text-main-text"} focus:outline-none ${shaking ? "animate-shake" : ""}`}
+                  className={cn(
+                    "w-full bg-inherit uppercase placeholder:text-white/40 focus:outline-none",
+                    error && "text-incorrect-guess",
+                    shaking && "animate-shake",
+                  )}
                 />
               </FormControl>
             </FormItem>

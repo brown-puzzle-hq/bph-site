@@ -12,7 +12,7 @@ import {
   unclaimHint,
   editHintStatus,
   insertHintResponse,
-  editMessage,
+  editAdminMessage,
   insertAdminReply,
   MessageType,
 } from "../actions";
@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormattedTime, ElapsedTime } from "~/lib/time";
+import { ensureError } from "~/lib/utils";
 
 type TableProps = {
   hint: Hint;
@@ -91,11 +92,13 @@ export default function AdminHintThread({
     }));
     setStatusLoading(true);
     startTransition(async () => {
-      const { error, title } = await editHintStatus(hint.id, selectedStatus);
-      setStatusLoading(false);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await editHintStatus(hint.id, selectedStatus);
+        setStatusLoading(false);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to update status.", {
+          description: error.message,
         });
         setOptimisticHint(optimisticHint);
       }
@@ -112,14 +115,16 @@ export default function AdminHintThread({
   const handleClaim = async () => {
     setOptimisticHint((prev) => ({
       ...prev,
-      claimer: { id: session!.user!.id!, displayName: session!.user!.name! },
+      claimer: { id: session!.user.id, displayName: session!.user.displayName },
     }));
 
     startTransition(async () => {
-      const { error, title } = await claimHint(hint.id);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await claimHint(hint.id);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to claim hint.", {
+          description: error.message,
         });
         setOptimisticHint(optimisticHint);
       }
@@ -134,10 +139,12 @@ export default function AdminHintThread({
     setResponse("");
 
     startTransition(async () => {
-      const { error, title } = await unclaimHint(hint.id);
-      if (error) {
-        toast.error(title, {
-          description: error,
+      try {
+        await unclaimHint(hint.id);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to unclaim hint.", {
+          description: error.message,
         });
         setOptimisticHint(optimisticHint);
         setResponse(response);
@@ -149,8 +156,8 @@ export default function AdminHintThread({
     setOptimisticHint((hint) => ({
       ...hint,
       claimer: {
-        id: session!.user!.id!,
-        displayName: session!.user!.displayName!,
+        id: session!.user.id,
+        displayName: session!.user.displayName,
       },
       response: response,
       status: "answered",
@@ -158,17 +165,17 @@ export default function AdminHintThread({
     setResponse("");
 
     startTransition(async () => {
-      const { error, title, id } = await insertHintResponse(hint.id, message);
-      if (error) {
-        toast.error(title, {
+      try {
+        await insertHintResponse(hint.id, message);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to submit response.", {
           description: response
-            ? error + " Response copied to clipboard."
-            : error,
+            ? error.message + " Response copied to clipboard."
+            : error.message,
         });
         if (response) navigator.clipboard.writeText(response);
         setOptimisticHint(optimisticHint);
-      } else {
-        setOptimisticHint((hint) => ({ ...hint, id: id! }));
       }
     });
   };
@@ -177,8 +184,6 @@ export default function AdminHintThread({
     setOptimisticHint((hint) => {
       if (!hint) return hint;
       switch (type) {
-        case "request":
-          return hint.id === id ? { ...hint, request: value } : hint;
         case "response":
           return hint.id === id ? { ...hint, response: value } : hint;
         case "reply":
@@ -193,7 +198,18 @@ export default function AdminHintThread({
       }
     });
     setEdit(null);
-    startTransition(async () => await editMessage(id, value, type));
+    startTransition(async () => {
+      try {
+        await editAdminMessage(id, value, type);
+      } catch (e) {
+        const error = ensureError(e);
+        toast.error("Failed to edit message.", {
+          description: error.message,
+        });
+        setOptimisticHint(optimisticHint);
+        setEdit(edit);
+      }
+    });
   };
 
   const handleSubmitReply = async (
@@ -208,8 +224,8 @@ export default function AdminHintThread({
         id: 0,
         message,
         user: {
-          displayName: session!.user!.displayName,
-          id: session!.user!.id!,
+          displayName: session!.user.displayName,
+          id: session!.user.id,
         },
         time: new Date(),
       }),
@@ -227,7 +243,7 @@ export default function AdminHintThread({
           replies: hint.replies.filter((reply) => reply.id !== 0),
         }));
         setNewReply(newReply); // Works since variable changes are not instant
-        toast.error("Failed to submit reply", {
+        toast.error("Failed to submit reply.", {
           description:
             "Please try again. If the problem persists, contact HQ or use the feedback form.",
         });
@@ -398,7 +414,7 @@ export default function AdminHintThread({
                     className="resize-none focus-visible:ring-0"
                     value={response}
                     onChange={(e) => setResponse(e.target.value)}
-                    disabled={optimisticHint.claimer?.id !== session?.user?.id}
+                    disabled={optimisticHint.claimer?.id !== session?.user.id}
                   />
                 </div>
 
@@ -412,7 +428,7 @@ export default function AdminHintThread({
                       Claim
                     </Button>
                   </div>
-                ) : optimisticHint.claimer.id === session?.user?.id ? (
+                ) : optimisticHint.claimer.id === session?.user.id ? (
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => handleSubmitResponse(response)}
@@ -476,7 +492,7 @@ export default function AdminHintThread({
 
                     {/* If the response was made by the current user, allow edits */}
                     {optimisticHint.response !== null &&
-                      optimisticHint.claimer?.id === session?.user?.id && (
+                      optimisticHint.claimer?.id === session?.user.id && (
                         <div>
                           {edit?.id === optimisticHint.id &&
                           edit.type === "response" ? (
@@ -609,7 +625,7 @@ export default function AdminHintThread({
                       ))}
 
                     {/* If the previous hint reply was made by user, allow edits */}
-                    {reply.user.id === session?.user?.id &&
+                    {reply.user.id === session?.user.id &&
                       reply.message !== "[Claimed]" && (
                         <div>
                           {edit?.type === "reply" && edit.id === reply.id ? (
