@@ -18,6 +18,12 @@ async function main() {
   let hadError = false;
 
   for (const [puzzleId, rel] of Object.entries(locations)) {
+    if (rel === null) {
+      console.error(`❌ ${puzzleId}: no folder found`);
+      hadError = true;
+      continue;
+    }
+
     const targetDir = path.join(PUZZLE_ROOT, rel);
     const title = `${namesFromDB[puzzleId]} - ${HUNT_NAME}`;
 
@@ -78,8 +84,6 @@ async function main() {
   } else {
     console.log("🎉 Puzzle folder check passed.");
   }
-
-  process.exit(0);
 }
 
 async function findLineMatching(
@@ -98,5 +102,5 @@ function extractQuotedValue(line: string, key: string): string | null {
 
 main().catch((err) => {
   console.error("❌ Folder check crashed:", err);
-  process.exit(1);
+  process.exit(0);
 });

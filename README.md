@@ -11,7 +11,7 @@ To get started with the main site, see the [README](/apps/hunt-site/README.md).
 - [x] Landing page art
 - [x] Favicon
 - [x] Landing page gate animation
-- [ ] Landing page parallax
+- [x] Landing page parallax
 - [x] Registration requirements (name, number of members)
 - [x] Info page
 

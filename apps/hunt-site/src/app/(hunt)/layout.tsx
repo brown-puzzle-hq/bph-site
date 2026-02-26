@@ -8,7 +8,6 @@ import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "@/config/client";
 import { HuntNavBar } from "./HuntNavBar";
-import { HuntNavBarSpacer } from "@/components/nav/HuntNavBarSpacer";
 
 export const metadata: Metadata = {
   title: HUNT_NAME,
@@ -27,16 +26,14 @@ export default async function RootLayout({
           {session?.user.role === "admin" && <CommandPalette />}
           <Toaster expand={true} visibleToasts={10} />
           <div className="bg-main-bg bg-gradient-to-t from-main-bottom to-main-bg">
-            {/* Navbar */}
             <HuntNavBar />
-
-            {/* Navbar spacer */}
-            <HuntNavBarSpacer />
+            {/* No extra component since we don't need Landing art to reach top */}
+            <div className="min-h-[56px]" />
             <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
             <footer className="bg-footer-bg py-2 text-center text-xs">
               <p className="hidden lg:block">
-                Having a good time? Want to support more puzzlehunts like this in
-                the future? Consider{" "}
+                Having a good time? Want to support more puzzlehunts like this
+                in the future? Consider{" "}
                 <Link
                   href="https://bbis.advancement.brown.edu/BBPhenix/give-now?did=05732af4-d994-4d40-bcd6-fb42d07b6eab"
                   className="text-link hover:underline"

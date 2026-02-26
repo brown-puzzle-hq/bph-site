@@ -345,10 +345,10 @@ export default function Page() {
               <p>
                 If you need a place for your team to work during the hunt, let
                 us know during the registration process and we will try to
-                accommodate you. We have limited classroom space, so our ability to allocate
-                classrooms like this will be limited. We will prioritize teams
-                which do not have other spaces available and who register in
-                advance.
+                accommodate you. We have limited classroom space, so our ability
+                to allocate classrooms like this will be limited. We will
+                prioritize teams which do not have other spaces available and
+                who register in advance.
               </p>
               <h3>Minors</h3>
               <p>
@@ -405,23 +405,26 @@ export default function Page() {
                 any time.
               </p>
             </TOCSection>
-            <TOCSection sectionId={7} tocTitle="What can I use to solve the hunt?">
+            <TOCSection
+              sectionId={7}
+              tocTitle="What can I use to solve the hunt?"
+            >
               <h2>What can I use to solve the hunt?</h2>
               <p>
-                This hunt was made by humans, for humans. We <strong>strongly 
-                discourage</strong> the use of LLMs or other AI models to solve 
-                puzzles. We've spent the last few months writing these puzzles for 
-                you to enjoy; we firmly believe that the best way for you to enjoy 
-                them is to solve them yourself. 
+                This hunt was made by humans, for humans. We{" "}
+                <strong>strongly discourage</strong> the use of LLMs or other AI
+                models to solve puzzles. We've spent the last few months writing
+                these puzzles for you to enjoy; we firmly believe that the best
+                way for you to enjoy them is to solve them yourself.
               </p>
               <p>
-                Other than LLMs, you may use any external sources for help, including other
-                people (as long as they are not helping other teams and are not
-                actively participating in the hunt).
+                Other than LLMs, you may use any external sources for help,
+                including other people (as long as they are not helping other
+                teams and are not actively participating in the hunt).
               </p>
               <p>
-                Use of Google search is not only permitted, but essential. You may also
-                benefit from other online tools, such as:
+                Use of Google search is not only permitted, but essential. You
+                may also benefit from other online tools, such as:
               </p>
               <ul>
                 <li>

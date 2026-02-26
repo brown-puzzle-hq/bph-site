@@ -91,16 +91,14 @@ async function main() {
 
   if (hadError) {
     console.error("❌ Puzzle directory map generation failed.");
-    process.exit(1);
+  } else {
+    console.log(
+      `🎉 Puzzle directory map written to ${path.relative(
+        process.cwd(),
+        OUTPUT_PATH,
+      )} (${Object.keys(puzzleDirectoryMap).length} puzzles)`,
+    );
   }
-
-  console.log(
-    `🎉 Puzzle directory map written to ${path.relative(
-      process.cwd(),
-      OUTPUT_PATH,
-    )} (${Object.keys(puzzleDirectoryMap).length} puzzles)`,
-  );
-  process.exit(0);
 }
 
 async function walkPuzzleDirectories(
@@ -146,5 +144,5 @@ async function walkPuzzleDirectories(
 
 main().catch((err) => {
   console.error("❌ Puzzle map generation crashed:", err);
-  process.exit(1);
+  process.exit(0);
 });

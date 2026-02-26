@@ -1,13 +1,15 @@
 {
   "root": "src/app/(hunt)/puzzle",
   "locations": {
+    "brown-date": null,
     "example-1": "example-1",
     "example-2": "example-2",
     "example-3": "example-3",
     "example-4": "example-4",
-    "example-5": "example-5"
+    "example-5": "example-5",
+    "one-guard-no-doors": null
   },
-  "missing": [],
+  "missing": ["one-guard-no-doors", "brown-date"],
   "extraneous": [
     "(business)",
     "(history-and-lit)",
