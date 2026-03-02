@@ -15,8 +15,7 @@ import Link from "next/link";
 import { CheckCircle, Unlock, Trophy } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-
-const TOAST_CLASS = "bg-nav-bg text-main-text shadow-lg rounded-xl";
+import { Button } from "@/components/ui/button";
 
 type WebSocketContextValue = {
   readyState: number;
@@ -43,72 +42,39 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     try {
       const data: SocketMessage = JSON.parse(event.data);
 
-      const puzzleLink = (id: string, name: string) => (
-        <Link
-          href={`/puzzle/${id}`}
-          className="font-semibold text-main-text underline hover:text-opacity-90"
-        >
-          {name}
-        </Link>
+      const puzzleLink = (id: string) => (
+        <Button asChild className="ml-auto" variant="outline">
+          <Link href={`/puzzle/${id}`} target="_blank">
+            View
+          </Link>
+        </Button>
       );
 
       switch (data.type) {
         case "SolvedPuzzle":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <CheckCircle className="h-6 w-6" />
-                <div>
-                  <div className="font-bold">Puzzle solved!</div>
-                  <div>{puzzleLink(data.puzzleId, data.puzzleName)}</div>
-                </div>
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast("Puzzle solved!", {
+            icon: <CheckCircle className="size-[18px]" />,
+            description: data.puzzleName,
+            action: puzzleLink(data.puzzleId),
+          });
           break;
 
         case "UnlockedPuzzle":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <Unlock className="h-6 w-6" />
-                <div>
-                  <div className="font-bold">Puzzle unlocked!</div>
-                  <div>{puzzleLink(data.puzzleId, data.puzzleName)}</div>
-                </div>
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast("Puzzle unlocked!", {
+            icon: <Unlock className="size-[18px]" />,
+            description: data.puzzleName,
+            action: puzzleLink(data.puzzleId),
+          });
           break;
 
         case "FinishedHunt":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <Trophy className="h-6 w-6" />
-                <div className="font-bold">
-                  Congratulations on finishing the hunt!
-                </div>
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast("Hunt finished. Congratulations!", {
+            icon: <Trophy className="size-[18px]" />,
+          });
           break;
 
         case "Toast":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <div className="font-bold">{data.title}</div>
-                {data.description && (
-                  <div className="text-white/90">{data.description}</div>
-                )}
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast(data.title, { description: data.description });
           break;
 
         default:

@@ -175,13 +175,15 @@ export function TeamTable<TData, TValue>({
   function handleEditRow<F extends keyof ClientEditableFields>(
     teamId: string,
     field: F,
-    cellValue: any,
+    cellValue: string,
   ) {
     setEditedRows((prev) => {
       const prevEdits = prev[teamId] ?? {};
       const oldValue = prevEdits[field]?.old ?? cellValue;
       const options = fieldToOptions[field];
-      const prevIndex = options.indexOf(prevEdits[field]?.new ?? cellValue);
+      const prevIndex = (options as readonly string[]).indexOf(
+        prevEdits[field]?.new ?? cellValue,
+      );
       const nextIndex = (prevIndex + 1) % options.length;
       const newValue = options[nextIndex];
 

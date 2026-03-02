@@ -20,8 +20,8 @@ export default function Page() {
           onClick={() =>
             sendWebsocketMessage({
               type: "Toast",
-              title: "Hi",
-              description: "Hello",
+              title: "Hello",
+              description: "If you can see this, the websocket server is up!",
             })
           }
         >

@@ -24,7 +24,18 @@ export default async function RootLayout({
       <body className="bg-main-bg text-main-text">
         <Providers session={session}>
           {session?.user.role === "admin" && <CommandPalette />}
-          <Toaster expand={true} visibleToasts={10} />
+          <Toaster
+            expand={true}
+            visibleToasts={10}
+            toastOptions={{
+              classNames: {
+                toast: "!bg-[#1C0770] !border-blue-300 !border-2",
+                title: "!text-main-text !text-sm !font-semibold",
+                description: "!text-main-text",
+                icon: "!text-main-text",
+              },
+            }}
+          />
           <div className="bg-main-bg bg-gradient-to-t from-main-bottom to-main-bg">
             <HuntNavBar />
             {/* No extra component since we don't need Landing art to reach top */}

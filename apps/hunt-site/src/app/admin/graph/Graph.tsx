@@ -25,12 +25,13 @@ import { cn, ensureError } from "~/lib/utils";
 import { type GraphConfig } from "./page";
 import { type Team } from "@/db/types";
 import { toast } from "sonner";
+import { formatPhoneNumber } from "~/lib/team-members";
 
 const roundTextColor: Record<string, string> = {};
 
 const roundNodeColor: Record<string, string> = {};
 
-export type SearchedTeam = Omit<Team, "password" | "roomNeeded"> & {
+export type SearchedTeam = Omit<Team, "password"> & {
   unlocks: string[];
   solves: string[];
 };
@@ -636,6 +637,26 @@ export default function Graph({
                 <span className="font-semibold"> Primary email: </span>
                 {searchedTeam.primaryEmail}
               </p>
+              {searchedTeam.interactionMode === "in-person" && (
+                <>
+                  <p>
+                    <span className="font-semibold">Brown members: </span>
+                    {searchedTeam.numCommunity}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone number: </span>
+                    {formatPhoneNumber(searchedTeam.phoneNumber)}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Room needed: </span>
+                    {searchedTeam.roomNeeded ? "Yes" : "No"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Solving location: </span>
+                    {searchedTeam.solvingLocation}
+                  </p>
+                </>
+              )}
               <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                 Members
               </p>

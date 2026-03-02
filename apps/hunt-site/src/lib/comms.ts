@@ -30,7 +30,7 @@ const channelToWebhookURL: Record<Channel, string | undefined> = {
 type Mention = "@hint" | "@HQ" | "@tech";
 
 const mentionToRoleId: Record<Mention, string> = {
-  "@hint": "<@&1310029428864057504>",
+  "@hint": "<@&1477851452192981003>",
   "@HQ": "<@&900958940475559969>",
   "@tech": "<@&1287563929282678795>",
 };
@@ -89,6 +89,8 @@ export async function sendEmail(
     return;
   }
 
+  to = [...new Set(to)];
+  bcc = bcc ? [...new Set(bcc)] : undefined;
   const resend = new Resend(process.env.RESEND_API_KEY);
   const response = await resend.emails.send({
     from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email

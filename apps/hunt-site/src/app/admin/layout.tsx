@@ -23,7 +23,16 @@ export default async function RootLayout({
       <body>
         <Providers session={session}>
           <CommandPalette />
-          <Toaster expand={true} visibleToasts={10} />
+          <Toaster
+            expand={true}
+            visibleToasts={10}
+            toastOptions={{
+              classNames: {
+                toast: "!border-2",
+                title: "!text-sm !font-semibold",
+              },
+            }}
+          />
           <AdminNavBar />
           <div className="min-h-[56px]" />
           {/* TODO: get rid of flex and pt-6 */}
