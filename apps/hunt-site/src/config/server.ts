@@ -11,22 +11,12 @@ import { IN_PERSON, REMOTE } from "./client";
  */
 
 /** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team. */
-export const INITIAL_PUZZLES: string[] = [
-  "example-1",
-  "example-2",
-  "example-3",
-];
+export const INITIAL_PUZZLES: string[] = [];
 
 /** Adjacency list for puzzles */
 // NOTE: every puzzle must be listed here and be associated with a round
 // for the src/admin/graph to work
-export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
-  "example-1": ["example-4", "example-5"],
-  "example-2": ["example-4", "example-5"],
-  "example-3": ["example-4", "example-5"],
-  "example-4": ["example-4", "example-5"],
-  "example-5": ["example-4", "example-5"],
-};
+export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {};
 
 export type Round = {
   name: string;
@@ -35,14 +25,45 @@ export type Round = {
 
 /** List of puzzles in each round. Each puzzle must be in a round. **/
 export const ROUNDS: Round[] = [
+  { name: "Business", puzzles: [] },
   {
-    name: "Example Round",
-    puzzles: ["example-1", "example-2", "example-3", "example-4", "example-5"],
+    name: "Humanities",
+    puzzles: ["card-game-theory", "mischievous-literature"],
+  },
+  { name: "Math", puzzles: ["primary-investigation", "herculean-math"] },
+  { name: "Performing Arts", puzzles: ["escapism-in-cinema", "wordbrain"] },
+  {
+    name: "Physical Sciences",
+    puzzles: ["hash-hash-hash-hash-bang"],
+  },
+  {
+    name: "RISD",
+    puzzles: ["advanced-logical-cooking-techniques", "one-guard-no-doors"],
+  },
+  {
+    name: "Social Sciences",
+    puzzles: ["intro-to-ubpcosu-final-exam", "intro-to-ubpcosu-first-lecture"],
+  },
+  {
+    name: "Meta",
+    puzzles: [
+      "anthropology-of-computers",
+      "psychoceramics",
+      "applied-criminology",
+      "theological-chemistry",
+      "underwater-basketweaving",
+      "geographical-textiles",
+      "thermodynamic-zoology",
+      "maritime-studies",
+      "luck-practicum",
+      "bar-exam",
+      "cubist-linguistics",
+    ],
   },
 ];
 
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */
-export const META_PUZZLES: string[] = ["example-1"];
+export const META_PUZZLES: string[] = [];
 
 /* HINTING SYSTEM
  * Teams currently get a hint request every three hours since the start of the hunt.

@@ -66,8 +66,14 @@ export default async function Page() {
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
       try {
+        const roundName = ROUNDS.find((round) =>
+          round.puzzles.includes(puzzle.id),
+        )
+          ?.name.toLowerCase()
+          .replace(/\s+/g, "-");
+
         const module = await import(
-          `../../(hunt)/puzzle/${puzzle.id}/data.tsx`
+          `../../(hunt)/puzzle/(${roundName})/${puzzle.id}/data.tsx`
         ).catch(() => null);
 
         const { inPersonBody, remoteBody, solutionBody, copyText } =

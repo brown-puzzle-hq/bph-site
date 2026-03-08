@@ -1,23 +1,38 @@
 {
   "root": "src/app/(hunt)/puzzle",
   "locations": {
+    "a-primary-investigation": null,
+    "advanced-logical-cooking-techniques": "(risd)/advanced-logical-cooking-techniques",
+    "anthropology-of-computers": "(meta)/anthropology-of-computers",
+    "applied-criminology": null,
+    "bar-exam": "(meta)/bar-exam",
     "brown-date": null,
-    "example-1": "example-1",
-    "example-2": "example-2",
-    "example-3": "example-3",
-    "example-4": "example-4",
-    "example-5": "example-5",
-    "one-guard-no-doors": null
+    "card-game-theory": "(history-and-lit)/card-game-theory",
+    "cubist-linguistics": "(meta)/cubist-linguistics",
+    "escapism-in-cinema": null,
+    "geographical-textiles": "(meta)/geographical-textiles",
+    "hash-hash-hash-hash-bang": "(physical-sciences)/hash-hash-hash-hash-bang",
+    "herculean-math": "(math)/herculean-math",
+    "intro-to-ubpcosu-final-exam": "(social-sciences)/intro-to-ubpcosu-final-exam",
+    "intro-to-ubpcosu-first-lecture": "(social-sciences)/intro-to-ubpcosu-first-lecture",
+    "luck-practicum": "(meta)/luck-practicum",
+    "maritime-studies": "(meta)/maritime-studies",
+    "mischievous-literature": "(history-and-lit)/mischievous-literature",
+    "one-guard-no-doors": null,
+    "psychoceramics": null,
+    "theological-chemistry": "(meta)/theological-chemistry",
+    "thermodynamic-zoology": "(meta)/thermodynamic-zoology",
+    "underwater-basketweaving": "(meta)/underwater-basketweaving",
+    "wordbrain": "(performing-arts)/wordbrain"
   },
-  "missing": ["one-guard-no-doors", "brown-date"],
-  "extraneous": [
-    "(business)",
-    "(history-and-lit)",
-    "(math)",
-    "(performing-arts)",
-    "(physical-sciences)",
-    "(risd)",
-    "(social-sciences)"
+  "missing": [
+    "brown-date",
+    "psychoceramics",
+    "applied-criminology",
+    "one-guard-no-doors",
+    "escapism-in-cinema",
+    "a-primary-investigation"
   ],
+  "extraneous": ["(business)"],
   "duplicate": {}
 }

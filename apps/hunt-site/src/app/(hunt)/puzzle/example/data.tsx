@@ -11,11 +11,11 @@ export const puzzleId = "example";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="max-w-3xl space-y-4 text-center">
+  <div className="max-w-3xl">
+    <div className="mb-4 space-y-4">
       <b>This is a puzzle.</b>
     </div>
-    <div className="mb-4 max-w-3xl text-center">
+    <div className="mb-4">
       <i>This is flavortext.</i>
     </div>
   </div>
@@ -27,14 +27,12 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = (
-  <div className="max-w-3xl">This is the solution.</div>
-);
+export const solutionBody = null;
 
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = "Josiah Carberry";
+export const authors = null;
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle
