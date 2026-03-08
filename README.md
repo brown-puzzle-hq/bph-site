@@ -15,12 +15,17 @@ To get started with the main site, see the [README](/apps/hunt-site/README.md).
 - [x] Registration requirements (name, number of members)
 - [x] Info page
 
+**Before testsolve**
+
+- [ ] Postprod puzzles
+- [ ] [One Guard No Doors](http://github.com/brown-puzzle-hq/2026-bph-site/issues/4)
+- [ ] [Moveable jigsaw pieces](https://github.com/brown-puzzle-hq/2026-bph-site/issues/3)
+- [ ] [Escapism in Cinema](https://github.com/brown-puzzle-hq/2026-bph-site/issues/13)
+
 **Before the hunt**
 
 - [ ] Round pages
 - [ ] Meta pages
-- [ ] [One Guard No Doors](http://github.com/brown-puzzle-hq/2026-bph-site/issues/4)
-- [ ] [Moveable jigsaw pieces](https://github.com/brown-puzzle-hq/2026-bph-site/issues/3)
 
 **Misc improvements**
 
