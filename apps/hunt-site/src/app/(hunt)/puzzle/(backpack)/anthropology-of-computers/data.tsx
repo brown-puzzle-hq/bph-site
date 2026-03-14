@@ -13,9 +13,9 @@ export const puzzleId = "anthropology-of-computers";
 export const inPersonBody = (
   <div>
     <div className="max-w-3xl space-y-4 pb-4 text-center">
-      Professor Conway hasn’t told you what’s going to be on the final—you’re
-      going in blind. So you stay up studying all night, counting down until
-      there’s nothing left to review.
+      Professor Conway hasn’t told you what’s going to be on the final — you’re
+      going in blind. So you stay up studying all night, taking no breaks
+      between words, counting down until there’s nothing left to review.
     </div>
     <div className="mb-4 max-w-3xl text-center">
       <i>What will the final exam be?</i>
