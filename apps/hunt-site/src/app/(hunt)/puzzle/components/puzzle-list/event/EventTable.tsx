@@ -9,7 +9,7 @@ import {
 } from "~/components/ui/table";
 import EventForm from "./EventForm";
 import { Calendar, PencilLine } from "lucide-react";
-import { AvailableEvent } from "@/puzzle/page";
+import { AvailableEvent } from "../puzzle-utils";
 
 export default function EventTable({
   availableEvents,

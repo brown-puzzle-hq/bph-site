@@ -49,7 +49,7 @@ export const ROUNDS: Round[] = [
     puzzles: ["intro-to-ubpcosu-final-exam", "intro-to-ubpcosu-first-lecture"],
   },
   {
-    name: "Meta",
+    name: "Backpack",
     puzzles: [
       "anthropology-of-computers",
       "psychoceramics",

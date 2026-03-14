@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { META_PUZZLES, type Round } from "@/config/server";
-import { AvailablePuzzle } from "@/puzzle/page";
+import { AvailablePuzzle } from "./puzzle-utils";
 
 export default function PuzzleTable({
   availableRounds,
