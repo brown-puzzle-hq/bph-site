@@ -139,7 +139,6 @@ export const CHAINS: ChainConfig[] = [
   },
 ];
 
-
 export const inPersonBody = <Game chains={CHAINS} />;
 
 export const remoteBody = inPersonBody;

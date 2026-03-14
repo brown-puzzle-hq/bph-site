@@ -51,6 +51,30 @@ export const inPersonBody = (
         unnecessary as the concentration itself?
       </i>
     </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>
+          <b>PERFORMING ARTS</b>: Cross(over)(word)
+        </li>
+        <li>
+          <b>PERFORMING ARTS</b>: Going in Circles
+        </li>
+        <li>
+          <b>PHYSICAL SCIENCES</b>: ####!
+        </li>
+        <li>
+          <b>MATH</b>: Messy Placeholder
+        </li>
+        <li>
+          <b>RISD</b>: Culinary Chemistry Lab
+        </li>
+        <li>
+          <b>SOCIAL SCIENCES</b>: Intro to Ubpcosu: Final Exam
+        </li>
+      </ul>
+    </div>
   </div>
 );
 

@@ -24,6 +24,33 @@ export const inPersonBody = (
     <div className="max-w-[calc(100vw-96px)] overflow-auto">
       <JigsawPuzzle />
     </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>
+          <b>BUSINESS</b>: The Rabbit Konundrum
+        </li>
+        <li>
+          <b>HUMANITIES</b>: Card Game Theory
+        </li>
+        <li>
+          <b>HUMANITIES</b>: Mischievous Literature
+        </li>
+        <li>
+          <b>PERFORMING ARTS</b>: Escapism in Cinema
+        </li>
+        <li>
+          <b>PHYSICAL SCIENCES</b>: Pageant Problems
+        </li>
+        <li>
+          <b>PHYSICAL SCIENCES</b>: Linesman Training
+        </li>
+        <li>
+          Five electives from <b>RISD</b>
+        </li>
+      </ul>
+    </div>
   </div>
 );
 

@@ -68,6 +68,27 @@ export const inPersonBody = (
         </tbody>
       </table>
     </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>
+          <b>BUSINESS</b>: Big Wheel!
+        </li>
+        <li>
+          <b>HUMANIITIES</b>: Sunk! Modern Naval Investigative Methodology
+        </li>
+        <li>
+          <b>PERFORMING ARTS</b>: Cross(over)(word)
+        </li>
+        <li>
+          <b>RISD</b>: Advanced Logical Cooking Techniques
+        </li>
+        <li>
+          <b>SOCIAL SCIENCES</b>: Movable Chorale
+        </li>
+      </ul>
+    </div>
   </div>
 );
 

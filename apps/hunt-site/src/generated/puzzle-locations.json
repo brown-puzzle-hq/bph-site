@@ -7,9 +7,8 @@
     "applied-probability": "(business)/applied-probability",
     "bar-exam": "(backpack)/bar-exam",
     "big-wheel": "(business)/big-wheel",
-    "brown-date": null,
     "card-game-theory": "(humanities)/card-game-theory",
-    "crossoverword": null,
+    "crossoverword": "(performing-arts)/crossoverword",
     "cubist-linguistics": "(backpack)/cubist-linguistics",
     "culinary-chemistry-lab": "(risd)/culinary-chemistry-lab",
     "date-everything-brown": "(risd)/date-everything-brown",
@@ -49,10 +48,7 @@
     "wordbrain": "(performing-arts)/wordbrain",
     "year-of-the-honse": "(social-sciences)/year-of-the-honse"
   },
-  "missing": [
-    "brown-date",
-    "crossoverword"
-  ],
+  "missing": [],
   "extraneous": [],
   "duplicate": {}
 }

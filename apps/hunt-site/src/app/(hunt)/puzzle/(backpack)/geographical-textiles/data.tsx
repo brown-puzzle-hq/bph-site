@@ -24,7 +24,7 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <p>
-        My Scottish grandmother is visiting me in the States, but we’re having a
+        My Scottish grandmother is visiting me in the States, but we're having a
         hard time communicating. Every sentence she states needs too much
         reading between the lines. How can we get out of this state of
         confusion?
@@ -39,6 +39,33 @@ export const inPersonBody = (
       <Image src={image6} alt="Image 6" width={500} height={500} />
       <Image src={image7} alt="Image 7" width={500} height={500} />
       <Image src={image8} alt="Image 8" width={500} height={500} />
+    </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>
+          <b>BUSINESS</b>: Schmear Campaign
+        </li>
+        <li>
+          <b>HUMANIITIES</b>: Multi-Clef Composition
+        </li>
+        <li>
+          <b>HUMANIITIES</b>: Sunk! Modern Naval Investigative Methodology
+        </li>
+        <li>
+          <b>PHYSICAL SCIENCES</b>: ####!
+        </li>
+        <li>
+          <b>RISD</b>: Editing Practice
+        </li>
+        <li>
+          <b>RISD</b>: Date Everything Brown
+        </li>
+        <li>
+          <b>SOCIAL SCIENCES</b>: Year of the HONSE
+        </li>
+      </ul>
     </div>
   </div>
 );

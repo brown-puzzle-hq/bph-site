@@ -18,8 +18,8 @@ export const inPersonBody = (
     <div className="mb-4 space-y-4">
       <p>
         You keep all your animals in temperature-controlled environments, but
-        they’ve all escaped! Thankfully, they’re all the same size, so they
-        shouldn’t be too hard to find...
+        they've all escaped! Thankfully, they're all the same size, so they
+        shouldn't be too hard to find...
       </p>
     </div>
     <div className="mb-4">
@@ -31,6 +31,13 @@ export const inPersonBody = (
         alt="Thermodynamic Zoology"
         height={500}
       />
+    </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>Seven electives from ANY DEPARTMENT</li>
+      </ul>
     </div>
   </div>
 );

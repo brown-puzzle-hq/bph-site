@@ -29,6 +29,13 @@ export const inPersonBody = (
         height={500}
       />
     </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>Five electives from ANY DEPARTMENT</li>
+      </ul>
+    </div>
   </div>
 );
 

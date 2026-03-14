@@ -74,12 +74,21 @@ function ColorGrid({ grid }: { grid: string[][] }) {
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl space-y-6">
-    <ColorGrid grid={GRID1} />
-    <ColorGrid grid={GRID2} />
-    <ColorGrid grid={GRID3} />
-    <ColorGrid grid={GRID4} />
-    <ColorGrid grid={GRID5} />
+  <div>
+    <div className="mb-6 grid max-w-3xl place-items-center space-y-6">
+      <ColorGrid grid={GRID1} />
+      <ColorGrid grid={GRID2} />
+      <ColorGrid grid={GRID3} />
+      <ColorGrid grid={GRID4} />
+      <ColorGrid grid={GRID5} />
+    </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>Five electives from ANY DEPARTMENT</li>
+      </ul>
+    </div>
   </div>
 );
 

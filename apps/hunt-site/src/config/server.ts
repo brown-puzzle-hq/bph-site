@@ -26,7 +26,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "advanced-logical-cooking-techniques": ["one-guard-no-doors"],
   "anthropology-of-computers": [],
   "applied-criminology": [],
-  "applied-probability": ["crossoverword"],
+  "applied-probability": ["crossoverword", "sword-placeholder"],
   "bar-exam": [],
   "big-wheel": ["sword-placeholder", "wordbrain"],
   "card-game-theory": [
@@ -123,7 +123,6 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "multi-clef-composition",
   ],
   "movable-chorale": [
-    "intro-to-ubpcosu-final-exam",
     "flying-through-the-grid",
     "rabbit-konundrum",
     "year-of-the-honse",
@@ -162,11 +161,15 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "card-game-theory",
     "multi-clef-composition",
   ],
-  "sword-placeholder": ["going-in-circles", "schmear-campaign", "big-wheel"],
+  "sword-placeholder": [
+    "going-in-circles",
+    "schmear-campaign",
+    "big-wheel",
+    "applied-probability",
+  ],
   "theological-chemistry": [],
   "thermodynamic-zoology": [],
   "trap-streets": [
-    "intro-to-ubpcosu-final-exam",
     "flying-through-the-grid",
     "rabbit-konundrum",
     "year-of-the-honse",

@@ -73,6 +73,21 @@ export const inPersonBody = (
       false items in fraud, the truth should bring the jury to the right
       decision.
     </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>
+          <b>MATH</b>: Herculean Math
+        </li>
+        <li>
+          Four electives from <b>BUSINESS</b>
+        </li>
+        <li>
+          Four electives from <b>PERFORMING ARTS</b>
+        </li>
+      </ul>
+    </div>
   </div>
 );
 

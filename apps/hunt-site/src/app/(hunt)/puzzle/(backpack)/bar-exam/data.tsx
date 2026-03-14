@@ -17,7 +17,7 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <p>
-        You’re here for the bar exam -- you’d better not get your cases mixed
+        You're here for the bar exam -- you'd better not get your cases mixed
         up. Especially since so many have fruit in them.
       </p>
       <p>
@@ -27,6 +27,13 @@ export const inPersonBody = (
     </div>
     <div className="mb-4 flex justify-center">
       <Image src={barExam} alt="Bar Exam" width={500} />
+    </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>Five electives from ANY DEPARTMENT</li>
+      </ul>
     </div>
   </div>
 );

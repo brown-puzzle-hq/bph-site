@@ -26,7 +26,7 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <p>
-        You’re using your unopened 54-card deck of Bicycle® index cards to
+        You're using your unopened 54-card deck of Bicycle® index cards to
         prepare for your thesis. You write a letter on each of their backs, and
         pull out the following ten cards.
       </p>
@@ -34,7 +34,7 @@ export const inPersonBody = (
     <div className="mb-4">
       <i>What will you need to pass your thesis defense?</i>
     </div>
-    <div className="grid grid-cols-5 gap-4">
+    <div className="mb-6 grid grid-cols-5 gap-4">
       <Image src={image1} alt="Image 1" width={500} height={500} />
       <Image src={image2} alt="Image 2" width={500} height={500} />
       <Image src={image3} alt="Image 3" width={500} height={500} />
@@ -45,6 +45,13 @@ export const inPersonBody = (
       <Image src={image8} alt="Image 8" width={500} height={500} />
       <Image src={image9} alt="Image 9" width={500} height={500} />
       <Image src={image10} alt="Image 10" width={500} height={500} />
+    </div>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>Five electives from ANY DEPARTMENT</li>
+      </ul>
     </div>
   </div>
 );

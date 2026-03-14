@@ -13,15 +13,30 @@ export const puzzleId = "anthropology-of-computers";
 export const inPersonBody = (
   <div>
     <div className="max-w-3xl space-y-4 pb-4 text-center">
-      Professor Conway hasn’t told you what’s going to be on the final — you’re
+      Professor Conway hasn't told you what's going to be on the final — you're
       going in blind. So you stay up studying all night, taking no breaks
-      between words, counting down until there’s nothing left to review.
+      between words, counting down until there's nothing left to review.
     </div>
     <div className="mb-4 max-w-3xl text-center">
       <i>What will the final exam be?</i>
     </div>
-    <div className="mb-4 max-w-3xl text-center">
-      <p>Note: Ignore spaces.</p>
+    <hr />
+    <div className="mt-4 max-w-3xl space-y-4 pb-4">
+      <b>Concentration Requirements:</b>
+      <ul className="ml-6">
+        <li>
+          <b>HUMANITIES</b>: Flying Through The Grid
+        </li>
+        <li>
+          <b>PHYSICAL SCIENCES</b>: Dirt
+        </li>
+        <li>
+          Four electives from <b>MATH</b>
+        </li>
+        <li>
+          Four electives from <b>SOCIAL SCIENCES</b>
+        </li>
+      </ul>
     </div>
   </div>
 );
