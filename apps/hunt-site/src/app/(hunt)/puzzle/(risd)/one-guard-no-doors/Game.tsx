@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { checkThreshold } from "./actions";
+import { cn } from "~/lib/utils";
+import { ArrowBigUp, Skull } from "lucide-react";
 
 type Square = number;
 type Wall = [Square, Square];
@@ -35,8 +37,12 @@ export type GameProps = {
   startSquare: Square;
   guardStartSquare: Square;
   gameIndex: number;
-  isFocused?: boolean;
-  onFocusChange?: () => void;
+};
+
+type GameFocus = {
+  isFocused: boolean;
+  onFocus: () => void;
+  onBlur: () => void;
 };
 
 /* Return neighbors for guard, respecting walls */
@@ -314,8 +320,9 @@ export default function Game({
   guardStartSquare,
   gameIndex,
   isFocused,
-  onFocusChange,
-}: GameProps) {
+  onFocus,
+  onBlur,
+}: GameProps & GameFocus) {
   const [player, setPlayer] = useState<Square>(startSquare);
   const [guard, setGuard] = useState<Square>(guardStartSquare);
   const [triggeredPinkWalls, setTriggeredPinkWalls] = useState<Wall[]>([]);
@@ -489,46 +496,29 @@ export default function Game({
     return () => window.removeEventListener("keydown", handler);
   }, [gameOver, moveUp, moveDown, moveLeft, moveRight, resetGame]);
 
-  const btnClass =
-    "rounded-sm px-4 py-1 font-medium bg-purple-500 text-white hover:bg-purple-600 active:bg-purple-700";
+  const btnClass = "rounded-sm p-1 bg-gray-700 hover:bg-opacity-90";
 
-  const controlledFocus = onFocusChange !== undefined;
-  const showFocused = controlledFocus ? (isFocused ?? false) : hasFocus;
-  const tabIndex = controlledFocus ? (isFocused ? 0 : -1) : 0;
+  const tabIndex = isFocused ? 0 : -1;
 
   return (
     <div
       ref={containerRef}
       tabIndex={tabIndex}
-      className={`flex flex-col items-center gap-4 rounded-xl p-8 outline-none focus:outline-none ${showFocused ? "bg-black/10 dark:bg-white/10" : ""}`}
+      className={cn(
+        "grid gap-4 rounded-xl p-4 text-lg font-medium outline-none focus:outline-none sm:grid-cols-[auto_auto]",
+        isFocused && "bg-black/5",
+      )}
       onMouseDown={(e) => (e.currentTarget as HTMLDivElement).focus()}
-      onFocus={() => {
-        if (onFocusChange) onFocusChange();
-        else setHasFocus(true);
-      }}
-      onBlur={() => {
-        if (!controlledFocus) setHasFocus(false);
-      }}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
-      <div className="flex w-full max-w-[10rem] items-center justify-between gap-3">
-        <p className="text-sm font-medium tabular-nums">Moves: {moveCount}</p>
-        <button
-          type="button"
-          onClick={resetGame}
-          className={btnClass}
-          aria-label="Reset game"
-        >
-          Reset
-        </button>
-      </div>
-
       {/* Grid wrapper with overlay when game over */}
       <div className="relative">
         <div
           className="inline-grid gap-0 border-2 border-black"
           style={{
-            gridTemplateColumns: `repeat(${width}, 2rem)`,
-            gridTemplateRows: `repeat(${height}, 2rem)`,
+            gridTemplateColumns: `repeat(${width}, 3rem)`,
+            gridTemplateRows: `repeat(${height}, 3rem)`,
           }}
         >
           {Array.from({ length: totalSquares }, (_, i) => {
@@ -577,7 +567,11 @@ export default function Game({
             return (
               <div
                 key={i}
-                className={`flex items-center justify-center border border-gray-300 text-xs dark:border-gray-600 ${isPlayer ? "text-white" : ""} ${isGuard ? "text-white" : ""} ${isBlue ? "bg-blue-600" : ""} ${isOrange ? "bg-orange-600" : ""} `}
+                className={cn(
+                  "flex items-center justify-center border border-gray-300",
+                  isBlue && "bg-blue-600",
+                  isOrange && "bg-orange-600",
+                )}
                 style={borderStyle}
               >
                 {isPlayer ? "P" : isGuard ? "G" : ""}
@@ -587,55 +581,61 @@ export default function Game({
         </div>
         {gameOver && (
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded bg-black/50"
+            className="absolute inset-0 flex flex-col items-center justify-center space-y-2 rounded bg-black/50"
             aria-label="Game over"
           >
-            <span className="text-4xl" aria-hidden>
-              💀
-            </span>
-            <p className="text-lg font-semibold text-white">Game over</p>
-            <button type="button" onClick={resetGame} className={btnClass}>
-              Start again
-            </button>
+            <Skull className="size-12" />
+            <p>Game over</p>
           </div>
         )}
       </div>
 
-      {/* Direction buttons */}
-      <div className="flex flex-col items-center gap-2">
-        <button
-          type="button"
-          onClick={moveUp}
-          aria-label="Up"
-          className={`${btnClass} min-w-[3.5rem]`}
-        >
-          ↑
-        </button>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={moveLeft}
-            aria-label="Left"
-            className={btnClass}
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            onClick={moveRight}
-            aria-label="Right"
-            className={btnClass}
-          >
-            →
-          </button>
+      <div className="flex flex-col items-center justify-between">
+        <p className="my-auto min-h-10 tabular-nums">Moves: {moveCount}</p>
+        <div>
+          {/* Buttons */}
+          <div className="inline-grid rounded-sm bg-black p-2">
+            <button
+              type="button"
+              onClick={moveUp}
+              aria-label="Up"
+              className={cn("col-start-2 row-start-1", btnClass)}
+            >
+              <ArrowBigUp className="size-8 fill-white" />
+            </button>
+            <button
+              type="button"
+              onClick={moveLeft}
+              aria-label="Left"
+              className={cn("col-start-1 row-start-2", btnClass)}
+            >
+              <ArrowBigUp className="size-8 -rotate-90 fill-white" />
+            </button>
+            <button
+              type="button"
+              onClick={moveRight}
+              aria-label="Right"
+              className={cn("col-start-3 row-start-2", btnClass)}
+            >
+              <ArrowBigUp className="size-8 rotate-90 fill-white" />
+            </button>
+            <button
+              type="button"
+              onClick={moveDown}
+              aria-label="Down"
+              className={cn("col-start-2 row-start-3", btnClass)}
+            >
+              <ArrowBigUp className="size-8 rotate-180 fill-white" />
+            </button>
+          </div>
         </div>
         <button
           type="button"
-          onClick={moveDown}
-          aria-label="Down"
-          className={`${btnClass} min-w-[3.5rem]`}
+          onClick={resetGame}
+          className="my-auto min-h-10"
+          aria-label="Reset game"
         >
-          ↓
+          Reset
         </button>
       </div>
     </div>

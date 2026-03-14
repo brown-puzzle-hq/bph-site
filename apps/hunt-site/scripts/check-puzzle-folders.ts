@@ -80,7 +80,7 @@ async function main() {
   }
 
   if (hadError) {
-    console.error("\n❌ Puzzle folder check failed.");
+    console.error("❌ Puzzle folder check failed.");
   } else {
     console.log("🎉 Puzzle folder check passed.");
   }

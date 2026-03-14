@@ -1,22 +1,40 @@
 "use client";
 
+import { useState } from "react";
 import { sendWebsocketMessage } from "./actions";
 import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 
 export default function Page() {
   const { readyState } = useWebSocket();
 
+  const [puzzleId, setPuzzleId] = useState("example");
+  const [puzzleName, setPuzzleName] = useState("Example");
+
   return (
-    <div className="mx-auto mb-4 w-full max-w-3xl px-4 md:mb-12">
+    <div className="mx-auto mb-4 w-full max-w-3xl space-y-4 px-4 md:mb-12">
       <h1 className="text-2xl font-bold">Websockets</h1>
       <p className="text-gray-600">
         Test whether the websocket server is working correctly.
       </p>
 
-      <div className="my-4 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+      <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
+        <Input
+          placeholder="Puzzle ID"
+          value={puzzleId}
+          onChange={(e) => setPuzzleId(e.target.value)}
+        />
+        <Input
+          placeholder="Puzzle Name"
+          value={puzzleName}
+          onChange={(e) => setPuzzleName(e.target.value)}
+        />
+      </div>
+
+      <div className="mr-auto flex flex-col items-center gap-4 md:flex-row">
         <Button
-          className="w-full sm:w-auto"
+          className="w-full md:w-auto"
           onClick={() =>
             sendWebsocketMessage({
               type: "Toast",
@@ -29,12 +47,12 @@ export default function Page() {
         </Button>
 
         <Button
-          className="w-full sm:w-auto"
+          className="w-full md:w-auto"
           onClick={() =>
             sendWebsocketMessage({
               type: "UnlockedPuzzle",
-              puzzleId: "example",
-              puzzleName: "Example",
+              puzzleId,
+              puzzleName,
             })
           }
         >
@@ -42,12 +60,24 @@ export default function Page() {
         </Button>
 
         <Button
-          className="w-full sm:w-auto"
+          className="w-full md:w-auto"
+          onClick={() =>
+            sendWebsocketMessage({
+              type: "RefreshPuzzle",
+              puzzleId,
+            })
+          }
+        >
+          🔄 Refresh Puzzle
+        </Button>
+
+        <Button
+          className="w-full md:w-auto"
           onClick={() =>
             sendWebsocketMessage({
               type: "SolvedPuzzle",
-              puzzleId: "example",
-              puzzleName: "Example",
+              puzzleId,
+              puzzleName,
             })
           }
         >
@@ -55,7 +85,7 @@ export default function Page() {
         </Button>
 
         <Button
-          className="w-full sm:w-auto"
+          className="w-full md:w-auto"
           onClick={() =>
             sendWebsocketMessage({
               type: "FinishedHunt",

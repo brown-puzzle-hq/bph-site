@@ -42,7 +42,7 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
 
   return (
     <div
-      className="hidden w-full font-mono text-sm lg:block"
+      className="hidden w-full tabular-nums lg:block"
       suppressHydrationWarning
     >
       {String(timeRemaining.days).padStart(2, "0")}:

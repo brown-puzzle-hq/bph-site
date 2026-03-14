@@ -39,10 +39,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const socketRef = useRef<WebSocket | null>(null);
-  const pathnameRef = useRef(pathname);
-  const routerRef = useRef(router);
-  pathnameRef.current = pathname;
-  routerRef.current = router;
   const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
 
   const handleMessage = useCallback((event: MessageEvent) => {
@@ -85,8 +81,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           break;
 
         case "RefreshPuzzle":
-          if (pathnameRef.current === `/puzzle/${data.puzzleId}`) {
-            routerRef.current.refresh();
+          if (pathname === `/puzzle/${data.puzzleId}`) {
+            router.refresh();
           }
           break;
 
