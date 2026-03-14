@@ -9,6 +9,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { type SocketMessage } from "~/lib/comms";
 import Link from "next/link";
@@ -35,7 +36,13 @@ export function useWebSocket() {
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
   const socketRef = useRef<WebSocket | null>(null);
+  const pathnameRef = useRef(pathname);
+  const routerRef = useRef(router);
+  pathnameRef.current = pathname;
+  routerRef.current = router;
   const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
 
   const handleMessage = useCallback((event: MessageEvent) => {
@@ -75,6 +82,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
         case "Toast":
           toast(data.title, { description: data.description });
+          break;
+
+        case "RefreshPuzzle":
+          if (pathnameRef.current === `/puzzle/${data.puzzleId}`) {
+            routerRef.current.refresh();
+          }
           break;
 
         default:

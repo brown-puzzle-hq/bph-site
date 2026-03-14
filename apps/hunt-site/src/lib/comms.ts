@@ -112,7 +112,8 @@ export type SocketMessage =
   | { type: "SolvedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "FinishedHunt" }
-  | { type: "Toast"; title: string; description: string };
+  | { type: "Toast"; title: string; description: string }
+  | { type: "RefreshPuzzle"; puzzleId: string };
 
 export async function sendToWebsocketServer(
   teamId: string,

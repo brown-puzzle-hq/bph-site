@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
+  integer,
   pgTableCreator,
   pgEnum,
   serial,
@@ -248,8 +249,25 @@ export const answerTokens = createTable(
   }),
 );
 
+export const oneGuardNoDoors = createTable(
+  "one_guard_no_doors",
+  {
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    gameIndex: integer("game_index").notNull(),
+  },
+  (table) => ({
+    unique_team_game: unique("one_guard_no_doors_team_game").on(
+      table.teamId,
+      table.gameIndex,
+    ),
+  }),
+);
+
 export const teamRelations = relations(teams, ({ many }) => ({
   unlocks: many(unlocks),
+  oneGuardNoDoors: many(oneGuardNoDoors),
   guesses: many(guesses),
   // Hints requested by this team
   requestedHints: many(hints, { relationName: "requested_hints" }),
@@ -355,3 +373,13 @@ export const answerTokenRelations = relations(answerTokens, ({ one }) => ({
     references: [puzzles.id],
   }),
 }));
+
+export const oneGuardNoDoorsRelations = relations(
+  oneGuardNoDoors,
+  ({ one }) => ({
+    team: one(teams, {
+      fields: [oneGuardNoDoors.teamId],
+      references: [teams.id],
+    }),
+  }),
+);
