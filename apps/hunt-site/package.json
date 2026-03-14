@@ -16,6 +16,7 @@
     "db:studio": "drizzle-kit studio",
     "db:dbml": "tsx src/server/db/dbml.ts",
     "generate:puzzle-locations": "tsx scripts/generate-puzzle-locations.ts",
+    "generate:jigsaw-locations": "tsx scripts/generate-jigsaw-locations.ts",
     "check:folders": "tsx scripts/check-puzzle-folders.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:folders": "tsx scripts/create-puzzle-folders.ts"
