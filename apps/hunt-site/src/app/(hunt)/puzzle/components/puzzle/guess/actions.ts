@@ -17,7 +17,7 @@ import {
   HUNT_URL,
   type SolveType,
 } from "@/config/client";
-import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
+import { PUZZLE_UNLOCK_MAP, META_PUZZLES, POOL_UNLOCKS } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError } from "~/lib/utils";
 import { assertPermissions } from "~/lib/server";
@@ -241,8 +241,28 @@ async function handleSolve(
   var finishedHunt = false;
 
   // Unlock the next puzzles
-  const nextPuzzles = PUZZLE_UNLOCK_MAP[puzzleId];
-  if (nextPuzzles?.length) {
+  // Graph unlocks
+  const nextPuzzles = PUZZLE_UNLOCK_MAP[puzzleId] ?? [];
+
+  for (const pool of POOL_UNLOCKS) {
+    if (pool.feeders.includes(puzzleId)) {
+      const [query] = await tx
+        .select({ count: count() })
+        .from(solves)
+        .where(
+          and(
+            eq(solves.teamId, teamId),
+            inArray(solves.puzzleId, pool.feeders),
+          ),
+        );
+
+      if (query?.count === pool.threshold) {
+        nextPuzzles.push(pool.name);
+      }
+    }
+  }
+
+  if (nextPuzzles.length > 0) {
     const newUnlocks = nextPuzzles.map((puzzleId) => ({
       teamId,
       puzzleId,
