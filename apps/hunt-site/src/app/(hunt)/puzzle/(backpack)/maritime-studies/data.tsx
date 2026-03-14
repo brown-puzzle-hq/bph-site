@@ -76,7 +76,7 @@ export const inPersonBody = (
           <b>BUSINESS</b>: Big Wheel!
         </li>
         <li>
-          <b>HUMANIITIES</b>: Sunk! Modern Naval Investigative Methodology
+          <b>HUMANITIES</b>: Sunk! Modern Naval Investigative Methodology
         </li>
         <li>
           <b>PERFORMING ARTS</b>: Cross(over)(word)

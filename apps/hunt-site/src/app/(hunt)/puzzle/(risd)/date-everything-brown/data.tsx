@@ -256,7 +256,7 @@ export const inPersonBody = (
     </div>
     <div className="mb-4 mt-5 space-y-4">
       <div className="mb-1 text-xl font-bold">
-        Simon Li (He/him, Saggitarius)
+        Simon Li (He/him, Sagittarius)
       </div>
       <b>Simon:</b> Hi :) This is actually my first time using an app like this,
       so I’m not really sure what I’m supposed to say.

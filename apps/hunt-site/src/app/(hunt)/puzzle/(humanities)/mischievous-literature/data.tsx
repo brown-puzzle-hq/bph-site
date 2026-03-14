@@ -1,3 +1,5 @@
+import Image from "next/image";
+import lit from "./lit.jpg";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -20,17 +22,12 @@ export const inPersonBody = (
       </i>
     </div>
     <div className="mb-4">
-      <p>
-        Young commuter in full rain gear embarrassed after abrupt weather
-        change.
-      </p>
-      <p>Rascal splashes mother with water bucket.</p>
-      <p>
-        Father trivializes stranded kid's flood warning, citing busyness at
-        work.
-      </p>
-      <p>Student preemptively rejects classmate for high school class dance.</p>
+      <p>Young commuter embarrassed after abrupt weather change.</p>
+      <p>Rascal employs water bucket techniques.</p>
+      <p>Stranded kid warns busy father about flood.</p>
+      <p>Student preemptively rejects classmate for senior prom.</p>
     </div>
+    <Image src={lit} alt="Four rectangles with characters and objects" />
   </div>
 );
 

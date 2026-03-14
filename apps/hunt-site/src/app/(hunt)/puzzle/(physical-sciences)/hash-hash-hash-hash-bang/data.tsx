@@ -16,10 +16,14 @@ export const puzzleId = "hash-hash-hash-hash-bang";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
-      <b>This is a puzzle.</b>
+      <b>This is a physical puzzle. See hunt HQ for access to this puzzle.</b>
     </div>
     <div className="mb-4">
-      <i>This is flavortext.</i>
+      <i>
+        Is there any light in here?! The board’s been unwoven with six moves to
+        go! We’ll both do our best, but we need to see where we’re placing our
+        pieces...
+      </i>
     </div>
   </div>
 );

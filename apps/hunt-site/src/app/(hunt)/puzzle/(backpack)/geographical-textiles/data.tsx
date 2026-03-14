@@ -48,10 +48,10 @@ export const inPersonBody = (
           <b>BUSINESS</b>: Schmear Campaign
         </li>
         <li>
-          <b>HUMANIITIES</b>: Multi-Clef Composition
+          <b>HUMANITIES</b>: Multi-Clef Composition
         </li>
         <li>
-          <b>HUMANIITIES</b>: Sunk! Modern Naval Investigative Methodology
+          <b>HUMANITIES</b>: Sunk! Modern Naval Investigative Methodology
         </li>
         <li>
           <b>PHYSICAL SCIENCES</b>: ####!
