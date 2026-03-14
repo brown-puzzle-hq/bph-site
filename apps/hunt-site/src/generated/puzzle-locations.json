@@ -72,6 +72,6 @@
     "messy-placeholder",
     "primary-investigation"
   ],
-  "extraneous": ["(business)"],
+  "extraneous": [],
   "duplicate": {}
 }
