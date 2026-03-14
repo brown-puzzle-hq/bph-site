@@ -13,7 +13,10 @@ export const puzzleId = "pageant-problems";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
-      <b>This is a physical puzzle! Please come to HQ in Friedman 208 to pick it up.</b>
+      <b>
+        This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
+        up.
+      </b>
     </div>
   </div>
 );

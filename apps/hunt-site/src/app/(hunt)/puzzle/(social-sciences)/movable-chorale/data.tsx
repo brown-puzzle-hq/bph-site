@@ -24,8 +24,8 @@ export const inPersonBody = (
         routine sounds like, but you are missing some key information…
       </i>
     </div>
-      <div className="mb-4 flex justify-center">
-      <Image className="bg-white" src={mov1} alt="Music notation"/>
+    <div className="mb-4 flex justify-center">
+      <Image className="bg-white" src={mov1} alt="Music notation" />
     </div>
     <ul className="list-disc">
       <li>The first person sings the tonic.</li>

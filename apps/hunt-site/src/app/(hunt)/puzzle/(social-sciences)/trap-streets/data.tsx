@@ -13,21 +13,21 @@ export const puzzleId = "trap-streets";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl space-y-4 ">
+  <div className="max-w-3xl space-y-4">
     <div>
-    <ol className="list-decimal list-inside">
-      <li>Famous football family</li>
-      <li>Serena _____ of tennis </li>
-      <li>Fugi-_____, the avian criminal</li>
-      <li>Star Wars: A New _____</li>
-      <li>_____ Giulia, building named after a Pope</li>
-      <li>_____ University of this puzzle hunt</li>
-      <li>The pond of the eleventh hour</li>
-      <li>Mean Girls protagonist _____ Heron</li>
-    </ol>
+      <ol className="list-inside list-decimal">
+        <li>Famous football family</li>
+        <li>Serena _____ of tennis </li>
+        <li>Fugi-_____, the avian criminal</li>
+        <li>Star Wars: A New _____</li>
+        <li>_____ Giulia, building named after a Pope</li>
+        <li>_____ University of this puzzle hunt</li>
+        <li>The pond of the eleventh hour</li>
+        <li>Mean Girls protagonist _____ Heron</li>
+      </ol>
     </div>
     <div>
-    <Image src={map} alt="A map of Brown University"/>
+      <Image src={map} alt="A map of Brown University" />
     </div>
   </div>
 );

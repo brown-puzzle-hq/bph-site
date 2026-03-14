@@ -13,9 +13,9 @@ export const puzzleId = "culinary-chemistry-lab";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-    <div className="mb-4 flex justify-center">
-      <Image src={map} alt="A map with 5 molecules and a question mark"/>
-    </div>
+  <div className="mb-4 flex justify-center">
+    <Image src={map} alt="A map with 5 molecules and a question mark" />
+  </div>
 );
 
 export const remoteBody = inPersonBody;

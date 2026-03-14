@@ -18,7 +18,7 @@ export const inPersonBody = (
         honsing around…
       </i>
     </div>
-    <ul className="list-disc list-inside">
+    <ul className="list-inside list-disc">
       <li>The Sopranos actor Pony Sirico is born.</li>
       <li>
         Reginald Fessenden broadcasts the first radio program during Muletide.

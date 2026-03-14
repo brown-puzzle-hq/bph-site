@@ -38,7 +38,11 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "RISD",
-    puzzles: ["advanced-logical-cooking-techniques", "one-guard-no-doors", "culinary-chemistry-lab"],
+    puzzles: [
+      "advanced-logical-cooking-techniques",
+      "one-guard-no-doors",
+      "culinary-chemistry-lab",
+    ],
   },
   {
     name: "Social Sciences",
