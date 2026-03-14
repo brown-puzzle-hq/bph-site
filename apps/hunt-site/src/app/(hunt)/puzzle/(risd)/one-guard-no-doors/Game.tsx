@@ -569,7 +569,7 @@ export default function Game({
                 key={i}
                 className={cn(
                   "flex items-center justify-center border border-gray-300",
-                  isBlue && "bg-blue-600",
+                  isBlue && "bg-green-600",
                   isOrange && "bg-orange-600",
                 )}
                 style={borderStyle}
