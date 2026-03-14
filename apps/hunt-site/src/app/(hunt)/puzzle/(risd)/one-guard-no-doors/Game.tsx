@@ -404,7 +404,7 @@ export default function Game({
       if (moveName) {
         setMoveCount((c) => {
           const newCount = c + 1;
-          void checkThreshold(gameIndex, newCount);
+          checkThreshold(gameIndex, newCount);
           return newCount;
         });
       }
