@@ -277,19 +277,19 @@ async function handleSolve(
   }
 
   // Check if the team has just completed the hunt
-  // by solving the six metas
+  // by solving all metas
   if (META_PUZZLES.includes(puzzleId)) {
-    const query = await tx
+    const [query] = await tx
       .select({ count: count() })
       .from(solves)
       .where(
         and(eq(solves.teamId, teamId), inArray(solves.puzzleId, META_PUZZLES)),
       );
 
-    if (query[0]?.count === META_PUZZLES.length) {
+    if (query?.count === META_PUZZLES.length) {
       await tx
         .update(teams)
-        .set({ finishTime: new Date() })
+        .set({ finishTime: currDate })
         .where(eq(teams.id, teamId));
       finishedHunt = true;
     }
