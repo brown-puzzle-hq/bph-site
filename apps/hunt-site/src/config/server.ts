@@ -186,6 +186,21 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   ],
 };
 
+/** List of meta puzzles. Solving all of the metas unlocks the runaround. */
+export const META_PUZZLES: string[] = [
+  "anthropology-of-computers",
+  "psychoceramics",
+  "applied-criminology",
+  "theological-chemistry",
+  "underwater-basketweaving",
+  "geographical-textiles",
+  "thermodynamic-zoology",
+  "maritime-studies",
+  "luck-practicum",
+  "bar-exam",
+  "cubist-linguistics",
+];
+
 export type Round = {
   name: string;
   puzzles: string[];
@@ -265,35 +280,8 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Backpack",
-    puzzles: [
-      "anthropology-of-computers",
-      "psychoceramics",
-      "applied-criminology",
-      "theological-chemistry",
-      "underwater-basketweaving",
-      "geographical-textiles",
-      "thermodynamic-zoology",
-      "maritime-studies",
-      "luck-practicum",
-      "bar-exam",
-      "cubist-linguistics",
-    ],
+    puzzles: META_PUZZLES,
   },
-];
-
-/** List of meta puzzles. Solving all of the metas unlocks the runaround. */
-export const META_PUZZLES: string[] = [
-  "anthropology-of-computers",
-  "psychoceramics",
-  "applied-criminology",
-  "theological-chemistry",
-  "underwater-basketweaving",
-  "geographical-textiles",
-  "thermodynamic-zoology",
-  "maritime-studies",
-  "luck-practicum",
-  "bar-exam",
-  "cubist-linguistics",
 ];
 
 export type PoolUnlock = {

@@ -128,13 +128,7 @@ export default async function Page() {
               allPuzzlesWithEverything
                 .filter((puzzle) => round.puzzles.includes(puzzle.id))
                 .sort((puzzleA, puzzleB) =>
-                  META_PUZZLES.includes(puzzleA.id)
-                    ? META_PUZZLES.includes(puzzleB.id)
-                      ? puzzleA.name.localeCompare(puzzleB.name)
-                      : -1
-                    : META_PUZZLES.includes(puzzleB.id)
-                      ? 1
-                      : puzzleA.name.localeCompare(puzzleB.name),
+                  puzzleA.name.localeCompare(puzzleB.name),
                 )
                 .map((puzzle) => (
                   <TableRow key={puzzle.id} className="hover:bg-inherit">

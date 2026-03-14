@@ -37,9 +37,7 @@ export const remoteBody = inPersonBody;
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = (
-  <div className="max-w-3xl">This is the solution.</div>
-);
+export const solutionBody = null;
 
 /**
  * The `authors` string renders below the `solutionBody`.
