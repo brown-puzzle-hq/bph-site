@@ -35,12 +35,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "one-guard-no-doors",
     "multi-clef-composition",
   ],
-  crossoverword: [
-    "disguised-financial-crimes",
-    "applied-probability",
-    "wordbrain",
-    "schmear-campaign",
-  ],
+  crossoverword: ["disguised-financial-crimes", "wordbrain"],
   "cubist-linguistics": [],
   "culinary-chemistry-lab": [
     "one-guard-no-doors",
@@ -161,12 +156,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "card-game-theory",
     "multi-clef-composition",
   ],
-  "sword-placeholder": [
-    "going-in-circles",
-    "schmear-campaign",
-    "big-wheel",
-    "applied-probability",
-  ],
+  "sword-placeholder": ["going-in-circles"],
   "theological-chemistry": [],
   "thermodynamic-zoology": [],
   "trap-streets": [
@@ -175,12 +165,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "year-of-the-honse",
   ],
   "underwater-basketweaving": [],
-  wordbrain: [
-    "disguised-financial-crimes",
-    "crossoverword",
-    "schmear-campaign",
-    "big-wheel",
-  ],
+  wordbrain: ["disguised-financial-crimes", "crossoverword"],
   "year-of-the-honse": [
     "movable-chorale",
     "embeddings",
