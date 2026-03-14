@@ -15,6 +15,10 @@ export const puzzleId = "advanced-logical-cooking-techniques";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="mb-4 font-bold">
+      ⚠️ Warning! This puzzle is difficult, especially compared to the other
+      puzzles in the hunt. This message is not part of the puzzle. ⚠️
+    </div>
     <div className="mb-4">
       <p>
         Sudoku, thermometer, and sandwich rules apply, but some sandwiches are
@@ -38,7 +42,7 @@ export const inPersonBody = (
       </p>
     </div>
     <div className="mb-4 flex justify-center">
-      <Image src={image1} alt="Image 1" width={500} height={500} />
+      <Image src={image1} alt="A logic puzzle" width={500} height={500} />
     </div>
   </div>
 );
