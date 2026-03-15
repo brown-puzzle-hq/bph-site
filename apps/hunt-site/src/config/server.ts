@@ -300,6 +300,7 @@ export const POOL_UNLOCKS: PoolUnlock[] = [
     feeders: [
       "mischievous-literature",
       "disguised-financial-crimes",
+      "advanced-logical-cooking-techniques",
       "wordbrain",
       "trap-streets",
       "intro-to-ubpcosu-first-lecture",
