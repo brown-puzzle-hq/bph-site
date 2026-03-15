@@ -94,6 +94,7 @@ export const JIGSAW_ADJACENCY: Record<string, RelativeEdge[]> = {
     { a: 8, dir: "up", b: 11 },
     { a: 8, dir: "left-of", b: 9 },
     { a: 9, dir: "up", b: 11 },
+    { a: 9, dir: "up", b: 3 },
     { a: 10, dir: "left-of", b: 11 },
   ],
 
