@@ -16,7 +16,10 @@ export const puzzleId = "linear-algebra";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
-      <i>Here is your first homework of the semester. Good luck!</i>
+      <i>
+        As you get through your math homework, you remind yourself that it must
+        be in your destiny to fill in matrices.
+      </i>
     </div>
     <ol className="list-inside list-decimal">
       <li>
