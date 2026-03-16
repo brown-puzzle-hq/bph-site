@@ -2,6 +2,8 @@ import { type GameProps } from "./Game";
 
 export const puzzleId = "one-guard-no-doors";
 
+export const MAX_UNLOCKS = 4 as const;
+
 /** Move-count thresholds for games 1–7;
  * meeting one records "threshold met" and unlocks the next puzzle in order */
 export const ONE_GUARD_THRESHOLDS = [11, 1, 11, 1, 3, 5, 12] as const;
@@ -31,7 +33,7 @@ const game1: GameProps = {
     [16, 21],
     [22, 23],
   ],
-  blueSquares: [],
+  greenSquares: [],
   orangeSquares: [],
   startSquare: 11,
   guardStartSquare: 4,
@@ -50,7 +52,7 @@ const game2: GameProps = {
     [18, 23],
   ],
   pinkWalls: [[13, 14]],
-  blueSquares: [14, 15, 18, 20, 21],
+  greenSquares: [14, 15, 18, 20, 21],
   orangeSquares: [6, 7, 9, 11, 19],
   startSquare: 16,
   guardStartSquare: 7,
@@ -73,7 +75,7 @@ const game3: GameProps = {
     [16, 21],
   ],
   pinkWalls: [[2, 7]],
-  blueSquares: [4, 6, 8, 14, 15, 18, 20, 24],
+  greenSquares: [4, 6, 8, 14, 15, 18, 20, 24],
   orangeSquares: [],
   startSquare: 16,
   guardStartSquare: 13,
@@ -97,7 +99,7 @@ const game4: GameProps = {
     [11, 12],
     [11, 16],
   ],
-  blueSquares: [0, 6, 8, 10, 18, 21],
+  greenSquares: [0, 6, 8, 10, 18, 21],
   orangeSquares: [2, 3, 13, 17],
   startSquare: 16,
   guardStartSquare: 13,
@@ -122,7 +124,7 @@ const game5: GameProps = {
     [17, 18],
     [18, 23],
   ],
-  blueSquares: [],
+  greenSquares: [],
   orangeSquares: [],
   startSquare: 16,
   guardStartSquare: 0,
@@ -137,7 +139,7 @@ const game6: GameProps = {
     [17, 18],
   ],
   pinkWalls: [[1, 6]],
-  blueSquares: [7, 13],
+  greenSquares: [7, 13],
   orangeSquares: [3, 9, 11],
   startSquare: 16,
   guardStartSquare: 8,
@@ -161,7 +163,7 @@ const game7: GameProps = {
     [10, 15],
     [12, 17],
   ],
-  blueSquares: [8, 11, 13, 15, 19, 22],
+  greenSquares: [8, 11, 13, 15, 19, 22],
   orangeSquares: [5, 16, 17, 18],
   startSquare: 15,
   guardStartSquare: 5,
@@ -173,7 +175,7 @@ const game8: GameProps = {
   width: 5,
   blackWalls: [],
   pinkWalls: [],
-  blueSquares: [],
+  greenSquares: [],
   orangeSquares: [18],
   startSquare: 16,
   guardStartSquare: 5,
@@ -191,6 +193,9 @@ export const allGames: GameProps[] = [
 ];
 
 // inPersonBody and remoteBody are specified in page.tsx
+export const inPersonBody = true;
+
+export const remoteBody = inPersonBody;
 
 export const solutionBody = null;
 

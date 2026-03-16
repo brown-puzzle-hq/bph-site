@@ -6,7 +6,7 @@ import Game, { type GameProps } from "./Game";
 export default function PuzzleBody({ games }: { games: GameProps[] }) {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   return (
-    <div className="space-y-8">
+    <div className="mx-auto w-fit space-y-8">
       {games.map((game, i) => (
         <Game
           key={i}

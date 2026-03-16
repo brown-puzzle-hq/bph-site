@@ -32,7 +32,7 @@ export type GameProps = {
   width: number;
   blackWalls: Wall[];
   pinkWalls: Wall[];
-  blueSquares: Square[];
+  greenSquares: Square[];
   orangeSquares: Square[];
   startSquare: Square;
   guardStartSquare: Square;
@@ -70,7 +70,7 @@ function getShortestPath(
   height: number,
   totalSquares: number,
   walls: Wall[],
-  blueSquares: Square[],
+  greenSquares: Square[],
 ): Square[] {
   // `dist` is an array of tuples [round, phase] where
   // round is the number of rounds needed to reach that square,
@@ -104,14 +104,14 @@ function getShortestPath(
         // If we can reach `next` in fewer rounds,
         // or the same number of rounds but fewer steps,
         // then we update its distance and parent
-        let curr_phase = blueSquares.includes(next) ? 1 : 0;
+        let curr_phase = greenSquares.includes(next) ? 1 : 0;
         if (
           round < prev_dist ||
           (round === prev_dist && curr_phase < prev_phase)
         ) {
-          // If the neighbor is a blue square, then treat it as if it is processed
+          // If the neighbor is a green square, then treat it as if it is processed
           // in the second phase
-          if (blueSquares.includes(next)) {
+          if (greenSquares.includes(next)) {
             dist[next] = [round, 1, dir];
             parents[next] = curr;
             queue3.push(next);
@@ -126,7 +126,7 @@ function getShortestPath(
         else if (
           round === prev_dist &&
           prev_phase === 0 &&
-          !blueSquares.includes(next)
+          !greenSquares.includes(next)
         ) {
           // prev path: [next -> guard]
           let sq: Square = next;
@@ -175,9 +175,9 @@ function getShortestPath(
     for (const curr of queue2) {
       const neighbors = getNeighbors(curr, width, height, walls);
       for (const [next, dir] of neighbors) {
-        // Cannot step onto blue on the second move
-        // Add curr back so we can step to this blue square next round
-        if (blueSquares.includes(next)) {
+        // Cannot step onto green on the second move
+        // Add curr back so we can step to this green square next round
+        if (greenSquares.includes(next)) {
           queue3.push(curr);
           continue;
         }
@@ -257,7 +257,7 @@ function getShortestPath(
 
 /**
  * Guard moves along the shortest path from guard to player.
- * Takes up to two steps; cannot step onto blue on the second move.
+ * Takes up to two steps; cannot step onto green on the second move.
  * Crossing a pink line triggers it as a wall.
  */
 function calculateGuard(
@@ -269,7 +269,7 @@ function calculateGuard(
   blackWalls: Wall[],
   triggeredPinkWalls: Wall[],
   pinkWalls: Wall[],
-  blueSquares: Square[],
+  greenSquares: Square[],
 ): { newGuard: Square; newTriggeredPinkWalls: Wall[] } {
   let triggered = [...triggeredPinkWalls];
   let effectiveBlack = [...blackWalls, ...triggered];
@@ -281,7 +281,7 @@ function calculateGuard(
     height,
     totalSquares,
     effectiveBlack,
-    blueSquares,
+    greenSquares,
   );
 
   // First move
@@ -299,8 +299,8 @@ function calculateGuard(
   if (
     next === undefined ||
     curr === player ||
-    blueSquares.includes(curr) ||
-    blueSquares.includes(next)
+    greenSquares.includes(curr) ||
+    greenSquares.includes(next)
   )
     return { newGuard: curr, newTriggeredPinkWalls: triggered };
   if (isWallInList(createWall(curr, next), pinkWalls)) {
@@ -314,7 +314,7 @@ export default function Game({
   width,
   blackWalls,
   pinkWalls,
-  blueSquares,
+  greenSquares,
   orangeSquares,
   startSquare,
   guardStartSquare,
@@ -327,7 +327,6 @@ export default function Game({
   const [guard, setGuard] = useState<Square>(guardStartSquare);
   const [triggeredPinkWalls, setTriggeredPinkWalls] = useState<Wall[]>([]);
   const [gameOver, setGameOver] = useState(false);
-  const [hasFocus, setHasFocus] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -387,7 +386,7 @@ export default function Game({
           blackWalls,
           newTriggered,
           pinkWalls,
-          blueSquares,
+          greenSquares,
         );
 
       const delta = next - player;
@@ -422,7 +421,7 @@ export default function Game({
       blackWalls,
       triggeredPinkWalls,
       pinkWalls,
-      blueSquares,
+      greenSquares,
       orangeSquares,
       width,
       height,
@@ -524,7 +523,7 @@ export default function Game({
           {Array.from({ length: totalSquares }, (_, i) => {
             const isPlayer = i === player;
             const isGuard = i === guard;
-            const isBlue = blueSquares.includes(i);
+            const isGreen = greenSquares.includes(i);
             const isOrange = orangeSquares.includes(i);
             const row = Math.floor(i / width);
             const col = i % width;
@@ -569,7 +568,7 @@ export default function Game({
                 key={i}
                 className={cn(
                   "flex items-center justify-center border border-gray-300",
-                  isBlue && "bg-green-600",
+                  isGreen && "bg-green-600",
                   isOrange && "bg-orange-600",
                 )}
                 style={borderStyle}
