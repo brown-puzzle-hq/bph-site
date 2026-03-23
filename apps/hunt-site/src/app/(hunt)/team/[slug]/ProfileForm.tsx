@@ -227,7 +227,7 @@ export default function ProfileForm({
             )}
           />
 
-          {/* Display name field */}
+          {/* Primary email field */}
           <FormField
             control={form.control}
             name="primaryEmail"
