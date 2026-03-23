@@ -1,4 +1,4 @@
-This is a fully functional and customizable puzzlehunt site built with Next.js, TypeScript, and Tailwind CSS. It has been used in [Puzzlethon 2024](https://puzzlethon.brownpuzzle.club/) and [BPH 2025](https://www.brownpuzzlehunt.com/).
+This is a fully functional and customizable puzzlehunt site built with Next.js, TypeScript, and Tailwind CSS. It has been used in [Puzzlethon 2024](https://puzzlethon.brownpuzzleclub.com/) and [BPH 2025](https://www.brownpuzzlehunt.com/).
 
 The docs are available [here](https://example.brownpuzzlehunt.com/docs).
 
