@@ -42,7 +42,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "editing-practice",
     "multi-clef-composition",
   ],
-  "date-everything-brown": [],
+  "date-everything-brown": ["embeddings", "linear-algebra"],
   dirt: ["primary-investigation", "linear-algebra"],
   "disguised-financial-crimes": [
     "going-in-circles",
@@ -62,7 +62,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "disguised-financial-crimes",
     "primary-investigation",
     "going-in-circles",
-    "messy-placeholder",
+    "date-everything-brown",
   ],
   "experimental-cardiac-measurement": [],
   "flying-through-the-grid": [
@@ -77,8 +77,9 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "sword-placeholder",
     "herculean-math",
     "escapism-in-cinema",
+    "date-everything-brown",
   ],
-  "hash-hash-hash-hash-bang": [],
+  "hash-hash-hash-hash-bang": ["advanced-logical-cooking-techniques"],
   "herculean-math": [
     "disguised-financial-crimes",
     "primary-investigation",
@@ -101,7 +102,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "dirt",
     "pageant-problems",
   ],
-  "linesman-training": [],
+  "linesman-training": ["advanced-logical-cooking-techniques"],
   "luck-practicum": [],
   "maritime-studies": [],
   "messy-placeholder": [
@@ -438,28 +439,6 @@ export const POOL_UNLOCKS: PoolUnlock[] = [
       "hash-hash-hash-hash-bang",
       "dirt",
       "linesman-training",
-    ],
-  },
-  {
-    name: "advanced-logical-cooking-techniques",
-    threshold: 3,
-    feeders: [
-      "schmear-campaign",
-      "big-wheel",
-      "rabbit-konundrum",
-      "applied-probability",
-      "sword-placeholder",
-    ],
-  },
-  {
-    name: "date-everything-brown",
-    threshold: 3,
-    feeders: [
-      "schmear-campaign",
-      "big-wheel",
-      "rabbit-konundrum",
-      "applied-probability",
-      "sword-placeholder",
     ],
   },
 ];
