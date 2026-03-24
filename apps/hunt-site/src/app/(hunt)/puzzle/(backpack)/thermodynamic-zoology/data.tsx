@@ -36,7 +36,15 @@ export const inPersonBody = (
     <div className="mt-4 max-w-3xl space-y-4 pb-4">
       <b>Concentration Requirements:</b>
       <ul className="ml-6">
-        <li>Seven electives from ANY DEPARTMENT</li>
+        <li>
+          <b>MATH:</b> Embeddings
+        </li>
+        <li>
+          <b>MATH:</b> Primary Investigation
+        </li>
+        <li>
+          Five electives from ANY NON-<b>MATH</b> DEPARTMENT
+        </li>
       </ul>
     </div>
   </div>
