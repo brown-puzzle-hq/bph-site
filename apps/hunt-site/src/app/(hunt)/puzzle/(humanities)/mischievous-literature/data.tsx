@@ -1,5 +1,5 @@
 import Image from "next/image";
-import lit from "./lit.jpg";
+import lit from "./lit.png";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.

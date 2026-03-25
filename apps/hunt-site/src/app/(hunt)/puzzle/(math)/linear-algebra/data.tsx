@@ -50,7 +50,7 @@ export const inPersonBody = (
         skeptical, but it can even answer your math homework. Do you want to see
         how it can solve the matrix?
       </li>
-      <li className="mt-8">
+      <li className="mt-4">
         <b>Fill in the matrix:</b>
         <div className="mt-4">
           <Image src={matrix} alt="" />

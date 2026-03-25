@@ -14,6 +14,10 @@ export const puzzleId = "primary-investigation";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="mb-4 italic">
+      I found a transcript and a color wheel. I wonder if I can figure out their
+      favorites?
+    </div>
     <div className="mb-4 space-y-4">
       <b>THE TRANSCRIPT:</b>
       <p>
@@ -38,9 +42,8 @@ export const inPersonBody = (
         “For the double color of the year that is nobody’s favorite, mixing the
         color in that pair furthest from the center with the color of the year
         from 8 years prior roughly yields a color of the year (in the
-        intermediary years). Drawing lines from this mixed color to each of the
-        two colors used to make it results in one additional color of the year
-        being on one of the lines. That is my favorite color.”
+        intermediary years). My favorite color is the first color of the year
+        you intersect when drawing a line straight down from this mixed color.”
       </p>
     </div>
     <div className="mb-4">

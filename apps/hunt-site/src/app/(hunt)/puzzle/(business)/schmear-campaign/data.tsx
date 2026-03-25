@@ -1,3 +1,11 @@
+import Image from "next/image";
+import img1 from "./schmear campaign 1.png";
+import img2 from "./schmear campaign 2.png";
+import img3 from "./schmear campaign 3.png";
+import img4 from "./schmear campaign 4.png";
+import img5 from "./schmear campaign 5.png";
+import img6 from "./schmear campaign 6.png";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -14,14 +22,29 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
       <i>
-        This is a runaround puzzle, whose location will be clarified to teams
-        during real hunt. See hunt HQ for access to materials for this puzzle.
+        Things are getting dirty as these dancing bagels fight to be your
+        breakfast.
       </i>
     </div>
   </div>
 );
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div className="max-w-3xl">
+    <div className="mb-8">
+      <i>
+        Things are getting dirty as these dancing bagels fight to be your
+        breakfast.
+      </i>
+    </div>
+    <Image className="mb-4" src={img1} alt="" />
+    <Image className="mb-4" src={img2} alt="" />
+    <Image className="mb-4" src={img3} alt="" />
+    <Image className="mb-4" src={img4} alt="" />
+    <Image className="mb-4" src={img5} alt="" />
+    <Image className="mb-4" src={img6} alt="" />
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.

@@ -24,7 +24,7 @@ export const inPersonBody = (
       <p>g(🙂,👁️)=2</p>
       <p>g(🐍,✋)=0</p>
       <p>g(⏱️,#️⃣)=12</p>
-      <p>g(🪙,Z)=0</p>
+      <p>g(🪙,Z)=1</p>
     </div>
     <div className="mb-4">
       <p>g(X,Z)=9</p>
