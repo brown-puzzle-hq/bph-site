@@ -26,9 +26,8 @@ export const inPersonBody = (
       </p>
       <p>
         “There is a color of the year with part of a flower in its name and
-        another one with ‘blue’ in its name (not the one that is someone else’s
-        favorite) that are nearly on top of each other. My favorite is the one
-        that is slightly further from the center.”
+        another one with ‘blue’ in its name that are nearly on top of each
+        other. My favorite is the one that is slightly further from the center.”
       </p>
       <p>
         “My favorite is the earliest color of the year that is on the right side
