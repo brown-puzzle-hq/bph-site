@@ -487,3 +487,7 @@ export async function getNumberOfHintsRemaining(
   const usedHints = query[0]?.count ? query[0].count : 0;
   return totalHints - usedHints;
 }
+
+/** Duration bounds for Blueno solve time gimmick. */
+export const MIN_SOLVE_DELAY = 5 * 1000; // 5 seconds
+export const MAX_SOLVE_DELAY = 5 * 60 * 1000; // 5 minutes

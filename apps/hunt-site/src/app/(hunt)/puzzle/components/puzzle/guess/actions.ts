@@ -20,7 +20,13 @@ import {
   REMOTE,
   type SolveType,
 } from "@/config/client";
-import { PUZZLE_UNLOCK_MAP, META_PUZZLES, POOL_UNLOCKS } from "@/config/server";
+import {
+  PUZZLE_UNLOCK_MAP,
+  META_PUZZLES,
+  POOL_UNLOCKS,
+  MIN_SOLVE_DELAY,
+  MAX_SOLVE_DELAY,
+} from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { ensureError, formatDuration } from "~/lib/utils";
 import { assertPermissions } from "~/lib/server";
@@ -30,7 +36,11 @@ export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 /** Handles a guess for a puzzle. May call handleSolve. */
 export async function handleGuess(puzzleId: string, guess: string) {
   // Check that the user is logged in
-  const { id: teamId, interactionMode } = await assertPermissions({
+  const {
+    id: teamId,
+    role,
+    interactionMode,
+  } = await assertPermissions({
     level: "userAny",
   });
   const currDate = new Date();
@@ -168,14 +178,17 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   if (isCorrect) {
     const huntStartTime =
-      interactionMode === "in-person"
-        ? IN_PERSON.START_TIME
-        : REMOTE.START_TIME;
-    const maxSolveTimeDifferenceMs = Math.min(
-      currDate.getTime() - huntStartTime.getTime(),
-      3 * 60 * 60 * 1000,
-    ); // Max is 3 hours
-    const ms = Math.floor(Math.random() * maxSolveTimeDifferenceMs);
+      role === "testsolver" || role === "admin"
+        ? new Date(0)
+        : interactionMode === "in-person"
+          ? IN_PERSON.START_TIME
+          : REMOTE.START_TIME;
+    const timeSinceStart = new Date().getTime() - huntStartTime.getTime();
+    const maxSolveDelay = Math.min(MAX_SOLVE_DELAY, timeSinceStart);
+    const ms = Math.floor(
+      Math.random() * (maxSolveDelay - MIN_SOLVE_DELAY) + MIN_SOLVE_DELAY,
+    );
+
     notifications.push(
       sendToWebsocketServer(teamId, {
         type: "SolvedPuzzle",

@@ -2,7 +2,7 @@ import { puzzleId, solutionBody } from "./data";
 import DefaultHeader from "~/app/(hunt)/puzzle/components/puzzle/DefaultHeader";
 
 export const metadata = {
-  title: "The Rabbit Konundrum - Brown Puzzlehunt",
+  title: "The Rabbit 'Nundrum - Brown Puzzlehunt",
 };
 
 export default async function Layout({
