@@ -37,4 +37,89 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  /* PuzzleJS sparse crossword styling (scoped via PuzzlePlayer className) */
+  .puzzle-player.crossword-sparse table.puzzle-grid-content {
+    background: transparent !important;
+    display: table !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    table-layout: fixed !important;
+  }
+
+  .puzzle-player.crossword-sparse table.puzzle-grid-content tbody {
+    display: table-row-group !important;
+  }
+
+  .puzzle-player.crossword-sparse table.puzzle-grid-content tr {
+    display: table-row !important;
+  }
+
+  .puzzle-player.crossword-sparse table.puzzle-grid-content td {
+    /* Force truly square cells (some browsers can slightly stretch table rows
+       when we override PuzzleJS's block-row layout). */
+    width: var(--puzzle-cell-size) !important;
+    min-width: var(--puzzle-cell-size) !important;
+    height: var(--puzzle-cell-size) !important;
+    min-height: var(--puzzle-cell-size) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: table-cell !important;
+    vertical-align: top !important;
+    box-sizing: border-box !important;
+    line-height: 1 !important;
+  }
+
+  /* Only real (non-@) cells should look like crossword cells.
+     Off-grid '@' cells are still present in the table, but must be invisible
+     so the words read as "floating islands". */
+  .puzzle-player.crossword-sparse
+    table.puzzle-grid-content
+    td:not(.black-cell):not(.marked):not(.hovered) {
+    /* Fillable cells are white; page background shows around the grid. */
+    background: hsl(0 0% 100%) !important;
+    border: 1px solid black !important;
+  }
+
+  /* PuzzleJS marks the active entry with .marked/.hovered.
+     Since we hide the SVG edges, we must still draw borders here. */
+  .puzzle-player.crossword-sparse
+    table.puzzle-grid-content
+    td.marked:not(.black-cell),
+  .puzzle-player.crossword-sparse
+    table.puzzle-grid-content
+    td.hovered:not(.black-cell) {
+    border: 1px solid black !important;
+  }
+
+  /* PuzzleJS draws borders via per-cell SVG which can leave hairline gaps
+     when we force table layout; use td borders instead. */
+  .puzzle-player.crossword-sparse table.puzzle-grid-content .cell > svg {
+    display: none !important;
+  }
+
+  .puzzle-player.crossword-sparse table.puzzle-grid-content td.black-cell {
+    background: black !important;
+    box-shadow: none !important;
+    border: 1px solid black !important;
+  }
+
+  .puzzle-player.crossword-sparse td.black-cell .text {
+    display: none;
+  }
+
+  /* Modifier: hide black/off-grid cells entirely for "floating islands" look. */
+  .puzzle-player.crossword-sparse.crossword-floating
+    table.puzzle-grid-content
+    td.black-cell {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .puzzle-player.crossword-sparse
+    table.puzzle-grid-content
+    td.rebus-cell:not(.marked):not(.hovered) {
+    /* Darker than normal fillable cells to call out rebus squares. */
+    background: hsl(0 0% 80%) !important;
+  }
 }
