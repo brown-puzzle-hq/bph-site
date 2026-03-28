@@ -19,7 +19,14 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 18.7744,
     h: 40.2824,
   },
-  "big-wheel": { icon: crayon, x: 10.5713, y: 14.3272, w: 25.2686, h: 26.1628 },
+  "big-wheel": {
+    icon: crayon,
+    x: 10.5713,
+    y: 14.3272,
+    w: 25.2686,
+    h: 26.1628,
+    labelDx: -15,
+  },
   "rabbit-konundrum": {
     icon: money,
     x: 71.2158,
@@ -40,5 +47,6 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 16.196,
     w: 17.9932,
     h: 22.6329,
+    labelDx: 10,
   },
 };
