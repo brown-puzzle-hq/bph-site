@@ -12,10 +12,12 @@ export const puzzleId = "anthropology-of-computers";
  */
 export const inPersonBody = (
   <div>
-    <div className="max-w-3xl space-y-4 pb-4 text-center"><b>
-      This is a metapuzzle. You will need to use some answers to puzzles 
-      from the Department rounds in order to solve it.
-    </b></div>
+    <div className="max-w-3xl space-y-4 pb-4 text-center">
+      <b>
+        This is a metapuzzle. You will need to use some answers to puzzles from
+        the Department rounds in order to solve it.
+      </b>
+    </div>
     <div className="max-w-3xl space-y-4 pb-4 text-center">
       Professor Conway hasn't told you what's going to be on the final — you're
       going in blind. So you stay up studying all night, taking no breaks

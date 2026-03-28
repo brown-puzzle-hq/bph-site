@@ -14,10 +14,12 @@ export const puzzleId = "psychoceramics";
  */
 export const inPersonBody = (
   <div className="w-full max-w-4xl">
-    <div className="space-y-4 pb-4 text-center"><b>
-      This is a metapuzzle. You will need to use some answers to puzzles 
-      from the Department rounds in order to solve it.
-    </b></div>
+    <div className="space-y-4 pb-4 text-center">
+      <b>
+        This is a metapuzzle. You will need to use some answers to puzzles from
+        the Department rounds in order to solve it.
+      </b>
+    </div>
     <div className="mb-4 space-y-4 text-center">
       <p>
         My pottery usually gets top g-Rae-des, but they've shattered in the

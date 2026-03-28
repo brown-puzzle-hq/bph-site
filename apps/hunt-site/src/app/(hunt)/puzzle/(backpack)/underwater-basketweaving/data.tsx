@@ -15,10 +15,12 @@ export const puzzleId = "underwater-basketweaving";
  */
 export const inPersonBody = (
   <div>
-    <div className="max-w-3xl space-y-4 pb-4 text-center"><b>
-      This is a metapuzzle. You will need to use some answers to puzzles 
-      from the Department rounds in order to solve it.
-    </b></div>
+    <div className="max-w-3xl space-y-4 pb-4 text-center">
+      <b>
+        This is a metapuzzle. You will need to use some answers to puzzles from
+        the Department rounds in order to solve it.
+      </b>
+    </div>
     <div className="mb-4 max-w-3xl space-y-4">
       <i>
         You're working on your final project, but your basket broke! Following

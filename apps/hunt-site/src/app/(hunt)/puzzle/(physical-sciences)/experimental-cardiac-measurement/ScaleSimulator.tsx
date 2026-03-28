@@ -32,14 +32,21 @@ type TrayRect = {
 };
 
 const HEART_IDS = new Set([
-  "beta",
-  "epsilon",
-  "mu",
-  "gamma",
-  "eta",
-  "omicron",
-  "iota",
-  "kappa",
+  // "beta",
+  // "epsilon",
+  // "mu",
+  // "gamma",
+  // "eta",
+  // "omicron",
+  // "iota",
+  // "kappa",
+  "alpha",
+  "delta",
+  "zeta",
+  "theta",
+  "lambda",
+  "nu",
+  "xi",
 ]);
 
 const ITEMS: Item[] = [
@@ -51,13 +58,13 @@ const ITEMS: Item[] = [
   { id: "omicron", label: "omicron", weight: 4 },
   { id: "iota", label: "iota", weight: 7 },
   { id: "kappa", label: "kappa", weight: 8 },
+  { id: "xi", label: "xi", weight: 9 },
   { id: "alpha", label: "alpha", weight: 10 },
   { id: "delta", label: "delta", weight: 11 },
   { id: "zeta", label: "zeta", weight: 12 },
   { id: "theta", label: "theta", weight: 15 },
-  { id: "lambda", label: "lambda", weight: 25 },
   { id: "nu", label: "nu", weight: 18 },
-  { id: "xi", label: "xi", weight: 9 },
+  { id: "lambda", label: "lambda", weight: 25 },
 ];
 
 const itemById = new Map(ITEMS.map((item) => [item.id, item]));
@@ -255,7 +262,9 @@ export default function ScaleSimulator() {
   }, [items, draggingItemId]);
 
   const balanceDelta = leftWeight - rightWeight;
-  const beamRotationDeg = clamp((rightWeight - leftWeight) * 0.9, -10, 10);
+  // const beamRotationDeg = clamp((rightWeight - leftWeight) * 0.9, -10, 10);
+  const beamRotationDeg = balanceDelta === 0 ? 0 : balanceDelta < 0 ? 10 : -10;
+  // clamp((rightWeight - leftWeight) * 0.9, -10, 10);
 
   latestBeamAngleRef.current = beamRotationDeg;
 
