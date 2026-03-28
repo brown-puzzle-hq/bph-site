@@ -24,6 +24,10 @@ export const puzzleId = "luck-practicum";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="space-y-4 pb-4 text-center"><b>
+      This is a metapuzzle. You will need to use some answers to puzzles 
+      from the Department rounds in order to solve it.
+    </b></div>
     <div className="mb-4 space-y-4">
       <p>
         You're using your unopened 54-card deck of Bicycle® index cards to

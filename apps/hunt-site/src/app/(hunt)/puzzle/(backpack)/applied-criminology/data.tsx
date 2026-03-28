@@ -12,6 +12,10 @@ export const puzzleId = "applied-criminology";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="space-y-4 pb-4 text-center"><b>
+      This is a metapuzzle. You will need to use some answers to puzzles 
+      from the Department rounds in order to solve it.
+    </b></div>
     <div className="mb-4">
       <i>
         You study hard, making an index card for each chapter of your law class,
