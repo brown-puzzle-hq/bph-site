@@ -17,13 +17,12 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <p>
-        You're here for the bar exam -- you'd better not get your cases mixed
-        up. Especially since so many have fruit in them.
-      </p>
-      <p>
         <i>What kind of test are you taking?</i>
       </p>
-      <p>(We suggest using Wikipedia as your canonical source.)</p>
+      <p>
+        (We suggest using Wikipedia as your canonical source. Each circle
+        represents one word.)
+      </p>
     </div>
     <div className="mb-4 flex justify-center">
       <Image src={barExam} alt="Bar Exam" width={500} />

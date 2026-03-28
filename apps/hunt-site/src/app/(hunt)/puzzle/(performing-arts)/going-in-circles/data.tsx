@@ -32,7 +32,7 @@ export const inPersonBody = (
         target="_blank"
         href="https://www.geogebra.org/geometry/hkcrqf34"
       >
-        Link to graph
+        <u>Link to graph</u>
       </a>
     </div>
   </div>
