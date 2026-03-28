@@ -16,60 +16,60 @@ export const inPersonBody = (
       I'd bet your grade will be a single zero if you can't spin a solution.
     </div>
 
-    <div className="text-red-600">GLaDOS's weapon of choice (10)</div>
-    <div className="text-black">Asbestos-induced cancer (12)</div>
+    <div className="bg-red-600">GLaDOS's weapon of choice (10)</div>
+    <div className="bg-black">Asbestos-induced cancer (12)</div>
 
-    <div className="text-red-600">
+    <div className="bg-red-600">
       <span className="italic">Gossip Girl</span> actor (2 8)
     </div>
 
-    <div className="text-black">Biological catalyst (6)</div>
-    <div className="text-red-600">
+    <div className="bg-black">Biological catalyst (6)</div>
+    <div className="bg-red-600">
       Metabolic pathway that breaks down glucose (10)
     </div>
-    <div className="text-black">One who reads without posting (6)</div>
-    <div className="text-red-600">Phallic West Coast clam (7)</div>
-    <div className="text-black">Lime or eggs, in baking (9)</div>
-    <div className="text-red-600">
+    <div className="bg-black">One who reads without posting (6)</div>
+    <div className="bg-red-600">Phallic West Coast clam (7)</div>
+    <div className="bg-black">Lime or eggs, in baking (9)</div>
+    <div className="bg-red-600">
       Something you can get close to, but never reach (9)
     </div>
-    <div className="text-black">Paperboys (7)</div>
-    <div className="text-black">Dispose of glass or cardboard (7)</div>
-    <div className="text-red-600">
+    <div className="bg-black">Paperboys (7)</div>
+    <div className="bg-black">Dispose of glass or cardboard (7)</div>
+    <div className="bg-red-600">
       Animal chef in Everything Everywhere All at Once (7)
     </div>
-    <div className="text-black">
+    <div className="bg-black">
       Video game series spanning RTS, MMORPG, and CCG genres (8)
     </div>
-    <div className="text-red-600">Boxing franchise (5)</div>
-    <div className="text-black">Dynamite of film (8)</div>
-    <div className="text-red-600">Bears are often in this (11)</div>
-    <div className="text-black">Slander (6)</div>
-    <div className="text-red-600">Causes of trade deficits (7)</div>
-    <div className="text-red-600">Common homes for dragons (8)</div>
-    <div className="text-black">
+    <div className="bg-red-600">Boxing franchise (5)</div>
+    <div className="bg-black">Dynamite of film (8)</div>
+    <div className="bg-red-600">Bears are often in this (11)</div>
+    <div className="bg-black">Slander (6)</div>
+    <div className="bg-red-600">Causes of trade deficits (7)</div>
+    <div className="bg-red-600">Common homes for dragons (8)</div>
+    <div className="bg-black">
       Like a Cauchy sequence in a compact metric space (10)
     </div>
-    <div className="text-red-600">
+    <div className="bg-red-600">
       2024 Carolina Panthers first round pick (6 7)
     </div>
-    <div className="text-black">Top chess engine (9)</div>
-    <div className="text-red-600">Responsiveness, in economics (10)</div>
-    <div className="text-black">Pitch (3)</div>
-    <div className="text-red-600">Doctor with many contacts (15)</div>
-    <div className="text-black">Arugula (6)</div>
-    <div className="text-red-600">
+    <div className="bg-black">Top chess engine (9)</div>
+    <div className="bg-red-600">Responsiveness, in economics (10)</div>
+    <div className="bg-black">Pitch (3)</div>
+    <div className="bg-red-600">Doctor with many contacts (15)</div>
+    <div className="bg-black">Arugula (6)</div>
+    <div className="bg-red-600">
       Deafening silence and alone together, for two (9)
     </div>
-    <div className="text-black">Nothingness (8)</div>
-    <div className="text-black">Overdose prevention drug (8)</div>
-    <div className="text-red-600">State for the nonbelieving (6)</div>
-    <div className="text-black">Shelf dweller (3)</div>
-    <div className="text-red-600">Recipe components (11)</div>
-    <div className="text-black">Zwischenzug (10)</div>
-    <div className="text-red-600">Hades' home (10)</div>
-    <div className="text-black">Philanthropist (5)</div>
-    <div className="text-red-600">Disciples of Ayn Rand (12)</div>
+    <div className="bg-black">Nothingness (8)</div>
+    <div className="bg-black">Overdose prevention drug (8)</div>
+    <div className="bg-red-600">State for the nonbelieving (6)</div>
+    <div className="bg-black">Shelf dweller (3)</div>
+    <div className="bg-red-600">Recipe components (11)</div>
+    <div className="bg-black">Zwischenzug (10)</div>
+    <div className="bg-red-600">Hades' home (10)</div>
+    <div className="bg-black">Philanthropist (5)</div>
+    <div className="bg-red-600">Disciples of Ayn Rand (12)</div>
   </div>
 );
 

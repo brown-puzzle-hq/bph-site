@@ -1,10 +1,11 @@
 import Image from "next/image";
-import img1 from "./schmear campaign 1.png";
-import img2 from "./schmear campaign 2.png";
-import img3 from "./schmear campaign 3.png";
-import img4 from "./schmear campaign 4.png";
-import img5 from "./schmear campaign 5.png";
-import img6 from "./schmear campaign 6.png";
+import img1 from "./schmear-1.jpeg";
+import img2 from "./schmear-2.jpeg";
+import img3 from "./schmear-3.jpeg";
+import img4 from "./schmear-4.jpeg";
+import img5 from "./schmear-5.jpeg";
+import img6 from "./schmear-6.jpeg";
+import img7 from "./schmear-7.jpeg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -43,6 +44,7 @@ export const remoteBody = (
     <Image className="mb-4" src={img4} alt="" />
     <Image className="mb-4" src={img5} alt="" />
     <Image className="mb-4" src={img6} alt="" />
+    <Image className="mb-4" src={img7} alt="" />
   </div>
 );
 

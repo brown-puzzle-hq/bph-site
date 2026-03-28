@@ -1,3 +1,6 @@
+import Image from "next/image";
+import img from "./editing-practice.png";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -50,29 +53,32 @@ export const inPersonBody = (
       just an extra directly ahead of him—so close, yet out of reach. This
       mystery or him—who was going to crack first?
     </div>
-    <div className="mb-4 space-y-4">
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ ____ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ ____ [#]
-      <br />
-      ❄️ ____ ____ ____ [#]
-      <br />
-      ❄️ ____ [#]
+    <div className="mb-4 flex justify-center">
+      <Image src={img} alt="" />
     </div>
+    {/* <div className="mb-4 space-y-4">
+      ❄️ ____ [#]
+      <br />
+      ❄️ ____ ____ ____ [#]
+      <br />
+      ❄️ ____ [#]
+      <br />
+      ❄️ ____ ____ [#]
+      <br />
+      ❄️ ____ [#]
+      <br />
+      ❄️ ____ [#]
+      <br />
+      ❄️ ____ [#]
+      <br />
+      ❄️ ____ [#]
+      <br />
+      ❄️ ____ ____ [#]
+      <br />
+      ❄️ ____ ____ ____ [#]
+      <br />
+      ❄️ ____ [#]
+    </div> */}
   </div>
 );
 

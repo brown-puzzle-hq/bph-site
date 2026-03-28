@@ -1,5 +1,5 @@
 import Image from "next/image";
-import underwaterBasketweaving from "./underwater-basketweaving.jpg";
+import underwaterBasketweaving from "./basketweaving_image.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -16,28 +16,32 @@ export const puzzleId = "underwater-basketweaving";
 export const inPersonBody = (
   <div>
     <div className="mb-4 max-w-3xl space-y-4">
-      You're working on your final project, but your basket broke! Following the
-      guidelines below and using your sense of direction to guide your turns
-      will help you reconnect your basket's strands, and just think about how
-      much string you'll save by pulling the added threads tight!
+      <i>
+        You're working on your final project, but your basket broke! Following
+        the guidelines below and using your sense of direction to guide your
+        turns will help you reconnect your basket's strands, and although the
+        threads that remain are rigid by now, think about how much string you'll
+        save by pulling the added threads tight!
+      </i>
     </div>
     <div className="mb-4 max-w-3xl">
       <p className="font-bold">Project Guidelines:</p>
       <ol className="list-inside list-decimal">
         <li>
           Connect each colored pair using straight lines that can only travel at
-          half-grid intervals
+          half-grid intervals.
         </li>
         <li>
-          Lines may not overlap with one another (but they may cross each other)
+          Lines may not overlap with one another (but they may cross each
+          other).
         </li>
-        <li>Lines may not cross or overlap with themselves</li>
-        <li>Two lines may not turn at the same point</li>
-        <li>Lines may not touch dots or boxes</li>
-        <li>Lines may not cross the border (dotted black lines)</li>
+        <li>Lines may not cross or overlap with themselves.</li>
+        <li>Two lines may not turn at the same point.</li>
+        <li>Lines may not touch dots or boxes (until pulled tight).</li>
+        <li>Each grid square is exactly 1 unit wide and 1 unit long.</li>
       </ol>
     </div>
-    <div className="mb-4 max-w-3xl">
+    <div className="mb-4 flex justify-center">
       <Image
         src={underwaterBasketweaving}
         alt="Underwater Basketweaving"
