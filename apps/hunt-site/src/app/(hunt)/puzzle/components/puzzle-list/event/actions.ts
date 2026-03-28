@@ -28,7 +28,8 @@ export async function insertAnswerToken(eventId: string, guess: string) {
     where: eq(events.id, eventId),
   });
   if (!event) throw new Error("Event not found!");
-  if (event.answer !== guess) throw new Error("Incorrect token!");
+  if (event.answer.replace(/\s+/g, "") !== guess)
+    throw new Error("Incorrect token!");
 
   // Insert a token into the token table
   await db.insert(answerTokens).values({

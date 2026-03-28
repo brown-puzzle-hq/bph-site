@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
-import { and, count, eq, inArray } from "drizzle-orm";
+import { and, count, eq, inArray, sql } from "drizzle-orm";
 import {
   puzzles,
   guesses,
@@ -15,6 +15,7 @@ import {
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   HUNT_URL,
+  sanitizeAnswer,
   IN_PERSON,
   REMOTE,
   type SolveType,
@@ -67,7 +68,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // Check if the puzzle was solved by being the right string
   // or by using an answer token
-  var isCorrect = puzzle.answer === guess;
+  const normalizedGuess = sanitizeAnswer(guess);
+  var isCorrect = sanitizeAnswer(puzzle.answer) === normalizedGuess;
   var solveType: SolveType = "guess";
 
   if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
@@ -77,8 +79,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
     // If it does not exist, insert it into the table.
     // Mark the guess as correct with solveType "answer_token"
     const event = await db.query.events.findFirst({
-      columns: { id: true },
-      where: eq(events.answer, guess),
+      columns: { id: true, answer: true },
+      where: sql`regexp_replace(upper(${events.answer}), '[^A-Z0-9]', '', 'g') = ${normalizedGuess}`,
     });
 
     if (event) {
@@ -125,7 +127,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
       await tx.insert(guesses).values({
         teamId,
         puzzleId,
-        guess,
+        guess: normalizedGuess,
         isCorrect,
         submitTime: currDate,
       });
@@ -150,7 +152,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
   // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+  const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${normalizedGuess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
   await sendBotMessage(guessMessage, "guess");
   /** END_SNIPPET:DISCORD_MESSAGE */
 

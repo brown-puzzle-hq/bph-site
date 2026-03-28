@@ -1,5 +1,6 @@
 /** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
 
+import { sanitizeAnswer } from "@/config/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -28,6 +29,17 @@ export function ensureError(value: unknown): Error {
     `This value was thrown as is, not through an Error: ${stringified}`,
   );
   return error;
+}
+
+export function displayStoredPuzzleGuess(
+  storedGuess: string,
+  isCorrect: boolean,
+  puzzleAnswer: string,
+) {
+  if (!isCorrect) return storedGuess;
+  if (sanitizeAnswer(storedGuess) === sanitizeAnswer(puzzleAnswer))
+    return puzzleAnswer;
+  return `${storedGuess} → ${puzzleAnswer}`;
 }
 
 /** Formats a duration in milliseconds as "Xd Yh Zm Ws" */

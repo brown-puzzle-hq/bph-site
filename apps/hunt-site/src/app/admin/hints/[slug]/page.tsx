@@ -4,6 +4,7 @@ import { and, asc, eq } from "drizzle-orm";
 import AdminHintThread from "./AdminHintThread";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import { IN_PERSON, REMOTE } from "@/config/client";
+import { displayStoredPuzzleGuess } from "~/lib/utils";
 import { notFound } from "next/navigation";
 
 export default async function Page({
@@ -85,6 +86,26 @@ export default async function Page({
   const partialSolutions = module?.partialSolutions ?? {};
   const tasks = module?.tasks ?? {};
 
+  const processedGuesses = previousGuesses.map(
+    ({ guess, isCorrect, submitTime }) => {
+      const finalGuess = displayStoredPuzzleGuess(
+        guess,
+        isCorrect,
+        hint.puzzle.answer,
+      );
+      const status = isCorrect
+        ? ("correct" as const)
+        : guess in partialSolutions
+          ? ("partial" as const)
+          : guess in tasks
+            ? ("task" as const)
+            : ("incorrect" as const);
+      const partialTip =
+        status === "partial" ? partialSolutions[guess] : undefined;
+      return { guess: finalGuess, status, partialTip, submitTime };
+    },
+  );
+
   return (
     <div className="mx-auto mb-12 flex max-w-[calc(min(100vw,968px))] flex-col items-center px-4">
       <h1 className="px-4 pb-4">Hint #{hint.id}</h1>
@@ -100,12 +121,7 @@ export default async function Page({
           <p className="w-full text-center text-sm font-semibold text-zinc-700">
             Team's Guesses
           </p>
-          <GuessTable
-            puzzleAnswer={hint.puzzle.answer}
-            previousGuesses={previousGuesses}
-            partialSolutions={partialSolutions}
-            tasks={tasks}
-          />
+          <GuessTable previousGuesses={processedGuesses} />
         </div>
       )}
     </div>

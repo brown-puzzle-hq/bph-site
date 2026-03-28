@@ -78,15 +78,21 @@ export default function DefaultPostHuntPuzzlePage({
       setError(null);
 
       const guess = data.guess;
-      const isCorrect = data.guess === puzzleAnswer;
+      const isCorrect = sanitizeAnswer(guess) === sanitizeAnswer(puzzleAnswer);
 
-      setPreviousGuesses((prevGuesses) => [
-        ...prevGuesses,
+      setPreviousGuesses((prev) => [
+        ...prev,
         {
-          id: prevGuesses.length,
-          guess,
-          isCorrect,
-          teamId: "anonymous",
+          guess: isCorrect ? puzzleAnswer : guess,
+          status: isCorrect
+            ? "correct"
+            : guess in partialSolutions
+              ? "partial"
+              : guess in tasks
+                ? "task"
+                : "incorrect",
+          partialTip:
+            guess in partialSolutions ? partialSolutions[guess] : undefined,
           submitTime: new Date(),
         },
       ]);
@@ -200,12 +206,7 @@ export default function DefaultPostHuntPuzzlePage({
       </div>
 
       <div className="mx-auto max-w-3xl">
-        <GuessTable
-          puzzleAnswer={puzzleAnswer}
-          previousGuesses={previousGuesses}
-          partialSolutions={partialSolutions}
-          tasks={tasks}
-        />
+        <GuessTable previousGuesses={previousGuesses} />
       </div>
     </div>
   );

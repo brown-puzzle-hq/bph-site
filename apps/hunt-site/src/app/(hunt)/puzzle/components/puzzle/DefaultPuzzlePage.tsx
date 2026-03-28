@@ -21,7 +21,7 @@ import {
   REMOTE,
 } from "@/config/client";
 import { INITIAL_PUZZLES } from "@/config/server";
-import { cn } from "~/lib/utils";
+import { cn, displayStoredPuzzleGuess } from "~/lib/utils";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 import { checkPermissions } from "~/lib/server";
 
@@ -129,6 +129,7 @@ export default async function DefaultPuzzlePage({
 
   // Get previous guesses
   const previousGuesses = await db.query.guesses.findMany({
+    columns: { guess: true, isCorrect: true, submitTime: true },
     where: and(eq(guesses.teamId, teamId), eq(guesses.puzzleId, puzzleId)),
   });
 
@@ -158,6 +159,26 @@ export default async function DefaultPuzzlePage({
 
   const puzzleBody =
     puzzleInteractionMode === "remote" ? remoteBody : inPersonBody;
+
+  const processedGuesses = previousGuesses.map(
+    ({ guess, isCorrect, submitTime }) => {
+      const finalGuess = displayStoredPuzzleGuess(
+        guess,
+        isCorrect,
+        puzzleAnswer,
+      );
+      const status = isCorrect
+        ? ("correct" as const)
+        : guess in partialSolutions
+          ? ("partial" as const)
+          : guess in tasks
+            ? ("task" as const)
+            : ("incorrect" as const);
+      const partialTip =
+        status === "partial" ? partialSolutions[guess] : undefined;
+      return { guess: finalGuess, status, partialTip, submitTime };
+    },
+  );
 
   return (
     <div className="w-full px-4">
@@ -193,12 +214,7 @@ export default async function DefaultPuzzlePage({
       </div>
 
       <div className="mx-auto max-w-3xl">
-        <GuessTable
-          puzzleAnswer={puzzleAnswer}
-          previousGuesses={previousGuesses}
-          partialSolutions={partialSolutions}
-          tasks={tasks}
-        />
+        <GuessTable previousGuesses={processedGuesses} />
       </div>
     </div>
   );
