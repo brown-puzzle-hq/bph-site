@@ -180,7 +180,7 @@ const DOWN_CLUE_LIST: string[] = [
 
 export const inPersonBody = (
   <div>
-    <div className="mx-auto flex flex-col items-start justify-center gap-4 md:flex-row md:gap-8">
+    <div className="mx-auto flex flex-col items-start justify-center gap-4 md:gap-8 2xl:flex-row">
       <div className="flex flex-col items-start">
         <div className="relative min-h-[788px] min-w-[1000px]">
           <PuzzlePlayer

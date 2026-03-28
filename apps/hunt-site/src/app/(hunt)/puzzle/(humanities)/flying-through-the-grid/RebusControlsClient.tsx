@@ -138,7 +138,7 @@ export default function RebusControlsClient({ puzzleId }: Props) {
         checked={rebusLocked}
         onCheckedChange={setRebusLocked}
       />
-      <Label htmlFor={inputId}>Rebus mode</Label>
+      <Label htmlFor={inputId}>Rebus mode (also activated by shift)</Label>
     </div>
   );
 }

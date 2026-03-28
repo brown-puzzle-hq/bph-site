@@ -211,6 +211,9 @@ function makeFills(
 
 const fillsDef = makeFills(GRID_ROWS, GRID_COLS, rebusCells);
 const extracted = extractClues(gridDef);
+const displayedDown = extracted.down.filter(
+  (clue) => !(clue.answerLength === 1),
+);
 
 export const acrossClues: Record<number, string> = {
   1: "Get dry and wrinkly",
@@ -497,7 +500,7 @@ export const inPersonBody = (
       <CrosswordCluesClient
         puzzleId={puzzleId}
         across={extracted.across}
-        down={extracted.down}
+        down={displayedDown}
         acrossClues={acrossClues}
         downClues={downClues}
       />

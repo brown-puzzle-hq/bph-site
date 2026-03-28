@@ -26,7 +26,7 @@ function renderClueText(text: string | undefined) {
 
 const CrosswordCluesClient: React.FC<Props> = ({ acrossClues, downClues }) => {
   return (
-    <div className="grid w-full max-w-xl gap-8 text-left md:grid-cols-2">
+    <div className="grid w-full max-w-xl gap-8 text-left xl:grid-cols-2">
       <div>
         <h3 className="mb-2 font-semibold">Across</h3>
         <ul className="space-y-1 text-sm">
