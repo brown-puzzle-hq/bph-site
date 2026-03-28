@@ -10,6 +10,9 @@ import {
 } from "react";
 import colorwheelPng from "./colorwheel.png";
 
+import Image from "next/image";
+import colorWheel from "./color-wheel.png";
+
 type Pin = {
   id: string;
   xPct: number;
@@ -514,7 +517,7 @@ export default function PrimaryInvestigationWheel() {
                   "conic-gradient(#ff0000 0deg, #ff7f00 30deg, #ffff00 60deg, #7fff00 120deg, #00ff00 150deg, #00ff7f 180deg, #00ffff 210deg, #007fff 240deg, #0000ff 270deg, #7f00ff 300deg, #ff00ff 330deg, #ff0000 360deg)",
               }}
             />
-            <img
+            <Image
               ref={imageRef}
               src={colorwheelPng.src}
               alt=""

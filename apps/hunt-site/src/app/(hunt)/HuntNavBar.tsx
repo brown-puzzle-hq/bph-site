@@ -12,7 +12,7 @@ export function HuntNavBar() {
   const now = new Date();
 
   const style: NavBarStyle = {
-    item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-all",
+    item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-colors",
     bar: "bg-nav-bg/30 backdrop-blur-md backdrop-filter",
     sheet: "bg-nav-bg",
   };

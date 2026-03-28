@@ -1,0 +1,201 @@
+import "server-only";
+
+import Image from "next/image";
+import { type StaticImageData } from "next/image";
+import type { CSSProperties } from "react";
+import { IN_PERSON, REMOTE } from "@/config/client";
+import { checkPermissions } from "~/lib/server";
+import {
+  type AvailablePuzzle,
+  getAvailablePuzzles,
+} from "@/puzzle/components/puzzle-list/puzzle-utils";
+import { notFound } from "next/navigation";
+import { ROUNDS, ALL_PUZZLES } from "~/config/server";
+import Link from "next/link";
+import { cookies } from "next/headers";
+import { decodeSeen } from "~/lib/utils";
+import SeenPuzzleIcon from "./SeenPuzzleIcon";
+
+export type PuzzleIcon = {
+  icon: StaticImageData;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+
+  /** Where the puzzle name label renders relative to the icon. Defaults to "bottom". */
+  labelPosition?: "top" | "bottom";
+  /** Horizontal offset (in % of the icon container) applied to the label position. */
+  labelDx?: number;
+  /** Vertical offset (in % of the icon container) applied to the label position. */
+  labelDy?: number;
+  /** Optional icon replacement once puzzle solved. */
+  solveIcon?: StaticImageData;
+};
+
+type DefaultRoundPageProps = {
+  background: StaticImageData;
+  roundName: string;
+  icons: Record<string, PuzzleIcon>;
+};
+
+export default async function DefaultRoundPage({
+  background,
+  roundName,
+  icons,
+}: DefaultRoundPageProps) {
+  const { error, user } = await checkPermissions({ level: "userAny" });
+  const currDate = new Date();
+
+  const seen = decodeSeen(cookies().get("seen")?.value);
+  const round = ROUNDS.find((round) => round.name === roundName)!;
+  let roundPuzzles: AvailablePuzzle[];
+
+  // --- NOT LOGGED IN ---
+  if (error) {
+    // If the hunt has not ended, 404
+    if (currDate < REMOTE.END_TIME) {
+      notFound();
+    }
+
+    const availablePuzzles = await getAvailablePuzzles();
+    roundPuzzles = availablePuzzles.filter((puzzle) =>
+      round.puzzles.includes(puzzle.id),
+    );
+  }
+  // --- LOGGED IN ---
+  else {
+    const { id: teamId, role, interactionMode } = user;
+
+    const huntStartTime =
+      interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME;
+
+    // If the hunt has not started, 404
+    if (role !== "testsolver" && role !== "admin" && currDate < huntStartTime) {
+      notFound();
+    }
+
+    const availablePuzzles = await getAvailablePuzzles(teamId);
+    roundPuzzles = availablePuzzles
+      .filter((puzzle) => round.puzzles.includes(puzzle.id))
+      .sort((puzzleA, puzzleB) => puzzleA.name.localeCompare(puzzleB.name));
+  }
+
+  return (
+    <div>
+      <div className="relative overflow-hidden">
+        {/* Background art */}
+        <Image
+          src={background}
+          alt={roundName}
+          className="w-screen shadow-lg"
+        />
+        {/* Icons */}
+        {roundPuzzles.map((puzzle) => {
+          const {
+            icon,
+            x,
+            y,
+            w,
+            h,
+            labelPosition = "bottom",
+            labelDx = 0,
+            labelDy = 0,
+            solveIcon,
+          } = icons[puzzle.id]!;
+          const puzzleIndex = ALL_PUZZLES.indexOf(puzzle.id);
+          const isSeen = seen[puzzleIndex] === "1";
+
+          const labelStyle: CSSProperties = {
+            left: `calc(50% + ${labelDx}%)`,
+            ...(labelPosition === "top"
+              ? {
+                  top: `calc(0% - 0.5rem + ${labelDy}%)`,
+                  transform: "translate(-50%, -100%)",
+                }
+              : {
+                  top: `calc(100% + 0.5rem + ${labelDy}%)`,
+                  transform: "translate(-50%, 0%)",
+                }),
+          };
+
+          return (
+            <div
+              key={puzzle.id}
+              className="absolute"
+              style={{
+                left: `${x}%`,
+                top: `${y}%`,
+                width: `${w}%`,
+              }}
+            >
+              <Link href={`/puzzle/${puzzle.id}`}>
+                <Image
+                  src={(puzzle.answer && solveIcon) || icon}
+                  alt={puzzle.name}
+                  style={{
+                    width: "100%",
+                    height: `${h}%`,
+                  }}
+                />
+              </Link>
+
+              {/* Puzzle name */}
+              <div className="absolute z-10 hidden sm:flex" style={labelStyle}>
+                <div className="relative rounded-md bg-black px-2 py-1">
+                  {/* Pointer */}
+                  {labelPosition === "top" ? (
+                    <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
+                  ) : (
+                    <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
+                  )}
+                  {/* Name */}
+                  <span className="text-nowrap text-main-text">
+                    {puzzle.name}
+                  </span>
+                  {puzzle.answer ? (
+                    <img
+                      className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
+                      src="/circle-check.svg"
+                    />
+                  ) : (
+                    !isSeen && <SeenPuzzleIcon index={puzzleIndex} />
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mx-auto mb-12 w-full max-w-3xl px-4 pt-6">
+        {/* Puzzle table */}
+        <div className="w-full overflow-hidden rounded-md text-sm font-medium">
+          <div className="grid grid-cols-2 p-2">
+            <p>Puzzle</p>
+            <p>Answer</p>
+          </div>
+          {roundPuzzles.map((puzzle) => (
+            <div key={puzzle.id}>
+              <hr className="w-full" />
+              <Link
+                href={`/puzzle/${puzzle.id}`}
+                className="grid grid-cols-2 p-2 transition-colors hover:bg-white/5"
+                prefetch={false}
+              >
+                <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
+                {puzzle.answer !== null && (
+                  <p className="truncate text-ellipsis text-correct-guess">
+                    {puzzle.answer}
+                  </p>
+                )}
+              </Link>
+            </div>
+          ))}
+          <hr className="w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}

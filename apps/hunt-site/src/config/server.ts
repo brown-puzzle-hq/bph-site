@@ -273,6 +273,8 @@ export const ROUNDS: Round[] = [
   },
 ];
 
+export const ALL_PUZZLES = ROUNDS.flatMap((round) => round.puzzles);
+
 export type PoolUnlock = {
   name: string;
   threshold: number;

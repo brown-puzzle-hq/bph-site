@@ -9,11 +9,15 @@ import {
   getAvailablePuzzles,
 } from "./components/puzzle-list/puzzle-utils";
 import { redirect } from "next/navigation";
-import { ROUNDS } from "~/config/server";
+import { cookies } from "next/headers";
+import { ALL_PUZZLES, ROUNDS } from "~/config/server";
+import { decodeSeen } from "~/lib/utils";
 
 export default async function Home() {
   const { error, user } = await checkPermissions({ level: "userAny" });
   const currDate = new Date();
+
+  const seen = decodeSeen(cookies().get("seen")?.value);
 
   // --- NOT LOGGED IN ---
   if (error) {
@@ -23,11 +27,20 @@ export default async function Home() {
     }
 
     // Otherwise, let them see all puzzles and events without answers
+    const availableRounds = ROUNDS.map((round) => ({
+      name: round.name,
+      totalPuzzles: round.puzzles.length,
+      unlockedPuzzles: round.puzzles.length,
+      solvedPuzzles: 0,
+      monitor: round.puzzles
+        .map((puzzle) => ALL_PUZZLES.indexOf(puzzle))
+        .filter((index) => seen[index] === "0"),
+    }));
     const availableEvents = await getAvailableEvents();
 
     return (
       <PuzzleListPage
-        availableRounds={ROUNDS}
+        availableRounds={availableRounds}
         availableEvents={availableEvents}
         hasFinishedHunt={false}
         hasEventInputBox={false}
@@ -51,12 +64,28 @@ export default async function Home() {
 
   // Otherwise, display the puzzles unlocked
   const availablePuzzles = await getAvailablePuzzles(teamId);
-  const availableRounds = ROUNDS.map((round) => ({
-    name: round.name,
-    puzzles: round.puzzles.filter((puzzle) =>
+  const availableRounds = ROUNDS.map((round) => {
+    const unlockedList = round.puzzles.filter((puzzle) =>
       availablePuzzles.some((ap) => ap.id === puzzle),
-    ),
-  })).filter((round) => round.puzzles.length > 0);
+    );
+    const unlockedPuzzles = unlockedList.length;
+    const solvedList = unlockedList.filter((puzzle) =>
+      availablePuzzles.some((ap) => ap.id === puzzle && ap.answer !== null),
+    );
+    const solvedPuzzles = solvedList.length;
+    const monitor = unlockedList
+      .filter((puzzle) => !solvedList.includes(puzzle))
+      .map((puzzle) => ALL_PUZZLES.indexOf(puzzle))
+      .filter((index) => seen[index] === "0");
+    return {
+      name: round.name,
+      totalPuzzles:
+        round.name !== "Backpack" ? round.puzzles.length : unlockedPuzzles,
+      unlockedPuzzles,
+      solvedPuzzles,
+      monitor,
+    };
+  });
   const availableEvents = await getAvailableEvents(teamId, interactionMode);
 
   // Check if the user has finished the hunt

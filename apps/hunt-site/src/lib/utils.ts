@@ -57,3 +57,19 @@ export function formatDuration(deltaMs: number): string {
   parts.push(`${seconds}s`);
   return parts.join(" ");
 }
+
+export const decodeSeen = (value: string | undefined) => {
+  const bytes = value
+    ? new Uint8Array(value.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)))
+    : new Uint8Array(8);
+
+  // Convert to bit string
+  return Array.from(bytes)
+    .map((b) => b.toString(2).padStart(8, "0"))
+    .join("");
+};
+
+export const encodeSeen = (bits: string) => {
+  const bytes = bits.match(/.{1,8}/g)!.map((b) => parseInt(b, 2));
+  return bytes.map((b) => b.toString(16).padStart(2, "0")).join("");
+};

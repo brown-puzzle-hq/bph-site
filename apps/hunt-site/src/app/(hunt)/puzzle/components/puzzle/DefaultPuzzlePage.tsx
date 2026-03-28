@@ -19,10 +19,12 @@ import {
   IN_PERSON,
   REMOTE,
 } from "@/config/client";
-import { INITIAL_PUZZLES } from "@/config/server";
-import { cn, displayStoredPuzzleGuess } from "~/lib/utils";
+import { ALL_PUZZLES, INITIAL_PUZZLES } from "@/config/server";
+import { displayStoredPuzzleGuess } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 import { checkPermissions } from "~/lib/server";
+import SeenSetter from "./SeenSetter";
 
 export type NumberOfGuesses = number | "infinity";
 
@@ -159,6 +161,7 @@ export default async function DefaultPuzzlePage({
   const puzzleBody =
     puzzleInteractionMode === "remote" ? remoteBody : inPersonBody;
 
+  const puzzleIndex = ALL_PUZZLES.indexOf(puzzleId);
   const processedGuesses = previousGuesses.map(
     ({ guess, isCorrect, submitTime }) => {
       const finalGuess = displayStoredPuzzleGuess(
@@ -181,6 +184,7 @@ export default async function DefaultPuzzlePage({
 
   return (
     <div className="w-full px-4">
+      <SeenSetter index={puzzleIndex} />
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>
