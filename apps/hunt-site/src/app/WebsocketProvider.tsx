@@ -57,7 +57,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         case "SolvedPuzzle":
           toast("Puzzle solved!", {
             icon: <CheckCircle className="size-[18px]" />,
-            description: data.puzzleName,
+            description: (
+              <>
+                {data.puzzleName} (
+                <span className="font-bold text-error">+{data.interval}</span>{" "}
+                after <span className="font-bold">???</span>)
+              </>
+            ),
             action: puzzleLink(data.puzzleId),
           });
           break;

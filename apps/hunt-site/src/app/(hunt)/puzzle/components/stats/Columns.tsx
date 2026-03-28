@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { formatDuration } from "~/lib/utils";
 
 export type TeamPuzzleStats = {
   team: {
@@ -22,20 +23,9 @@ function formatTime(time: Date | null) {
   });
 }
 
-function formatDuration(deltaMs: number | null) {
+function formatDurationCell(deltaMs: number | null) {
   if (deltaMs == null) return "-";
-
-  const totalSeconds = Math.floor(deltaMs / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const parts = [];
-  if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0 || hours > 0) parts.push(`${minutes}m`);
-  parts.push(`${seconds}s`);
-
-  return parts.join(" ");
+  return formatDuration(deltaMs);
 }
 
 // Define the columns for the table using TanStack
@@ -128,6 +118,6 @@ export const columns: ColumnDef<TeamPuzzleStats>[] = [
         )}
       </div>
     ),
-    cell: ({ row }) => formatDuration(row.getValue("delta")),
+    cell: ({ row }) => formatDurationCell(row.getValue("delta")),
   },
 ];

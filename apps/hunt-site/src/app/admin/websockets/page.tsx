@@ -5,6 +5,8 @@ import { sendWebsocketMessage } from "./actions";
 import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { formatDuration } from "~/lib/utils";
+import { IN_PERSON } from "~/config/client";
 
 export default function Page() {
   const { readyState } = useWebSocket();
@@ -73,13 +75,21 @@ export default function Page() {
 
         <Button
           className="w-full md:w-auto"
-          onClick={() =>
+          onClick={() => {
+            const huntStartTime = IN_PERSON.START_TIME;
+            const maxSolveTimeDifferenceMs = Math.min(
+              new Date().getTime() - huntStartTime.getTime(),
+              3 * 60 * 60 * 1000,
+            ); // Max is 3 hours
+            const ms = Math.floor(Math.random() * maxSolveTimeDifferenceMs);
+
             sendWebsocketMessage({
               type: "SolvedPuzzle",
               puzzleId,
               puzzleName,
-            })
-          }
+              interval: formatDuration(ms),
+            });
+          }}
         >
           ✅ Solve Puzzle
         </Button>

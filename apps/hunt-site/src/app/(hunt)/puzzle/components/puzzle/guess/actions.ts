@@ -15,11 +15,13 @@ import {
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   HUNT_URL,
+  IN_PERSON,
+  REMOTE,
   type SolveType,
 } from "@/config/client";
 import { PUZZLE_UNLOCK_MAP, META_PUZZLES, POOL_UNLOCKS } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
+import { ensureError, formatDuration } from "~/lib/utils";
 import { assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -27,7 +29,9 @@ export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 /** Handles a guess for a puzzle. May call handleSolve. */
 export async function handleGuess(puzzleId: string, guess: string) {
   // Check that the user is logged in
-  const { id: teamId } = await assertPermissions({ level: "userAny" });
+  const { id: teamId, interactionMode } = await assertPermissions({
+    level: "userAny",
+  });
   const currDate = new Date();
 
   // Check that the guess does not exceed guess limits
@@ -161,11 +165,21 @@ export async function handleGuess(puzzleId: string, guess: string) {
   const notifications: Promise<unknown>[] = [];
 
   if (isCorrect) {
+    const huntStartTime =
+      interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME;
+    const maxSolveTimeDifferenceMs = Math.min(
+      currDate.getTime() - huntStartTime.getTime(),
+      3 * 60 * 60 * 1000,
+    ); // Max is 3 hours
+    const ms = Math.floor(Math.random() * maxSolveTimeDifferenceMs);
     notifications.push(
       sendToWebsocketServer(teamId, {
         type: "SolvedPuzzle",
         puzzleId,
         puzzleName: puzzle.name,
+        interval: formatDuration(ms),
       }),
     );
   }

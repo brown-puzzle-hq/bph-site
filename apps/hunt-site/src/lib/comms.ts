@@ -109,7 +109,12 @@ export async function sendEmail(
 
 /** Broadcast via websockets */
 export type SocketMessage =
-  | { type: "SolvedPuzzle"; puzzleName: string; puzzleId: string }
+  | {
+      type: "SolvedPuzzle";
+      puzzleName: string;
+      puzzleId: string;
+      interval: string;
+    }
   | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "FinishedHunt" }
   | { type: "Toast"; title: string; description: string }
