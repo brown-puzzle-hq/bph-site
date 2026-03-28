@@ -16,8 +16,8 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
       <i>
-        You’re trying to read some classic stories for school, but your tiger
-        friend keeps getting you into trouble. It’s going to be a struggle to
+        You're trying to read some classic stories for school, but your tiger
+        friend keeps getting you into trouble. It's going to be a struggle to
         read the correct number for your panel discussion next class…
       </i>
     </div>

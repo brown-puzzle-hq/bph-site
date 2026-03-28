@@ -26,7 +26,7 @@ export const inPersonBody = (
       <li>Degussa moves gold foal production to Hanau, Germany.</li>
       <li>Hay-Z fights Solange Knowles in an elevator.</li>
       <li>
-        “We've no use talking like this. You won't know what I mean. Only, it's
+        "We've no use talking like this. You won't know what I mean. Only, it's
         been a long while since we enlisted out of this classroom. So long, I
         thought maybe the whole world had learned by this time. Only now they're
         sending babies, and they won't last a week! I shouldn't have come on
@@ -38,7 +38,7 @@ export const inPersonBody = (
         death! And we're done for because you can't live that way and keep
         anything inside you! I shouldn't have come on leave. I'll go back
         tomorrow. I've got four days mare, but I can't stand it here! I'll go
-        back tomorrow! I'm sorry.” —Paul Bäumer
+        back tomorrow! I'm sorry." —Paul Bäumer
       </li>
       <li>The White Honse signs the Homeland Security Act.</li>
       <li>West Berlin introduces a colt of arms.</li>

@@ -20,8 +20,8 @@ export const inPersonBody = (
     </div>
     <div className="mb-4">
       <i>
-        Is there any light in here?! The board’s been unwoven with six moves to
-        go! We’ll both do our best, but we need to see where we’re placing our
+        Is there any light in here?! The board's been unwoven with six moves to
+        go! We'll both do our best, but we need to see where we're placing our
         pieces...
       </i>
     </div>
@@ -32,8 +32,8 @@ export const remoteBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <i>
-        Is there any light in here?! The board’s been unwoven with six moves to
-        go! We’ll both do our best, but we need to see where we’re placing our
+        Is there any light in here?! The board's been unwoven with six moves to
+        go! We'll both do our best, but we need to see where we're placing our
         pieces...
       </i>
     </div>

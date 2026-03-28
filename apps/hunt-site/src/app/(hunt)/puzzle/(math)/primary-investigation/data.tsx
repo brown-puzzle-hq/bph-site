@@ -21,28 +21,28 @@ export const inPersonBody = (
     <div className="mb-4 space-y-4">
       <b>THE TRANSCRIPT:</b>
       <p>
-        “My favorite color of the year is the one directly inwards from the
-        favorite color of the person with the most complicated explanation.”
+        "My favorite color of the year is the one directly inwards from the
+        favorite color of the person with the most complicated explanation."
       </p>
       <p>
-        “There is a color of the year with part of a flower in its name and
-        another one with ‘blue’ in its name that are nearly on top of each
-        other. My favorite is the one that is slightly further from the center.”
+        "There is a color of the year with part of a flower in its name and
+        another one with 'blue' in its name that are nearly on top of each
+        other. My favorite is the one that is slightly further from the center."
       </p>
       <p>
-        “My favorite is the earliest color of the year that is on the right side
-        of the wheel.”
+        "My favorite is the earliest color of the year that is on the right side
+        of the wheel."
       </p>
       <p>
-        “My favorite color of the year is actually two! Specifically, out of the
-        doubles my favorite is the pair that are closest together.”
+        "My favorite color of the year is actually two! Specifically, out of the
+        doubles my favorite is the pair that are closest together."
       </p>
       <p>
-        “For the double color of the year that is nobody’s favorite, mixing the
+        "For the double color of the year that is nobody's favorite, mixing the
         color in that pair furthest from the center with the color of the year
         from 8 years prior roughly yields a color of the year (in the
         intermediary years). My favorite color is the first color of the year
-        you intersect when drawing a line straight down from this mixed color.”
+        you intersect when drawing a line straight down from this mixed color."
       </p>
     </div>
     <div className="mb-4">

@@ -14,7 +14,7 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <p>
-        Speaking objectively or subjectively, there’s something almost romantic
+        Speaking objectively or subjectively, there's something almost romantic
         about discovering a new language. Your professor has translated the
         following phrases, and left the rest to you:
       </p>
@@ -126,7 +126,7 @@ export const inPersonBody = (
         </li>
       </ul>
     </div>
-    There’s one phrase left…
+    There's one phrase left…
     <div className="overflow-x-auto">
       <table className="w-full max-w-3xl table-fixed border-collapse text-sm text-black">
         <colgroup>

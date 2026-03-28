@@ -27,7 +27,7 @@ export const inPersonBody = (
       <p>Crazed admirer starts relapsing</p>
       <p>Frustrated Strip Weathers not electric after dongle accident</p>
       <p>Lawyer test twice and (Magic Johnson rapper and Hecox of Smosh)</p>
-      <p>Jimin’s family surrounded by Gangnam Style singer’s sound</p>
+      <p>Jimin's family surrounded by Gangnam Style singer's sound</p>
     </div>
   </div>
 );

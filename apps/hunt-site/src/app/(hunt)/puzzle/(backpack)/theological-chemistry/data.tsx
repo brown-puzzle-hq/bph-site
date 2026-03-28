@@ -16,7 +16,7 @@ export const puzzleId = "theological-chemistry";
 export const inPersonBody = (
   <div>
     <div className="max-w-3xl space-y-4 text-center">
-      For your final project, you’ve been assigned Wicca.
+      For your final project, you've been assigned Wicca.
     </div>
     <div className="mb-4 max-w-3xl text-center">
       <i>How should you bond the different religious branches together?</i>

@@ -388,8 +388,8 @@ export default function Page() {
                 You can use hint requests to ask for help on any puzzle. This
                 can be something like a nudge in the right direction (i.e. you
                 give us your progress on the puzzle and we will try to get you
-                unstuck) or an answer to a question (e.g. “Which answers to
-                these crossword clues are wrong?”). You can only have one open
+                unstuck) or an answer to a question (e.g. "Which answers to
+                these crossword clues are wrong?"). You can only have one open
                 hint request at a time. Teams will gain one hint request every 3
                 hours in the in-person event and one hint request every 6 hours
                 in the remote event.

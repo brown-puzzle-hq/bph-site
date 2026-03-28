@@ -21,8 +21,8 @@ export const inPersonBody = (
     </div>
     <div>
       <i>
-        Make sure you’re face-to-face to observe the flags, though keep all text
-        hidden. We’ve given notches on a few tiles—be sure to line them up to
+        Make sure you're face-to-face to observe the flags, though keep all text
+        hidden. We've given notches on a few tiles—be sure to line them up to
         help you put things together.
       </i>
     </div>
@@ -33,8 +33,8 @@ export const remoteBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
       <i>
-        Make sure you’re face-to-face to observe the flags, though keep all text
-        hidden. We’ve given notches on a few tiles—be sure to line them up to
+        Make sure you're face-to-face to observe the flags, though keep all text
+        hidden. We've given notches on a few tiles—be sure to line them up to
         help you put things together.
       </i>
     </div>

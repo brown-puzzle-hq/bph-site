@@ -22,13 +22,13 @@ export const inPersonBody = (
       to do with this puzzle:
       <ol className="list-inside">
         <li>
-          They are not ‘ropes’ on a boat, they are ‘lines.’ (So the answer to
-          “How many ropes are there on this boat?” is always zero because they
+          They are not 'ropes' on a boat, they are 'lines.' (So the answer to
+          "How many ropes are there on this boat?" is always zero because they
           are lines.)
         </li>
         <li>
-          Technically, the ‘pier’ is the physical structure that you walk on to
-          get to the boat, and the ‘dock’ is the water surrounding the pier.
+          Technically, the 'pier' is the physical structure that you walk on to
+          get to the boat, and the 'dock' is the water surrounding the pier.
         </li>
       </ol>
     </div>

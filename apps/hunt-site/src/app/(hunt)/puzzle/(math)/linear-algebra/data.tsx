@@ -27,24 +27,24 @@ export const inPersonBody = (
         <br /> In my family, we are great fans of cinema, video games, and
         music. I guess it was destined to happen, since my parents had their
         first date on the day when the world began its long debate about how
-        many people could actually fit on a door. It was my dad’s birthday,
+        many people could actually fit on a door. It was my dad's birthday,
         actually one of the best he ever had, as he claims. Surprisingly, the
         second birthday we celebrated with him together was also when the world
         learned about the dangers of inheriting jewelry from your uncle. Besides
         cinema, my dad loves video games. His recent obsession is Valorant, with
-        an honorable mention of Counter-Strike. I suppose that’s only natural,
+        an honorable mention of Counter-Strike. I suppose that's only natural,
         since he was born in the year the first commercially successful video
         game was released.
         <br />
         <br />
-        As for my mother, she’s a musician. My grandmother says it was meant to
+        As for my mother, she's a musician. My grandmother says it was meant to
         be, as she had been listening to A Night at the Opera nonstop just weeks
         before my mom was born. And then there was me, joining the family the
         same number of days after the New Year as the age gap between my
         parents.
         <br />
         <br />
-        It’s interesting how everything worked out that way. I do believe in
+        It's interesting how everything worked out that way. I do believe in
         signs, repeating numbers, and destiny. It is said that your destiny
         holds answers to any question - big or small. I know you might be
         skeptical, but it can even answer your math homework. Do you want to see

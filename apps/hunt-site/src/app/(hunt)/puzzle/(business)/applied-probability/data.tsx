@@ -13,10 +13,10 @@ export const puzzleId = "applied-probability";
 export const inPersonBody = (
   <div className="max-w-3xl space-y-2">
     <div className="mb-6 italic">
-      I’d bet your grade will be a single zero if you can’t spin a solution.
+      I'd bet your grade will be a single zero if you can't spin a solution.
     </div>
 
-    <div className="text-red-600">GLaDOS’s weapon of choice (10)</div>
+    <div className="text-red-600">GLaDOS's weapon of choice (10)</div>
     <div className="text-black">Asbestos-induced cancer (12)</div>
 
     <div className="text-red-600">
@@ -67,7 +67,7 @@ export const inPersonBody = (
     <div className="text-black">Shelf dweller (3)</div>
     <div className="text-red-600">Recipe components (11)</div>
     <div className="text-black">Zwischenzug (10)</div>
-    <div className="text-red-600">Hades’ home (10)</div>
+    <div className="text-red-600">Hades' home (10)</div>
     <div className="text-black">Philanthropist (5)</div>
     <div className="text-red-600">Disciples of Ayn Rand (12)</div>
   </div>

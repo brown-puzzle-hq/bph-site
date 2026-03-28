@@ -62,7 +62,7 @@ export const inPersonBody = (
       </li>
 
       <li className="mb-4">
-        <p className="font-bold">The inchworms asked, “Whence I forsook?”</p>
+        <p className="font-bold">The inchworms asked, "Whence I forsook?"</p>
         <ol className="list-inside list-[a,b,c,d] pl-4">
           <li>
             <i>« kiki api cusiwe bewa? » onenosu cobokiki.</i>

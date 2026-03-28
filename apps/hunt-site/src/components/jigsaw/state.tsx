@@ -60,7 +60,7 @@ export function createRandomOrder(seed = 20260228, count = NUM_X * NUM_Y) {
   return shuffledRange(count, seed);
 }
 
-// Convenience exports matching the original “module-level” Python values.
+// Convenience exports matching the original "module-level" Python values.
 export const RANDOM_ORDER = createRandomOrder();
 export const INVERSE = inversePermutation(RANDOM_ORDER);
 
