@@ -66,9 +66,9 @@ export const CHAINS: ChainConfig[] = [
       { type: "small", text: "Frances McDormand" },
       { type: "big", text: "" },
       { type: "small", text: "Sam Rockwell" },
-      { type: "big", text: "Iron Man 2" },
+      { type: "big", text: "IF" },
       { type: "small", text: "" },
-      { type: "big", text: "The Nanny Diaries" },
+      { type: "big", text: "Deadpool and Wolverine" },
     ],
   },
   {
@@ -90,8 +90,8 @@ export const CHAINS: ChainConfig[] = [
   {
     nodes: [
       { type: "big", text: "" },
-      { type: "small", text: "Holly Hunter" },
-      { type: "big", text: "Levity" },
+      { type: "small", text: "Juliette Binoche" },
+      { type: "big", text: "Paradise Highway" },
       { type: "small", text: "" },
       { type: "big", text: "" },
       { type: "small", text: "Gwyneth Paltrow" },
