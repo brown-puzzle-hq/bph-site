@@ -1,3 +1,5 @@
+import ScaleSimulator from "./ScaleSimulator";
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -12,16 +14,24 @@ export const puzzleId = "experimental-cardiac-measurement";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
+    <div className="mb-4 space-y-4">
       <b>
         This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
         up.
       </b>
+      <p>
+        Practice setup: drag the labeled chips onto either side of the scale.
+        The balance responds to each chip&apos;s hardcoded weight.
+      </p>
     </div>
   </div>
 );
 
-export const remoteBody = inPersonBody;
+export const remoteBody = (
+  <div className="max-w-3xl">
+    <ScaleSimulator />
+  </div>
+);
 
 /**
  * The `solutionBody` renders in the solution page.

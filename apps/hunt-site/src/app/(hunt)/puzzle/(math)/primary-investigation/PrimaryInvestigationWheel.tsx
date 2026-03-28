@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import colorwheelPng from "./colorwheel.png";
 
 type Pin = {
   id: string;
@@ -515,7 +516,7 @@ export default function PrimaryInvestigationWheel() {
             />
             <img
               ref={imageRef}
-              src="/puzzle/primary-investigation/colorwheel.png"
+              src={colorwheelPng.src}
               alt=""
               className="absolute inset-0 h-full w-full rounded-full object-cover"
               style={{ opacity: wheelAlpha }}
