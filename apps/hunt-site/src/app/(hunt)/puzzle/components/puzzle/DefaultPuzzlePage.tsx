@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and, gt } from "drizzle-orm";
 import {
@@ -9,7 +8,7 @@ import {
   errata,
   unlocks,
 } from "~/server/db/schema";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import ErratumDialog from "~/app/(hunt)/puzzle/components/puzzle/ErratumDialog";
 import GuessForm from "@/puzzle/components/puzzle/guess/GuessForm";
@@ -52,7 +51,7 @@ export default async function DefaultPuzzlePage({
     case "not_authenticated":
       redirect("/login");
     case "not_authorized":
-      redirect("/puzzle");
+      notFound();
   }
 
   // Puzzle answer

@@ -2,7 +2,9 @@ import { type GameProps } from "./Game";
 
 export const puzzleId = "one-guard-no-doors";
 
-export const MAX_UNLOCKS = 4 as const;
+export const INITIAL_GAMES_VISIBLE = 4;
+export const MAX_GAMES = 8;
+export const MAX_UNLOCKS = MAX_GAMES - INITIAL_GAMES_VISIBLE;
 
 /** Move-count thresholds for games 1–7;
  * meeting one records "threshold met" and unlocks the next puzzle in order */

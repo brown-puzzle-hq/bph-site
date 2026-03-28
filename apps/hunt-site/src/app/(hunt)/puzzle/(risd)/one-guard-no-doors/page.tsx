@@ -1,35 +1,40 @@
 import DefaultPuzzlePage from "@/puzzle/components/puzzle/DefaultPuzzlePage";
 import { db } from "@/db/index";
 import { oneGuardNoDoors } from "@/db/schema";
-import { count, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { checkPermissions } from "~/lib/server";
 import * as data from "./data";
 import PuzzleBody from "./PuzzleBody";
 
-const INITIAL_GAMES_VISIBLE = 4;
-const MAX_GAMES = 8;
-
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | undefined };
+  searchParams?: Record<string, string | undefined>;
 }) {
   const { error, user } = await checkPermissions({ level: "userAny" });
 
-  let numPuzzlesToShow = INITIAL_GAMES_VISIBLE;
-  if (!error && user) {
-    const result = await db
-      .select({ count: count() })
+  let metGameIndices: number[] = [];
+  if (!error) {
+    const rows = await db
+      .select({ gameIndex: oneGuardNoDoors.gameIndex })
       .from(oneGuardNoDoors)
       .where(eq(oneGuardNoDoors.teamId, user.id));
-    const thresholdCount = Number(result[0]?.count ?? 0);
-    numPuzzlesToShow = Math.min(
-      MAX_GAMES,
-      INITIAL_GAMES_VISIBLE + thresholdCount,
-    );
+    metGameIndices = rows.map((r) => r.gameIndex);
   }
 
+  const thresholdCount = metGameIndices.length;
+  const numPuzzlesToShow = Math.min(
+    data.MAX_GAMES,
+    data.INITIAL_GAMES_VISIBLE + thresholdCount,
+  );
+  const thresholds = data.ONE_GUARD_THRESHOLDS.slice(0, numPuzzlesToShow).map(
+    (threshold, i) =>
+      metGameIndices.includes(i) || numPuzzlesToShow === data.MAX_GAMES
+        ? null
+        : threshold,
+  );
   const gamesToShow = data.allGames.slice(0, numPuzzlesToShow);
+
   const puzzleBody = (
     <div>
       <div className="mb-4 max-w-3xl space-y-4">
@@ -53,7 +58,7 @@ export default async function Page({
           survive against the guard?
         </p>
       </div>
-      <PuzzleBody games={gamesToShow} />
+      <PuzzleBody games={gamesToShow} thresholds={thresholds} />
     </div>
   );
 
