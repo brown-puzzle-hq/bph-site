@@ -17,6 +17,7 @@ export async function checkThreshold(
   const { id: teamId } = await assertPermissions({ level: "userAny" });
 
   if (gameIndex < 0 || gameIndex > 6) return { unlocked: false };
+
   const threshold = ONE_GUARD_THRESHOLDS[gameIndex];
   if (threshold === undefined || moveCount < threshold)
     return { unlocked: false };

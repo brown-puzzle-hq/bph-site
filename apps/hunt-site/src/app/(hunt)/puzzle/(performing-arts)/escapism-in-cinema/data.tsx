@@ -113,7 +113,7 @@ export const CHAINS: ChainConfig[] = [
       { type: "small", text: "" },
       { type: "big", text: "" },
       { type: "small", text: "Jessica Alba" },
-      { type: "big", text: "Killer Anonymous" },
+      { type: "big", text: "Killers Anonymous" },
       { type: "small", text: "Gary Oldman" },
     ],
   },

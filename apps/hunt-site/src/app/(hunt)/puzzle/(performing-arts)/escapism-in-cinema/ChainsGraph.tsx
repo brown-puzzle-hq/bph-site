@@ -1,15 +1,35 @@
 "use client";
 
 import { useMemo, useState, useCallback, useRef, useEffect } from "react";
+import {
+  getOccupiedCells,
+  getValidDropCells,
+  nearestValidCell,
+  cellToPixel,
+  pixelToCell,
+  normalizeLabelAngle,
+  segmentGeometryFromPoints,
+  type GridPos,
+} from "./chainsGraphUtils";
 
+// Public type for chain game props
 export type ChainGameProps = {
   chains: ChainConfig[];
   gridSize?: number;
   cellSize?: number;
 };
 
-type GridPos = { col: number; row: number };
+export type ChainConfig = {
+  nodes: ChainNodeConfig[];
+};
 
+export type ChainNodeConfig = {
+  type: "big" | "small";
+  text?: string;
+};
+
+// Private type for runtime data
+// Small nodes appear as edges between big nodes
 type ChainEntry = {
   chainIndex: number;
   nodeIndex: number;
@@ -18,23 +38,15 @@ type ChainEntry = {
   text: string;
 };
 
-// Each chain is a sequence of alternating big and small nodes
-export type ChainNodeConfig = {
-  type: "big" | "small";
-  text?: string;
-};
-
-export type ChainConfig = {
-  nodes: ChainNodeConfig[];
-};
-
+// Number of cells on each side of the grid
 const DEFAULT_GRID_SIZE = 6;
+// Size of each cell in the grid
 const DEFAULT_CELL_SIZE = 100;
 
 // Size of big nodes
 const BIG_NODE_SIZE = 80;
 
-// Drag past this distance (px) to dislodge whole chain from grid
+// Drag past this distance to dislodge whole chain from grid
 const DISLODGE_THRESHOLD_PX = 225;
 // Spacing between nodes when chain is dragged in a straight line
 const DISLODGED_CHAIN_SPACING = BIG_NODE_SIZE + 24;
@@ -48,7 +60,7 @@ const GRID_BOTTOM_PADDING = 24;
 // Gap between chains
 const BOTTOM_STRIP_CHAIN_GAP = 16;
 
-// From film puzzle map.svg: cells that are pink (#f4cccc)
+// Cells that are pink (#f4cccc)
 const PINK_CELLS = new Set<string>([
   "0,1",
   "1,0",
@@ -64,7 +76,7 @@ const PINK_CELLS = new Set<string>([
   "5,4",
 ]);
 
-// From film puzzle map.svg: cells that show a number (col,row -> number 1–14)
+// Cells that show text
 const CELL_CONTENTS: Record<string, string> = {
   "0,0": "13",
   "0,2": "10",
@@ -82,58 +94,7 @@ const CELL_CONTENTS: Record<string, string> = {
   "5,3": "2",
 };
 
-function getOccupiedCells(
-  positions: Record<string, GridPos>,
-  excludeId: string | null,
-): Set<string> {
-  const out = new Set<string>();
-  for (const [id, pos] of Object.entries(positions)) {
-    if (id === excludeId) continue;
-    out.add(`${pos.col},${pos.row}`);
-  }
-  return out;
-}
-
-// Get valid drop cells for a big node: any unoccupied cell on the grid
-function getValidDropCells(
-  nodeId: string,
-  _chainIndex: number,
-  _nodeIndexInChain: number,
-  _bigNodeIndicesInChain: number[],
-  positions: Record<string, GridPos>,
-  gridSize: number,
-): GridPos[] {
-  const occupied = getOccupiedCells(positions, nodeId);
-  const valid: GridPos[] = [];
-  for (let row = 0; row < gridSize; row++) {
-    for (let col = 0; col < gridSize; col++) {
-      if (!occupied.has(`${col},${row}`)) valid.push({ col, row });
-    }
-  }
-  return valid;
-}
-
-// Nearest valid cell to (col, row) by Manhattan distance
-// If none, return current
-function nearestValidCell(
-  col: number,
-  row: number,
-  validCells: GridPos[],
-): GridPos {
-  if (validCells.length === 0) return { col, row };
-  let best = validCells[0]!;
-  let bestDist = Infinity;
-  for (const c of validCells) {
-    const d = Math.abs(c.col - col) + Math.abs(c.row - row);
-    if (d < bestDist) {
-      bestDist = d;
-      best = c;
-    }
-  }
-  return best;
-}
-
-// Build flat list of chain entries and per-chain list of node indices that are big
+/** Build flat list of chain entries and list of big node indices */
 function buildChainEntries(chains: ChainConfig[]): {
   entries: ChainEntry[];
   bigIndicesByChain: number[][];
@@ -158,33 +119,400 @@ function buildChainEntries(chains: ChainConfig[]): {
   return { entries, bigIndicesByChain };
 }
 
-function cellToPixel(
-  col: number,
-  row: number,
-  cellSize: number,
-  originX: number,
-  originY: number,
-): { x: number; y: number } {
-  return {
-    x: originX + (col + 0.5) * cellSize,
-    y: originY + (row + 0.5) * cellSize,
-  };
+/** Update bottom strip state after removing node ids from the stri. */
+function pruneBottomStripFromNodeIds(
+  nodeIds: string[],
+  setBottomDislodgedNodeIds: React.Dispatch<React.SetStateAction<string[]>>,
+  setBottomDislodgedChainOrder: React.Dispatch<React.SetStateAction<number[]>>,
+) {
+  setBottomDislodgedNodeIds((prev) => {
+    const next = prev.filter((id) => !nodeIds.includes(id));
+    setBottomDislodgedChainOrder((prevOrder) =>
+      prevOrder.filter((ci) => next.some((id) => id.startsWith(`${ci}-`))),
+    );
+    return next;
+  });
 }
 
-function pixelToCell(
-  x: number,
-  y: number,
-  cellSize: number,
-  originX: number,
-  originY: number,
-  gridSize: number,
-): GridPos | null {
-  const col = Math.floor((x - originX) / cellSize);
-  const row = Math.floor((y - originY) / cellSize);
-  if (col < 0 || col >= gridSize || row < 0 || row >= gridSize) return null;
-  return { col, row };
+/** Applies drop onto the bottom strip for a set of chain node ids */
+function applyDropToBottomStrip(
+  idsToUpdate: string[],
+  chainIndex: number,
+  setPositions: React.Dispatch<React.SetStateAction<Record<string, GridPos>>>,
+  setDislodgedPositions: React.Dispatch<
+    React.SetStateAction<Record<string, { x: number; y: number }>>
+  >,
+  setBottomDislodgedNodeIds: React.Dispatch<React.SetStateAction<string[]>>,
+  setBottomDislodgedChainOrder: React.Dispatch<React.SetStateAction<number[]>>,
+) {
+  setBottomDislodgedNodeIds((prev) => [...prev, ...idsToUpdate]);
+  setBottomDislodgedChainOrder((prev) =>
+    prev.includes(chainIndex) ? prev : [...prev, chainIndex],
+  );
+  setPositions((prev) => {
+    const next = { ...prev };
+    for (const id of idsToUpdate) delete next[id];
+    return next;
+  });
+  setDislodgedPositions((prev) => {
+    const next = { ...prev };
+    for (const id of idsToUpdate) delete next[id];
+    return next;
+  });
 }
 
+/** Toolbar for adding and removing edges */
+function Toolbar({
+  addEdgeMode,
+  removeEdgeMode,
+  onAddEdgeClick,
+  onRemoveEdgeClick,
+}: {
+  addEdgeMode: boolean;
+  removeEdgeMode: boolean;
+  onAddEdgeClick: () => void;
+  onRemoveEdgeClick: () => void;
+}) {
+  return (
+    <div className="flex justify-center gap-2">
+      <button
+        type="button"
+        className={`rounded border px-2 py-1 text-sm text-white hover:bg-white/20 disabled:opacity-50 ${addEdgeMode ? "border-amber-400 bg-amber-500/30" : "border-white/30 bg-white/10"}`}
+        onClick={onAddEdgeClick}
+        disabled={removeEdgeMode}
+      >
+        Add edge
+      </button>
+      <button
+        type="button"
+        className={`rounded border px-2 py-1 text-sm text-white hover:bg-white/20 disabled:opacity-50 ${removeEdgeMode ? "border-amber-400 bg-amber-500/30" : "border-white/30 bg-white/10"}`}
+        onClick={onRemoveEdgeClick}
+        disabled={addEdgeMode}
+      >
+        Remove edge
+      </button>
+    </div>
+  );
+}
+
+/** Bottom strip for dislodged chains */
+function BottomStrip({
+  stripTop,
+  width,
+  height,
+}: {
+  stripTop: number;
+  width: number;
+  height: number;
+}) {
+  return (
+    <div
+      className="absolute left-0 z-0 rounded-b-md bg-white/10"
+      style={{ top: stripTop, width, height }}
+    />
+  );
+}
+
+/** Grid cells for the game grid */
+function GridCells({
+  gridSize,
+  cellSize,
+  originX,
+  originY,
+  totalGridPx,
+  pinkCells,
+  cellContents,
+}: {
+  gridSize: number;
+  cellSize: number;
+  originX: number;
+  originY: number;
+  totalGridPx: number;
+  pinkCells: Set<string>;
+  cellContents: Record<string, string>;
+}) {
+  return (
+    <div
+      className="border-while/80 absolute grid border"
+      style={{
+        left: originX,
+        top: originY,
+        width: totalGridPx,
+        height: totalGridPx,
+        gridTemplateColumns: `repeat(${gridSize}, ${cellSize}px)`,
+        gridTemplateRows: `repeat(${gridSize}, ${cellSize}px)`,
+      }}
+    >
+      {Array.from({ length: gridSize * gridSize }).map((_, i) => {
+        const row = Math.floor(i / gridSize);
+        const col = i % gridSize;
+        const key = `${col},${row}`;
+        const isPink = pinkCells.has(key);
+        const str = cellContents[key];
+        return (
+          <div
+            key={i}
+            className={`flex items-center justify-center border border-gray-100/10 text-white ${isPink ? "bg-[#f4cccc]/40" : ""}`}
+            style={{ width: cellSize, height: cellSize }}
+          >
+            {str != null && (
+              <span className="select-none text-sm font-medium">{str}</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Thick line for the grid */
+function GridThickLine({
+  originX,
+  originY,
+  gridSize,
+  cellSize,
+  width,
+  height,
+}: {
+  originX: number;
+  originY: number;
+  gridSize: number;
+  cellSize: number;
+  width: number;
+  height: number;
+}) {
+  return (
+    <svg
+      className="pointer-events-none absolute left-0 top-0 z-0"
+      width={width}
+      height={height}
+    >
+      <line
+        x1={originX}
+        y1={originY + (gridSize - 1) * cellSize}
+        x2={originX + 4 * cellSize}
+        y2={originY + (gridSize - 1) * cellSize}
+        stroke="#ffffff80"
+        strokeWidth={8}
+        strokeLinecap="butt"
+      />
+    </svg>
+  );
+}
+
+type ConnectorSegment = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  smallNodeId: string | null;
+};
+type UserEdgeSegment = ConnectorSegment & {
+  smallNodeId: string;
+  smallText: string;
+  midX: number;
+  midY: number;
+};
+
+/** SVG for connectors and user edges */
+function ConnectorsSVG({
+  width,
+  height,
+  connectorSegments,
+  userEdgeSegments,
+  removeEdgeMode,
+}: {
+  width: number;
+  height: number;
+  connectorSegments: Array<ConnectorSegment & { chainIndex: number }>;
+  userEdgeSegments: UserEdgeSegment[];
+  removeEdgeMode: boolean;
+}) {
+  return (
+    <svg
+      className="pointer-events-none absolute left-0 top-0 z-0"
+      width={width}
+      height={height}
+    >
+      {connectorSegments.map((seg, i) => (
+        <g key={i}>
+          <line
+            x1={seg.x1}
+            y1={seg.y1}
+            x2={seg.x2}
+            y2={seg.y2}
+            stroke="rgba(100, 100, 100, 1)"
+            strokeWidth={3}
+          />
+        </g>
+      ))}
+      {userEdgeSegments.map((seg) => (
+        <g key={`user-${seg.smallNodeId}`}>
+          <line
+            x1={seg.x1}
+            y1={seg.y1}
+            x2={seg.x2}
+            y2={seg.y2}
+            stroke={
+              removeEdgeMode
+                ? "rgba(251, 191, 36, 0.95)"
+                : "rgba(100, 100, 100, 1)"
+            }
+            strokeWidth={removeEdgeMode ? 5 : 3}
+          />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/** Label for small nodes */
+function SmallNodeLabel({
+  midX,
+  midY,
+  labelAngle,
+  text,
+  className,
+  onDoubleClick,
+}: {
+  midX: number;
+  midY: number;
+  labelAngle: number;
+  text: string;
+  className: string;
+  onDoubleClick?: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <div
+      className={className}
+      style={{
+        left: midX,
+        top: midY,
+        transform: `translate(-50%, -50%) rotate(${labelAngle}deg)`,
+      }}
+      onDoubleClick={onDoubleClick}
+    >
+      {(text || "\u00a0").split("-").join("-\u200B")}
+    </div>
+  );
+}
+
+/** Label for user edges */
+function UserEdgeLabel({
+  seg,
+  labelAngle,
+  removeEdgeMode,
+  onRemove,
+  onDoubleClick,
+}: {
+  seg: UserEdgeSegment;
+  labelAngle: number;
+  removeEdgeMode: boolean;
+  onRemove: (e: React.MouseEvent) => void;
+  onDoubleClick: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <div
+      className={`absolute z-10 flex min-h-[0.875rem] min-w-[1rem] max-w-[4rem] items-center justify-center break-words rounded px-1 py-0.5 text-center text-[12px] font-normal leading-none text-white ${removeEdgeMode ? "cursor-pointer shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-2 ring-amber-400 ring-offset-1 ring-offset-transparent hover:ring-amber-300" : "cursor-text hover:bg-white/20"}`}
+      style={{
+        left: seg.midX,
+        top: seg.midY,
+        transform: `translate(-50%, -50%) rotate(${labelAngle}deg)`,
+      }}
+      onClick={onRemove}
+      onDoubleClick={onDoubleClick}
+    >
+      {(seg.smallText || "\u00a0").split("-").join("-\u200B")}
+    </div>
+  );
+}
+
+/** List of big nodes */
+function BigNodesList({
+  bigNodes,
+  getNodePixelPosition,
+  textOverrides,
+  addEdgeFromId,
+  onDragStart,
+  onNodeClick,
+  onAddEdgeClick,
+}: {
+  bigNodes: ChainEntry[];
+  getNodePixelPosition: (id: string) => { x: number; y: number } | null;
+  textOverrides: Record<string, string>;
+  addEdgeFromId: string | null;
+  onDragStart: (e: React.MouseEvent, id: string) => void;
+  onNodeClick: (id: string, currentText: string, isEditable?: boolean) => void;
+  onAddEdgeClick: (e: React.MouseEvent, id: string) => void;
+}) {
+  return (
+    <>
+      {bigNodes.map((entry) => {
+        const pos = getNodePixelPosition(entry.id);
+        if (!pos) return null;
+        const displayText = textOverrides[entry.id] ?? entry.text;
+        const isAddEdgeSource = addEdgeFromId === entry.id;
+        return (
+          <div
+            key={entry.id}
+            className={`absolute z-10 flex cursor-grab items-center justify-center overflow-hidden rounded border-2 bg-[oklch(0.85_0.08_250)] text-neutral-800 active:cursor-grabbing ${isAddEdgeSource ? "border-blue-500 ring-2 ring-blue-300" : "border-neutral-600"}`}
+            style={{
+              left: pos.x - BIG_NODE_SIZE / 2,
+              top: pos.y - BIG_NODE_SIZE / 2,
+              width: BIG_NODE_SIZE,
+              height: BIG_NODE_SIZE,
+            }}
+            onMouseDown={(e) => onDragStart(e, entry.id)}
+            onClick={(e) => onAddEdgeClick(e, entry.id)}
+          >
+            <span
+              className={`line-clamp-3 w-full min-w-0 max-w-full select-none overflow-hidden break-words px-1 py-0.5 text-center text-[14px] leading-tight [display:-webkit-box] ${entry.text !== "" ? "font-bold" : "font-normal"}`}
+              style={
+                {
+                  wordBreak: "break-word",
+                  WebkitBoxOrient: "vertical",
+                } as React.CSSProperties
+              }
+              onDoubleClick={(e) => e.stopPropagation()}
+              onClick={() =>
+                onNodeClick(entry.id, entry.text, entry.text !== "")
+              }
+            >
+              {(displayText || "\u00a0").split("-").join("-\u200B")}
+            </span>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+/** Overlay for editing text */
+function EditOverlay({
+  editText,
+  onEditChange,
+  onCommit,
+}: {
+  editText: string;
+  onEditChange: (value: string) => void;
+  onCommit: () => void;
+}) {
+  return (
+    <div className="absolute left-1/2 top-2 z-20 -translate-x-1/2 rounded border border-neutral-300 bg-white p-2 shadow">
+      <input
+        type="text"
+        value={editText}
+        onChange={(e) => onEditChange(e.target.value)}
+        onBlur={onCommit}
+        onKeyDown={(e) => e.key === "Enter" && onCommit()}
+        className="min-w-[120px] rounded border border-neutral-200 px-2 py-1 text-sm text-black"
+        autoFocus
+      />
+    </div>
+  );
+}
+
+/** Main component for the chains game */
 export default function ChainsGraph({
   chains,
   gridSize = DEFAULT_GRID_SIZE,
@@ -221,6 +549,15 @@ export default function ChainsGraph({
   const lastClickRef = useRef<{ id: string; time: number } | null>(null);
   const DOUBLE_CLICK_MS = 400;
 
+  // User-added edges (between arbitrary big nodes)
+  const [userEdges, setUserEdges] = useState<
+    Array<{ fromId: string; toId: string; smallNodeId: string }>
+  >([]);
+  const [addEdgeFromId, setAddEdgeFromId] = useState<string | null>(null);
+  const [addEdgeMode, setAddEdgeMode] = useState(false);
+  const [removeEdgeMode, setRemoveEdgeMode] = useState(false);
+  const userEdgeIdRef = useRef(0);
+
   // Drag state
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragPixel, setDragPixel] = useState<{ x: number; y: number } | null>(
@@ -238,13 +575,14 @@ export default function ChainsGraph({
     chainIndex: number;
     chainStartPixels: Record<string, { x: number; y: number }>;
     chainNodeIds: string[];
+    chainNodeIdsOnGridAtStart: Set<string>;
     gridLeft: number;
     gridTop: number;
     gridRight: number;
     gridBottom: number;
   } | null>(null);
 
-  // When chains or grid change: start all chains in bottom strip (one row per chain)
+  // Start all chains in bottom strip
   useEffect(() => {
     const allBigIds = chains.flatMap((_, ci) =>
       (bigIndicesByChain[ci] ?? []).map((ni) => `${ci}-${ni}`),
@@ -255,6 +593,7 @@ export default function ChainsGraph({
     setBottomDislodgedChainOrder(chains.map((_, i) => i));
   }, [chains, gridSize, bigIndicesByChain]);
 
+  // Update dimensions
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -355,6 +694,57 @@ export default function ChainsGraph({
     ],
   );
 
+  const hasEdgeBetween = useCallback(
+    (aId: string, bId: string): boolean => {
+      const [ciStr, niStr] = aId.split("-");
+      const [cjStr, njStr] = bId.split("-");
+      const ci = parseInt(ciStr ?? "", 10);
+      const cj = parseInt(cjStr ?? "", 10);
+      const ni = parseInt(niStr ?? "", 10);
+      const nj = parseInt(njStr ?? "", 10);
+      if (
+        Number.isNaN(ci) ||
+        Number.isNaN(cj) ||
+        Number.isNaN(ni) ||
+        Number.isNaN(nj)
+      )
+        return false;
+      if (ci === cj) {
+        const bigIndices = bigIndicesByChain[ci] ?? [];
+        const ai = bigIndices.indexOf(ni);
+        const aj = bigIndices.indexOf(nj);
+        if (ai >= 0 && aj >= 0 && Math.abs(ai - aj) === 1) return true;
+      }
+      const norm = (x: string, y: string) => [x, y].sort().join(",");
+      const pair = norm(aId, bId);
+      return userEdges.some((e) => norm(e.fromId, e.toId) === pair);
+    },
+    [bigIndicesByChain, userEdges],
+  );
+
+  const addEdge = useCallback(
+    (fromId: string, toId: string) => {
+      if (fromId === toId) return;
+      if (hasEdgeBetween(fromId, toId)) return;
+      userEdgeIdRef.current += 1;
+      const smallNodeId = `user-edge-${userEdgeIdRef.current}`;
+      setUserEdges((prev) => [...prev, { fromId, toId, smallNodeId }]);
+      setTextOverrides((prev) => ({ ...prev, [smallNodeId]: "" }));
+      setAddEdgeFromId(null);
+      setAddEdgeMode(false);
+    },
+    [hasEdgeBetween],
+  );
+
+  const removeUserEdge = useCallback((smallNodeId: string) => {
+    setUserEdges((prev) => prev.filter((e) => e.smallNodeId !== smallNodeId));
+    setTextOverrides((prev) => {
+      const next = { ...prev };
+      delete next[smallNodeId];
+      return next;
+    });
+  }, []);
+
   const commitEdit = useCallback(() => {
     if (editingNodeId === null) return;
     setTextOverrides((prev) => ({ ...prev, [editingNodeId]: editText }));
@@ -362,7 +752,8 @@ export default function ChainsGraph({
   }, [editingNodeId, editText]);
 
   const handleNodeClick = useCallback(
-    (id: string, currentText: string) => {
+    (id: string, currentText: string, isEditable?: boolean) => {
+      if (isEditable) return;
       const now = Date.now();
       const last = lastClickRef.current;
       const isDouble = last?.id === id && now - last.time < DOUBLE_CLICK_MS;
@@ -373,65 +764,6 @@ export default function ChainsGraph({
       }
     },
     [textOverrides],
-  );
-
-  const placeChainOnGrid = useCallback(
-    (
-      chainIndex: number,
-      dropCol: number,
-      dropRow: number,
-      draggedNodeId: string,
-      positionsSnapshot: Record<string, GridPos>,
-    ): Record<string, GridPos> | null => {
-      const bigIndices = bigIndicesByChain[chainIndex];
-      if (!bigIndices?.length) return null;
-      const chainNodeIds = bigIndices.map((ni) => `${chainIndex}-${ni}`);
-      const dragIdx = chainNodeIds.indexOf(draggedNodeId);
-      if (dragIdx < 0) return null;
-      const occupied = new Set<string>();
-      for (const [id, pos] of Object.entries(positionsSnapshot)) {
-        if (!chainNodeIds.includes(id)) occupied.add(`${pos.col},${pos.row}`);
-      }
-      const result: Record<string, GridPos> = {};
-      const tryPlace = (col: number, row: number): boolean => {
-        if (col < 0 || col >= gridSize || row < 0 || row >= gridSize)
-          return false;
-        if (occupied.has(`${col},${row}`)) return false;
-        return true;
-      };
-      const place = (id: string, col: number, row: number) => {
-        result[id] = { col, row };
-        occupied.add(`${col},${row}`);
-      };
-      if (!tryPlace(dropCol, dropRow)) return null;
-      place(draggedNodeId, dropCol, dropRow);
-      for (let i = dragIdx - 1; i >= 0; i--) {
-        const id = chainNodeIds[i]!;
-        const nextPos = result[chainNodeIds[i + 1]!]!;
-        const { col: nc, row: nr } = nextPos;
-        const candidates: GridPos[] = [
-          { col: nc - 1, row: nr },
-          { col: nc + 1, row: nr },
-        ];
-        const cell = candidates.find((c) => tryPlace(c.col, c.row));
-        if (!cell) break;
-        place(id, cell.col, cell.row);
-      }
-      for (let i = dragIdx + 1; i < chainNodeIds.length; i++) {
-        const id = chainNodeIds[i]!;
-        const prevPos = result[chainNodeIds[i - 1]!]!;
-        const { col: nc, row: nr } = prevPos;
-        const candidates: GridPos[] = [
-          { col: nc - 1, row: nr },
-          { col: nc + 1, row: nr },
-        ];
-        const cell = candidates.find((c) => tryPlace(c.col, c.row));
-        if (!cell) break;
-        place(id, cell.col, cell.row);
-      }
-      return result;
-    },
-    [bigIndicesByChain, gridSize],
   );
 
   const getValidCellsForNode = useCallback(
@@ -465,6 +797,7 @@ export default function ChainsGraph({
 
   const handleDragStart = useCallback(
     (e: React.MouseEvent, nodeId: string) => {
+      if (addEdgeFromId != null) return; // Add-edge mode: don't start drag
       if (e.detail === 2) return; // Allow double-click to edit instead of drag
       e.preventDefault();
       const container = containerRef.current;
@@ -496,6 +829,9 @@ export default function ChainsGraph({
       }
       const nodeX = chainStartPixels[nodeId]!.x;
       const nodeY = chainStartPixels[nodeId]!.y;
+      const chainNodeIdsOnGridAtStart = new Set(
+        chainNodeIds.filter((id) => id in positions),
+      );
       const totalGridPxForRef = gridSize * cellSize;
       setDraggingId(nodeId);
       setDragPixel({ x: nodeX, y: nodeY });
@@ -511,6 +847,7 @@ export default function ChainsGraph({
         chainIndex,
         chainStartPixels,
         chainNodeIds,
+        chainNodeIdsOnGridAtStart,
         gridLeft: originX,
         gridTop: originY,
         gridRight: originX + totalGridPxForRef,
@@ -518,6 +855,7 @@ export default function ChainsGraph({
       };
     },
     [
+      addEdgeFromId,
       positions,
       dislodgedPositions,
       bottomDislodgedNodeIds,
@@ -569,7 +907,7 @@ export default function ChainsGraph({
   );
 
   const handleDragEnd = useCallback(
-    (e: MouseEvent) => {
+    (_: MouseEvent) => {
       if (!draggingId) return;
       const ref = dragStartRef.current;
       const dropX = dragPixel?.x ?? 0;
@@ -579,7 +917,14 @@ export default function ChainsGraph({
         (ref?.dislodgedThisDrag ?? false);
 
       if (wasChainDrag && ref?.chainNodeIds) {
-        const { chainIndex, chainNodeIds } = ref;
+        const { chainIndex, chainNodeIds, chainNodeIdsOnGridAtStart } = ref;
+        const wholeChainDislodged = ref.dislodgedThisDrag ?? false;
+        const chainNodeIdsDislodgedAtStart = chainNodeIds.filter(
+          (id) => !chainNodeIdsOnGridAtStart.has(id),
+        );
+        const idsToUpdate = wholeChainDislodged
+          ? chainNodeIds
+          : chainNodeIdsDislodgedAtStart;
         const dragIdx = chainNodeIds.indexOf(draggingId);
         const currentPositions: Record<string, { x: number; y: number }> = {};
         for (let i = 0; i < chainNodeIds.length; i++) {
@@ -593,20 +938,14 @@ export default function ChainsGraph({
 
         const zone = getDropZone(dropX, dropY);
         if (zone === "bottom") {
-          setBottomDislodgedNodeIds((prev) => [...prev, ...chainNodeIds]);
-          setBottomDislodgedChainOrder((prev) =>
-            prev.includes(chainIndex) ? prev : [...prev, chainIndex],
+          applyDropToBottomStrip(
+            idsToUpdate,
+            chainIndex,
+            setPositions,
+            setDislodgedPositions,
+            setBottomDislodgedNodeIds,
+            setBottomDislodgedChainOrder,
           );
-          setPositions((prev) => {
-            const next = { ...prev };
-            for (const id of chainNodeIds) delete next[id];
-            return next;
-          });
-          setDislodgedPositions((prev) => {
-            const next = { ...prev };
-            for (const id of chainNodeIds) delete next[id];
-            return next;
-          });
         } else {
           const rawCell = pixelToCell(
             dropX,
@@ -617,40 +956,49 @@ export default function ChainsGraph({
             gridSize,
           );
           if (rawCell) {
-            const placement = placeChainOnGrid(
-              chainIndex,
-              rawCell.col,
-              rawCell.row,
+            const positionsWithoutChain = { ...positions };
+            for (const id of chainNodeIds) delete positionsWithoutChain[id];
+            const bigIndices = bigIndicesByChain[chainIndex] ?? [];
+            const validCells = getValidDropCells(
               draggingId,
-              positions,
+              chainIndex,
+              dragIdx,
+              bigIndices,
+              positionsWithoutChain,
+              gridSize,
             );
-            if (placement) {
+            const snapCell =
+              validCells.length === 0
+                ? null
+                : validCells.some(
+                      (c) => c.col === rawCell.col && c.row === rawCell.row,
+                    )
+                  ? rawCell
+                  : nearestValidCell(rawCell.col, rawCell.row, validCells);
+
+            if (snapCell) {
               setPositions((prev) => {
                 const next = { ...prev };
-                for (const id of chainNodeIds) delete next[id];
-                return { ...next, ...placement };
+                for (const id of idsToUpdate) delete next[id];
+                return { ...next, [draggingId]: snapCell };
               });
               setDislodgedPositions((prev) => {
                 const next = { ...prev };
-                for (const id of chainNodeIds) delete next[id];
-                for (const id of chainNodeIds) {
-                  if (!(id in placement)) next[id] = currentPositions[id]!;
+                for (const id of idsToUpdate) {
+                  if (id === draggingId) delete next[id];
+                  else next[id] = currentPositions[id]!;
                 }
                 return next;
               });
-              setBottomDislodgedNodeIds((prev) => {
-                const next = prev.filter((id) => !chainNodeIds.includes(id));
-                setBottomDislodgedChainOrder((prevOrder) =>
-                  prevOrder.filter((ci) =>
-                    next.some((id) => id.startsWith(`${ci}-`)),
-                  ),
-                );
-                return next;
-              });
+              pruneBottomStripFromNodeIds(
+                idsToUpdate,
+                setBottomDislodgedNodeIds,
+                setBottomDislodgedChainOrder,
+              );
             } else {
               const nextDislodged: Record<string, { x: number; y: number }> =
                 {};
-              for (const id of chainNodeIds)
+              for (const id of idsToUpdate)
                 nextDislodged[id] = currentPositions[id]!;
               setDislodgedPositions((prev) => ({
                 ...prev,
@@ -658,38 +1006,30 @@ export default function ChainsGraph({
               }));
               setPositions((prev) => {
                 const next = { ...prev };
-                for (const id of chainNodeIds) delete next[id];
+                for (const id of idsToUpdate) delete next[id];
                 return next;
               });
-              setBottomDislodgedNodeIds((prev) => {
-                const next = prev.filter((id) => !chainNodeIds.includes(id));
-                setBottomDislodgedChainOrder((prevOrder) =>
-                  prevOrder.filter((ci) =>
-                    next.some((id) => id.startsWith(`${ci}-`)),
-                  ),
-                );
-                return next;
-              });
+              pruneBottomStripFromNodeIds(
+                idsToUpdate,
+                setBottomDislodgedNodeIds,
+                setBottomDislodgedChainOrder,
+              );
             }
           } else {
             const nextDislodged: Record<string, { x: number; y: number }> = {};
-            for (const id of chainNodeIds)
+            for (const id of idsToUpdate)
               nextDislodged[id] = currentPositions[id]!;
             setDislodgedPositions((prev) => ({ ...prev, ...nextDislodged }));
             setPositions((prev) => {
               const next = { ...prev };
-              for (const id of chainNodeIds) delete next[id];
+              for (const id of idsToUpdate) delete next[id];
               return next;
             });
-            setBottomDislodgedNodeIds((prev) => {
-              const next = prev.filter((id) => !chainNodeIds.includes(id));
-              setBottomDislodgedChainOrder((prevOrder) =>
-                prevOrder.filter((ci) =>
-                  next.some((id) => id.startsWith(`${ci}-`)),
-                ),
-              );
-              return next;
-            });
+            pruneBottomStripFromNodeIds(
+              idsToUpdate,
+              setBottomDislodgedNodeIds,
+              setBottomDislodgedChainOrder,
+            );
           }
         }
       } else {
@@ -723,15 +1063,11 @@ export default function ChainsGraph({
         if (!ref?.dislodgedThisDrag && !wasDislodged) {
           if (canSnap && snapCell) {
             setPositions((prev) => ({ ...prev, [draggingId]: snapCell }));
-            setBottomDislodgedNodeIds((prev) => {
-              const next = prev.filter((id) => id !== draggingId);
-              setBottomDislodgedChainOrder((prevOrder) =>
-                prevOrder.filter((ci) =>
-                  next.some((id) => id.startsWith(`${ci}-`)),
-                ),
-              );
-              return next;
-            });
+            pruneBottomStripFromNodeIds(
+              [draggingId],
+              setBottomDislodgedNodeIds,
+              setBottomDislodgedChainOrder,
+            );
           }
         } else {
           if (canSnap && snapCell) {
@@ -741,15 +1077,11 @@ export default function ChainsGraph({
               delete next[draggingId];
               return next;
             });
-            setBottomDislodgedNodeIds((prev) => {
-              const next = prev.filter((id) => id !== draggingId);
-              setBottomDislodgedChainOrder((prevOrder) =>
-                prevOrder.filter((ci) =>
-                  next.some((id) => id.startsWith(`${ci}-`)),
-                ),
-              );
-              return next;
-            });
+            pruneBottomStripFromNodeIds(
+              [draggingId],
+              setBottomDislodgedNodeIds,
+              setBottomDislodgedChainOrder,
+            );
           } else {
             const zone = getDropZone(dropX, dropY);
             if (zone === "bottom") {
@@ -782,15 +1114,11 @@ export default function ChainsGraph({
                   return next;
                 });
               }
-              setBottomDislodgedNodeIds((prev) => {
-                const next = prev.filter((id) => id !== draggingId);
-                setBottomDislodgedChainOrder((prevOrder) =>
-                  prevOrder.filter((ci) =>
-                    next.some((id) => id.startsWith(`${ci}-`)),
-                  ),
-                );
-                return next;
-              });
+              pruneBottomStripFromNodeIds(
+                [draggingId],
+                setBottomDislodgedNodeIds,
+                setBottomDislodgedChainOrder,
+              );
             }
           }
         }
@@ -809,7 +1137,7 @@ export default function ChainsGraph({
       gridSize,
       getValidCellsForNode,
       getDropZone,
-      placeChainOnGrid,
+      bigIndicesByChain,
       positions,
     ],
   );
@@ -832,23 +1160,32 @@ export default function ChainsGraph({
   const getNodePixelPosition = useCallback(
     (nodeId: string): { x: number; y: number } | null => {
       const ref = dragStartRef.current;
-      const chainIndex = parseInt(nodeId.split("-")[0]!, 10);
+      if (draggingId === nodeId && dragPixel) return dragPixel;
       const isInChainDrag =
         draggingId &&
         ref?.chainNodeIds.includes(nodeId) &&
         (ref.dislodgedThisDrag || ref.wasDislodgedAtStart);
-      if (isInChainDrag && ref && dragPixel) {
-        const dragIdx = ref.chainNodeIds.indexOf(draggingId);
-        const i = ref.chainNodeIds.indexOf(nodeId);
-        if (dragIdx >= 0 && i >= 0) {
-          const offset = (i - dragIdx) * DISLODGED_CHAIN_SPACING;
-          return {
-            x: dragPixel.x + offset,
-            y: dragPixel.y,
-          };
+      if (isInChainDrag && ref) {
+        if (
+          !ref.dislodgedThisDrag &&
+          ref.chainNodeIdsOnGridAtStart.has(nodeId)
+        ) {
+          const pos = positions[nodeId];
+          if (pos)
+            return cellToPixel(pos.col, pos.row, cellSize, originX, originY);
+        }
+        if (dragPixel) {
+          const dragIdx = ref.chainNodeIds.indexOf(draggingId);
+          const i = ref.chainNodeIds.indexOf(nodeId);
+          if (dragIdx >= 0 && i >= 0) {
+            const offset = (i - dragIdx) * DISLODGED_CHAIN_SPACING;
+            return {
+              x: dragPixel.x + offset,
+              y: dragPixel.y,
+            };
+          }
         }
       }
-      if (draggingId === nodeId && dragPixel) return dragPixel;
       if (bottomDislodgedNodeIds.includes(nodeId)) {
         return getBottomStripPosition(nodeId);
       }
@@ -895,9 +1232,7 @@ export default function ChainsGraph({
         const p1 = getNodePixelPosition(aId);
         const p2 = getNodePixelPosition(bId);
         if (!p1 || !p2) continue;
-        let angleDeg = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
-        if (angleDeg > 90) angleDeg -= 180;
-        if (angleDeg < -90) angleDeg += 180;
+        const geom = segmentGeometryFromPoints(p1, p2);
         const smallNodeIndex = bigIndices[i]! + 1;
         const smallEntry = chain.nodes[smallNodeIndex];
         const isSmall = smallEntry?.type === "small";
@@ -907,14 +1242,8 @@ export default function ChainsGraph({
           ? (textOverrides[smallNodeId!] ?? smallDefaultText)
           : "";
         segs.push({
+          ...geom,
           chainIndex,
-          x1: p1.x,
-          y1: p1.y,
-          x2: p2.x,
-          y2: p2.y,
-          midX: (p1.x + p2.x) / 2,
-          midY: (p1.y + p2.y) / 2,
-          angleDeg,
           smallText,
           smallNodeId,
           smallDefaultText,
@@ -924,182 +1253,186 @@ export default function ChainsGraph({
     return segs;
   }, [chains, getNodePixelPosition, textOverrides]);
 
+  const userEdgeSegments = useMemo(() => {
+    const segs: {
+      fromId: string;
+      toId: string;
+      smallNodeId: string;
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+      midX: number;
+      midY: number;
+      angleDeg: number;
+      smallText: string;
+    }[] = [];
+    userEdges.forEach((edge) => {
+      const p1 = getNodePixelPosition(edge.fromId);
+      const p2 = getNodePixelPosition(edge.toId);
+      if (!p1 || !p2) return;
+      const geom = segmentGeometryFromPoints(p1, p2);
+      segs.push({
+        ...geom,
+        fromId: edge.fromId,
+        toId: edge.toId,
+        smallNodeId: edge.smallNodeId,
+        smallText: textOverrides[edge.smallNodeId] ?? "",
+      });
+    });
+    return segs;
+  }, [userEdges, getNodePixelPosition, textOverrides]);
+
   const hasSize = dimensions.width > 0 && dimensions.height > 0;
 
   return (
-    <div
-      ref={containerRef}
-      className="relative min-h-[600px] w-full min-w-[640px] max-w-[100vw] rounded-md"
-      style={{ width: dimensions.width, height: dimensions.height }}
-    >
-      {hasSize && (
-        <>
-          {/* Bottom strip for dislodged nodes */}
-          <div
-            className="absolute left-0 z-0 rounded-b-md bg-white/10"
-            style={{
-              top: stripTop,
-              width: dimensions.width,
-              height: BOTTOM_STRIP_HEIGHT,
-            }}
-          />
+    <div className="p-5">
+      <Toolbar
+        addEdgeMode={addEdgeMode}
+        removeEdgeMode={removeEdgeMode}
+        onAddEdgeClick={() => {
+          setRemoveEdgeMode(false);
+          if (addEdgeMode) {
+            setAddEdgeMode(false);
+            setAddEdgeFromId(null);
+          } else {
+            setAddEdgeMode(true);
+            setAddEdgeFromId("");
+          }
+        }}
+        onRemoveEdgeClick={() => {
+          setAddEdgeMode(false);
+          setAddEdgeFromId(null);
+          setRemoveEdgeMode((prev) => !prev);
+        }}
+      />
 
-          {/* 6x6 grid */}
-          <div
-            className="border-while/80 absolute grid border"
-            style={{
-              left: originX,
-              top: originY,
-              width: totalGridPx,
-              height: totalGridPx,
-              gridTemplateColumns: `repeat(${gridSize}, ${cellSize}px)`,
-              gridTemplateRows: `repeat(${gridSize}, ${cellSize}px)`,
-            }}
-          >
-            {Array.from({ length: gridSize * gridSize }).map((_, i) => {
-              const row = Math.floor(i / gridSize);
-              const col = i % gridSize;
-              const key = `${col},${row}`;
-              const isPink = PINK_CELLS.has(key);
-              const str = CELL_CONTENTS[key];
+      <div
+        ref={containerRef}
+        className="relative min-h-[600px] w-full min-w-[640px] max-w-[100vw] rounded-md"
+        style={{ width: dimensions.width, height: dimensions.height }}
+      >
+        {hasSize && (
+          <>
+            <BottomStrip
+              stripTop={stripTop}
+              width={dimensions.width}
+              height={BOTTOM_STRIP_HEIGHT}
+            />
+
+            <GridCells
+              gridSize={gridSize}
+              cellSize={cellSize}
+              originX={originX}
+              originY={originY}
+              totalGridPx={totalGridPx}
+              pinkCells={PINK_CELLS}
+              cellContents={CELL_CONTENTS}
+            />
+
+            <GridThickLine
+              originX={originX}
+              originY={originY}
+              gridSize={gridSize}
+              cellSize={cellSize}
+              width={dimensions.width}
+              height={dimensions.height}
+            />
+
+            <ConnectorsSVG
+              width={dimensions.width}
+              height={dimensions.height}
+              connectorSegments={connectorSegments}
+              userEdgeSegments={userEdgeSegments}
+              removeEdgeMode={removeEdgeMode}
+            />
+
+            {connectorSegments.map((seg, i) => {
+              const ref = dragStartRef.current;
+              const isGridChainDrag =
+                draggingId &&
+                ref?.chainIndex === seg.chainIndex &&
+                !ref?.wasDislodgedAtStart &&
+                !ref?.dislodgedThisDrag;
+              if (seg.smallNodeId == null || isGridChainDrag) return null;
+              const labelAngle = normalizeLabelAngle(seg.angleDeg);
+              const isEditable = seg.smallDefaultText !== "";
               return (
-                <div
-                  key={i}
-                  className={`flex items-center justify-center border border-gray-100/10 text-white ${isPink ? "bg-[#f4cccc]/40" : ""}`}
-                  style={{ width: cellSize, height: cellSize }}
-                >
-                  {str != null && (
-                    <span className="select-none text-sm font-medium">
-                      {str}
-                    </span>
-                  )}
-                </div>
+                <SmallNodeLabel
+                  key={`small-${i}`}
+                  midX={seg.midX}
+                  midY={seg.midY}
+                  labelAngle={labelAngle}
+                  text={seg.smallText}
+                  className={`absolute z-10 flex min-h-[0.875rem] min-w-[1rem] max-w-[4rem] items-center justify-center break-words rounded px-1 py-0.5 text-center text-[12px] leading-none text-white hover:bg-white/20 ${isEditable ? "cursor-default font-bold" : "cursor-text font-normal"}`}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (isEditable) return;
+                    setEditingNodeId(seg.smallNodeId!);
+                    setEditText(
+                      textOverrides[seg.smallNodeId!] ?? seg.smallDefaultText,
+                    );
+                  }}
+                />
               );
             })}
-          </div>
 
-          {/* Thick white line above the first four cells in the last row */}
-          <svg
-            className="pointer-events-none absolute left-0 top-0 z-0"
-            width={dimensions.width}
-            height={dimensions.height}
-          >
-            <line
-              x1={originX}
-              y1={originY + (gridSize - 1) * cellSize}
-              x2={originX + 4 * cellSize}
-              y2={originY + (gridSize - 1) * cellSize}
-              stroke="#ffffff80"
-              strokeWidth={8}
-              strokeLinecap="butt"
-            />
-          </svg>
-
-          {/* Connectors */}
-          <svg
-            className="pointer-events-none absolute left-0 top-0 z-0"
-            width={dimensions.width}
-            height={dimensions.height}
-          >
-            {connectorSegments.map((seg, i) => (
-              <g key={i}>
-                <line
-                  x1={seg.x1}
-                  y1={seg.y1}
-                  x2={seg.x2}
-                  y2={seg.y2}
-                  stroke="rgba(100, 100, 100, 1)"
-                  strokeWidth={3}
-                />
-              </g>
-            ))}
-          </svg>
-
-          {/* Small nodes */}
-          {connectorSegments.map((seg, i) => {
-            const ref = dragStartRef.current;
-            const isGridChainDrag =
-              draggingId &&
-              ref?.chainIndex === seg.chainIndex &&
-              !ref?.wasDislodgedAtStart &&
-              !ref?.dislodgedThisDrag;
-            if (seg.smallNodeId == null || isGridChainDrag) return null;
-            let labelAngle = seg.angleDeg + 90;
-            if (labelAngle > 90) labelAngle -= 180;
-            if (labelAngle < -90) labelAngle += 180;
-            return (
-              <div
-                key={`small-${i}`}
-                className="absolute z-10 flex min-h-[0.875rem] min-w-[1rem] max-w-[4rem] cursor-text items-center justify-center break-words rounded px-1 py-0.5 text-center text-[12px] font-medium leading-none text-white hover:bg-white/20"
-                style={{
-                  left: seg.midX,
-                  top: seg.midY,
-                  transform: `translate(-50%, -50%) rotate(${labelAngle}deg)`,
+            {userEdgeSegments.map((seg) => (
+              <UserEdgeLabel
+                key={`user-${seg.smallNodeId}`}
+                seg={seg}
+                labelAngle={normalizeLabelAngle(seg.angleDeg)}
+                removeEdgeMode={removeEdgeMode}
+                onRemove={(e) => {
+                  if (removeEdgeMode) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    removeUserEdge(seg.smallNodeId);
+                    setRemoveEdgeMode(false);
+                  }
                 }}
                 onDoubleClick={(e) => {
+                  if (removeEdgeMode) return;
                   e.stopPropagation();
                   e.preventDefault();
-                  setEditingNodeId(seg.smallNodeId!);
-                  setEditText(
-                    textOverrides[seg.smallNodeId!] ?? seg.smallDefaultText,
-                  );
+                  setEditingNodeId(seg.smallNodeId);
+                  setEditText(textOverrides[seg.smallNodeId] ?? "");
                 }}
-              >
-                {(seg.smallText || "\u00a0").split("-").join("-\u200B")}
-              </div>
-            );
-          })}
-
-          {/* Big nodes */}
-          {bigNodes.map((entry) => {
-            const pos = getNodePixelPosition(entry.id);
-            if (!pos) return null;
-            const displayText = textOverrides[entry.id] ?? entry.text;
-            return (
-              <div
-                key={entry.id}
-                className="absolute z-10 flex cursor-grab items-center justify-center overflow-hidden rounded border-2 border-neutral-600 bg-[oklch(0.85_0.08_250)] text-neutral-800 active:cursor-grabbing"
-                style={{
-                  left: pos.x - BIG_NODE_SIZE / 2,
-                  top: pos.y - BIG_NODE_SIZE / 2,
-                  width: BIG_NODE_SIZE,
-                  height: BIG_NODE_SIZE,
-                }}
-                onMouseDown={(e) => handleDragStart(e, entry.id)}
-              >
-                <span
-                  className="line-clamp-3 w-full min-w-0 max-w-full select-none overflow-hidden break-words px-1 py-0.5 text-center text-[14px] font-medium leading-tight [display:-webkit-box]"
-                  style={
-                    {
-                      wordBreak: "break-word",
-                      WebkitBoxOrient: "vertical",
-                    } as React.CSSProperties
-                  }
-                  onDoubleClick={(e) => e.stopPropagation()}
-                  onClick={() => handleNodeClick(entry.id, entry.text)}
-                >
-                  {(displayText || "\u00a0").split("-").join("-\u200B")}
-                </span>
-              </div>
-            );
-          })}
-
-          {/* Edit overlay */}
-          {editingNodeId && (
-            <div className="absolute left-1/2 top-2 z-20 -translate-x-1/2 rounded border border-neutral-300 bg-white p-2 shadow">
-              <input
-                type="text"
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-                onBlur={commitEdit}
-                onKeyDown={(e) => e.key === "Enter" && commitEdit()}
-                className="min-w-[120px] rounded border border-neutral-200 px-2 py-1 text-sm text-black"
-                autoFocus
               />
-            </div>
-          )}
-        </>
-      )}
+            ))}
+
+            <BigNodesList
+              bigNodes={bigNodes}
+              getNodePixelPosition={getNodePixelPosition}
+              textOverrides={textOverrides}
+              addEdgeFromId={addEdgeFromId}
+              onDragStart={handleDragStart}
+              onNodeClick={handleNodeClick}
+              onAddEdgeClick={(e, id) => {
+                if (addEdgeFromId == null) return;
+                e.stopPropagation();
+                if (addEdgeFromId === "") {
+                  setAddEdgeFromId(id);
+                } else if (addEdgeFromId === id) {
+                  setAddEdgeFromId(null);
+                  setAddEdgeMode(false);
+                } else {
+                  addEdge(addEdgeFromId, id);
+                }
+              }}
+            />
+
+            {editingNodeId && (
+              <EditOverlay
+                editText={editText}
+                onEditChange={setEditText}
+                onCommit={commitEdit}
+              />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

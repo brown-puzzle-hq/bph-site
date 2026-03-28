@@ -16,10 +16,8 @@ export type { ChainGameProps };
 
 export default function Game(props: ChainGameProps) {
   return (
-    <div>
-      <p className="text-center">
-        Double click a node or an edge to edit the text.
-      </p>
+    <div className="text-center">
+      <p>Double click a node or an edge to edit the text.</p>
       <ChainsGraph {...props} />
     </div>
   );
