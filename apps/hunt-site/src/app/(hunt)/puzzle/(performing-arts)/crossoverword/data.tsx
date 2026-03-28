@@ -459,8 +459,11 @@ const textHash = computePuzzleJsTextHashFromSolution(
 
 export const inPersonBody = (
   <div>
-    <div className="max-w-3xl space-y-4 text-center">
-      <b>Crossoverword</b>
+    <div className="max-w-3xl space-y-4">
+      <i>
+        Something is hidden episodically in this grid... <br /> 2-16, 4-11, 3-10
+        [S], 1-6, 3-10 [D], 3-10 [A], 3-2, 2-6, 1-7, 6-16, 1-6, 7-8, 1-8
+      </i>
     </div>
 
     <div className="mx-auto flex flex-col items-start justify-center gap-4 md:flex-row md:gap-8">
