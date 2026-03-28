@@ -36,7 +36,7 @@
     "one-guard-no-doors": "(risd)/one-guard-no-doors",
     "pageant-problems": "(physical-sciences)/pageant-problems",
     "primary-investigation": "(math)/primary-investigation",
-    "psychoceramics": null,
+    "psychoceramics": "(backpack)/psychoceramics",
     "rabbit-konundrum": "(business)/rabbit-konundrum",
     "schmear-campaign": "(business)/schmear-campaign",
     "sunk-modern-naval-investigative-methodology": "(humanities)/sunk-modern-naval-investigative-methodology",
@@ -49,8 +49,6 @@
     "year-of-the-honse": "(social-sciences)/year-of-the-honse"
   },
   "missing": [],
-  "extraneous": ["(round)"],
-  "duplicate": {
-    "psychoceramics": ["(backpack)/psychoceramics", "psychoceramics"]
-  }
+  "extraneous": [],
+  "duplicate": {}
 }
