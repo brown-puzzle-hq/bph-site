@@ -11,7 +11,6 @@ import {
 import colorwheelPng from "./colorwheel.png";
 
 import Image from "next/image";
-import colorWheel from "./color-wheel.png";
 
 type Pin = {
   id: string;
@@ -350,15 +349,15 @@ export default function PrimaryInvestigationWheel() {
           current.map((pin) =>
             pin.id === pinId
               ? {
-                  ...pin,
-                  xPct: solved.xPct,
-                  yPct: solved.yPct,
-                  rPct: solved.rPct,
-                  thetaDeg: solved.thetaDeg,
-                  alpha: a,
-                  color: normalized,
-                  isDark: isDarkColor(normalized),
-                }
+                ...pin,
+                xPct: solved.xPct,
+                yPct: solved.yPct,
+                rPct: solved.rPct,
+                thetaDeg: solved.thetaDeg,
+                alpha: a,
+                color: normalized,
+                isDark: isDarkColor(normalized),
+              }
               : pin,
           ),
         );
@@ -371,14 +370,14 @@ export default function PrimaryInvestigationWheel() {
         current.map((pin) =>
           pin.id === pinId
             ? {
-                ...pin,
-                xPct: pos.xPct,
-                yPct: pos.yPct,
-                rPct: pos.rPct,
-                thetaDeg: pos.thetaDeg,
-                color: normalized,
-                isDark: isDarkColor(normalized),
-              }
+              ...pin,
+              xPct: pos.xPct,
+              yPct: pos.yPct,
+              rPct: pos.rPct,
+              thetaDeg: pos.thetaDeg,
+              color: normalized,
+              isDark: isDarkColor(normalized),
+            }
             : pin,
         ),
       );
@@ -519,7 +518,7 @@ export default function PrimaryInvestigationWheel() {
             />
             <Image
               ref={imageRef}
-              src={colorwheelPng.src}
+              src={colorwheelPng}
               alt=""
               className="absolute inset-0 h-full w-full rounded-full object-cover"
               style={{ opacity: wheelAlpha }}
@@ -696,11 +695,10 @@ export default function PrimaryInvestigationWheel() {
                   <div className="mt-2 flex gap-1.5">
                     <button
                       type="button"
-                      className={`rounded-full border px-2 py-0.5 text-xs ${
-                        pin.showLabel
+                      className={`rounded-full border px-2 py-0.5 text-xs ${pin.showLabel
                           ? "border-black bg-black text-white"
                           : "border-black/20 bg-white/75 text-black/80"
-                      }`}
+                        }`}
                       onClick={() =>
                         setPins((current) =>
                           current.map((p) =>
@@ -715,11 +713,10 @@ export default function PrimaryInvestigationWheel() {
                     </button>
                     <button
                       type="button"
-                      className={`rounded-full border px-2 py-0.5 text-xs ${
-                        pin.showPin
+                      className={`rounded-full border px-2 py-0.5 text-xs ${pin.showPin
                           ? "border-black bg-black text-white"
                           : "border-black/20 bg-white/75 text-black/80"
-                      }`}
+                        }`}
                       onClick={() =>
                         setPins((current) =>
                           current.map((p) =>
