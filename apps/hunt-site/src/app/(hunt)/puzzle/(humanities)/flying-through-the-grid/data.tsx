@@ -149,6 +149,7 @@ const ACROSS_CLUE_LIST: string[] = [
   "Jackal-headed Egyptian god",
   "__IMAGE_WHALES_SHOOT__",
   "Cowlike",
+  "Coriander",
   '"Concrete jungle where dreams are made of" song',
   "Annual holiday on June 25th",
   "One of the five gifted in a classic Christmas song",
