@@ -41,7 +41,7 @@ export const remoteBody = (
         VERVE. The people have voted -- now we need to count the ballots.
       </p>
       <p>The election works by Single Transferable Vote:</p>
-      <ul>
+      <ul className="mx-4 my-4 list-inside">
         <li>
           Ineligible votes are automatically transferred before any other
           calculations.
@@ -111,74 +111,74 @@ export const tasks: Record<string, JSX.Element> = {
         each judge has different opinions about what votes should be counted...
       </div>
       <table>
-        <tbody className="w-full table-fixed">
+        <tbody className="w-full table-fixed border-collapse text-center">
           <tr>
-            <td>
+            <td className="border-border border px-3">
               <b>Judge</b>
             </td>
-            <td>
+            <td className="border-border border px-3">
               <b>1</b>
             </td>
-            <td>
+            <td className="border-border border px-3">
               <b>2</b>
             </td>
-            <td>
+            <td className="border-border border px-3">
               <b>3</b>
             </td>
-            <td>
+            <td className="border-border border px-3">
               <b>4</b>
             </td>
-            <td>
+            <td className="border-border border px-3">
               <b>5</b>
             </td>
-            <td>
+            <td className="border-border border px-3">
               <b>6</b> (STYLE only)
             </td>
           </tr>
           <tr>
-            <td>Full punch</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">Full punch</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
           </tr>
           <tr>
-            <td>Hanging chad</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">Hanging chad</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
           </tr>
           <tr>
-            <td>Swinging chad</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">Swinging chad</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
           </tr>
           <tr>
-            <td>Tri-chad</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">Tri-chad</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
           </tr>
           <tr>
-            <td>Small hole</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;❌&nbsp;</td>
-            <td>&nbsp;✅&nbsp;</td>
+            <td className="border-border border px-3">Small hole</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;❌&nbsp;</td>
+            <td className="border-border border px-3">&nbsp;✅&nbsp;</td>
           </tr>
         </tbody>
       </table>
