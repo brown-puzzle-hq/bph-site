@@ -17,9 +17,8 @@ import {
 import { handleGuess } from "./actions";
 import { toast } from "sonner";
 import { NumberOfGuesses } from "../DefaultPuzzlePage";
-import { Infinity } from "lucide-react";
+import { Infinity, SendHorizonal } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
-import { ensureError } from "~/lib/utils";
 
 const formSchema = z.object({
   guess: z.preprocess(
@@ -46,24 +45,24 @@ export default function GuessForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
-    defaultValues: {
-      guess: "",
-    },
+    defaultValues: { guess: "" },
   });
 
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    form.reset();
     startTransition(async () => {
       try {
-        await handleGuess(puzzleId, data.guess);
+        const { error } = await handleGuess(puzzleId, data.guess);
+        if (error) {
+          toast.error("Failed to submit guess.", {
+            description: error,
+          });
+        }
       } catch (e) {
-        const error = ensureError(e);
-        toast.error("Unable to submit guess.", {
-          description: error.message,
-        });
+        toast.error("Failed to submit guess. Please try again.");
       }
-      form.reset();
     });
   };
 
@@ -123,14 +122,10 @@ export default function GuessForm({
         />
         <Button
           type="submit"
-          disabled={
-            !form.watch("guess") ||
-            isSolved ||
-            !numberOfGuessesLeft ||
-            isPending
-          }
+          disabled={isSolved || !numberOfGuessesLeft || isPending}
+          className="bg-blue-900 px-8 py-1.5 hover:bg-blue-900/90"
         >
-          Submit
+          <SendHorizonal className="size-4 fill-main-text" />
         </Button>
       </form>
     </Form>

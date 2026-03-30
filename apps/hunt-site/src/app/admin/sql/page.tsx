@@ -105,7 +105,7 @@ export default function Page() {
                 Raw SQL
               </TabsTrigger>
             </div>
-            <div className="pr-1.5 hover:opacity-75">
+            <div className="mr-1.5">
               <CopyButton copyText={getContent()} />
             </div>
           </TabsList>

@@ -52,7 +52,7 @@ import {
 import { deserializeMembers, serializeMembers } from "~/lib/team-members";
 import { signOut } from "next-auth/react";
 import { Team } from "@/db/types";
-import { focusAtEnd, cn, ensureError } from "~/lib/utils";
+import { focusAtEnd, cn } from "~/lib/utils";
 import { AsYouType } from "libphonenumber-js";
 import { formatPhoneNumber, zPhone, memberSchema } from "~/lib/team-members";
 
@@ -176,10 +176,7 @@ export default function ProfileForm({
         confirmPassword: "",
       });
     } catch (e) {
-      const error = ensureError(e);
-      toast("Failed to update team.", {
-        description: error.message,
-      });
+      toast.error("Failed to update team. Please try again.");
     }
   };
 
@@ -193,10 +190,7 @@ export default function ProfileForm({
         signOut();
       }
     } catch (e) {
-      const error = ensureError(e);
-      toast("Failed to delete team.", {
-        description: error.message,
-      });
+      toast.error("Failed to delete team. Please try again.");
     }
   };
 

@@ -21,7 +21,7 @@ import {
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
 import { FormattedTime } from "~/lib/time";
 import { deserializeMembers } from "~/lib/team-members";
-import { cn, ensureError } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 import { type GraphConfig } from "./page";
 import { type Team } from "@/db/types";
 import { toast } from "sonner";
@@ -101,6 +101,13 @@ export default function Graph({
         puzzleId,
       );
 
+      if ("error" in result) {
+        toast.error("Failed to search puzzle.", {
+          description: result.error,
+        });
+        return;
+      }
+
       // Set searched puzzle and remove team sidebar
       setSearchedPuzzle({
         puzzleId,
@@ -119,10 +126,7 @@ export default function Graph({
 
       setPuzzleQuery("");
     } catch (e) {
-      const error = ensureError(e);
-      toast.error("Failed to fetch.", {
-        description: error.message,
-      });
+      toast.error("Failed to search puzzle. Please try again.");
     }
   };
 
@@ -130,6 +134,14 @@ export default function Graph({
     const cleanedQuery = teamQuery.replace(/[^\w]/g, "").toLowerCase();
     try {
       const result = await getSearchedTeam(cleanedQuery);
+
+      if ("error" in result) {
+        teamQueryRef.current?.select();
+        setTeamQueryShaking(true);
+        setTimeout(() => setTeamQueryShaking(false), 200);
+        setSearchedTeam(null);
+        return;
+      }
 
       setTeamQuery(result.id);
       setSearchedTeam(result);
@@ -142,11 +154,7 @@ export default function Graph({
       params.set("team", result.id);
       router.push(`?${params.toString()}`);
     } catch (e) {
-      teamQueryRef.current?.select();
-      setTeamQueryShaking(true);
-      setTimeout(() => setTeamQueryShaking(false), 200);
-      setSearchedTeam(null);
-      return;
+      toast.error("Failed to search team. Please try again.");
     }
   };
 
@@ -180,14 +188,18 @@ export default function Graph({
       if (teamId) {
         try {
           const result = await getSearchedTeam(teamId);
-          setTeamQuery(teamId);
-          setSearchedTeam(result);
-          setTeamSidebar(!puzzleId);
+          if ("error" in result) {
+            toast.error("Failed to search team.", {
+              description: result.error,
+            });
+            teamId = null;
+          } else {
+            setTeamQuery(teamId);
+            setSearchedTeam(result);
+            setTeamSidebar(!puzzleId);
+          }
         } catch (e) {
-          const error = ensureError(e);
-          toast.error("Failed to fetch.", {
-            description: error.message,
-          });
+          toast.error("Failed to search team.");
           teamId = null;
         }
       }
@@ -213,6 +225,13 @@ export default function Graph({
         try {
           const result = await getSearchedPuzzle(teamId || null, puzzleId);
 
+          if ("error" in result) {
+            toast.error("Failed to search puzzle.", {
+              description: result.error,
+            });
+            return;
+          }
+
           setSearchedPuzzle({
             puzzleId,
             ...result,
@@ -221,10 +240,7 @@ export default function Graph({
               "",
           });
         } catch (e) {
-          const error = ensureError(e);
-          toast.error("Failed to fetch.", {
-            description: error.message,
-          });
+          toast.error("Failed to search puzzle.");
         }
       }
     };
@@ -663,7 +679,7 @@ export default function Graph({
               <table>
                 {deserializeMembers(searchedTeam.members).map(
                   (member, index) => (
-                    <tr className="w-full align-top">
+                    <tr key={`member-${index}`} className="w-full align-top">
                       <td className="text-center">{index + 1}</td>
                       <td className="break-words pl-2">{member.firstName}</td>
                       <td className="break-words pl-2">{member.lastName}</td>
@@ -717,7 +733,7 @@ export default function Graph({
                 )}
               </div>
               {rounds.map((round) => (
-                <>
+                <div key={round.name}>
                   <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                     {round.name}
                   </p>
@@ -726,7 +742,7 @@ export default function Graph({
                     const isUnlock = searchedTeam?.unlocks.includes(puzzle);
                     const isMeta = metaPuzzles.includes(puzzle);
                     return (
-                      <div>
+                      <div key={puzzle}>
                         <button
                           className="w-full text-left hover:bg-neutral-200"
                           onClick={async () =>
@@ -750,7 +766,7 @@ export default function Graph({
                       </div>
                     );
                   })}
-                </>
+                </div>
               ))}
             </div>
           ) : (
@@ -821,7 +837,7 @@ export default function Graph({
                       className={`${
                         guess.isCorrect ? "text-lime-600" : "text-rose-500"
                       }`}
-                      id={`guess=${i}`}
+                      key={`guess-${i}`}
                     >
                       {guess.guess}
                     </p>
@@ -838,12 +854,9 @@ export default function Graph({
                   {searchedPuzzle.requestedHints
                     ?.sort((a, b) => a.id - b.id)
                     .map((hint) => (
-                      <div>
+                      <div key={`hint-${hint.id}`}>
                         <div className="flex justify-between space-x-2 py-1">
-                          <p
-                            id={`hint-${hint.id}`}
-                            className="max-w-full break-words"
-                          >
+                          <p className="max-w-full break-words">
                             {hint.request}
                           </p>
                           <div>

@@ -15,22 +15,6 @@ export function focusAtEnd(input?: HTMLInputElement | null) {
   input.setSelectionRange(len, len);
 }
 
-export function ensureError(value: unknown): Error {
-  if (value instanceof Error) return value;
-
-  let stringified;
-  try {
-    stringified = JSON.stringify(value);
-  } catch {
-    stringified = "[Unable to stringify the thrown value]";
-  }
-
-  const error = new Error(
-    `This value was thrown as is, not through an Error: ${stringified}`,
-  );
-  return error;
-}
-
 export function displayStoredPuzzleGuess(
   storedGuess: string,
   isCorrect: boolean,
@@ -40,22 +24,6 @@ export function displayStoredPuzzleGuess(
   if (sanitizeAnswer(storedGuess) === sanitizeAnswer(puzzleAnswer))
     return puzzleAnswer;
   return `${storedGuess} → ${puzzleAnswer}`;
-}
-
-/** Formats a duration in milliseconds as "Xd Yh Zm Ws" */
-export function formatDuration(deltaMs: number): string {
-  const totalSeconds = Math.floor(Math.max(0, deltaMs) / 1000);
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const parts: string[] = [];
-  if (days > 0) parts.push(`${days}d`);
-  if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
-  parts.push(`${seconds}s`);
-  return parts.join(" ");
 }
 
 export const decodeSeen = (value: string | undefined) => {
@@ -73,3 +41,38 @@ export const encodeSeen = (bits: string) => {
   const bytes = bits.match(/.{1,8}/g)!.map((b) => parseInt(b, 2));
   return bytes.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
+
+export function renderTableToPlainText(html: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const rows = doc.querySelectorAll("table tr");
+
+  const table: string[][] = [];
+
+  for (const row of rows) {
+    const cells = Array.from(row.querySelectorAll("th, td")).map(
+      (cell) => cell.textContent?.trim() ?? "",
+    );
+    table.push(cells);
+  }
+
+  // Find the max width of each column
+  const colWidths: number[] = [];
+  table.forEach((row) =>
+    row.forEach((cell, i) => {
+      colWidths[i] = Math.max(colWidths[i] || 0, cell.length);
+    }),
+  );
+
+  // Format rows
+  const formatted = table
+    .map((row) =>
+      row
+        .map((cell, i) => cell.padEnd(colWidths[i]!))
+        .join(" | ")
+        .trimEnd(),
+    )
+    .join("\n");
+
+  return formatted;
+}

@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { NumberOfGuesses } from "./DefaultPuzzlePage";
-import { Infinity } from "lucide-react";
+import { Infinity, SendHorizontal } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
 
 type DefaultPostHuntPuzzlePageProps = {
@@ -164,9 +164,10 @@ export default function DefaultPostHuntPuzzlePage({
           />
           <Button
             type="submit"
-            disabled={!form.watch("guess") || isSolved || !numberOfGuessesLeft}
+            disabled={isSolved || !numberOfGuessesLeft}
+            className="bg-blue-900 px-8 py-1.5 hover:bg-blue-900/90"
           >
-            Submit
+            <SendHorizontal className="size-4 fill-main-text" />
           </Button>
         </form>
       </Form>

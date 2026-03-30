@@ -34,7 +34,7 @@ import { insertTeam } from "./actions";
 import { IN_PERSON, INTERACTION_MODE_VALUES, HUNT_NAME } from "@/config/client";
 import { serializeMembers } from "~/lib/team-members";
 import { signIn } from "next-auth/react";
-import { focusAtEnd, cn, ensureError } from "~/lib/utils";
+import { focusAtEnd, cn } from "~/lib/utils";
 import { AsYouType } from "libphonenumber-js";
 import { zPhone, memberSchema } from "~/lib/team-members";
 
@@ -125,10 +125,19 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      await insertTeam({
+      const { error } = await insertTeam({
         ...data,
         members: serializeMembers(data.members),
       });
+
+      if (error) {
+        form.setError("id", {
+          type: "server",
+          message: "Username already taken",
+        });
+        form.setFocus("id");
+        return;
+      }
 
       await signIn("credentials", {
         id: data.id,
@@ -141,18 +150,7 @@ export default function RegisterForm() {
       });
       router.push("/");
     } catch (e) {
-      const error = ensureError(e);
-      if (error.message.startsWith("duplicate key value")) {
-        form.setError("id", {
-          type: "server",
-          message: "Username already taken",
-        });
-        form.setFocus("id");
-      } else {
-        toast.error("Failed to register team.", {
-          description: "An unexpected error occurred. Please try again.",
-        });
-      }
+      toast.error("Failed to register team. Please try again.");
     }
   };
 

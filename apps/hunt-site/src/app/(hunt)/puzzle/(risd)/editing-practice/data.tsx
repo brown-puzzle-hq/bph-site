@@ -14,71 +14,52 @@ export const puzzleId = "editing-practice";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl">
-    <div className="mb-4 space-y-4">
-      Dear Editor,
-      <br />
+  <div className="max-w-3xl space-y-4">
+    <p>Dear Editor,</p>
+    <p>
       Attached is my latest draft. I was trying to use common phrases to create
       a chilling atmosphere but I think I may have misremembered some of the
       sayings.
-    </div>
-    <div className="mb-4 space-y-4 font-mono">
+    </p>
+    <p className="font-mono">
       In his two hardened decades as a private eye, Eddie Esterly had never had
       an icy dossier. That night—that woman—might just be what finally tipped
       him over. It would be a gelid 24 hours in Hades' fiery depths before he
       would give up the chase! Frigid eccrine gland secreted fluid prickled his
       brow, trickled down his neck like a warning.
-    </div>
-    <div className="mb-4 space-y-4 font-mono">
+    </p>
+    <p className="font-mono">
       He didn't believe in gods or destiny, but alas, the glacial excruciatingly
       toilsome verisimilitude darkening his path! He could take frosty
       consolation in the thought that he would soon meet the ultimate test of
       his wits—that is, if she didn't once again give him the subzero scapula
       and surrounding region.
-    </div>
-    <div className="mb-4 space-y-4 font-mono">
+    </p>
+    <p className="font-mono">
       His mind whirled around the memory often. He took a long drag of a
       cigar—he had tried several times before, but he had never been able to
       quit arctic meleagris. It eased his nerves, at least. It would all fall
       apart if he got a chilling 0.3048 meters now.
-    </div>
-    <div className="mb-4 space-y-4 font-mono">
+    </p>
+    <p className="font-mono">
       He hailed a cab and paid the fare, handing over the last cool solid legal
       tender sewn into the lining of his overcoat. The city smoked and
       blackened. It would look different in the freezing diurnal sunshine.
-    </div>
-    <div className="mb-4 space-y-4 font-mono">
+    </p>
+    <p className="font-mono">
       He had oft been accused of possessing a polar cardiovascular organ. Yet,
       he felt he had never been filled with more wanting. Grasping for what's
       just an extra directly ahead of him—so close, yet out of reach. This
       mystery or him—who was going to crack first?
-    </div>
-    <div className="mb-4 flex justify-center">
-      <Image src={img} alt="" />
-    </div>
-    {/* <div className="mb-4 space-y-4">
-      ❄️ ____ [#]
+    </p>
+    <p className="w-full text-center font-mono text-[calc(min(5.128vw-1.641px,39.385px))]">
+      ❄️ ___ ___ ___ … → ❄️ _ _ _ … [#]
+    </p>
+    <p className="w-full whitespace-pre text-center font-mono text-[calc(min(5.128vw-1.641px,39.385px))]">
+      {"╰──────┬──────╯              "}
       <br />
-      ❄️ ____ ____ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ [#]
-      <br />
-      ❄️ ____ ____ [#]
-      <br />
-      ❄️ ____ ____ ____ [#]
-      <br />
-      ❄️ ____ [#]
-    </div> */}
+      {"       #                     "}
+    </p>
   </div>
 );
 
@@ -99,27 +80,7 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `Dear Editor, 
-Attached is my latest draft. I was trying to use common phrases to create a chilling atmosphere but I think I may have misremembered some of the sayings.
-
-In his two hardened decades as a private eye, Eddie Esterly had never had an icy dossier. That night—that woman—might just be what finally tipped him over. It would be a gelid 24 hours in Hades' fiery depths before he would give up the chase! Frigid eccrine gland secreted fluid prickled his brow, trickled down his neck like a warning.
-He didn't believe in gods or destiny, but alas, the glacial excruciatingly toilsome verisimilitude darkening his path! He could take  frosty consolation in the thought that he would soon meet the ultimate test of his wits—that is, if she didn't once again give him the subzero scapula and surrounding region.
-His mind whirled around the memory often. He took a long drag of a cigar—he had tried several times before, but he had never been able to quit arctic meleagris. It eased his nerves, at least. It would all fall apart if he got a chilling 0.3048 meters now. 
-He hailed a cab and paid the fare, handing over the last cool solid legal tender sewn into the lining of his overcoat. The city smoked and blackened. It would look different in the freezing diurnal sunshine. 
-He had oft been accused of possessing a polar cardiovascular organ. Yet, he felt he had never been filled with more wanting. Grasping for what's just an extra directly ahead of him—so close, yet out of reach. This mystery or him—who was going to crack first?
-
-❄️ ____ [#]
-❄️ ____ ____ ____ [#]
-❄️ ____ [#]
-❄️ ____ ____ [#]
-❄️ ____ [#]
-❄️ ____ [#]
-❄️ ____ [#]
-❄️ ____ [#]
-❄️ ____ ____ [#]
-❄️ ____ ____ ____ [#]
-❄️ ____  [#]
-`;
+export const copyText = null;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

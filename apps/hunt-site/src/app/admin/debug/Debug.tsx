@@ -5,7 +5,7 @@ import { sendWebsocketMessage } from "./actions";
 import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { formatDuration } from "~/lib/utils";
+import { formatDuration } from "~/lib/time";
 
 import { removeCookie, getCookies } from "typescript-cookie";
 import { decodeSeen } from "~/lib/utils";

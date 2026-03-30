@@ -27,7 +27,6 @@ import {
 import ErratumDialog from "./ErratumDialog";
 import { insertErratum } from "./actions";
 import { Erratum } from "@/db/types";
-import { ensureError } from "~/lib/utils";
 
 type FormProps = {
   puzzleList: { id: string; name: string }[];
@@ -73,10 +72,7 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
 
       form.setValue("description", "");
     } catch (e) {
-      const error = ensureError(e);
-      toast("Failed to submit erratum.", {
-        description: error.message,
-      });
+      toast.error("Failed to submit erratum. Please try again.");
     }
   };
 

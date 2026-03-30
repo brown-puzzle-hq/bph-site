@@ -71,7 +71,7 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
     throw new Error("No team matching the given ID was found.");
   }
 
-  revalidatePath(`/team/${id}`, "page");
+  revalidatePath(`/team/${id}`);
   return { updatedTeam };
 }
 

@@ -83,13 +83,21 @@ export async function canViewHint(puzzleId: string): Promise<viewStatus> {
  * Returns a viewStatus string.
  */
 export async function canViewSolution(puzzleId: string): Promise<viewStatus> {
+  // Gate until solutions are written
+  // TODO: remove and uncomment lines 98 and 100
+  const { error, user } = await checkPermissions({ level: "userAny" });
+  if (error) return "not_authenticated";
+  const { id: teamId, role } = user;
+
+  return role === "admin" ? "success" : "not_authorized";
+
   // If wrapup has released, anyone can view solutions
   if (new Date() > REMOTE.WRAPUP_TIME) return "success";
 
   // If the hunt has not ended, users must be signed-in
-  const { error, user } = await checkPermissions({ level: "userAny" });
+  // const { error, user } = await checkPermissions({ level: "userAny" });
   if (error) return "not_authenticated";
-  const { id: teamId, role } = user;
+  // const { id: teamId, role } = user;
 
   // Admin can always view the solution
   if (role === "admin") return "success";

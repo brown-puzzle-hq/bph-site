@@ -57,13 +57,15 @@ export async function claimHint(hintId: number) {
       throw new Error(`Hint ${hintId} not found.`);
     }
     if (hint.claimer !== null) {
-      throw new Error(`Hint ${hintId} claimed by ${hint.claimer}.`);
+      if (hint.claimer === teamId) return { error: null };
+      return { error: `Hint ${hintId} claimed by ${hint.claimer}.` };
     }
     if (hint.status !== "no_response") {
-      throw new Error(`Hint ${hintId} has status ${hint.status}`);
+      return { error: `Hint ${hintId} has status ${hint.status}.` };
     }
     throw new Error("An unexpected error occurred.");
   }
+  return { error: null };
 }
 
 export async function unclaimHint(hintId: number) {
@@ -92,13 +94,15 @@ export async function unclaimHint(hintId: number) {
       throw new Error(`Hint ${hintId} not found.`);
     }
     if (hint.claimer !== teamId) {
-      throw new Error(`Hint ${hintId} not claimed by user.`);
+      if (hint.claimer === null) return { error: null };
+      return { error: `Hint ${hintId} not claimed by user.` };
     }
     if (hint.status !== "no_response") {
-      throw new Error(`Hint ${hintId} has status ${hint.status}`);
+      return { error: `Hint ${hintId} has status ${hint.status}.` };
     }
     throw new Error("An unexpected error occurred.");
   }
+  return { error: null };
 }
 
 export async function editAdminMessage(
@@ -202,7 +206,7 @@ export async function insertAdminReply(
 export async function insertHintResponse(hintId: number, response: string) {
   const { id: teamId } = await assertPermissions({ level: "admin" });
 
-  if (!response) throw new Error("Response is empty.");
+  if (!response) return { error: "Response is empty." };
 
   const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
@@ -248,18 +252,16 @@ export async function insertHintResponse(hintId: number, response: string) {
       puzzleId: hints.puzzleId,
     });
 
-  revalidatePath("/admin/");
-
   // Error-handling
   if (!result) {
     if (hint.claimer === null) {
-      throw new Error(`Hint ${hintId} is unclaimed.`);
+      return { error: `Hint ${hintId} is unclaimed.` };
     }
     if (hint.claimer !== teamId) {
-      throw new Error(`Hint ${hintId} claimed by ${hint.claimer}.`);
+      return { error: `Hint ${hintId} claimed by ${hint.claimer}.` };
     }
     if (hint.status !== "no_response") {
-      throw new Error(`Hint ${hintId} has status ${hint.status}`);
+      return { error: `Hint ${hintId} has status ${hint.status}.` };
     }
     throw new Error("An unexpected error occurred.");
   }
@@ -277,4 +279,5 @@ export async function insertHintResponse(hintId: number, response: string) {
       response,
     }),
   );
+  return { error: null };
 }

@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown, ArrowUp, ArrowDown } from "lucide-react";
-import { formatDuration } from "~/lib/utils";
+import { formatDuration } from "~/lib/time";
 
 export type TeamPuzzleStats = {
   team: {

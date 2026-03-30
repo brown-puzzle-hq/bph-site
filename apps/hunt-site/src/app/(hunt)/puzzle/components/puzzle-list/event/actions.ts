@@ -20,16 +20,16 @@ export async function insertAnswerToken(eventId: string, guess: string) {
   });
   if (token) {
     revalidatePath("/puzzle");
-    throw new Error("Token already used!");
+    return { error: "Token already used!" };
   }
 
   // Check that the token is valid
   const event = await db.query.events.findFirst({
     where: eq(events.id, eventId),
   });
-  if (!event) throw new Error("Event not found!");
+  if (!event) throw new Error("Event not found.");
   if (event.answer.replace(/\s+/g, "") !== guess)
-    throw new Error("Incorrect token!");
+    return { error: "Incorrect token!" };
 
   // Insert a token into the token table
   await db.insert(answerTokens).values({
@@ -39,4 +39,6 @@ export async function insertAnswerToken(eventId: string, guess: string) {
   });
 
   revalidatePath("/puzzle");
+
+  return { error: null };
 }

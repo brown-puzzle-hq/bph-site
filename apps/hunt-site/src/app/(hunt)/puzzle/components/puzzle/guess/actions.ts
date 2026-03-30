@@ -28,8 +28,8 @@ import {
   MAX_SOLVE_DELAY,
 } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { ensureError, formatDuration } from "~/lib/utils";
-import { assertPermissions } from "~/lib/server";
+import { formatDuration } from "~/lib/time";
+import { ensureError, assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -56,7 +56,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
     },
   });
 
-  if (!puzzle) throw new Error("Puzzle not found");
+  if (!puzzle) throw new Error("Puzzle not found.");
+
+  if (puzzle.guesses.find((g) => g.isCorrect)) {
+    revalidatePath(`/puzzle/${puzzleId}`);
+    return { error: "Puzzle already solved!" };
+  }
 
   // TODO: can we eliminate this... also doesn't generalize to hunt structure
   const module = await import(`../../../${puzzleId}/data.tsx`).catch(
@@ -73,7 +78,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
     ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
-    throw new Error("You have no guesses left. Please contact HQ for help.");
+    return { error: "You have no guesses left. Please contact HQ for help." };
   }
 
   // Check if the puzzle was solved by being the right string
@@ -152,7 +157,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
     // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to submit the same guess twice
     if ("code" in error && error.code === "23505") {
-      throw new Error("Already guessed!");
+      revalidatePath(`/puzzle/${puzzleId}`);
+      return { error: "Already guessed!" };
     }
 
     const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
@@ -243,6 +249,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
       console.error("Websocket send failed:", r.reason);
     }
   }
+
+  return { error: null };
 }
 
 /** Handles a solve for a puzzle. Returns whether the hunt was finished. */

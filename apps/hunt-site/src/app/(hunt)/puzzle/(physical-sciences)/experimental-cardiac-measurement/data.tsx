@@ -21,7 +21,7 @@ export const inPersonBody = (
       </b>
       <p>
         Practice setup: drag the labeled chips onto either side of the scale.
-        The balance responds to each chip&apos;s hardcoded weight.
+        The balance responds to each chip's hardcoded weight.
       </p>
     </div>
   </div>

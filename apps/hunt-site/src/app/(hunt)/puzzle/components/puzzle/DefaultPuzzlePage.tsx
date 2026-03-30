@@ -21,7 +21,6 @@ import {
 } from "@/config/client";
 import { ALL_PUZZLES, INITIAL_PUZZLES } from "@/config/server";
 import { displayStoredPuzzleGuess } from "~/lib/utils";
-import { cn } from "~/lib/utils";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 import { checkPermissions } from "~/lib/server";
 import SeenSetter from "./SeenSetter";
@@ -185,16 +184,13 @@ export default async function DefaultPuzzlePage({
   return (
     <div className="w-full px-4">
       <SeenSetter index={puzzleIndex} />
+
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>
 
       <div className="no-scrollbar overflow-auto">
-        <div className="mx-auto flex w-fit items-start justify-center space-x-2">
-          {copyText && <div className="min-w-6" />}
-          <div className="w-fit">{puzzleBody}</div>
-          {copyText && <CopyButton copyText={copyText} />}
-        </div>
+        <div className="mx-auto w-fit">{puzzleBody}</div>
       </div>
 
       {Object.keys(tasks).map((task) => {
@@ -208,7 +204,7 @@ export default async function DefaultPuzzlePage({
         }
       })}
 
-      <div className={cn("mx-auto mb-4 mt-6 max-w-3xl", copyText && "px-8")}>
+      <div className="mx-auto mb-4 mt-6 max-w-3xl">
         <GuessForm
           puzzleId={puzzleId}
           numberOfGuessesLeft={numberOfGuessesLeft}
@@ -219,6 +215,12 @@ export default async function DefaultPuzzlePage({
       <div className="mx-auto max-w-3xl">
         <GuessTable previousGuesses={processedGuesses} />
       </div>
+
+      {copyText && (
+        <div className="fixed bottom-4 right-4 size-10">
+          <CopyButton copyText={copyText} />
+        </div>
+      )}
     </div>
   );
 }

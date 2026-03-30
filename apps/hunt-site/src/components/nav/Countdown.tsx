@@ -1,56 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
+import { formatDuration } from "~/lib/time";
 
-export function Countdown({ targetDate }: { targetDate: Date }) {
-  const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
-
-  function calculateTimeRemaining() {
-    const now = new Date();
-    const difference = targetDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  }
+export default function Countdown({ targetDate }: { targetDate: Date }) {
+  const [timeRemaining, setTimeRemaining] = useState(
+    targetDate.getTime() - Date.now(),
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining());
+      setTimeRemaining(targetDate.getTime() - Date.now());
     }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  if (
-    timeRemaining.days +
-      timeRemaining.hours +
-      timeRemaining.minutes +
-      timeRemaining.seconds ===
-    0
-  ) {
-    return null;
-  }
+  if (timeRemaining <= 0) return null;
 
   return (
-    <div
-      className="hidden w-full tabular-nums lg:block"
-      suppressHydrationWarning
-    >
-      {String(timeRemaining.days).padStart(2, "0")}:
-      {String(timeRemaining.hours).padStart(2, "0")}:
-      {String(timeRemaining.minutes).padStart(2, "0")}:
-      {String(timeRemaining.seconds).padStart(2, "0")} until hunt
+    <div className="hidden tabular-nums lg:block" suppressHydrationWarning>
+      {formatDuration(timeRemaining)} until hunt
     </div>
   );
 }
-
-export default Countdown;

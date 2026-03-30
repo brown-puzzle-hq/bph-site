@@ -205,11 +205,9 @@ export default async function Page() {
                         </a>
                       </div>
                     </TableCell>
-                    <TableCell className="justify-center">
+                    <TableCell className="flex justify-center">
                       {puzzle.copyText && (
-                        <div className="flex justify-center hover:opacity-60">
-                          <CopyButton copyText={puzzle.copyText} />
-                        </div>
+                        <CopyButton copyText={puzzle.copyText} />
                       )}
                     </TableCell>
                   </TableRow>

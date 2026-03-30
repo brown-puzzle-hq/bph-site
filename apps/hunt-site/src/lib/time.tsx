@@ -1,12 +1,5 @@
 "use client";
 
-type Time = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
-
 function formatTime(time: string | Date | null) {
   const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "short",
@@ -23,36 +16,30 @@ function formatTime(time: string | Date | null) {
 }
 
 export function FormattedTime({ time }: { time: string | Date | null }) {
-  return <>{formatTime(time)}</>;
+  return <span>{formatTime(time)}</span>;
 }
 
-function getTimeDifference(date1: Date, date2: Date) {
-  const date1ms = date1.getTime();
-  const date2ms = date2.getTime();
-  const differenceMs = Math.abs(date2ms - date1ms);
-  const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-  const remainingMs = differenceMs % (1000 * 60 * 60 * 24);
-  const hours = Math.floor(remainingMs / (1000 * 60 * 60));
-  const remainingMs2 = remainingMs % (1000 * 60 * 60);
-  const minutes = Math.floor(remainingMs2 / (1000 * 60));
-  const remainingMs3 = remainingMs2 % (1000 * 60);
-  const seconds = Math.floor(remainingMs3 / 1000);
-  return { days, hours, minutes, seconds };
-}
+/** Formats a duration in milliseconds as "Xd Yh Zm Ws" */
+export function formatDuration(deltaMs: number): string {
+  const totalSeconds = Math.floor(Math.max(0, deltaMs) / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-function getTimeDifferenceString(time: Time) {
-  if (time.days > 0) {
-    return `${time.days} ${time.days === 1 ? "day" : "days"}`;
-  } else if (time.hours > 0) {
-    return `${time.hours} ${time.hours === 1 ? "hour" : "hours"}`;
-  } else if (time.minutes > 0) {
-    return `${time.minutes} ${time.minutes === 1 ? "minute" : "minutes"}`;
-  } else {
-    return `${time.seconds} ${time.seconds === 1 ? "second" : "seconds"}`;
-  }
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
+  parts.push(`${seconds}s`);
+  return parts.join(" ");
 }
 
 export function ElapsedTime({ date }: { date: Date | null }) {
-  if (!date) return <></>;
-  return <>{getTimeDifferenceString(getTimeDifference(new Date(), date))}</>;
+  if (!date) return null;
+  return (
+    <span suppressHydrationWarning>
+      {formatDuration(Date.now() - date.getTime())}
+    </span>
+  );
 }

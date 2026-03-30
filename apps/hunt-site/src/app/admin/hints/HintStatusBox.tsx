@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { Reply, HintClaimer } from "./Columns";
 import { useTransition } from "react";
-import { ensureError } from "~/lib/utils";
 
 export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const { data: session } = useSession();
@@ -21,13 +20,16 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const handleClaim = () => {
     startTransition(async () => {
       try {
-        await claimHint(hintId);
-        window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
+        const { error } = await claimHint(hintId);
+        if (error) {
+          toast.error("Failed to claim hint.", {
+            description: error,
+          });
+        } else {
+          window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
+        }
       } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to claim hint.", {
-          description: error.message,
-        });
+        toast.error("Failed to claim hint. Please try again.");
       }
     });
   };
@@ -35,12 +37,14 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const handleUnclaim = () => {
     startTransition(async () => {
       try {
-        await unclaimHint(hintId);
+        const { error } = await unclaimHint(hintId);
+        if (error) {
+          toast.error("Failed to unclaim hint.", {
+            description: error,
+          });
+        }
       } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to unclaim hint.", {
-          description: error.message,
-        });
+        toast.error("Failed to unclaim hint. Please try again.");
       }
     });
   };
