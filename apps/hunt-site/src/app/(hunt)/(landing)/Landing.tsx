@@ -1,7 +1,22 @@
 "use client";
 import { useSession } from "next-auth/react";
+import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { forwardRef } from "react";
+
+import sky from "/public/home/sky.png";
+import building from "/public/home/building.png";
+import open from "/public/home/gates-open.png";
+import closed from "/public/home/gates-closed.png";
+
+const ExoticImage = forwardRef<HTMLImageElement, ImageProps>(
+  function ExoticImageWrapper(props, ref) {
+    return <Image {...props} ref={ref} />; // ❌  this is not forwarded
+  },
+);
+
+const MotionComponent = motion.create(ExoticImage);
 
 export default function Landing() {
   const { data: session } = useSession();
@@ -11,19 +26,25 @@ export default function Landing() {
 
   return (
     <div className="relative grid overflow-hidden">
-      <motion.img
+      <MotionComponent
         className="absolute max-h-[112.5vw] min-h-[calc(100vh-56px-32px)] w-screen object-cover object-top"
-        src="/home/sky.png"
+        src={sky}
+        alt=""
+        priority
         style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "30%"]) }}
       />
-      <motion.img
+      <MotionComponent
         className="absolute max-h-[112.5vw] min-h-[calc(100vh-56px-32px)] w-screen object-cover object-top"
-        src="/home/building.png"
+        src={building}
+        alt=""
+        priority
         style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "15%"]) }}
       />
-      <motion.img
+      <MotionComponent
         className="z-0 max-h-[112.5vw] min-h-[calc(100vh-56px-32px)] w-screen object-cover object-top"
-        src={session?.user ? "/home/gates-open.png" : "/home/gates-closed.png"}
+        src={session?.user ? open : closed}
+        alt=""
+        priority
       />
       {!session?.user && (
         <Link
