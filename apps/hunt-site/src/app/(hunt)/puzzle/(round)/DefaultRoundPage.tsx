@@ -24,6 +24,9 @@ export type PuzzleIcon = {
   w: number;
   h: number;
 
+  /** Optional z-index for overlapping icons. */
+  z?: number;
+
   /** Where the puzzle name label renders relative to the icon. Defaults to "bottom". */
   labelPosition?: "top" | "bottom";
   /** Horizontal offset (in % of the icon container) applied to the label position. */
@@ -101,6 +104,7 @@ export default async function DefaultRoundPage({
             y,
             w,
             h,
+            z,
             labelPosition = "bottom",
             labelDx = 0,
             labelDy = 0,
@@ -128,6 +132,7 @@ export default async function DefaultRoundPage({
                 left: `${x}%`,
                 top: `${y}%`,
                 width: `${w}%`,
+                zIndex: z,
               }}
             >
               <Link href={`/puzzle/${puzzle.id}`} className="peer block">

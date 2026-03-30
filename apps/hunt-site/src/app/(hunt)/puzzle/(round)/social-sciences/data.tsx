@@ -41,6 +41,7 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 26.1628,
     w: 5.8838,
     h: 8.4718,
+    z: 1,
     labelPosition: "top",
   },
   "year-of-the-honse": {
