@@ -14,7 +14,7 @@ export function HuntNavBar() {
   const style: NavBarStyle = {
     item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-colors",
     bar: "bg-nav-bg/30 backdrop-blur-md backdrop-filter",
-    sheet: "bg-nav-bg",
+    sheet: "bg-[#1A2A7A]/80",
   };
   const logoutSizing = "cursor-pointer rounded-md px-[6px] py-[4px]";
 

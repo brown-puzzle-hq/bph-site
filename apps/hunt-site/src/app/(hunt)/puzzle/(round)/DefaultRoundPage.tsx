@@ -1,5 +1,6 @@
 import "server-only";
 
+import { ChevronsLeft } from "lucide-react";
 import Image from "next/image";
 import { type StaticImageData } from "next/image";
 import type { CSSProperties } from "react";
@@ -13,7 +14,7 @@ import { notFound } from "next/navigation";
 import { ROUNDS, ALL_PUZZLES } from "~/config/server";
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { decodeSeen } from "~/lib/utils";
+import { cn, decodeSeen } from "~/lib/utils";
 import SeenPuzzleIcon from "./SeenPuzzleIcon";
 
 export type PuzzleIcon = {
@@ -113,11 +114,9 @@ export default async function DefaultRoundPage({
             ...(labelPosition === "top"
               ? {
                   top: `calc(0% - 0.5rem + ${labelDy}%)`,
-                  transform: "translate(-50%, -100%)",
                 }
               : {
                   top: `calc(100% + 0.5rem + ${labelDy}%)`,
-                  transform: "translate(-50%, 0%)",
                 }),
           };
 
@@ -131,9 +130,9 @@ export default async function DefaultRoundPage({
                 width: `${w}%`,
               }}
             >
-              <Link href={`/puzzle/${puzzle.id}`}>
+              <Link href={`/puzzle/${puzzle.id}`} className="peer block">
                 <Image
-                  src={(puzzle.answer && solveIcon) || icon}
+                  src={(puzzle.answer && solveIcon) ?? icon}
                   alt={puzzle.name}
                   style={{
                     width: "100%",
@@ -143,8 +142,16 @@ export default async function DefaultRoundPage({
               </Link>
 
               {/* Puzzle name */}
-              <div className="absolute z-10 hidden sm:flex" style={labelStyle}>
-                <div className="relative rounded-md bg-black px-2 py-1">
+              <div
+                className="absolute z-10 hidden transition-transform peer-hover:-translate-y-1 sm:flex"
+                style={labelStyle}
+              >
+                <div
+                  className={cn(
+                    "relative -translate-x-1/2",
+                    labelPosition === "top" && "-translate-y-full",
+                  )}
+                >
                   {/* Pointer */}
                   {labelPosition === "top" ? (
                     <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
@@ -152,9 +159,12 @@ export default async function DefaultRoundPage({
                     <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
                   )}
                   {/* Name */}
-                  <span className="text-nowrap text-main-text">
+                  <Link
+                    href={`/puzzle/${puzzle.id}`}
+                    className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                  >
                     {puzzle.name}
-                  </span>
+                  </Link>
                   {puzzle.answer ? (
                     <img
                       className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
@@ -168,34 +178,44 @@ export default async function DefaultRoundPage({
             </div>
           );
         })}
+        {/* Back to main page */}
+        <Link
+          href={"/puzzle"}
+          className="absolute left-4 top-4 flex items-center space-x-0.5 rounded-md bg-black p-1 sm:pr-2"
+        >
+          <ChevronsLeft className="size-6 fill-white" />
+          <p className="hidden font-semibold sm:block">Rounds</p>
+        </Link>
       </div>
-      <div className="mx-auto mb-12 w-full max-w-3xl px-4 pt-6">
-        {/* Puzzle table */}
-        <div className="w-full overflow-hidden rounded-md text-sm font-medium">
-          <div className="grid grid-cols-2 p-2">
-            <p>Puzzle</p>
-            <p>Answer</p>
-          </div>
-          {roundPuzzles.map((puzzle) => (
-            <div key={puzzle.id}>
-              <hr className="w-full" />
-              <Link
-                href={`/puzzle/${puzzle.id}`}
-                className="grid grid-cols-2 p-2 transition-colors hover:bg-white/5"
-                prefetch={false}
-              >
-                <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
-                {puzzle.answer !== null && (
-                  <p className="truncate text-ellipsis text-correct-guess">
-                    {puzzle.answer}
-                  </p>
-                )}
-              </Link>
+      {roundPuzzles.length > 0 && (
+        <div className="mx-auto mb-12 w-full max-w-3xl px-4 pt-6">
+          {/* Puzzle table */}
+          <div className="w-full overflow-hidden rounded-md text-sm font-medium">
+            <div className="grid grid-cols-2 p-2 font-bold">
+              <p>Puzzle</p>
+              <p>Answer</p>
             </div>
-          ))}
-          <hr className="w-full" />
+            {roundPuzzles.map((puzzle) => (
+              <div key={puzzle.id}>
+                <hr className="w-full" />
+                <Link
+                  href={`/puzzle/${puzzle.id}`}
+                  className="grid grid-cols-2 p-2 transition-colors hover:bg-white/5"
+                  prefetch={false}
+                >
+                  <p>{puzzle.name.trim() ? puzzle.name : "\u200b"}</p>
+                  {puzzle.answer !== null && (
+                    <p className="truncate text-ellipsis text-correct-guess">
+                      {puzzle.answer}
+                    </p>
+                  )}
+                </Link>
+              </div>
+            ))}
+            <hr className="w-full" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

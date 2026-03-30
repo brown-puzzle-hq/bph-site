@@ -30,7 +30,6 @@ export default function PuzzleListPage({
       {/* Puzzle table */}
       <h1 className="mb-2 text-center">Rounds</h1>
       <div className="overflow-hidden rounded-b-md text-sm font-medium">
-        <hr />
         {availableRounds
           .sort((a, b) =>
             a.name === "Backpack" ? -1 : b.name === "Backpack" ? 1 : 0,
@@ -83,6 +82,7 @@ export default function PuzzleListPage({
             availableEvents={availableEvents}
             inputBox={hasEventInputBox}
           />
+          <hr />
         </>
       )}
     </div>

@@ -24,8 +24,10 @@ export default function EventTable({
       <Table className="mx-auto table-fixed overflow-hidden rounded-md md:table-auto">
         <TableHeader>
           <TableRow className="hover:bg-inherit">
-            <TableHead className="text-main-text">Event</TableHead>
-            <TableHead className="text-main-text">Description</TableHead>
+            <TableHead className="font-bold text-main-text">Event</TableHead>
+            <TableHead className="font-bold text-main-text">
+              Description
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
