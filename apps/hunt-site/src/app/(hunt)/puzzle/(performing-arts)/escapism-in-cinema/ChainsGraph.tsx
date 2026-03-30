@@ -622,11 +622,16 @@ export default function ChainsGraph({
   const originY = TOP_PADDING;
 
   const getDropZone = useCallback(
-    (_containerX: number, containerY: number): "bottom" | null => {
-      if (containerY >= stripTop) return "bottom";
+    (containerX: number, containerY: number): "bottom" | null => {
+      if (
+        containerY >= stripTop &&
+        containerX >= originX &&
+        containerX < originX + totalGridPx
+      )
+        return "bottom";
       return null;
     },
-    [stripTop],
+    [stripTop, originX, totalGridPx],
   );
 
   const BOTTOM_STRIP_PADDING = 16;
@@ -893,13 +898,16 @@ export default function ChainsGraph({
         ref.dislodgedThisDrag = true;
       }
       if (ref.dislodgedThisDrag) {
-        setDragPixel({ x: containerX, y: containerY });
+        setDragPixel({
+          x: containerX,
+          y: Math.max(BIG_NODE_SIZE / 2, containerY),
+        });
       } else {
         const dx = e.clientX - ref.clientX;
         const dy = e.clientY - ref.clientY;
         setDragPixel({
           x: ref.nodeX + dx,
-          y: ref.nodeY + dy,
+          y: Math.max(BIG_NODE_SIZE / 2, ref.nodeY + dy),
         });
       }
     },
@@ -911,7 +919,7 @@ export default function ChainsGraph({
       if (!draggingId) return;
       const ref = dragStartRef.current;
       const dropX = dragPixel?.x ?? 0;
-      const dropY = dragPixel?.y ?? 0;
+      const dropY = Math.max(BIG_NODE_SIZE / 2, dragPixel?.y ?? 0);
       const wasChainDrag =
         (ref?.wasDislodgedAtStart ?? false) ||
         (ref?.dislodgedThisDrag ?? false);
