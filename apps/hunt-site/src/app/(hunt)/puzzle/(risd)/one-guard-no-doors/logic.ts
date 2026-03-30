@@ -335,6 +335,8 @@ export function applyMove(
     const direction = step - state.player;
     let current = step;
     while (true) {
+      if (direction === 1 && current % config.width === config.width - 1) break;
+      if (direction === -1 && current % config.width === 0) break;
       const nextSquare = current + direction;
       if (nextSquare < 0 || nextSquare >= totalSquares) break;
       if (
