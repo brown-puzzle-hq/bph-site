@@ -178,7 +178,7 @@ export default function PrimaryInvestigationWheel() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [wheelAlpha, setWheelAlpha] = useState(1);
+  const [wheelAlpha, setWheelAlpha] = useState(0.75);
   const [imageReady, setImageReady] = useState(false);
   const [pins, setPins] = useState<Pin[]>([]);
   const [nextPinNumber, setNextPinNumber] = useState(1);
@@ -572,7 +572,7 @@ export default function PrimaryInvestigationWheel() {
               Clear all
             </button>
           </div>
-          <p className="mb-2 mt-1 text-sm text-black/70">
+          <p className="mb-2 mt-1 text-sm text-white/70">
             Click the wheel to drop a pin.
           </p>
 
@@ -596,9 +596,9 @@ export default function PrimaryInvestigationWheel() {
             </button>
           </form>
 
-          <ul className="m-0 grid max-h-80 list-none gap-2 overflow-auto p-0 pr-1">
+          <ul className="m-0 grid max-h-80 list-none gap-2 overflow-auto p-0 pr-1 text-white">
             {pinCountLabel && (
-              <li className="rounded-md border border-dashed border-black/20 px-3 py-2 text-sm text-black/70">
+              <li className="rounded-md border border-dashed border-white/40 px-3 py-2 text-sm text-white">
                 {pinCountLabel}
               </li>
             )}
@@ -765,7 +765,7 @@ export default function PrimaryInvestigationWheel() {
         step="0.01"
         value={wheelAlpha}
         onChange={(e) => setWheelAlpha(clamp01(Number(e.target.value)))}
-        className="w-full"
+        className="w-full accent-white"
         aria-label="Color wheel opacity"
       />
     </div>
