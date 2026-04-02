@@ -8,7 +8,7 @@ import { EnlargedImage } from "~/components/ui/enlarged-component";
 
 import { queryDatabase } from "./actions";
 import CopyButton from "../puzzle/CopyButton";
-import { extractEmails } from "~/lib/team-members";
+import { extractEmails, extractNames } from "~/lib/team-members";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("emails");
@@ -38,14 +38,21 @@ export default function Page() {
         if (!parsedResult?.rows?.[0]) {
           return "No emails found.";
         }
-        return parsedResult.rows
-          .flatMap((row: any) => [
-            row.primary_email,
-            ...extractEmails(row.members),
-          ])
-          .join("\n");
+        if (activeTab === "names") {
+          return parsedResult.rows
+            .filter((row: any) => row.members.length > 2)
+            .flatMap((row: any) => [extractNames(row.members)])
+            .join("\n");
+        } else {
+          return parsedResult.rows
+            .flatMap((row: any) => [
+              row.primary_email,
+              ...extractEmails(row.members),
+            ])
+            .join("\n");
+        }
       } catch (error) {
-        return "SQL error.";
+        return error;
       }
     }
   };
@@ -99,6 +106,12 @@ export default function Page() {
                 Emails
               </TabsTrigger>
               <TabsTrigger
+                value="names"
+                className="rounded-lg data-[state=active]:bg-inherit data-[state=active]:text-inherit data-[state=active]:underline data-[state=active]:decoration-blue-500 data-[state=active]:decoration-2 data-[state=active]:shadow-none"
+              >
+                Roster
+              </TabsTrigger>
+              <TabsTrigger
                 value="raw"
                 className="rounded-lg data-[state=active]:bg-inherit data-[state=active]:text-inherit data-[state=active]:underline data-[state=active]:decoration-blue-500 data-[state=active]:decoration-2 data-[state=active]:shadow-none"
               >
@@ -109,6 +122,14 @@ export default function Page() {
               <CopyButton copyText={getContent()} />
             </div>
           </TabsList>
+
+          <TabsContent value="names" className="w-full">
+            <div className="bg-gray-100 p-4">
+              <pre className="text-wrap text-sm text-gray-800">
+                {getContent()}
+              </pre>
+            </div>
+          </TabsContent>
 
           {/* Raw SQL*/}
           <TabsContent value="raw" className="w-full">

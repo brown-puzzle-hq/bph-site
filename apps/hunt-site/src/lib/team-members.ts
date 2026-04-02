@@ -1,5 +1,5 @@
 /** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
-import { z } from "zod";
+import { string, z } from "zod";
 import parsePhoneNumberFromString from "libphonenumber-js";
 
 export type Member = {
@@ -31,6 +31,15 @@ export function extractEmails(memberString: string): string[] {
   return JSON.parse(memberString)
     .map(([_f, _l, email]: [string, string, string]) => email)
     .filter(Boolean);
+}
+
+export function extractNames(memberString: string): string {
+  return JSON.parse(memberString)
+    .map(
+      ([first, last, email]: [string, string, string]) =>
+        first + "\t" + last + "\t" + email,
+    )
+    .join("\n");
 }
 
 export const zPhone = z.string().transform((arg, ctx) => {
