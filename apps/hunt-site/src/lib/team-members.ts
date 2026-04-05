@@ -33,11 +33,11 @@ export function extractEmails(memberString: string): string[] {
     .filter(Boolean);
 }
 
-export function extractNames(memberString: string): string {
+export function extractNames(memberString: string, teamName: string): string {
   return JSON.parse(memberString)
     .map(
       ([first, last, email]: [string, string, string]) =>
-        first + "\t" + last + "\t" + email,
+        first + "\t" + last + "\t" + teamName + "\t" + email,
     )
     .join("\n");
 }

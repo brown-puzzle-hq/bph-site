@@ -41,7 +41,9 @@ export default function Page() {
         if (activeTab === "names") {
           return parsedResult.rows
             .filter((row: any) => row.members.length > 2)
-            .flatMap((row: any) => [extractNames(row.members)])
+            .flatMap((row: any) => [
+              extractNames(row.members, row.display_name),
+            ])
             .join("\n");
         } else {
           return parsedResult.rows
