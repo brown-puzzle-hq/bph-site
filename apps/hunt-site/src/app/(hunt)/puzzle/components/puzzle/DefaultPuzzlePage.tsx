@@ -12,7 +12,9 @@ import { notFound, redirect } from "next/navigation";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import ErratumDialog from "~/app/(hunt)/puzzle/components/puzzle/ErratumDialog";
 import GuessForm from "@/puzzle/components/puzzle/guess/GuessForm";
-import CopyButton from "@/puzzle/components/puzzle/CopyButton";
+import CopyButton, {
+  type CopyData,
+} from "@/puzzle/components/puzzle/CopyButton";
 import { canViewPuzzle } from "@/puzzle/actions";
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
@@ -31,7 +33,7 @@ type DefaultPuzzlePageProps = {
   puzzleId: string;
   inPersonBody: React.ReactNode;
   remoteBody: React.ReactNode;
-  copyText: string | null;
+  copyText: string | CopyData | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
   interactionMode?: string;

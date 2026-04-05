@@ -64,7 +64,17 @@ export const authors = "Josiah Carberry";
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Anthropology of Computers
+This is a metapuzzle. You will need to use some answers to puzzles from the Department rounds in order to solve it.
+Professor Conway hasn't told you what's going to be on the final — you're going in blind. So you stay up studying all night, taking no breaks between words, counting down until there's nothing left to review.
+What will the final exam be?
+
+Concentration Requirements:
+HUMANITIES: Flying Through The Grid
+PHYSICAL SCIENCES: Dirt
+Four electives from MATH
+Four electives from SOCIAL SCIENCES
+`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

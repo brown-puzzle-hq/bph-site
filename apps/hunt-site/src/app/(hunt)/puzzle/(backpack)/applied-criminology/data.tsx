@@ -114,7 +114,42 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `
+Applied Criminology
+This is a metapuzzle. You will need to use some answers to puzzles from the Department rounds in order to solve it.
+You study hard, making an index card for each chapter of your law class, to figure out how to stop your sentencing.
+§1
+Whereas the devices injured were definitively owned by the city government, ejection of the defendant's alibi is inherently justified.
+
+§2
+Whereas the business in question had criminal origins, its management of such an activity is clearly illegal.
+
+§3
+Whereas religious purposes were occurring less than a mile away from the offending action, the jury must find the suspect guilty.
+
+§4
+Whereas the instrument's location was just to the side of the trail, justice must be found.
+
+§5
+Whereas verbiage of this sort was used, we must find an adequate punishment for the offender.
+
+§6
+Whereas restricted areas were certainly entered with malicious intention, the victims must be avenged.
+
+§7
+Whereas the illegal details were used in lieu of real payment, any sensible court would convict the accused.
+
+§8
+Whereas the delivery became known to the state and is by no means under doubt, the defendant is deserving of punishment.
+
+§9
+Whereas the intended action of the defendant was in no doubt to use their false items in fraud, the truth should bring the jury to the right decision.
+
+Concentration Requirements:
+MATH: Herculean Math
+Four electives from BUSINESS
+Four electives from PERFORMING ARTS
+`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

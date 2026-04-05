@@ -3,7 +3,7 @@
 // Default PostHunt Page
 import { useState } from "react";
 import { cn } from "~/lib/utils";
-import CopyButton from "./CopyButton";
+import CopyButton, { type CopyData } from "./CopyButton";
 import GuessTable from "./guess/GuessTable";
 import { Guess } from "./guess/GuessTable";
 
@@ -29,7 +29,7 @@ type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;
   inPersonBody: React.ReactNode;
   remoteBody: React.ReactNode;
-  copyText: string | null;
+  copyText: string | CopyData | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
   interactionMode?: string;

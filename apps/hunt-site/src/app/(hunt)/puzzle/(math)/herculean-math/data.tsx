@@ -56,7 +56,27 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Herculean Math
+
+f(😎,🕶️,∅)=🙂
+f(🍺,∅,🍺)=🍻
+f(🌕,☀️,∅)=🌑
+f(🏝️,🌴,⛱️)=🏖️
+f(🪨,∅,Z)=🗿
+
+g(🪑,🦵)=4
+g(🙂,👁️)=2
+g(🐍,✋)=0
+g(⏱️,#️⃣)=12
+g(🪙,Z)=1
+
+g(X,Z)=9
+f(X,Z,∅)=X
+g(f(X,Z,∅),Z)=10
+f(X,Z,Y)=X
+g(f(X,Z,Y),Z)=8
+
+🔑=Y+X+ f(🐜,🅰️,∅)`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

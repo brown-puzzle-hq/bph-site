@@ -1,51 +1,17 @@
 "use client";
 
 import { Check, Clipboard } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import { cn, renderTableToPlainText } from "~/lib/utils";
+import { type CopyData, useCopyToClipboard } from "~/lib/copy";
+import { cn } from "~/lib/utils";
 
-export default function CopyButton({ copyText }: { copyText: string }) {
-  const isHtml = /<\/?[a-z][\s\S]*>/i.test(copyText);
-  const [didCopy, setDidCopy] = useState(false);
-  const resetTimerRef = useRef<number | null>(null);
+export type { CopyData };
 
-  useEffect(() => {
-    return () => {
-      if (resetTimerRef.current !== null) {
-        window.clearTimeout(resetTimerRef.current);
-      }
-    };
-  }, []);
-
-  async function handleCopy() {
-    try {
-      const plainText = isHtml ? renderTableToPlainText(copyText) : copyText;
-
-      if (isHtml) {
-        const blobHtml = new Blob([copyText], { type: "text/html" });
-        const blobText = new Blob([plainText], { type: "text/plain" });
-        const clipboardItem = new ClipboardItem({
-          "text/html": blobHtml,
-          "text/plain": blobText,
-        });
-        await navigator.clipboard.write([clipboardItem]);
-      } else {
-        await navigator.clipboard.writeText(copyText);
-      }
-
-      setDidCopy(true);
-      if (resetTimerRef.current !== null) {
-        window.clearTimeout(resetTimerRef.current);
-      }
-      resetTimerRef.current = window.setTimeout(() => {
-        setDidCopy(false);
-        resetTimerRef.current = null;
-      }, 1500);
-    } catch (error) {
-      toast.error("Failed to copy. Please try again.");
-    }
-  }
+export default function CopyButton({
+  copyText,
+}: {
+  copyText: string | CopyData;
+}) {
+  const { didCopy, handleCopy } = useCopyToClipboard(copyText);
 
   return (
     <button

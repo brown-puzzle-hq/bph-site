@@ -24,6 +24,7 @@ export default async function AdminNavBar() {
     Graph: "/admin/graph",
     Queries: "/admin/sql",
     Debug: "/admin/debug",
+    Clipboard: "/admin/clipboard-inspector",
   };
 
   const OtherMenuItems = () => (
