@@ -1,6 +1,3 @@
-import { db } from "@/db/index";
-import { eq } from "drizzle-orm";
-import { teams } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import PuzzleListPage from "./components/puzzle-list/PuzzleListPage";
 import { checkPermissions } from "~/lib/server";
@@ -10,7 +7,7 @@ import {
 } from "./components/puzzle-list/puzzle-utils";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { ALL_PUZZLES, ROUNDS } from "~/config/server";
+import { ALL_PUZZLES, META_PUZZLES, ROUNDS } from "~/config/server";
 import { decodeSeen } from "~/lib/utils";
 
 export default async function Home() {
@@ -29,6 +26,7 @@ export default async function Home() {
     // Otherwise, let them see all puzzles and events without answers
     const availableRounds = ROUNDS.map((round) => ({
       name: round.name,
+      id: round.name.toLowerCase().replace(/\s/g, "-"),
       totalPuzzles: round.puzzles.length,
       unlockedPuzzles: round.puzzles.length,
       solvedPuzzles: 0,
@@ -46,7 +44,7 @@ export default async function Home() {
         availableRounds={availableRounds}
         availableEvents={availableEvents}
         availablePuzzles={allPuzzles.map(({ id, name }) => ({ id, name }))}
-        hasFinishedHunt={false}
+        solvedMetas={0}
         hasEventInputBox={false}
       />
     );
@@ -87,6 +85,7 @@ export default async function Home() {
       .filter((index) => seen[index] === "0");
     return {
       name: round.name,
+      id: round.name.toLowerCase().replace(/\s/g, "-"),
       totalPuzzles:
         round.name !== "Backpack" ? round.puzzles.length : unlockedPuzzles,
       unlockedPuzzles,
@@ -95,22 +94,19 @@ export default async function Home() {
     };
   });
 
-  // Check if the user has finished the hunt
-  const finishTime = await db.query.teams.findFirst({
-    columns: { finishTime: true },
-    where: eq(teams.id, teamId),
-  });
-
-  const hasFinishedHunt = !!finishTime?.finishTime;
   const hasEventInputBox =
     interactionMode === "in-person" && currDate < IN_PERSON.END_TIME;
+
+  const solvedMetas = availablePuzzles.filter(
+    (puzzle) => puzzle.answer !== null && META_PUZZLES.includes(puzzle.id),
+  ).length;
 
   return (
     <PuzzleListPage
       availableRounds={availableRounds}
       availableEvents={availableEvents}
       availablePuzzles={availablePuzzles.map(({ id, name }) => ({ id, name }))}
-      hasFinishedHunt={hasFinishedHunt}
+      solvedMetas={solvedMetas}
       hasEventInputBox={hasEventInputBox}
     />
   );

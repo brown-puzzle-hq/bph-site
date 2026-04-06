@@ -4,7 +4,36 @@ import { useEffect, useState } from "react";
 import { getCookie } from "typescript-cookie";
 import { decodeSeen } from "~/lib/utils";
 
-export default function SeenRoundIcon({ monitor }: { monitor: number[] }) {
+export function SeenRoundImageIcon({ monitor }: { monitor: number[] }) {
+  const [isSeen, setIsSeen] = useState(false);
+
+  useEffect(() => {
+    const checkSeen = () => {
+      const seen = decodeSeen(getCookie("seen"));
+      setIsSeen(monitor.every((index) => seen[index] === "1"));
+    };
+
+    checkSeen();
+
+    const handleFocus = () => {
+      checkSeen();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [monitor]);
+
+  if (isSeen) return null;
+
+  return (
+    <img
+      className="absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
+      src="/circle-alert.svg"
+    />
+  );
+}
+
+export function SeenRoundTableIcon({ monitor }: { monitor: number[] }) {
   const [isSeen, setIsSeen] = useState(false);
 
   useEffect(() => {

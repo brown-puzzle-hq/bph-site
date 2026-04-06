@@ -21,6 +21,7 @@ export type Puzzle = {
 
 export type PuzzleListRound = {
   name: string;
+  id: string;
   totalPuzzles: number;
   unlockedPuzzles: number;
   solvedPuzzles: number;
