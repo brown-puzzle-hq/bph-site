@@ -1,3 +1,4 @@
+import { ROUND_BACKGROUND_COLORS } from "~/config/styles";
 import { roundName } from "./data";
 
 export const metadata = {
@@ -7,5 +8,12 @@ export const metadata = {
 export default async function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return (
+    <div
+      className="flex min-h-dvh flex-col"
+      style={{ backgroundColor: ROUND_BACKGROUND_COLORS.backpack }}
+    >
+      {children}
+    </div>
+  );
 }

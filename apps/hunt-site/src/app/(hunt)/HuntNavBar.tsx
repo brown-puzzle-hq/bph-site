@@ -6,6 +6,8 @@ import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import { cn } from "~/lib/utils";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function HuntNavBar() {
   const { data: session } = useSession();
@@ -21,8 +23,12 @@ export function HuntNavBar() {
   const leftMenuItems: MenuItem[] = [
     {
       title: "Home",
-      href: "/",
-      type: "link",
+      element: (
+        <Link href="/" prefetch={false}>
+          <Image src="/favicon.png" alt="Home" width={28} height={28} />
+        </Link>
+      ),
+      type: "element",
     },
     {
       title: "Info",
