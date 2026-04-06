@@ -36,12 +36,16 @@ export default async function Home() {
         .map((puzzle) => ALL_PUZZLES.indexOf(puzzle))
         .filter((index) => seen[index] === "0"),
     }));
-    const availableEvents = await getAvailableEvents();
+    const [availableEvents, allPuzzles] = await Promise.all([
+      getAvailableEvents(),
+      getAvailablePuzzles(),
+    ]);
 
     return (
       <PuzzleListPage
         availableRounds={availableRounds}
         availableEvents={availableEvents}
+        availablePuzzles={allPuzzles.map(({ id, name }) => ({ id, name }))}
         hasFinishedHunt={false}
         hasEventInputBox={false}
       />
@@ -62,8 +66,12 @@ export default async function Home() {
     );
   }
 
-  // Otherwise, display the puzzles unlocked
-  const availablePuzzles = await getAvailablePuzzles(teamId);
+  // Otherwise, display the puzzles unlocked and all events (if in-person)
+  const [availablePuzzles, availableEvents] = await Promise.all([
+    getAvailablePuzzles(teamId),
+    getAvailableEvents(teamId, interactionMode),
+  ]);
+
   const availableRounds = ROUNDS.map((round) => {
     const unlockedList = round.puzzles.filter((puzzle) =>
       availablePuzzles.some((ap) => ap.id === puzzle),
@@ -86,7 +94,6 @@ export default async function Home() {
       monitor,
     };
   });
-  const availableEvents = await getAvailableEvents(teamId, interactionMode);
 
   // Check if the user has finished the hunt
   const finishTime = await db.query.teams.findFirst({
@@ -102,6 +109,7 @@ export default async function Home() {
     <PuzzleListPage
       availableRounds={availableRounds}
       availableEvents={availableEvents}
+      availablePuzzles={availablePuzzles.map(({ id, name }) => ({ id, name }))}
       hasFinishedHunt={hasFinishedHunt}
       hasEventInputBox={hasEventInputBox}
     />

@@ -1,25 +1,12 @@
 import { db } from "@/db/index";
 import { eq, inArray } from "drizzle-orm";
 import { puzzles, unlocks, solves, answerTokens } from "~/server/db/schema";
-import { ROUNDS, INITIAL_PUZZLES } from "@/config/server";
+import { INITIAL_PUZZLES } from "@/config/server";
+import type { AvailablePuzzle, AvailableEvent } from "./types";
 
-export type AvailablePuzzle = {
-  unlockTime: Date | null;
-  id: string;
-  name: string;
-  answer: string | null;
-};
-
-export type AvailableEvent = {
-  id: string;
-  name: string;
-  answer: string | null;
-  spent: boolean;
-  description: string;
-  startTime: string;
-};
-
-export async function getAvailablePuzzles(teamId?: string) {
+export async function getAvailablePuzzles(
+  teamId?: string,
+): Promise<AvailablePuzzle[]> {
   let availablePuzzles: AvailablePuzzle[] = [];
 
   // If no teamId, assume post-hunt view (all puzzles, no answers)
@@ -71,7 +58,7 @@ export async function getAvailablePuzzles(teamId?: string) {
 export async function getAvailableEvents(
   teamId?: string,
   interactionMode?: string,
-) {
+): Promise<AvailableEvent[]> {
   if (teamId !== undefined && interactionMode === "remote") return [];
 
   // TODO: not a great way to order events

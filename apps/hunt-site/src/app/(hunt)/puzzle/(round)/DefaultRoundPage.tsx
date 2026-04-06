@@ -6,10 +6,8 @@ import { type StaticImageData } from "next/image";
 import type { CSSProperties } from "react";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import { checkPermissions } from "~/lib/server";
-import {
-  type AvailablePuzzle,
-  getAvailablePuzzles,
-} from "@/puzzle/components/puzzle-list/puzzle-utils";
+import { getAvailablePuzzles } from "@/puzzle/components/puzzle-list/puzzle-utils";
+import type { AvailablePuzzle } from "@/puzzle/components/puzzle-list/types";
 import { notFound } from "next/navigation";
 import { ROUNDS, ALL_PUZZLES } from "~/config/server";
 import Link from "next/link";

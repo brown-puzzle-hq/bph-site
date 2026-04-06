@@ -1,20 +1,14 @@
 import EventTable from "./event/EventTable";
-import { AvailableEvent } from "./puzzle-utils";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import SeenRoundIcon from "./SeenRoundIcon";
-
-type PuzzleListRound = {
-  name: string;
-  totalPuzzles: number;
-  unlockedPuzzles: number;
-  solvedPuzzles: number;
-  monitor: number[]; // Indices of puzzles to monitor for "seen" status
-};
+import PuzzleSearch from "./PuzzleSearch";
+import type { Puzzle, PuzzleListRound, AvailableEvent } from "./types";
 
 type PuzzleListPageProps = {
   availableRounds: PuzzleListRound[];
   availableEvents: AvailableEvent[];
+  availablePuzzles: Puzzle[];
   hasFinishedHunt: boolean;
   hasEventInputBox: boolean;
 };
@@ -22,11 +16,16 @@ type PuzzleListPageProps = {
 export default function PuzzleListPage({
   availableRounds,
   availableEvents,
+  availablePuzzles,
   hasFinishedHunt,
   hasEventInputBox,
 }: PuzzleListPageProps) {
   return (
     <div className="mx-auto mb-12 w-full max-w-3xl px-4 pt-6">
+      {/* Search bar */}
+      {availablePuzzles.length > 0 && (
+        <PuzzleSearch puzzles={availablePuzzles} />
+      )}
       {/* Puzzle table */}
       <h1 className="mb-2 text-center">Rounds</h1>
       <div className="overflow-hidden rounded-b-md text-sm font-medium">
