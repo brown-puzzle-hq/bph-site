@@ -194,11 +194,11 @@ export default function EmbeddingsMachine() {
 
         <div className="mt-4 flex flex-1 flex-col justify-end">
           <div
-            className={`rounded-lg ${result === null || "border border-white/50"} min-h-[3rem] px-4 py-3 font-mono`}
+            className={`rounded-lg ${(result === null && error === null) || "border border-white/80"} min-h-[3rem] px-4 py-3 font-mono`}
           >
             {result ??
               (error ? (
-                <span className="text-sm text-red-600">{error}</span>
+                <span className="text-sm text-red-300">{error}</span>
               ) : null)}
           </div>
         </div>
