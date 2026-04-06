@@ -17,7 +17,7 @@ export default function PuzzleBody({
         <Game
           key={i}
           {...game}
-          unmetThreshold={thresholds[i]}
+          unmetThreshold={thresholds[i] ?? null}
           isFocused={focusedIndex === i}
           onFocus={() => setFocusedIndex(i)}
           onBlur={() => setFocusedIndex(null)}

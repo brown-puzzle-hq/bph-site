@@ -28,7 +28,7 @@ type GameFocus = {
 
 type UnlockProps = {
   /** If non-null, the client will submit exactly when `moveCount === unmetThreshold`. */
-  unmetThreshold?: number | null;
+  unmetThreshold: number | null;
 };
 
 export default function Game({
@@ -41,7 +41,7 @@ export default function Game({
   startSquare,
   guardStartSquare,
   gameIndex,
-  unmetThreshold: unmetThresholdProp,
+  unmetThreshold,
   isFocused,
   onFocus,
   onBlur,
@@ -52,10 +52,6 @@ export default function Game({
   const [gameOver, setGameOver] = useState(false);
   const [isEatPending, setIsEatPending] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
-  const [unmetThreshold, setUnmetThreshold] = useState<number | null>(
-    unmetThresholdProp ?? null,
-  );
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const movesRef = useRef<Move[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -156,18 +152,9 @@ export default function Game({
   useEffect(() => {
     if (unmetThreshold === null) return;
     if (moveCount !== unmetThreshold) return;
-    if (isSubmitting) return;
     if (movesRef.current.length !== moveCount) return;
-
-    setIsSubmitting(true);
-    void submitThreshold(gameIndex, movesRef.current.slice(0, moveCount))
-      .then(({ result }) => {
-        if (result === "unlocked" || result === "alreadyUnlocked") {
-          setUnmetThreshold(null);
-        }
-      })
-      .finally(() => setIsSubmitting(false));
-  }, [unmetThreshold, moveCount, isSubmitting, gameIndex]);
+    submitThreshold(gameIndex, movesRef.current.slice(0, moveCount));
+  }, [unmetThreshold, moveCount, gameIndex]);
 
   useEffect(() => {
     if (gameOver) {

@@ -53,6 +53,7 @@ export async function submitThreshold(
   moves: Move[],
 ): Promise<{ result: SubmitThresholdResult }> {
   const { id: teamId } = await assertPermissions({ level: "userAny" });
+  revalidatePath(`/puzzle/${puzzleId}`);
 
   const threshold = ONE_GUARD_THRESHOLDS[gameIndex];
   if (threshold === undefined) return { result: "notEligible" };
@@ -108,7 +109,6 @@ export async function submitThreshold(
   const unlocked = inserted.length > 0;
   if (!unlocked) return { result: "alreadyUnlocked" };
 
-  revalidatePath(`/puzzle/${puzzleId}`);
   await sendToWebsocketServer(teamId, {
     type: "Toast",
     title: "One Guard, No Doors",
