@@ -1,3 +1,9 @@
+import dynamic from "next/dynamic";
+
+const EmbeddingsMachine = dynamic(() => import("./EmbeddingsMachine"), {
+  ssr: false,
+});
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -12,9 +18,7 @@ export const puzzleId = "embeddings";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4 space-y-4">
-      <b>This puzzle is not yet on our website. See Arnav to do it.</b>
-    </div>
+    <EmbeddingsMachine />
   </div>
 );
 
