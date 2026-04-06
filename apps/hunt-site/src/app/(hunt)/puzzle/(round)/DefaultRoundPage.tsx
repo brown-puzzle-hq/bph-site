@@ -184,7 +184,7 @@ export default async function DefaultRoundPage({
         {/* Back to main page */}
         <Link
           href={"/puzzle"}
-          className="fixed left-4 top-[72px] flex items-center space-x-0.5 rounded-md bg-black p-1 sm:pr-2"
+          className="fixed left-4 top-[72px] z-10 flex items-center space-x-0.5 rounded-md bg-black p-1 sm:pr-2"
         >
           <ChevronsLeft className="size-6 fill-white" />
           <p className="hidden font-semibold sm:block">Rounds</p>
