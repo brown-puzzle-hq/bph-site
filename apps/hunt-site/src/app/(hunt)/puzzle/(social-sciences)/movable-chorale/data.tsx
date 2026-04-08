@@ -40,6 +40,7 @@ export const inPersonBody = (
       <li>Blake and Casey read in different clefs.</li>
       <li>The missing key signature has no sharps.</li>
       <li>Exactly three letter names are sung in total.</li>
+      <li>None of the letter names require sharps or flats.</li>
     </ul>
   </div>
 );
