@@ -19,19 +19,22 @@ export const puzzleId = "rabbit-konundrum";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div>
-    <div className="max-w-3xl space-y-6">
+  <div className="max-w-3xl space-y-4">
+    <div className="text-center">
       <b>
         This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
         up.
       </b>
     </div>
+    <div>
+      Please read the GENERAL INSTRUCTIONS before any of the other instructions.
+    </div>
   </div>
 );
 
 export const remoteBody = (
-  <div>
-    <div className="max-w-3xl space-y-6">
+  <div className="max-w-3xl space-y-4 text-center">
+    <div>
       <b>
         This was a physical puzzle. In addition to the plush rabbits (below),
         solvers received a series of documents, which you can access{" "}

@@ -21,14 +21,13 @@ export const inPersonBody = (
         the Department rounds in order to solve it.
       </b>
     </div>
-    <div className="mb-4 space-y-4">
-      <p>
-        <i>What kind of test are you taking?</i>
-      </p>
-      <p>
-        (We suggest using Wikipedia as your canonical source. Each circle
-        represents one word.)
-      </p>
+    <div className="mb-4">The format of the bar exam has changed.</div>
+    <div className="mb-4">
+      <i>What kind of test are you taking?</i>
+    </div>
+    <div className="mb-4">
+      (We suggest using Wikipedia as your canonical source. Each circle
+      represents one word.)
     </div>
     <div className="mb-4 flex justify-center">
       <Image src={barExam} alt="Bar Exam" width={500} />

@@ -22,6 +22,24 @@ export const puzzleId = "disguised-financial-crimes";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
+  <div className="max-w-3xl space-y-4">
+    <div className="text-center">
+      <b>
+        This puzzle can be found on the 3rd floor of Page-Robinson Hall. If you
+        are a non-Brown team whose solving room is not located in this building,
+        please call us to get access.
+      </b>
+    </div>
+    <div className="mb-4">
+      <i>
+        You and your partner, Detective Rolfsen, have finally unknotted the
+        whole conspiracy: APMA-Econ majors are lizards in disguise.
+      </i>
+    </div>
+  </div>
+);
+
+export const remoteBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
       <i>
@@ -61,8 +79,6 @@ export const inPersonBody = (
     </div>
   </div>
 );
-
-export const remoteBody = inPersonBody;
 
 /**
  * The `solutionBody` renders in the solution page.

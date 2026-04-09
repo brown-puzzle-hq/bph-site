@@ -11,29 +11,14 @@ export const puzzleId = "sunk-modern-naval-investigative-methodology";
  * and interactive puzzle components here.
  */
 export const inPersonBody = (
-  <div className="max-w-3xl space-y-6">
-    <div className="italic">
+  <div className="max-w-3xl">
+    <div className="mb-4 italic">
       To prevent expensive boats from hitting and damaging each other when they
       are docked, sailors put fenders in between the boats. For the purposes of
       this puzzle, people never put fenders diagonally.
     </div>
-    <div className="italic">
-      Also I want you to know two things about sailing that truly have nothing
-      to do with this puzzle:
-      <ol className="list-inside">
-        <li>
-          They are not 'ropes' on a boat, they are 'lines.' (So the answer to
-          "How many ropes are there on this boat?" is always zero because they
-          are lines.)
-        </li>
-        <li>
-          Technically, the 'pier' is the physical structure that you walk on to
-          get to the boat, and the 'dock' is the water surrounding the pier.
-        </li>
-      </ol>
-    </div>
 
-    <table className="mx-auto border border-black text-center">
+    <table className="mx-auto mb-4 border border-black text-center">
       <tbody>
         <tr>
           <td className="border px-3 py-1">I</td>
@@ -167,37 +152,55 @@ export const inPersonBody = (
       </tbody>
     </table>
 
-    <div>Hits:</div>
+    <div className="mb-4">
+      Hits:
+      <ul className="ml-6 list-disc">
+        <li>Patrol Boat, B2</li>
+        <li>Submarine, B4</li>
+        <li>Destroyer, B9</li>
+        <li>Battleship, E7</li>
+        <li>Submarine, F2</li>
+        <li>Aircraft Carrier, F9</li>
+        <li>Patrol Boat, H6</li>
+        <li>Destroyer, I4</li>
+      </ul>
+    </div>
 
-    <ul className="ml-6 list-disc">
-      <li>Patrol Boat, B2</li>
-      <li>Submarine, B4</li>
-      <li>Destroyer, B9</li>
-      <li>Battleship, E7</li>
-      <li>Submarine, F2</li>
-      <li>Aircraft Carrier, F9</li>
-      <li>Patrol Boat, H6</li>
-      <li>Destroyer, I4</li>
-    </ul>
+    <div className="mb-4">
+      Misses:
+      <ul className="ml-6 list-disc">
+        <li>A2</li>
+        <li>A4</li>
+        <li>A9</li>
+        <li>D9</li>
+        <li>E8</li>
+        <li>F3</li>
+        <li>F7</li>
+        <li>G2</li>
+        <li>H7</li>
+        <li>I2</li>
+        <li>I5</li>
+        <li>I6</li>
+        <li>J4</li>
+        <li>J9</li>
+      </ul>
+    </div>
 
-    <div>Misses:</div>
-
-    <ul className="ml-6 list-disc">
-      <li>A2</li>
-      <li>A4</li>
-      <li>A9</li>
-      <li>D9</li>
-      <li>E8</li>
-      <li>F3</li>
-      <li>F7</li>
-      <li>G2</li>
-      <li>H7</li>
-      <li>I2</li>
-      <li>I5</li>
-      <li>I6</li>
-      <li>J4</li>
-      <li>J9</li>
-    </ul>
+    <div className="italic">
+      Also I want you to know two things about sailing that truly have nothing
+      to do with this puzzle:
+      <ol className="list-inside">
+        <li>
+          They are not 'ropes' on a boat, they are 'lines.' (So the answer to
+          "How many ropes are there on this boat?" is always zero because they
+          are lines.)
+        </li>
+        <li>
+          Technically, the 'pier' is the physical structure that you walk on to
+          get to the boat, and the 'dock' is the water surrounding the pier.
+        </li>
+      </ol>
+    </div>
   </div>
 );
 

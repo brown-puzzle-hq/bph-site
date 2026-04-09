@@ -1,5 +1,11 @@
 import Image from "next/image";
-import thermodynamicZoology from "./thermodynamic-zoology.png";
+import image1 from "./images/image1.png";
+import image2 from "./images/image2.png";
+import image3 from "./images/image3.png";
+import image4 from "./images/image4.png";
+import image5 from "./images/image5.png";
+import image6 from "./images/image6.png";
+import image7 from "./images/image7.png";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -21,22 +27,23 @@ export const inPersonBody = (
         the Department rounds in order to solve it.
       </b>
     </div>
-    <div className="mb-4 space-y-4">
-      <p>
-        You keep all your animals in temperature-controlled environments, but
-        they've all escaped! Thankfully, they're all the same size, so they
-        shouldn't be too hard to find...
-      </p>
+    <div className="mb-4">
+      Even though your animals are the same size, they've all been complaining
+      about the heat.
     </div>
     <div className="mb-4">
-      <i>What is left?</i>
+      <i>Who could help them out?</i>
     </div>
-    <div className="mb-4 flex justify-center">
-      <Image
-        src={thermodynamicZoology}
-        alt="Thermodynamic Zoology"
-        height={500}
-      />
+    <div className="flex justify-center">
+      <div className="mb-4 grid grid-cols-1 content-center">
+        <Image src={image1} alt="Thermodynamic Zoology" height={100} />
+        <Image src={image2} alt="Thermodynamic Zoology" height={100} />
+        <Image src={image3} alt="Thermodynamic Zoology" height={100} />
+        <Image src={image4} alt="Thermodynamic Zoology" height={100} />
+        <Image src={image5} alt="Thermodynamic Zoology" height={100} />
+        <Image src={image6} alt="Thermodynamic Zoology" height={100} />
+        <Image src={image7} alt="Thermodynamic Zoology" height={100} />
+      </div>
     </div>
     <hr />
     <div className="mt-4 max-w-3xl space-y-4 pb-4">
