@@ -27,7 +27,7 @@ export const puzzleId = "dirt";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-10">
+    <div className="mb-4 text-center">
       <b>
         This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
         up.
@@ -57,7 +57,7 @@ export const inPersonBody = (
 
 export const remoteBody = (
   <div className="max-w-3xl">
-    <div className="mb-10">
+    <div className="mb-4 text-center">
       <b>
         This was a physical puzzle. In addition to the information below,
         solvers received 10 bags of dirt:

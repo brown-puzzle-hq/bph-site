@@ -34,11 +34,7 @@ type WebSocketContextValue = {
   readyState: number | null;
   role: "leader" | "follower" | "worker" | "none";
   teamId: string | null;
-  transport:
-    | "shared-worker"
-    | "leader-election"
-    | "leader-web-lock"
-    | null;
+  transport: "shared-worker" | "leader-election" | "leader-web-lock" | null;
 };
 
 export const WebSocketContext = createContext<WebSocketContextValue | null>(

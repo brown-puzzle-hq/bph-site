@@ -211,10 +211,13 @@ function makeFills(
 
 const fillsDef = makeFills(GRID_ROWS, GRID_COLS, rebusCells);
 const extracted = extractClues(gridDef);
+const displayedAcross = extracted.across.filter(
+  (clue) => !(clue.answerLength === 1),
+);
 const displayedDown = extracted.down.filter(
   (clue) => !(clue.answerLength === 1),
 );
-
+// DO NOT USE THE ANSWERS TO CONSTRUCT SOLUTION!! they are not up to date
 export const acrossClues: Record<number, string> = {
   1: "Get dry and wrinkly",
   8: "Voice below soprano",
@@ -233,19 +236,19 @@ export const acrossClues: Record<number, string> = {
   36: "Nike competitor",
   38: "Angkor Wat locale",
   39: "Ignited again",
-  40: "Yes, in Guadalajara",
+  40: '"What\'s up?"',
   41: "CEO's degree, often",
   42: "One leading a D&D session",
-  43: "Grammy winner Keys",
+  43: "One is a Cooper, one is a Walker, and one is in chains",
   45: "Poseidon's domain",
   46: "Someone in the UK's House of Commons",
   48: "Suffix with ball or bass",
   49: "Ginger ___",
   51: "Antlered animal",
-  53: "Providence-to-Worcester dir.",
+  53: "Designation as a key wildlife site in the UK",
   54: "Compelled",
   57: "Grazing area",
-  58: "Day, in Rotterdam",
+  58: "Curtsy, in Gdansk",
   60: "Household skills class, for short",
   61: "Evel Knievel, e.g.",
   65: "A town in ancient Thrace, or most of a prefix meaning bird",
@@ -271,15 +274,15 @@ export const acrossClues: Record<number, string> = {
 
 export const downClues: Record<number, string> = {
   1: "Antimony's uninferrable chemical symbol",
-  2: "Assassination, or adlib for Playboi Carti",
+  2: "Assassination, or ad lib for Playboi Carti",
   3: "Currency of 38A",
   4: '"Let ___!" ("Go ahead!")',
   5: "Inoculation",
   6: "Greek war goddess",
-  7: '"_ and behold!"',
+  7: '"___ and behold!"',
   8: "Home of the Hawks",
   9: 'Elizabeth who played the title role in Lifetime\'s "You"',
-  10: "Trityl chloride, abbr.",
+  10: "Abbeviation for trityl chloride",
   11: "First black NHL player",
   14: '"Whichever," phrase meaning something is not special',
   15: "Abbr. for the currency of India",
@@ -295,15 +298,15 @@ export const downClues: Record<number, string> = {
   34: "Flow back",
   35: "Mover's form for the USPS",
   37: 'Pickles on "Rugrats"',
-  38: "Espionage org.",
-  40: "Periodic oscillation that is not cos",
+  38: "Gov. of the Separatist movement in Star Wars",
+  40: "Shakespeare work of 1599",
   44: "Sentenced to a punishment",
   45: "A fortunate package, for the unemployed",
   46: "Blend",
-  47: '"the magic word"',
+  47: '"The magic word"',
   49: "___/ace",
   50: "C10H16, a terpene found in citrus rinds",
-  52: "Pejorative for loudly unsatisfied customer",
+  52: "Pejorative for a loudly unsatisfied customer",
   54: "Baseball player who only plays offense",
   55: "Friend of meeny, miny, and moe",
   56: "Law enforcement agency of the Navy",
@@ -329,7 +332,7 @@ export const downClues: Record<number, string> = {
   87: "Nittany Lions' sch.",
   89: "Govt.-issued ID",
   90: "Alternative to the ACT",
-  92: "_ Manchu, title character of 5 Christopher Lee films",
+  92: "___ Manchu, title character of 5 Christopher Lee films",
   94: "How some boxing matches end",
 };
 
@@ -464,13 +467,11 @@ export const inPersonBody = (
   <div>
     <div className="w-full space-y-4 text-center">
       <i>
-        Something is hidden episodically in this grid... <br />
-        2-16, 4-11, 3-10 [S], 1-6, 3-10 [D], 3-10 [A], 3-2, 2-6, 1-7, 6-16, 1-6,
-        7-8, 1-8
+        Something is hidden episodically in this grid...
+        <br />
       </i>
-    </div>
-    <div className="max-w-3xl space-y-4 text-center">
-      <b>Crossoverword</b>
+      2-16, 4-11, 3-10 [S], 1-6, 3-10 [D], 3-10 [A], 3-2, 2-6, 1-7, 6-16, 1-6,
+      7-8, 1-8
     </div>
 
     <div className="mx-auto flex flex-col items-start justify-center gap-4 md:flex-row md:gap-8">
@@ -499,7 +500,7 @@ export const inPersonBody = (
 
       <CrosswordCluesClient
         puzzleId={puzzleId}
-        across={extracted.across}
+        across={displayedAcross}
         down={displayedDown}
         acrossClues={acrossClues}
         downClues={downClues}

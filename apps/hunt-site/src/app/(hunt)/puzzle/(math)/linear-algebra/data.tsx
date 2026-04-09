@@ -41,7 +41,7 @@ export const inPersonBody = (
         As for my mother, she's a musician. My grandmother says it was meant to
         be, as she had been listening to A Night at the Opera nonstop just weeks
         before my mom was born. And then there was me, joining the family the
-        same number of days after the New Year as the age gap between my
+        same number of days after New Year's day as the age gap between my
         parents.
         <br />
         <br />

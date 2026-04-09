@@ -14,61 +14,68 @@ export const puzzleId = "pageant-problems";
  * The body renders above the guess submission form. Put flavor text, images,
  * and interactive puzzle components here.
  */
+const body = (
+  <div className="mb-4">
+    <p>
+      In this pageant, four competitors are competing in two races: STYLE and
+      VERVE. The people have voted -- now we need to count the ballots.
+    </p>
+    <p>The election works by Single Transferable Vote:</p>
+    <ul className="mx-4 my-4 list-inside">
+      <li>
+        Ineligible votes are automatically transferred before any other
+        calculations.
+      </li>
+      <li>
+        The threshold for winning is floor(n/2)+1, where n is the number of
+        remaining voters.
+      </li>
+      <li>
+        If no candidate meets the threshold for winning, move the 1st place
+        votes for the lowest candidate(s) to their next eligible options
+        simultaneously.
+      </li>
+      <li>
+        If a voter runs out of eligible preferences, they no longer count
+        against the threshold for winning, and their vote is cast for no-one.
+      </li>
+    </ul>
+    <p>
+      A vote for a candidate is only eligible if it is a large hole that punches
+      out all four corners of the rectangle.
+    </p>
+    <p>
+      Who wins for STYLE? Who wins for VERVE? (Submit your answer in the form
+      "WINNER 1 AND WINNER 2".)
+    </p>
+  </div>
+);
+
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
+    <div className="mb-4 text-center">
       <b>
         This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
         up.
       </b>
     </div>
+    {body}
   </div>
 );
 
 export const remoteBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
+    <div className="mb-4 text-center">
       <b>
         This was a physical puzzle. In addition to the information below,
         solvers received the following paper ballots:
       </b>
-      <div className="mb-4 mt-4 grid grid-cols-2 gap-4">
-        <Image src={style} alt="" />
-        <Image src={verve} alt="" />
-      </div>
-      <p>
-        In this pageant, four competitors are competing in two races: STYLE and
-        VERVE. The people have voted -- now we need to count the ballots.
-      </p>
-      <p>The election works by Single Transferable Vote:</p>
-      <ul className="mx-4 my-4 list-inside">
-        <li>
-          Ineligible votes are automatically transferred before any other
-          calculations.
-        </li>
-        <li>
-          The threshold for winning is floor(n/2)+1, where n is the number of
-          remaining voters.
-        </li>
-        <li>
-          If no candidate meets the threshold for winning, move the 1st place
-          votes for the lowest candidate(s) to their next eligible options
-          simultaneously.
-        </li>
-        <li>
-          If a voter runs out of eligible preferences, they no longer count
-          against the threshold for winning, and their vote is cast for no-one.
-        </li>
-      </ul>
-      <p>
-        A vote for a candidate is only eligible if it is a large hole that
-        punches out all four corners of the rectangle.
-      </p>
-      <p>
-        Who wins for STYLE? Who wins for VERVE? (Submit your answer in the form
-        "WINNER 1 AND WINNER 2".)
-      </p>
     </div>
+    <div className="mb-4 mt-4 grid grid-cols-2 gap-4">
+      <Image src={style} alt="" />
+      <Image src={verve} alt="" />
+    </div>
+    {body}
   </div>
 );
 
@@ -95,7 +102,7 @@ export const copyText = null;
  * be in all caps, no spaces.
  */
 export const partialSolutions: Record<string, string> = {
-  PRETTYANDTOYNBEE: "Oh no! Scandal! There's going to have to be a recount...",
+  TOYNBEEANDPRETTY: "Oh no! Scandal! There's going to have to be a recount...",
 };
 
 /**
@@ -103,7 +110,7 @@ export const partialSolutions: Record<string, string> = {
  * more content will be added to the puzzle body. Keys must be in all caps, no spaces.
  */
 export const tasks: Record<string, JSX.Element> = {
-  PRETTYANDTOYNBEE: (
+  TOYNBEEANDPRETTY: (
     <div className="max-w-3xl space-y-6">
       <div>
         Oh no! Scandal! There's going to be a recount, and a number of

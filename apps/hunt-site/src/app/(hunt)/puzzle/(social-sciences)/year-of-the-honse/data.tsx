@@ -19,12 +19,17 @@ export const inPersonBody = (
       </i>
     </div>
     <ul className="list-inside list-disc">
-      <li>The Sopranos actor Pony Sirico is born.</li>
+      <li>Degussa moves gold foal production to Hanau, Germany.</li>
+      <li>Francis Peyton Rous wins a Nobel Prize for his canter research.</li>
+      <li>GAIT Newspaper covers the influenza pandemic.</li>
+      <li>Hay-Z fights Solange Knowles in an elevator.</li>
       <li>
         Reginald Fessenden broadcasts the first radio program during Muletide.
       </li>
-      <li>Degussa moves gold foal production to Hanau, Germany.</li>
-      <li>Hay-Z fights Solange Knowles in an elevator.</li>
+      <li>The album Dana Mane 4 Ever is released.</li>
+      <li>The Sopranos actor Pony Sirico is born.</li>
+      <li>The White Honse signs the Homeland Security Act.</li>
+      <li>West Berlin introduces a colt of arms.</li>
       <li>
         "We've no use talking like this. You won't know what I mean. Only, it's
         been a long while since we enlisted out of this classroom. So long, I
@@ -40,11 +45,6 @@ export const inPersonBody = (
         tomorrow. I've got four days mare, but I can't stand it here! I'll go
         back tomorrow! I'm sorry." —Paul Bäumer
       </li>
-      <li>The White Honse signs the Homeland Security Act.</li>
-      <li>West Berlin introduces a colt of arms.</li>
-      <li>GAIT Newspaper covers the influenza pandemic.</li>
-      <li>Francis Peyton Rous wins a Nobel Prize for his canter research.</li>
-      <li>The album Dana Mane 4 Ever is released.</li>
     </ul>
   </div>
 );

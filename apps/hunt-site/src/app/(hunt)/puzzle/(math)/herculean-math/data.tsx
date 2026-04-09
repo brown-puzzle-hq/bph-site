@@ -13,28 +13,28 @@ export const puzzleId = "herculean-math";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4">
-      <p>f(😎,🕶️,∅)=🙂</p>
-      <p>f(🍺,∅,🍺)=🍻</p>
-      <p>f(🌕,☀️,∅)=🌑</p>
-      <p>f(🏝️,🌴,⛱️)=🏖️</p>
-      <p>f(🪨,∅,Z)=🗿</p>
+      <p>f(😎, 🕶️, ∅) = 🙂</p>
+      <p>f(🍺, ∅, 🍺) = 🍻</p>
+      <p>f(🌕, ☀️, ∅) = 🌑</p>
+      <p>f(🏝️, 🌴, ⛱️) = 🏖️</p>
+      <p>f(🪨, ∅, Z) = 🗿</p>
     </div>
     <div className="mb-4">
-      <p>g(🪑,🦵)=4</p>
-      <p>g(🙂,👁️)=2</p>
-      <p>g(🐍,✋)=0</p>
-      <p>g(⏱️,#️⃣)=12</p>
-      <p>g(🪙,Z)=1</p>
+      <p>g(🪑, 🦵) = 4</p>
+      <p>g(🙂, 👁️) = 2</p>
+      <p>g(🐍, ✋) = 0</p>
+      <p>g(⏱️, #️⃣) = 12</p>
+      <p>g(🪙, Z) = 1</p>
     </div>
     <div className="mb-4">
-      <p>g(X,Z)=9</p>
-      <p>f(X,Z,∅)=X</p>
-      <p>g(f(X,Z,∅),Z)=10</p>
-      <p>f(X,Z,Y)=X</p>
-      <p>g(f(X,Z,Y),Z)=8</p>
+      <p>g(X, Z) = 9</p>
+      <p>f(X, Z, ∅) = X</p>
+      <p>g(f(X, Z, ∅), Z) = 10</p>
+      <p>f(X, Z, Y) = X</p>
+      <p>g(f(X, Z, Y), Z) = 8</p>
     </div>
     <div className="mb-4">
-      <p>🔑=Y+X+ f(🐜,🅰️,∅)</p>
+      <p>🔑 = Y + X + f(🐜, 🅰️, ∅)</p>
     </div>
   </div>
 );

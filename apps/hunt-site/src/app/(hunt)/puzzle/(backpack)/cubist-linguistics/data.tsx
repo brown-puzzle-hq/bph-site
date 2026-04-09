@@ -35,9 +35,7 @@ const GRID3: string[][] = [
   ["grn", "grn", "grn", "grn"],
 ];
 
-const GRID4: string[][] = [["blk", "blk", "blk", "blk"]];
-
-const GRID5: string[][] = [
+const GRID4: string[][] = [
   ["gry", "gry", "gry", "gry"],
   ["gry", "grn", "gry", "grn"],
   ["grn", "grn", "gry", "gry"],
@@ -85,8 +83,8 @@ export const inPersonBody = (
       <ColorGrid grid={GRID1} />
       <ColorGrid grid={GRID2} />
       <ColorGrid grid={GRID3} />
+      <div className="text-6xl">↓</div>
       <ColorGrid grid={GRID4} />
-      <ColorGrid grid={GRID5} />
     </div>
     <hr />
     <div className="mt-4 max-w-3xl space-y-4 pb-4">

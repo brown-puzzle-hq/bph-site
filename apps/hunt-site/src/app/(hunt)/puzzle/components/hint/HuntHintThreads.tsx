@@ -353,8 +353,8 @@ export default function HuntHintThreads({
           );
         })() && (
           <p className="mt-2 text-white/70">
-            <span className="font-semibold">Sabbatical:</span> hint answers
-            will be delayed until 9 AM EST.
+            <span className="font-semibold">Sabbatical:</span> hint answers will
+            be delayed until 9 AM EST.
           </p>
         )}
       </div>

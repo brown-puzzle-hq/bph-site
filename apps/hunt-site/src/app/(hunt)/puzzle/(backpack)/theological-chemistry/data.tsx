@@ -27,7 +27,7 @@ export const inPersonBody = (
     <div className="mb-4 max-w-3xl text-center">
       <i>How should you bond the different religious branches together?</i>
     </div>
-    <div className="mb-4 max-w-3xl">
+    <div className="mb-4 flex justify-center">
       <Image
         src={theologicalChemistry}
         alt="Theological Chemistry"
