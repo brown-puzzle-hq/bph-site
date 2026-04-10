@@ -276,7 +276,8 @@ export default function Page() {
                 When you need to move between buildings, you will need to show
                 your wristband to a BPH staff member to gain access to
                 card-restricted buildings. BPH members will be on call all
-                weekend (sans quiet hours) to facilitate this.
+                weekend (sans quiet hours) to facilitate this; if you are locked
+                out, please call us at (513) 667-0838.
               </p>
               <p>
                 We acknowledge that many community members may be uncomfortable

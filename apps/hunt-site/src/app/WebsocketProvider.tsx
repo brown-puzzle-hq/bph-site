@@ -173,6 +173,10 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         case "FinishedHunt":
           toast("Hunt finished. Congratulations!", {
             icon: <Trophy className="size-[18px]" />,
+            description:
+              session?.user.interactionMode === "in-person"
+                ? "We will call you to schedule runaround shortly! If we are on sabbatical (Quiet Hours), email us!"
+                : "Keep an eye on your email for a feedback form!",
           });
           break;
 
