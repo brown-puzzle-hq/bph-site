@@ -104,3 +104,9 @@ export const tasks: Record<string, JSX.Element> = {
     </div>
   ),
 };
+
+/**
+ * Specifically for The Rabbit 'Nundrum, remoteTasks will be displayed instead of tasks
+ * for remote teams. Make sure the keys match!
+ */
+export const remoteTasks = tasks;
