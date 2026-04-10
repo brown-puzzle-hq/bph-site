@@ -125,9 +125,10 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
+      const { confirmPassword, members, ...teamData } = data;
       const { error } = await insertTeam({
-        ...data,
-        members: serializeMembers(data.members),
+        ...teamData,
+        members: serializeMembers(members),
       });
 
       if (error) {
