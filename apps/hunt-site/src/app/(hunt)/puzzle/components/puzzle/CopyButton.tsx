@@ -18,22 +18,26 @@ export default function CopyButton({
       className="relative size-10 rounded-full bg-black/50 shadow-md shadow-black hover:opacity-90"
       onClick={handleCopy}
     >
-      <span
-        className={cn(
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200",
-          didCopy && "scale-90 opacity-0",
-        )}
-      >
-        <Clipboard />
-      </span>
-      <span
-        className={cn(
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pt-1 transition-all duration-200",
-          !didCopy && "scale-90 opacity-0",
-        )}
-      >
-        <Check />
-      </span>
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <span
+          className={cn(
+            "transition-all duration-200",
+            didCopy && "scale-90 opacity-0",
+          )}
+        >
+          <Clipboard />
+        </span>
+      </div>
+      <div className="absolute left-1/2 top-1/2 mt-0.5 -translate-x-1/2 -translate-y-1/2">
+        <span
+          className={cn(
+            "transition-all duration-200",
+            !didCopy && "scale-90 opacity-0",
+          )}
+        >
+          <Check />
+        </span>
+      </div>
     </button>
   );
 }

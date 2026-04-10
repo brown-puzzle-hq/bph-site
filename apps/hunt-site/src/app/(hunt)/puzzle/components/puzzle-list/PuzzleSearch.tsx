@@ -13,7 +13,7 @@ export default function PuzzleSearch({ puzzles }: { puzzles: Puzzle[] }) {
     : [];
 
   return (
-    <div className="fixed left-4 right-4 top-[72px] z-10 sm:max-w-[325px]">
+    <div className="fixed left-4 right-4 top-[52px] z-10 sm:max-w-[325px]">
       <div className="relative space-y-1">
         <div className="flex w-full justify-between rounded-md bg-black p-2 pl-3">
           <input

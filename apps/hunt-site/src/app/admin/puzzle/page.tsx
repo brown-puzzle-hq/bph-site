@@ -106,7 +106,7 @@ export default async function Page() {
       <div className="overflow-y-auto rounded-md px-4">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-inherit">
+            <TableRow className="transition-none hover:bg-inherit">
               <TableHead className="w-fit py-0">Round</TableHead>
               <TableHead className="w-1/6 min-w-56 py-0">Name</TableHead>
               <TableHead className="w-10 break-all py-0">Answer</TableHead>
@@ -131,7 +131,10 @@ export default async function Page() {
                   puzzleA.name.localeCompare(puzzleB.name),
                 )
                 .map((puzzle) => (
-                  <TableRow key={puzzle.id} className="hover:bg-inherit">
+                  <TableRow
+                    key={puzzle.id}
+                    className="transition-none hover:bg-inherit"
+                  >
                     <TableCell className="py-0">
                       <div
                         className={`inline-flex rounded-sm px-1 py-0.5 ${colorMap[round.name as keyof typeof colorMap] ?? ""} space-y-2`}

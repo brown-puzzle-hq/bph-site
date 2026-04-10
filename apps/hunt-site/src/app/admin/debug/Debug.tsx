@@ -5,10 +5,9 @@ import { sendWebsocketMessage } from "./actions";
 import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { formatDuration } from "~/lib/time";
 
 import { removeCookie, getCookies } from "typescript-cookie";
-import { decodeSeen } from "~/lib/utils";
+import { decodeSeen, formatDuration } from "~/lib/utils";
 import { X } from "lucide-react";
 
 const formatCookieValue = (key: string, value: string) => {
@@ -76,7 +75,7 @@ export default function Debug({
         />
       </div>
 
-      <div className="mr-auto flex flex-col items-center gap-4 md:flex-row">
+      <div className="flex flex-col items-center gap-4 md:flex-row">
         <Button
           className="w-full md:w-auto"
           onClick={() =>
@@ -118,19 +117,23 @@ export default function Debug({
         <Button
           className="w-full md:w-auto"
           onClick={() => {
-            const huntStartTime = new Date(0); // For admin debug purposes
-            const timeSinceStart =
-              new Date().getTime() - huntStartTime.getTime();
-            maxSolveDelay = Math.min(maxSolveDelay, timeSinceStart);
-            const ms = Math.floor(
-              Math.random() * (maxSolveDelay - minSolveDelay) + minSolveDelay,
+            const min = 30 * 60 * 1000; // 30 minutes
+            const max = 3 * 60 * 60 * 1000; // 3 hours
+            const solveTimeMs = Math.floor(Math.random() * (max - min) + min);
+
+            const minBluenoTime = solveTimeMs - maxSolveDelay;
+            const maxBluenoTime = solveTimeMs - minSolveDelay;
+            const otherTimeMs = Math.floor(
+              Math.random() * (maxBluenoTime - minBluenoTime) + minBluenoTime,
             );
 
             sendWebsocketMessage({
               type: "SolvedPuzzle",
               puzzleId,
               puzzleName,
-              interval: formatDuration(ms),
+              solveTime: formatDuration(solveTimeMs),
+              otherTeam: "???",
+              otherTime: formatDuration(Math.max(otherTimeMs, 30 * 1000)),
             });
           }}
         >

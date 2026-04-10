@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { formatDuration } from "~/lib/time";
+import { formatDuration } from "~/lib/utils";
 
 export default function Countdown({ targetDate }: { targetDate: Date }) {
   const [timeRemaining, setTimeRemaining] = useState(

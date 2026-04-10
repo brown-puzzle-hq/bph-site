@@ -17,6 +17,7 @@ import { CheckCircle, Unlock, Trophy } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { cn } from "~/lib/utils";
 
 /** Bumped when `public/ws-shared-worker.js` changes so tabs load the new script. */
 const WS_SHARED_WORKER_BUILD = "20260407-1";
@@ -134,9 +135,27 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
             icon: <CheckCircle className="size-[18px]" />,
             description: (
               <>
-                {data.puzzleName} (
-                <span className="font-bold text-error">+{data.interval}</span>{" "}
-                after <span className="font-bold">???</span>)
+                {data.puzzleName} in{" "}
+                <span
+                  className={cn(
+                    "font-bold",
+                    data.otherTeam ? "text-error" : "text-correct-guess",
+                  )}
+                >
+                  {data.solveTime}
+                </span>
+                {data.otherTeam && (
+                  <>
+                    {" "}
+                    (<span className="font-bold">
+                      {data.otherTeam}
+                    </span> took{" "}
+                    <span className="font-bold text-correct-guess">
+                      {data.otherTime}
+                    </span>
+                    )
+                  </>
+                )}
               </>
             ),
             action: puzzleLink(data.puzzleId),

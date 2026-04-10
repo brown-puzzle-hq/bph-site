@@ -18,20 +18,23 @@ import {
   sanitizeAnswer,
   IN_PERSON,
   REMOTE,
-  type SolveType,
 } from "@/config/client";
+import type { SolveType, Role, InteractionMode } from "@/config/client";
 import {
   PUZZLE_UNLOCK_MAP,
   META_PUZZLES,
   POOL_UNLOCKS,
   MIN_SOLVE_DELAY,
   MAX_SOLVE_DELAY,
+  MIN_BLUENO_TIME,
 } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { formatDuration } from "~/lib/time";
+import { formatDuration } from "~/lib/utils";
 import { ensureError, assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+type PinInteractionResult = "none" | "brown" | "non-brown";
 
 /** Handles a guess for a puzzle. May call handleSolve. */
 export async function handleGuess(puzzleId: string, guess: string) {
@@ -135,8 +138,11 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // Insert the guess into the guess table
   // If the guess is correct, handle the solve
+  let solvedMetas = 0;
+  let pinInteraction: PinInteractionResult = "none";
   let finishedHunt = false;
   let unlockedPuzzles: string[] = [];
+  let solveTimeMs: number | null = null;
   try {
     await db.transaction(async (tx) => {
       await tx.insert(guesses).values({
@@ -147,9 +153,48 @@ export async function handleGuess(puzzleId: string, guess: string) {
         submitTime: currDate,
       });
       if (isCorrect) {
-        const result = await handleSolve(tx, teamId, puzzleId, solveType);
-        finishedHunt = result.finishedHunt;
+        const result = await handleSolve(
+          tx,
+          teamId,
+          role,
+          interactionMode,
+          puzzleId,
+          solveType,
+          currDate,
+        );
+
+        const solvedPuzzles = result.solvedPuzzles;
+        solvedMetas = result.solvedMetas;
         unlockedPuzzles = result.unlockedPuzzles;
+        solveTimeMs = result.solveTimeMs;
+
+        const wasMeta = META_PUZZLES.includes(puzzleId);
+
+        const eligible =
+          interactionMode === "in-person" &&
+          (solvedPuzzles === 8 || (wasMeta && solvedMetas === 1));
+
+        if (eligible) {
+          const { numCommunity } = (await tx.query.teams.findFirst({
+            where: eq(teams.id, teamId),
+            columns: { numCommunity: true },
+          })) ?? { numCommunity: "0" };
+          const brownTeam = Number(numCommunity) > 0;
+
+          if (brownTeam && solvedPuzzles === 8) {
+            pinInteraction = "brown";
+          } else if (!brownTeam && wasMeta && solvedMetas === 1) {
+            pinInteraction = "non-brown";
+          }
+        }
+
+        if (wasMeta && solvedMetas === META_PUZZLES.length) {
+          await tx
+            .update(teams)
+            .set({ finishTime: currDate })
+            .where(eq(teams.id, teamId));
+          finishedHunt = true;
+        }
       }
     });
   } catch (e) {
@@ -172,35 +217,41 @@ export async function handleGuess(puzzleId: string, guess: string) {
   await sendBotMessage(guessMessage, "guess");
   /** END_SNIPPET:DISCORD_MESSAGE */
 
-  // If the team has finished the hunt, message the finish channel
-  // Only ping the HQ role if it is the in-person hunt
+  // If the team has unlocked the pin interaction, message the interaction channel
+  if (pinInteraction !== "none") {
+    const interactionMessage = `📌 **${pinInteraction === "brown" ? "Brown" : "Non-Brown"} Pin Interaction** for [${teamId}](${HUNT_URL}/team/${teamId}) after [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId})`;
+    await sendBotMessage(interactionMessage, "interaction", "@lore");
+  }
+
+  // If the team has finished the hunt, message the interaction channel
+  // Only ping the lore role if it is the in-person hunt
   if (finishedHunt) {
     const finishMessage = `🏆 **Hunt Finish** by [${teamId}](${HUNT_URL}/team/${teamId})`;
-    sendBotMessage(finishMessage, "general");
+    const mention = interactionMode === "in-person" ? "@lore" : undefined;
+    sendBotMessage(finishMessage, "interaction", mention);
   }
 
   // Make websocket notifications to the clients
   const notifications: Promise<unknown>[] = [];
 
-  if (isCorrect) {
-    const huntStartTime =
-      role === "testsolver" || role === "admin"
-        ? new Date(0)
-        : interactionMode === "in-person"
-          ? IN_PERSON.START_TIME
-          : REMOTE.START_TIME;
-    const timeSinceStart = new Date().getTime() - huntStartTime.getTime();
-    const maxSolveDelay = Math.min(MAX_SOLVE_DELAY, timeSinceStart);
-    const ms = Math.floor(
-      Math.random() * (maxSolveDelay - MIN_SOLVE_DELAY) + MIN_SOLVE_DELAY,
+  if (isCorrect && solveTimeMs !== null) {
+    const minBluenoTime = solveTimeMs - MAX_SOLVE_DELAY;
+    const maxBluenoTime = solveTimeMs - MIN_SOLVE_DELAY;
+    const otherTimeMs = Math.floor(
+      Math.random() * (maxBluenoTime - minBluenoTime) + minBluenoTime,
     );
+    const otherTeam = solvedMetas >= 7 ? "Blueno" : "???";
+    const otherTime = formatDuration(Math.max(otherTimeMs, MIN_BLUENO_TIME));
 
     notifications.push(
       sendToWebsocketServer(teamId, {
         type: "SolvedPuzzle",
         puzzleId,
         puzzleName: puzzle.name,
-        interval: formatDuration(ms),
+        solveTime: formatDuration(solveTimeMs),
+        // If solve was fast (e.g. with answer token), let them have their moment
+        otherTeam: solveTimeMs > MIN_BLUENO_TIME ? otherTeam : null,
+        otherTime: solveTimeMs > MIN_BLUENO_TIME ? otherTime : null,
       }),
     );
   }
@@ -253,20 +304,24 @@ export async function handleGuess(puzzleId: string, guess: string) {
   return { error: null };
 }
 
-/** Handles a solve for a puzzle. Returns whether the hunt was finished. */
+/** Handles a solve for a puzzle. Returns updated information. */
 type SolveOutcome = {
-  finishedHunt: boolean;
+  solvedPuzzles: number;
+  solvedMetas: number;
   unlockedPuzzles: string[];
+  solveTimeMs: number;
 };
 
 async function handleSolve(
   tx: TxType,
   teamId: string,
+  role: Role,
+  interactionMode: InteractionMode,
   puzzleId: string,
   type: SolveType,
+  currDate: Date,
 ): Promise<SolveOutcome> {
   // Insert the solve into the solve table
-  const currDate = new Date();
   await tx.insert(solves).values({
     teamId,
     puzzleId,
@@ -274,8 +329,7 @@ async function handleSolve(
     type,
   });
 
-  var unlockedPuzzles: string[] = [];
-  var finishedHunt = false;
+  let unlockedPuzzles: string[] = [];
 
   // Unlock the next puzzles
   // Graph unlocks
@@ -313,24 +367,43 @@ async function handleSolve(
       .then((res) => res.map((r) => r.puzzleId));
   }
 
-  // Check if the team has just completed the hunt
-  // by solving all metas
-  if (META_PUZZLES.includes(puzzleId)) {
-    const [query] = await tx
-      .select({ count: count() })
-      .from(solves)
-      .where(
-        and(eq(solves.teamId, teamId), inArray(solves.puzzleId, META_PUZZLES)),
-      );
+  // Get solve counts
+  const [row] = await tx
+    .select({
+      solvedPuzzles: count(),
+      solvedMetas: count(
+        sql`CASE WHEN ${inArray(solves.puzzleId, META_PUZZLES)} THEN 1 END`,
+      ),
+    })
+    .from(solves)
+    .where(eq(solves.teamId, teamId));
 
-    if (query?.count === META_PUZZLES.length) {
-      await tx
-        .update(teams)
-        .set({ finishTime: currDate })
-        .where(eq(teams.id, teamId));
-      finishedHunt = true;
-    }
+  const solvedPuzzles = row?.solvedPuzzles ?? 0;
+  const solvedMetas = row?.solvedMetas ?? 0;
+
+  // Solve time shown to the team is duration since they could first see the puzzle.
+  const unlockRow = await tx.query.unlocks.findFirst({
+    where: and(eq(unlocks.teamId, teamId), eq(unlocks.puzzleId, puzzleId)),
+    columns: { unlockTime: true },
+  });
+  const unlockTime = unlockRow?.unlockTime;
+
+  if (unlockTime) {
+    const solveTimeMs = currDate.getTime() - unlockTime.getTime();
+    return { solvedPuzzles, solvedMetas, unlockedPuzzles, solveTimeMs };
   }
 
-  return { unlockedPuzzles, finishedHunt };
+  const teamRow = await tx.query.teams.findFirst({
+    where: eq(teams.id, teamId),
+    columns: { createTime: true },
+  });
+  const createTime = teamRow!.createTime;
+
+  const huntStartTime =
+    interactionMode === "in-person" ? IN_PERSON.START_TIME : REMOTE.START_TIME;
+  const effectiveUnlockTime =
+    role !== "user" || createTime > huntStartTime ? createTime : huntStartTime;
+
+  const solveTimeMs = currDate.getTime() - effectiveUnlockTime.getTime();
+  return { solvedPuzzles, solvedMetas, unlockedPuzzles, solveTimeMs };
 }

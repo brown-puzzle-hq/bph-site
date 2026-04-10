@@ -27,11 +27,12 @@ const channelToWebhookURL: Record<Channel, string | undefined> = {
   dev: process.env.DISCORD_WEBHOOK_URL_DEV,
 };
 
-type Mention = "@hint" | "@HQ" | "@tech";
+type Mention = "@hint" | "@HQ" | "@lore" | "@tech";
 
 const mentionToRoleId: Record<Mention, string> = {
   "@hint": "<@&1477851452192981003>",
   "@HQ": "<@&900958940475559969>",
+  "@lore": "<@&1201541948880736378>",
   "@tech": "<@&1287563929282678795>",
 };
 
@@ -113,7 +114,9 @@ export type SocketMessage =
       type: "SolvedPuzzle";
       puzzleName: string;
       puzzleId: string;
-      interval: string;
+      solveTime: string;
+      otherTeam: string | null;
+      otherTime: string | null;
     }
   | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "FinishedHunt" }

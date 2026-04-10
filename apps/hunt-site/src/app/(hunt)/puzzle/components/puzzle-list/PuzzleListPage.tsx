@@ -14,6 +14,7 @@ import {
   allWhiteboardObjects,
 } from "./data";
 import { DORM_BACKGROUND_COLOR } from "~/config/styles";
+import { BadgeInfo, Info, MessageCircleQuestion } from "lucide-react";
 
 type PuzzleListPageProps = {
   availableRounds: PuzzleListRound[];
@@ -153,11 +154,11 @@ export default function PuzzleListPage({
           );
         })}
       </div>
+      {/* Search bar */}
+      {availablePuzzles.length > 0 && (
+        <PuzzleSearch puzzles={availablePuzzles} />
+      )}
       <div className="mx-auto w-full max-w-3xl px-4">
-        {/* Search bar */}
-        {availablePuzzles.length > 0 && (
-          <PuzzleSearch puzzles={availablePuzzles} />
-        )}
         {/* Puzzle table */}
         <h1 className="mb-2 text-center">Rounds</h1>
         <div className="overflow-hidden text-sm font-medium">
@@ -207,14 +208,25 @@ export default function PuzzleListPage({
         </div>
         {/* Event table */}
         {availableEvents.length > 0 && (
-          <>
-            <h1 className="mb-2 mt-4 text-center">Events</h1>
+          <div className="mt-6">
+            <div className="relative mx-auto w-fit">
+              <h1 className="leading-none">Events</h1>
+              <div className="absolute -right-3 top-0">
+                <div className="group relative font-medium">
+                  <Info className="size-3" />
+                  <span className="pointer-events-none absolute -top-8 left-1/2 z-10 w-max -translate-x-1/2 rounded bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-l-4 border-r-4 border-t-4 border-transparent border-t-black" />
+                    Submit token to puzzle to consume.
+                  </span>
+                </div>
+              </div>
+            </div>
             <EventTable
               availableEvents={availableEvents}
               inputBox={hasEventInputBox}
             />
             <hr />
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import StatsTable from "./StatsTable";
 import GuessChart from "./GuessChart";
 import { canViewStats } from "../../actions";
