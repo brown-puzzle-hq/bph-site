@@ -35,7 +35,7 @@ export const inPersonBody = (
       <b>Concentration Requirements:</b>
       <ul className="ml-6">
         <li>
-          <b>BUSINESS</b>: The Rabbit Konundrum
+          <b>BUSINESS</b>: Rabbit 'Nundrum
         </li>
         <li>
           <b>HUMANITIES</b>: Card Game Theory
@@ -47,7 +47,7 @@ export const inPersonBody = (
           <b>PERFORMING ARTS</b>: Escapism in Cinema
         </li>
         <li>
-          <b>PHYSICAL SCIENCES</b>: Pageant Problems
+          <b>PHYSICAL SCIENCES</b>: Voting Dynamics
         </li>
         <li>
           <b>PHYSICAL SCIENCES</b>: Linesman Training

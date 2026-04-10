@@ -12,7 +12,7 @@ import teacup from "./icons/teacup.png";
 import { type PuzzleIcon } from "../DefaultRoundPage";
 
 export const icons: Record<string, PuzzleIcon> = {
-  "movable-chorale": {
+  "collaborative-chorale": {
     icon: bearing,
     x: 63.1592,
     y: 0.0,
@@ -20,7 +20,7 @@ export const icons: Record<string, PuzzleIcon> = {
     h: 38.7043,
     labelDx: 5,
   },
-  "intro-to-ubpcosu-final-exam": {
+  "ubpcosu-ii": {
     icon: cards,
     x: 3.0762,
     y: 43.4385,
@@ -35,7 +35,7 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 10.5713,
     h: 9.4684,
   },
-  "intro-to-ubpcosu-first-lecture": {
+  "ubpcosu-i": {
     icon: stamp,
     x: 65.0879,
     y: 26.1628,

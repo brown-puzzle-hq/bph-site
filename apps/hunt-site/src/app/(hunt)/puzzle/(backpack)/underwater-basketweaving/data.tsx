@@ -66,13 +66,13 @@ export const inPersonBody = (
       <b>Concentration Requirements:</b>
       <ul className="ml-6">
         <li>
-          <b>PERFORMING ARTS</b>: Cross(over)(word)
+          <b>PERFORMING ARTS</b>: Serialized Storytelling
         </li>
         <li>
           <b>PERFORMING ARTS</b>: Going in Circles
         </li>
         <li>
-          <b>PHYSICAL SCIENCES</b>: ####!
+          <b>PHYSICAL SCIENCES</b>: Scacchic Fabrication
         </li>
         <li>
           <b>MATH</b>: Messy Placeholder
@@ -81,7 +81,7 @@ export const inPersonBody = (
           <b>RISD</b>: Culinary Chemistry Lab
         </li>
         <li>
-          <b>SOCIAL SCIENCES</b>: Intro to Ubpcosu: Final Exam
+          <b>SOCIAL SCIENCES</b>: Ubpcosu II
         </li>
       </ul>
     </div>

@@ -43,7 +43,7 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 21.4844,
     h: 15.5731,
   },
-  "flying-through-the-grid": {
+  "avionic-intersectionality": {
     icon: top,
     x: 43.6768,
     y: 3.7375,

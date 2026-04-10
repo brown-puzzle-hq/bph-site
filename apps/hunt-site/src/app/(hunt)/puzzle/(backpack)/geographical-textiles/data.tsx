@@ -51,7 +51,7 @@ export const inPersonBody = (
       <b>Concentration Requirements:</b>
       <ul className="ml-6">
         <li>
-          <b>BUSINESS</b>: Schmear Campaign
+          <b>BUSINESS</b>: Schmear Campaigns
         </li>
         <li>
           <b>HUMANITIES</b>: Multi-Clef Composition
@@ -60,13 +60,13 @@ export const inPersonBody = (
           <b>HUMANITIES</b>: Sunk! Modern Naval Investigative Methodology
         </li>
         <li>
-          <b>PHYSICAL SCIENCES</b>: ####!
+          <b>PHYSICAL SCIENCES</b>: Scacchic Fabrication
         </li>
         <li>
           <b>RISD</b>: Editing Practice
         </li>
         <li>
-          <b>RISD</b>: Date Everything Brown
+          <b>RISD</b>: How To Get Your Heart Broken
         </li>
         <li>
           <b>SOCIAL SCIENCES</b>: Year of the HONSE

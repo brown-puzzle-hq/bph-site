@@ -123,13 +123,13 @@
     background: hsl(0 0% 80%) !important;
   }
 
-  /* In flying-through-the-grid, active-entry highlighting should not replace
+  /* In avionic-intersectionality, active-entry highlighting should not replace
      rebus shading with PuzzleJS blue. Keep rebus visibly distinct by using a
      darker rebus tone while marked/hovered. */
-  .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="flying-through-the-grid"]
+  .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="avionic-intersectionality"]
     table.puzzle-grid-content
     td.rebus-cell.marked,
-  .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="flying-through-the-grid"]
+  .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="avionic-intersectionality"]
     table.puzzle-grid-content
     td.rebus-cell.hovered {
     background: hsl(0 0% 68%) !important;

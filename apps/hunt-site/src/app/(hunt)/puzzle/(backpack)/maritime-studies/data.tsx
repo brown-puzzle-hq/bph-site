@@ -85,13 +85,13 @@ export const inPersonBody = (
           <b>HUMANITIES</b>: Sunk! Modern Naval Investigative Methodology
         </li>
         <li>
-          <b>PERFORMING ARTS</b>: Cross(over)(word)
+          <b>PERFORMING ARTS</b>: Serialized Storytelling
         </li>
         <li>
           <b>RISD</b>: Advanced Logical Cooking Techniques
         </li>
         <li>
-          <b>SOCIAL SCIENCES</b>: Movable Chorale
+          <b>SOCIAL SCIENCES</b>: Collaborative Chorale
         </li>
       </ul>
     </div>

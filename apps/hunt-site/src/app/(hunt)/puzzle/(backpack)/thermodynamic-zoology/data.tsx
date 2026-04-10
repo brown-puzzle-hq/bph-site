@@ -50,7 +50,7 @@ export const inPersonBody = (
       <b>Concentration Requirements:</b>
       <ul className="ml-6">
         <li>
-          <b>MATH:</b> Embeddings
+          <b>MATH:</b> Analogical Semantics
         </li>
         <li>
           <b>MATH:</b> Primary Investigation

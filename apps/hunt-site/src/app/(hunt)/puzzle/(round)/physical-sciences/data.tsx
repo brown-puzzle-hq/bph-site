@@ -12,7 +12,7 @@ import pipette from "./icons/pipette.png";
 import { type PuzzleIcon } from "../DefaultRoundPage";
 
 export const icons: Record<string, PuzzleIcon> = {
-  "pageant-problems": {
+  "voting-dynamics": {
     icon: beaker,
     x: 5.5908,
     y: 0.9551,
@@ -21,7 +21,7 @@ export const icons: Record<string, PuzzleIcon> = {
     labelDx: -20,
     labelDy: -35,
   },
-  "hash-hash-hash-hash-bang": {
+  "scacchic-fabrication": {
     icon: galaxy,
     x: 46.4111,
     y: 26.7027,

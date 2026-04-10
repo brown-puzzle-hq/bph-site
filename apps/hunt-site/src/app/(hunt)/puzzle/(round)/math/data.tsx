@@ -26,14 +26,20 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 8.459,
     h: 14.2086,
   },
-  "messy-placeholder": {
+  "itty-bitty-kitties": {
     icon: math3,
     x: 61.474,
     y: 50.1199,
     w: 10.4271,
     h: 15.5875,
   },
-  embeddings: { icon: math4, x: 75.1675, y: 9.7122, w: 10.6365, h: 17.506 },
+  "analogical-semantics": {
+    icon: math4,
+    x: 75.1675,
+    y: 9.7122,
+    w: 10.6365,
+    h: 17.506,
+  },
   "linear-algebra": {
     icon: math5,
     x: 15.2429,

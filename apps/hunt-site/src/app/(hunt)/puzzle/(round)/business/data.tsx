@@ -12,7 +12,7 @@ import stonks from "./icons/stonks.png";
 import { type PuzzleIcon } from "../DefaultRoundPage";
 
 export const icons: Record<string, PuzzleIcon> = {
-  "schmear-campaign": {
+  "schmear-campaigns": {
     icon: blueno,
     x: 21.5088,
     y: 39.5349,
@@ -27,7 +27,7 @@ export const icons: Record<string, PuzzleIcon> = {
     h: 26.1628,
     labelDx: -15,
   },
-  "rabbit-konundrum": {
+  "rabbit-nundrum": {
     icon: money,
     x: 71.2158,
     y: 46.1379,
@@ -41,7 +41,7 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 13.9893,
     h: 27.5748,
   },
-  "sword-placeholder": {
+  "architecture-on-college-hill": {
     icon: stonks,
     x: 58.0078,
     y: 16.196,

@@ -12,7 +12,13 @@ import paint from "./icons/paint.png";
 import { type PuzzleIcon } from "../DefaultRoundPage";
 
 export const icons: Record<string, PuzzleIcon> = {
-  crossoverword: { icon: hammer, x: 46.1055, y: 68.4652, w: 7.2446, h: 6.5348 },
+  "serialized-storytelling": {
+    icon: hammer,
+    x: 46.1055,
+    y: 68.4652,
+    w: 7.2446,
+    h: 6.5348,
+  },
   "escapism-in-cinema": {
     icon: ladder,
     x: 61.474,
@@ -34,5 +40,11 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 12.1859,
     h: 15.2278,
   },
-  wordbrain: { icon: paint, x: 18.6348, y: 63.2494, w: 5.8208, h: 14.0887 },
+  "characters-in-flight": {
+    icon: paint,
+    x: 18.6348,
+    y: 63.2494,
+    w: 5.8208,
+    h: 14.0887,
+  },
 };

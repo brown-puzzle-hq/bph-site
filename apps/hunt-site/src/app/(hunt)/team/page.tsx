@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { db } from "~/server/db";
 import { count, max, sql } from "drizzle-orm";
-import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
+import { and, asc, desc, eq, lt } from "drizzle-orm";
 import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import { FormattedTime } from "~/lib/time";

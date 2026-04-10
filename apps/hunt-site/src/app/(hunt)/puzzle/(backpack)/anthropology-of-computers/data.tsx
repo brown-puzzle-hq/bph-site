@@ -31,7 +31,7 @@ export const inPersonBody = (
       <b>Concentration Requirements:</b>
       <ul className="ml-6">
         <li>
-          <b>HUMANITIES</b>: Flying Through The Grid
+          <b>HUMANITIES</b>: Avionic Intersectionality
         </li>
         <li>
           <b>PHYSICAL SCIENCES</b>: Dirt
@@ -70,7 +70,7 @@ Professor Conway hasn't told you what's going to be on the final — you're goin
 What will the final exam be?
 
 Concentration Requirements:
-HUMANITIES: Flying Through The Grid
+HUMANITIES: Avionic Intersectionality
 PHYSICAL SCIENCES: Dirt
 Four electives from MATH
 Four electives from SOCIAL SCIENCES`;

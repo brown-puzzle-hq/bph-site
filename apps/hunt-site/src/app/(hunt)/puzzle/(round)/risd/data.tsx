@@ -34,14 +34,14 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 8.8983,
     h: 13.4473,
   },
-  "date-everything-brown": {
+  "how-to-get-your-heart-broken": {
     icon: pencil,
     x: 53.5714,
     y: 44.0565,
     w: 7.2034,
     h: 15.4532,
   },
-  "one-guard-no-doors": {
+  "topics-in-guard-door-theory": {
     icon: swan,
     x: 8.0508,
     y: 58.2467,
