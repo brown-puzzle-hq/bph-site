@@ -1,8 +1,11 @@
-/**
- * Pure utilities for ChainsGraph. No React or component state.
- */
+/** Pure utilities for ChainsGraph */
 
 export type GridPos = { col: number; row: number };
+
+/** Canonical key for an undirected edge between two node ids */
+export function edgePairKey(a: string, b: string): string {
+  return [a, b].sort().join(",");
+}
 
 export function getOccupiedCells(
   positions: Record<string, GridPos>,
@@ -79,14 +82,14 @@ export function pixelToCell(
   return { col, row };
 }
 
-/** Normalize line angle (degrees from atan2) to roughly -90..90 for segment storage. */
+/** Normalize line angle (degrees from atan2) to roughly -90..90 for segment storage */
 export function normalizeSegmentAngle(angleDeg: number): number {
   if (angleDeg > 90) return angleDeg - 180;
   if (angleDeg < -90) return angleDeg + 180;
   return angleDeg;
 }
 
-/** Convert segment angle to label rotation: +90 then clamp to readable range. */
+/** Convert segment angle to label rotation: +90 then clamp to readable range */
 export function normalizeLabelAngle(segmentAngleDeg: number): number {
   let a = segmentAngleDeg + 90;
   if (a > 90) a -= 180;
@@ -94,7 +97,7 @@ export function normalizeLabelAngle(segmentAngleDeg: number): number {
   return a;
 }
 
-/** Shared geometry for connector and user-edge segments (line + midpoint + angle). */
+/** Shared geometry for connector and user-edge segments (line + midpoint + angle) */
 export type SegmentGeometry = {
   x1: number;
   y1: number;
