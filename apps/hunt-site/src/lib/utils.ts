@@ -1,6 +1,5 @@
 /** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
 
-import { sanitizeAnswer } from "@/config/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -13,17 +12,6 @@ export function focusAtEnd(input?: HTMLInputElement | null) {
   input.focus();
   const len = input.value.length;
   input.setSelectionRange(len, len);
-}
-
-export function displayStoredPuzzleGuess(
-  storedGuess: string,
-  isCorrect: boolean,
-  puzzleAnswer: string,
-) {
-  if (!isCorrect) return storedGuess;
-  if (sanitizeAnswer(storedGuess) === sanitizeAnswer(puzzleAnswer))
-    return puzzleAnswer;
-  return `${storedGuess} → ${puzzleAnswer}`;
 }
 
 /** Formats a duration in milliseconds as "Xd Yh Zm Ws" */

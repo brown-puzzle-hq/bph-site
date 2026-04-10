@@ -22,7 +22,7 @@ import {
   REMOTE,
 } from "@/config/client";
 import { ALL_PUZZLES, INITIAL_PUZZLES } from "@/config/server";
-import { displayStoredPuzzleGuess } from "~/lib/utils";
+import { displayStoredPuzzleGuess } from "~/lib/server";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 import { checkPermissions } from "~/lib/server";
 import SeenSetter from "./SeenSetter";

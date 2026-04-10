@@ -1,5 +1,6 @@
 import "server-only";
 
+import { sanitizeAnswer } from "@/config/client";
 import { auth } from "@/auth";
 
 type PermissionRequirement =
@@ -67,4 +68,15 @@ export function ensureError(value: unknown): Error {
     `This value was thrown as is, not through an Error: ${stringified}`,
   );
   return error;
+}
+
+export function displayStoredPuzzleGuess(
+  storedGuess: string,
+  isCorrect: boolean,
+  puzzleAnswer: string,
+) {
+  if (!isCorrect) return storedGuess;
+  if (sanitizeAnswer(storedGuess) === sanitizeAnswer(puzzleAnswer))
+    return puzzleAnswer;
+  return `${storedGuess} → ${puzzleAnswer}`;
 }

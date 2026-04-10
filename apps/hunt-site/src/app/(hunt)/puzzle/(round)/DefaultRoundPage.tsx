@@ -118,7 +118,7 @@ export default async function DefaultRoundPage({
                   top: `calc(0% - 0.5rem + ${labelDy}%)`,
                 }
               : {
-                  top: `calc(100% + 0.5rem + ${labelDy}%)`,
+                  top: `calc(100% + 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
                 }),
           };
 
@@ -146,7 +146,7 @@ export default async function DefaultRoundPage({
 
               {/* Puzzle name */}
               <div
-                className="absolute z-10 hidden transition-transform peer-hover:-translate-y-1 sm:flex"
+                className="absolute z-10 hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] sm:flex"
                 style={labelStyle}
               >
                 <div
