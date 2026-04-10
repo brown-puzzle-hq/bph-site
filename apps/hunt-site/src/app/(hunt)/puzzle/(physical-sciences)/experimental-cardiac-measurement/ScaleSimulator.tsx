@@ -1,12 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Gentium_Plus } from "next/font/google";
 import { useEffect, useMemo, useRef, useState } from "react";
 import featherSvg from "./feather.svg";
 import heartSvg from "./heart.svg";
 
+const gentiumPlus = Gentium_Plus({
+  subsets: ["latin", "greek"],
+  weight: ["400", "700"],
+});
+
 type Zone = "tray" | "left" | "right";
-type Container = "bank" | "left" | "right";
+type Container = "heartBank" | "featherBank" | "left" | "right";
 
 type Item = {
   id: string;
@@ -32,39 +38,31 @@ type TrayRect = {
 };
 
 const HEART_IDS = new Set([
-  // "beta",
-  // "epsilon",
-  // "mu",
-  // "gamma",
-  // "eta",
-  // "omicron",
-  // "iota",
-  // "kappa",
+  "xi",
   "alpha",
   "delta",
   "zeta",
   "theta",
-  "lambda",
   "nu",
-  "xi",
+  "lambda",
 ]);
 
 const ITEMS: Item[] = [
-  { id: "beta", label: "beta", weight: 1 },
-  { id: "epsilon", label: "epsilon", weight: 1 },
-  { id: "mu", label: "mu", weight: 2 },
-  { id: "gamma", label: "gamma", weight: 3 },
-  { id: "eta", label: "eta", weight: 4 },
-  { id: "omicron", label: "omicron", weight: 4 },
-  { id: "iota", label: "iota", weight: 7 },
-  { id: "kappa", label: "kappa", weight: 8 },
-  { id: "xi", label: "xi", weight: 9 },
-  { id: "alpha", label: "alpha", weight: 10 },
-  { id: "delta", label: "delta", weight: 11 },
-  { id: "zeta", label: "zeta", weight: 12 },
-  { id: "theta", label: "theta", weight: 15 },
-  { id: "nu", label: "nu", weight: 18 },
-  { id: "lambda", label: "lambda", weight: 25 },
+  { id: "beta", label: "β", weight: 1 },
+  { id: "epsilon", label: "ε", weight: 1 },
+  { id: "mu", label: "μ", weight: 2 },
+  { id: "gamma", label: "γ", weight: 3 },
+  { id: "eta", label: "η", weight: 4 },
+  { id: "omicron", label: "ο", weight: 4 },
+  { id: "iota", label: "ι", weight: 7 },
+  { id: "kappa", label: "κ", weight: 8 },
+  { id: "xi", label: "ξ", weight: 9 },
+  { id: "alpha", label: "α", weight: 10 },
+  { id: "delta", label: "δ", weight: 11 },
+  { id: "zeta", label: "ζ", weight: 12 },
+  { id: "theta", label: "θ", weight: 15 },
+  { id: "nu", label: "ν", weight: 18 },
+  { id: "lambda", label: "λ", weight: 25 },
 ];
 
 const itemById = new Map(ITEMS.map((item) => [item.id, item]));
@@ -93,8 +91,15 @@ const TRAY_DEPTH = 94;
 const TRAY_BOTTOM_Y = BEAM_TOP + BEAM_HEIGHT;
 const TRAY_ATTACH_RAISE = 6;
 
-const BANK_RECT: TrayRect = {
+const HEART_BANK_RECT: TrayRect = {
   left: 50,
+  right: 470,
+  top: 500,
+  bottom: 678,
+};
+
+const FEATHER_BANK_RECT: TrayRect = {
+  left: 530,
   right: 950,
   top: 500,
   bottom: 678,
@@ -127,11 +132,11 @@ const inRect = (x: number, y: number, rect: TrayRect) =>
 const inRectX = (x: number, rect: TrayRect) =>
   x >= rect.left && x <= rect.right;
 
-const pickContainerForPoint = (
+const pickTrayTargetForPoint = (
   x: number,
   y: number,
   beamAngleDeg: number,
-): Container => {
+): "left" | "right" | null => {
   const { left: leftTray, right: rightTray } =
     getTrayRectsForBeam(beamAngleDeg);
 
@@ -143,29 +148,45 @@ const pickContainerForPoint = (
 
   if (inRect(x, y, leftTray)) return "left";
   if (inRect(x, y, rightTray)) return "right";
-  return "bank";
+  return null;
 };
 
 const getInitialSimItems = (): SimItem[] => {
-  const columns = 8;
-  const startX = 85;
-  const xGap = 118;
-  const y1 = 548;
-  const y2 = 632;
+  const heartItems = ITEMS.filter((item) => HEART_IDS.has(item.id));
+  const featherItems = ITEMS.filter((item) => !HEART_IDS.has(item.id));
 
-  return ITEMS.map((item, index) => {
+  const positionInBank = (
+    item: Item,
+    index: number,
+    rect: TrayRect,
+    container: Container,
+  ): SimItem => {
+    const columns = 4;
     const row = Math.floor(index / columns);
     const col = index % columns;
+    const xGap = 98;
+    const yGap = 82;
+    const xStart = rect.left + 54;
+    const yStart = rect.top + 48;
     return {
       id: item.id,
-      x: startX + col * xGap,
-      y: row === 0 ? y1 : y2,
+      x: xStart + col * xGap,
+      y: yStart + row * yGap,
       vx: 0,
       vy: 0,
-      container: "bank",
+      container,
       settled: true,
     };
-  });
+  };
+
+  return [
+    ...heartItems.map((item, index) =>
+      positionInBank(item, index, HEART_BANK_RECT, "heartBank"),
+    ),
+    ...featherItems.map((item, index) =>
+      positionInBank(item, index, FEATHER_BANK_RECT, "featherBank"),
+    ),
+  ];
 };
 
 const BANK_HOME_BY_ID = new Map(
@@ -239,6 +260,36 @@ export default function ScaleSimulator() {
   const pointerOffsetRef = useRef({ x: 0, y: 0 });
   const latestBeamAngleRef = useRef(0);
 
+  const isHeart = (itemId: string) => HEART_IDS.has(itemId);
+
+  const getBankContainerForItem = (itemId: string): Container =>
+    isHeart(itemId) ? "heartBank" : "featherBank";
+
+  const resolveDropContainer = (
+    itemId: string,
+    x: number,
+    y: number,
+    currentItems: SimItem[],
+    beamAngleDeg: number,
+  ): Container => {
+    const trayTarget = pickTrayTargetForPoint(x, y, beamAngleDeg);
+    const itemIsHeart = isHeart(itemId);
+
+    if (trayTarget === "left") {
+      if (!itemIsHeart) return "featherBank";
+      const leftHasOtherItem = currentItems.some(
+        (item) => item.container === "left" && item.id !== itemId,
+      );
+      return leftHasOtherItem ? "heartBank" : "left";
+    }
+
+    if (trayTarget === "right") {
+      return itemIsHeart ? "heartBank" : "right";
+    }
+
+    return getBankContainerForItem(itemId);
+  };
+
   const leftWeight = useMemo(() => {
     return items
       .filter(
@@ -271,7 +322,8 @@ export default function ScaleSimulator() {
   const trayRects = useMemo(
     () => ({
       ...getTrayRectsForBeam(beamRotationDeg),
-      bank: BANK_RECT,
+      heartBank: HEART_BANK_RECT,
+      featherBank: FEATHER_BANK_RECT,
     }),
     [beamRotationDeg],
   );
@@ -291,15 +343,16 @@ export default function ScaleSimulator() {
     const point = toWorldPoint(event.clientX, event.clientY);
     if (!point) return;
 
-    const nextContainer = pickContainerForPoint(
-      point.x,
-      point.y,
-      latestBeamAngleRef.current,
-    );
-
     setItems((current) =>
       current.map((item) => {
         if (item.id !== draggingItemId) return item;
+        const nextContainer = resolveDropContainer(
+          item.id,
+          point.x,
+          point.y,
+          current,
+          latestBeamAngleRef.current,
+        );
         return {
           ...item,
           x: point.x - pointerOffsetRef.current.x,
@@ -321,21 +374,21 @@ export default function ScaleSimulator() {
       return;
     }
 
-    const targetContainer = pickContainerForPoint(
-      point.x,
-      point.y,
-      latestBeamAngleRef.current,
-    );
-
     setItems((current) =>
       current.map((item) =>
         item.id === draggingItemId
           ? {
               ...item,
-              container: targetContainer,
+              container: resolveDropContainer(
+                item.id,
+                point.x,
+                point.y,
+                current,
+                latestBeamAngleRef.current,
+              ),
               vx: 0,
               vy: 0,
-              settled: targetContainer === "bank",
+              settled: false,
             }
           : item,
       ),
@@ -368,22 +421,27 @@ export default function ScaleSimulator() {
           ? leftTray
           : next.container === "right"
             ? rightTray
-            : BANK_RECT;
+            : next.container === "heartBank"
+              ? HEART_BANK_RECT
+              : FEATHER_BANK_RECT;
 
       const floorY = tray.bottom - TOKEN_RADIUS;
 
       if (next.y > floorY) {
         next.y = floorY;
-        next.vy *= next.container === "bank" ? 0 : -0.18;
+        next.vy *=
+          next.container === "left" || next.container === "right" ? -0.18 : 0;
         next.vx *= 0.92;
         if (Math.abs(next.vy) < 20) next.vy = 0;
-        if (next.container !== "bank") {
+        if (next.container === "left" || next.container === "right") {
+          next.settled = true;
+        } else {
           next.settled = true;
         }
       }
 
       if (
-        next.container !== "bank" &&
+        (next.container === "left" || next.container === "right") &&
         next.y >= tray.top + TOKEN_RADIUS * 0.6
       ) {
         const minX = tray.left + TOKEN_RADIUS;
@@ -396,9 +454,14 @@ export default function ScaleSimulator() {
           next.x = maxX;
           next.vx *= -0.22;
         }
-      } else if (next.container === "bank") {
-        const minX = BANK_RECT.left + TOKEN_RADIUS;
-        const maxX = BANK_RECT.right - TOKEN_RADIUS;
+      } else if (
+        next.container === "heartBank" ||
+        next.container === "featherBank"
+      ) {
+        const bankRect =
+          next.container === "heartBank" ? HEART_BANK_RECT : FEATHER_BANK_RECT;
+        const minX = bankRect.left + TOKEN_RADIUS;
+        const maxX = bankRect.right - TOKEN_RADIUS;
         if (next.x < minX) {
           next.x = minX;
           next.vx *= -0.18;
@@ -409,7 +472,12 @@ export default function ScaleSimulator() {
         }
       }
 
-      next.vx *= Math.pow(next.container === "bank" ? 0.82 : 0.985, dt * 60);
+      next.vx *= Math.pow(
+        next.container === "heartBank" || next.container === "featherBank"
+          ? 0.82
+          : 0.985,
+        dt * 60,
+      );
       return next;
     };
 
@@ -421,7 +489,10 @@ export default function ScaleSimulator() {
         const nextItems = current.map((item) => {
           if (item.id === draggingItemId) return item;
 
-          if (item.container === "bank") {
+          if (
+            item.container === "heartBank" ||
+            item.container === "featherBank"
+          ) {
             const home = BANK_HOME_BY_ID.get(item.id);
             const targetX = home?.x ?? item.x;
             const targetY = home?.y ?? item.y;
@@ -454,7 +525,12 @@ export default function ScaleSimulator() {
               const b = nextItems[j];
               if (!a || !b) continue;
               if (a.container !== b.container) continue;
-              if (a.container === "bank") continue;
+              if (
+                a.container === "heartBank" ||
+                a.container === "featherBank"
+              ) {
+                continue;
+              }
 
               const dx = b.x - a.x;
               const dy = b.y - a.y;
@@ -561,7 +637,9 @@ export default function ScaleSimulator() {
     () => ({
       left: items.filter((item) => item.container === "left").length,
       right: items.filter((item) => item.container === "right").length,
-      bank: items.filter((item) => item.container === "bank").length,
+      heartBank: items.filter((item) => item.container === "heartBank").length,
+      featherBank: items.filter((item) => item.container === "featherBank")
+        .length,
     }),
     [items],
   );
@@ -645,9 +723,26 @@ export default function ScaleSimulator() {
             />
           </div>
 
-          <UTray rect={trayRects.left} isEmpty={zoneItems.left === 0} />
-          <UTray rect={trayRects.right} isEmpty={zoneItems.right === 0} />
-          <BankZone rect={BANK_RECT} isEmpty={zoneItems.bank === 0} />
+          <UTray
+            rect={trayRects.left}
+            isEmpty={zoneItems.left === 0}
+            emptyLabel="Drop heart"
+          />
+          <UTray
+            rect={trayRects.right}
+            isEmpty={zoneItems.right === 0}
+            emptyLabel="Drop feather(s)"
+          />
+          <BankZone
+            rect={HEART_BANK_RECT}
+            isEmpty={zoneItems.heartBank === 0}
+            label="Heart Bank"
+          />
+          <BankZone
+            rect={FEATHER_BANK_RECT}
+            isEmpty={zoneItems.featherBank === 0}
+            label="Feather Bank"
+          />
 
           {items.map((simItem) => {
             const item = itemById.get(simItem.id);
@@ -700,7 +795,9 @@ export default function ScaleSimulator() {
                     {item.label.slice(0, 2)}
                   </div>
                 )}
-                <span className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[11px] font-bold uppercase tracking-wide text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.65)]">
+                <span
+                  className={`pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[18px] font-bold text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.65)] ${gentiumPlus.className}`}
+                >
                   {item.label}
                 </span>
               </div>
@@ -712,7 +809,15 @@ export default function ScaleSimulator() {
   );
 }
 
-function UTray({ rect, isEmpty }: { rect: TrayRect; isEmpty: boolean }) {
+function UTray({
+  rect,
+  isEmpty,
+  emptyLabel,
+}: {
+  rect: TrayRect;
+  isEmpty: boolean;
+  emptyLabel: string;
+}) {
   const left = (rect.left / WORLD_WIDTH) * 100;
   const width = ((rect.right - rect.left) / WORLD_WIDTH) * 100;
   const top = (rect.top / WORLD_HEIGHT) * 100;
@@ -730,14 +835,22 @@ function UTray({ rect, isEmpty }: { rect: TrayRect; isEmpty: boolean }) {
     >
       {isEmpty ? (
         <div className="text-muted-foreground/90 absolute inset-0 grid place-items-center text-sm font-medium">
-          Drop here
+          {emptyLabel}
         </div>
       ) : null}
     </div>
   );
 }
 
-function BankZone({ rect, isEmpty }: { rect: TrayRect; isEmpty: boolean }) {
+function BankZone({
+  rect,
+  isEmpty,
+  label,
+}: {
+  rect: TrayRect;
+  isEmpty: boolean;
+  label: string;
+}) {
   const left = (rect.left / WORLD_WIDTH) * 100;
   const width = ((rect.right - rect.left) / WORLD_WIDTH) * 100;
   const top = (rect.top / WORLD_HEIGHT) * 100;
@@ -755,7 +868,7 @@ function BankZone({ rect, isEmpty }: { rect: TrayRect; isEmpty: boolean }) {
     >
       {isEmpty ? (
         <div className="text-muted-foreground/80 absolute inset-0 grid place-items-center text-sm">
-          Bank
+          {label}
         </div>
       ) : null}
     </div>
