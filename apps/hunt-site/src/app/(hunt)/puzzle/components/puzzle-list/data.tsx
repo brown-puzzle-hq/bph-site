@@ -73,16 +73,48 @@ import sock from "./rotating-objects/sock.png";
 
 export const rotatingObjects = [puddle, headphones, books, banana, sock];
 
-import cheez_its from "./whiteboard/cheez-its.png";
+import whiteboard_1 from "./whiteboard/whiteboard-1.png";
+import whiteboard_2 from "./whiteboard/whiteboard-2.png";
+import whiteboard_3 from "./whiteboard/whiteboard-3.png";
+import whiteboard_4 from "./whiteboard/whiteboard-4.png";
+import whiteboard_5 from "./whiteboard/whiteboard-5.png";
+import whiteboard_6 from "./whiteboard/whiteboard-6.png";
+import whiteboard_7 from "./whiteboard/whiteboard-7.png";
+import whiteboard_8 from "./whiteboard/whiteboard-8.png";
+import whiteboard_9 from "./whiteboard/whiteboard-9.png";
+import whiteboard_10 from "./whiteboard/whiteboard-10.png";
+import whiteboard_11 from "./whiteboard/whiteboard-11.png";
+import whiteboard_12 from "./whiteboard/whiteboard-12.png";
+import whiteboard_13 from "./whiteboard/whiteboard-13.png";
+import whiteboard_14 from "./whiteboard/whiteboard-14.png";
+import whiteboard_15 from "./whiteboard/whiteboard-15.png";
+import whiteboard_16 from "./whiteboard/whiteboard-16.png";
+import whiteboard_17 from "./whiteboard/whiteboard-17.png";
+import whiteboard_18 from "./whiteboard/whiteboard-18.png";
+
 import { type StaticImageData } from "next/image";
 
 export const allWhiteboardObjects: StaticImageData[][] = [
   // Category 0
-  [cheez_its],
+  [
+    whiteboard_1,
+    whiteboard_2,
+    whiteboard_3,
+    whiteboard_4,
+    whiteboard_5,
+    whiteboard_6,
+  ],
   // Category 1
-  [cheez_its],
+  [
+    whiteboard_7,
+    whiteboard_8,
+    whiteboard_9,
+    whiteboard_10,
+    whiteboard_11,
+    whiteboard_12,
+  ],
   // Category 2
-  [cheez_its],
+  [whiteboard_13, whiteboard_14, whiteboard_15, whiteboard_16, whiteboard_17],
   // Category 3
-  [cheez_its],
+  [whiteboard_18],
 ];
