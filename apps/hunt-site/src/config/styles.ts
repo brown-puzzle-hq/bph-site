@@ -11,4 +11,4 @@ export const ROUND_BACKGROUND_COLORS: Record<string, string> = {
 };
 
 /** Background color for main puzzles page */
-export const DORM_BACKGROUND_COLOR = "#2B2A3A";
+export const DORM_BACKGROUND_COLOR = "#4D2925";

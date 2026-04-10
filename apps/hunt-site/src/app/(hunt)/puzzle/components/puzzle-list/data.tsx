@@ -15,56 +15,63 @@ import { type PuzzleIcon } from "@/puzzle/(round)/DefaultRoundPage";
 export const icons: Record<string, PuzzleIcon> = {
   backpack: {
     icon: backpack,
-    x: 61.0972,
-    y: 78.6571,
-    w: 21.9849,
-    h: 21.3429,
+    x: 61.8928,
+    y: 78.0576,
+    w: 15.9129,
+    h: 21.9424,
     labelPosition: "top",
+    labelDx: 10,
   },
-  business: { icon: business, x: 50.7538, y: 65.7674, w: 4.1039, h: 16.1271 },
-  humanities: { icon: humanities, x: 4.1457, y: 58.753, w: 7.3283, h: 11.1511 },
-  math: { icon: math, x: 74.665, y: 38.1295, w: 15.4104, h: 12.2902 },
+  business: { icon: business, x: 50.4606, y: 67.8657, w: 3.3082, h: 12.7698 },
+  humanities: {
+    icon: humanities,
+    x: 3.7688,
+    y: 58.6331,
+    w: 6.4489,
+    h: 11.0911,
+  },
+  math: { icon: math, x: 74.0369, y: 38.1295, w: 16.0385, h: 12.1703 },
   "performing-arts": {
     icon: performing_arts,
-    x: 16.541,
-    y: 81.7146,
-    w: 15.1173,
-    h: 18.2854,
+    x: 16.3317,
+    y: 76.8585,
+    w: 18.4255,
+    h: 23.1415,
     labelPosition: "top",
   },
   "physical-sciences": {
     icon: physical_sciences,
-    x: 14.6147,
-    y: 58.5132,
-    w: 4.6064,
-    h: 5.3957,
+    x: 14.531,
+    y: 58.6331,
+    w: 4.6482,
+    h: 5.2158,
     labelPosition: "top",
   },
   risd: {
     icon: risd,
-    x: 13.1072,
+    x: 12.7722,
     y: 39.3885,
-    w: 3.5176,
+    w: 3.9782,
     h: 13.5492,
     labelPosition: "top",
   },
   "social-sciences": {
     icon: social_sciences,
-    x: 31.7002,
-    y: 37.9496,
-    w: 5.5695,
-    h: 11.5108,
+    x: 31.407,
+    y: 37.8897,
+    w: 6.072,
+    h: 11.8705,
     labelPosition: "top",
   },
 };
 
 import puddle from "./rotating-objects/puddle.png";
 import headphones from "./rotating-objects/headphones.png";
-import pages from "./rotating-objects/pages.png";
+import books from "./rotating-objects/books.png";
 import banana from "./rotating-objects/banana.png";
 import sock from "./rotating-objects/sock.png";
 
-export const rotatingObjects = [puddle, headphones, pages, banana, sock];
+export const rotatingObjects = [puddle, headphones, books, banana, sock];
 
 import cheez_its from "./whiteboard/cheez-its.png";
 import { type StaticImageData } from "next/image";
