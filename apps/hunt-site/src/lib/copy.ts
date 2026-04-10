@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { renderTableToPlainText } from "~/lib/utils";
 
 /** Map of MIME type to content. "text/plain" is required; all others are optional. */
 export type CopyData = {
@@ -7,23 +6,9 @@ export type CopyData = {
   [mimeType: string]: string;
 };
 
-export function normalizeCopyData(copyText: string | CopyData): CopyData {
-  if (typeof copyText === "string") {
-    const isHtml = /<\/?[a-z][\s\S]*>/i.test(copyText);
-    if (isHtml) {
-      return {
-        "text/plain": renderTableToPlainText(copyText),
-        "text/html": copyText,
-      };
-    }
-    return { "text/plain": copyText };
-  }
-  return copyText;
-}
-
 export function useCopyToClipboard(copyText: string | CopyData) {
-  const copyData = useMemo(() => normalizeCopyData(copyText), [copyText]);
-  const plainText = copyData["text/plain"];
+  const copyData =
+    typeof copyText === "string" ? { "text/plain": copyText } : copyText;
 
   const [didCopy, setDidCopy] = useState(false);
   const resetTimerRef = useRef<number | null>(null);
@@ -44,9 +29,7 @@ export function useCopyToClipboard(copyText: string | CopyData) {
       // accessible via e.clipboardData in paste events for any MIME type,
       // and HTML is not sanitized at write time.
       const textarea = document.createElement("textarea");
-      textarea.value = plainText;
-      textarea.style.cssText =
-        "position:fixed;top:-9999px;left:-9999px;opacity:0";
+      textarea.style.cssText = "position:fixed";
       document.body.appendChild(textarea);
       textarea.focus();
       textarea.select();
@@ -75,8 +58,8 @@ export function useCopyToClipboard(copyText: string | CopyData) {
         setDidCopy(false);
         resetTimerRef.current = null;
       }, 1500);
-    } catch {
-      // copy failed silently
+    } catch (e) {
+      console.warn(e);
     }
   }
 

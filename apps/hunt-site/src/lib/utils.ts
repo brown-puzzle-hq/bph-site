@@ -58,38 +58,3 @@ export const encodeSeen = (bits: string) => {
   const bytes = bits.match(/.{1,8}/g)!.map((b) => parseInt(b, 2));
   return bytes.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
-
-export function renderTableToPlainText(html: string): string {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  const rows = doc.querySelectorAll("table tr");
-
-  const table: string[][] = [];
-
-  for (const row of rows) {
-    const cells = Array.from(row.querySelectorAll("th, td")).map(
-      (cell) => cell.textContent?.trim() ?? "",
-    );
-    table.push(cells);
-  }
-
-  // Find the max width of each column
-  const colWidths: number[] = [];
-  table.forEach((row) =>
-    row.forEach((cell, i) => {
-      colWidths[i] = Math.max(colWidths[i] || 0, cell.length);
-    }),
-  );
-
-  // Format rows
-  const formatted = table
-    .map((row) =>
-      row
-        .map((cell, i) => cell.padEnd(colWidths[i]!))
-        .join(" | ")
-        .trimEnd(),
-    )
-    .join("\n");
-
-  return formatted;
-}

@@ -73,8 +73,7 @@ Concentration Requirements:
 HUMANITIES: Flying Through The Grid
 PHYSICAL SCIENCES: Dirt
 Four electives from MATH
-Four electives from SOCIAL SCIENCES
-`;
+Four electives from SOCIAL SCIENCES`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

@@ -1,8 +1,4 @@
-import dynamic from "next/dynamic";
-
-const EmbeddingsMachine = dynamic(() => import("./EmbeddingsMachine"), {
-  ssr: false,
-});
+import EmbeddingsMachine from "./EmbeddingsMachine";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.

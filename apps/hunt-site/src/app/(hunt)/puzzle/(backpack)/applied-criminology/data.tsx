@@ -114,8 +114,7 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `
-Applied Criminology
+export const copyText = `Applied Criminology
 This is a metapuzzle. You will need to use some answers to puzzles from the Department rounds in order to solve it.
 You study hard, making an index card for each chapter of your law class, to figure out how to stop your sentencing.
 §1
@@ -148,8 +147,7 @@ Whereas the intended action of the defendant was in no doubt to use their false 
 Concentration Requirements:
 MATH: Herculean Math
 Four electives from BUSINESS
-Four electives from PERFORMING ARTS
-`;
+Four electives from PERFORMING ARTS`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

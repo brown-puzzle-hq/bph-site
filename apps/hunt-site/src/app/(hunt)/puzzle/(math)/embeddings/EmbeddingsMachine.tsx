@@ -28,10 +28,10 @@ function AnalogyLine({
   separator?: string;
 }) {
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center font-mono text-base text-xs leading-relaxed">
-      <div className="pr-3 text-right">{renderParts(left)}</div>
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 font-mono text-xs leading-relaxed">
+      <div className="text-right">{renderParts(left)}</div>
       <div className="min-w-[2.5rem] text-center font-bold">{separator}</div>
-      <div className="pl-3 text-left">{renderParts(right)}</div>
+      <div className="text-left">{renderParts(right)}</div>
     </div>
   );
 }
@@ -73,7 +73,7 @@ export default function EmbeddingsMachine() {
   return (
     <div className="flex w-full max-w-3xl flex-col gap-4 md:flex-row md:items-stretch">
       {/* Puzzle display */}
-      <div className="min-w-0 flex-[1.25] rounded-xl border border-2 border-blue-900 bg-white/10 px-2 py-6">
+      <div className="flex-[1.25] rounded-xl border-2 border-blue-900 bg-white/10 px-2 py-6">
         <AnalogyLine
           left={["man : woman"]}
           right={[{ var: "A" }, " : herself"]}
@@ -161,7 +161,7 @@ export default function EmbeddingsMachine() {
       </div>
 
       {/* Machine */}
-      <div className="flex min-w-[260px] flex-1 flex-col rounded-xl border border-2 border-blue-900 bg-white/10 px-4 py-6">
+      <div className="flex flex-1 flex-col rounded-xl border-2 border-blue-900 bg-white/10 px-4 py-6">
         <div className="mb-1 text-center text-2xl font-bold">Machine</div>
         <div className="mb-5 text-center text-sm">Enter up to two words</div>
 
@@ -186,7 +186,7 @@ export default function EmbeddingsMachine() {
           <button
             type="submit"
             disabled={isPending || !word1.trim()}
-            className="w-full rounded-md border border-2 border-blue-900 bg-blue-900 py-2 text-sm font-medium transition-all hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-md border-2 border-blue-900 bg-blue-900 py-2 text-sm font-medium transition-all enabled:hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isPending ? "Running…" : "Run machine"}
           </button>
