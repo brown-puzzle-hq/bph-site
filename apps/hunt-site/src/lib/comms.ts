@@ -1,10 +1,11 @@
 import "server-only";
 
-import axios from "axios";
 import { Resend } from "resend";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "@/config/client";
 import { sign } from "jsonwebtoken";
+
+const MAX_RECIPIENTS_PER_EMAIL = 50;
 
 /** Discord integration */
 
@@ -43,7 +44,7 @@ export async function sendBotMessage(
 ) {
   // Use the general channel if the other channels are not set
   const webhookURL =
-    channelToWebhookURL[channel] || process.env.DISCORD_WEBHOOK_URL;
+    channelToWebhookURL[channel] ?? process.env.DISCORD_WEBHOOK_URL;
 
   // Disable the webhook by not including it in the env file
   if (!webhookURL) {
@@ -91,6 +92,8 @@ export async function sendBotMessage(
 
 /** Email integration */
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function sendEmail(
   to: string[],
   subject: string,
@@ -102,20 +105,45 @@ export async function sendEmail(
     return;
   }
 
-  to = [...new Set(to)];
-  bcc = bcc ? [...new Set(bcc)] : undefined;
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const response = await resend.emails.send({
-    from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
-    replyTo: `"Puzzle HQ" <${HUNT_EMAIL}>`,
-    to,
-    bcc,
-    subject,
-    react,
-  });
+  to = [...new Set(to)].filter(Boolean);
+  bcc = [...new Set(bcc ?? [])].filter(Boolean);
+  const batches: Array<{ to: string[]; bcc?: string[] }> = [];
 
-  if (response.error) {
-    const errorMessage = `✉️ Email send failed: ${response.error.message}`;
+  // Drain TO
+  while (to.length > MAX_RECIPIENTS_PER_EMAIL) {
+    batches.push({ to: to.splice(0, MAX_RECIPIENTS_PER_EMAIL) });
+  }
+
+  // Remaining TO with as much BCC as possible
+  if (to.length > 0) {
+    const bccList = bcc.splice(0, MAX_RECIPIENTS_PER_EMAIL - to.length);
+    batches.push({
+      to,
+      bcc: bccList.length > 0 ? bccList : undefined,
+    });
+  }
+
+  // Remaining BCC with HQ as primary recipient
+  while (bcc && bcc.length > 0) {
+    batches.push({
+      to: [HUNT_EMAIL],
+      bcc: bcc.splice(0, MAX_RECIPIENTS_PER_EMAIL - 1),
+    });
+  }
+
+  const { error } = await resend.batch.send(
+    batches.map((batch) => ({
+      from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
+      replyTo: `"Puzzle HQ" <${HUNT_EMAIL}>`,
+      to: batch.to,
+      bcc: batch.bcc,
+      subject,
+      react,
+    })),
+  );
+
+  if (error) {
+    const errorMessage = `✉️ Email send failed: ${error.message}`;
     await sendBotMessage(errorMessage, "dev", "@tech");
   }
 }

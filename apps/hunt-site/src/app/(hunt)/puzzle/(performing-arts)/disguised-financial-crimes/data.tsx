@@ -16,9 +16,8 @@ export const inPersonBody = (
     <div className="text-center">
       <b>
         This puzzle can be found on the 3rd floor of Page-Robinson Hall. You
-        should bring your tape. If you are a non-Brown team whose
-        solving room is not located in this building, please call us to get
-        access.
+        should bring your tape. If you are a non-Brown team whose solving room
+        is not located in this building, please call us to get access.
       </b>
     </div>
     <div className="text-center">

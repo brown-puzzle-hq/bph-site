@@ -16,9 +16,10 @@ export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
       <p>
-        This is an open book exam—please use your notes from this course sequence.
-        Multiple choice answers are worth 0 points, with the free response
-        determining the entirety of your grade for the semester. Good luck!
+        This is an open book exam—please use your notes from this course
+        sequence. Multiple choice answers are worth 0 points, with the free
+        response determining the entirety of your grade for the semester. Good
+        luck!
       </p>
     </div>
     <div className="mb-4">
