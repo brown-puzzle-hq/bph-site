@@ -2,13 +2,22 @@ import express from "express";
 import { WebSocket, WebSocketServer } from "ws";
 import http from "http";
 import cors from "cors";
-import { verify, JwtPayload } from "jsonwebtoken";
+import { verify, JwtPayload, TokenExpiredError } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
 interface WsJwtPayload extends JwtPayload {
   scope: string;
 }
+
+// https://github.com/Luka967/websocket-close-codes
+const CLOSE_CODES = {
+  INVALID_TOKEN: 1007 as const,
+  UNAUTHORIZED: 3000 as const,
+  FORBIDDEN: 3003 as const,
+  MISSING_TEAM: 4000 as const,
+  SESSION_EXPIRED: 4001 as const,
+};
 
 const app = express();
 // TODO: currently forced to use http, not https in dev
@@ -33,7 +42,7 @@ wss.on("connection", (ws, req) => {
   const token = url.searchParams.get("token");
   if (!token) {
     console.error("No token provided");
-    ws.close(3000, "No token provided");
+    ws.close(CLOSE_CODES.UNAUTHORIZED, "No token provided");
     return;
   }
 
@@ -46,12 +55,12 @@ wss.on("connection", (ws, req) => {
       decoded.scope !== "ws-connect"
     ) {
       console.error("Invalid claim(s)", decoded);
-      ws.close(3000, "Invalid claim(s)");
+      ws.close(CLOSE_CODES.FORBIDDEN, "Invalid claim(s)");
       return;
     }
     if (!decoded.sub) {
       console.error("No team provided");
-      ws.close(1003, "No team provided");
+      ws.close(CLOSE_CODES.MISSING_TEAM, "No team provided");
       return;
     }
     const teamId = decoded.sub;
@@ -61,8 +70,13 @@ wss.on("connection", (ws, req) => {
     socketToTeam.set(ws, teamId);
     console.log("Added to channel", teamId);
   } catch (e) {
-    console.error("Invalid token", token);
-    ws.close(3000, "Invalid token");
+    if (e instanceof TokenExpiredError) {
+      console.error("Token expired", token);
+      ws.close(CLOSE_CODES.SESSION_EXPIRED, "Token expired");
+    } else {
+      console.error("Invalid token", token);
+      ws.close(CLOSE_CODES.INVALID_TOKEN, "Invalid token");
+    }
     return;
   }
 

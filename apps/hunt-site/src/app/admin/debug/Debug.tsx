@@ -157,32 +157,9 @@ export default function Debug({
 
         <div className="space-y-2 text-sm md:columns-2">
           <div className="flex items-center justify-between gap-4">
-            <span className="text-gray-600">Role</span>
-            <span className="font-mono">{debug.role}</span>
-          </div>
-          <div className="flex items-center justify-between gap-4">
             <span className="text-gray-600">Transport</span>
             <span className="font-mono">{debug.transport ?? "(none)"}</span>
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-gray-600">Instance ID</span>
-            <span className="font-mono" title={debug.instanceId ?? ""}>
-              {debug.instanceId?.slice(0, 13) || "(none)"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-gray-600">Leader ID</span>
-            <span className="font-mono" title={debug.leaderId ?? ""}>
-              {debug.leaderId?.slice(0, 13) ?? "(unknown)"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-gray-600">Last election</span>
-            <span className="font-mono">
-              {formatTime(debug.lastElectionAt)}
-            </span>
-          </div>
-
           <div className="flex items-center justify-between gap-4">
             <span className="text-gray-600">Last message</span>
             <span className="font-mono">{formatTime(debug.lastMessageAt)}</span>
@@ -195,31 +172,9 @@ export default function Debug({
           </div>
 
           <div className="flex items-center justify-between gap-4">
-            <span className="whitespace-nowrap text-gray-600">Team ID</span>
-            <span className="truncate font-mono" title={debug.teamId ?? ""}>
-              {debug.teamId ?? "(none)"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="whitespace-nowrap text-gray-600">Channel</span>
-            <span
-              className="truncate font-mono"
-              title={debug.channelName ?? ""}
-            >
-              {debug.channelName ?? "(none)"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="whitespace-nowrap text-gray-600">Lock key</span>
-            <span className="truncate font-mono" title={debug.lockKey ?? ""}>
-              {debug.lockKey ?? "(none)"}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between gap-4">
             <span className="text-gray-600">Websocket status</span>
             <span className="font-mono">
-              {debug.role === "follower" || debug.role === "none" ? (
+              {!debug.transport ? (
                 "-"
               ) : debug.readyState === WebSocket.CONNECTING ? (
                 <p className="text-yellow-500">CONNECTING</p>
@@ -237,17 +192,13 @@ export default function Debug({
           <div className="flex items-center justify-between gap-4">
             <span className="text-gray-600">Last connected</span>
             <span className="font-mono">
-              {debug.role === "follower" || debug.role === "none"
-                ? "-"
-                : formatTime(debug.lastConnectedAt)}
+              {!debug.transport ? "-" : formatTime(debug.lastConnectedAt)}
             </span>
           </div>
           <div className="flex items-center justify-between gap-4">
             <span className="text-gray-600">Last closed</span>
             <span className="font-mono">
-              {debug.role === "follower" || debug.role === "none"
-                ? "-"
-                : formatTime(debug.lastClosedAt)}
+              {!debug.transport ? "-" : formatTime(debug.lastClosedAt)}
             </span>
           </div>
         </div>

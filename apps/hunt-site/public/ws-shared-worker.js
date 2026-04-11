@@ -1,26 +1,13 @@
-const teamStates = new Map();
-const portTeamMap = new WeakMap();
-
-function getState(teamId) {
-  const existing = teamStates.get(teamId);
-  if (existing) return existing;
-
-  const created = {
-    teamId,
-    ports: new Set(),
-    socket: null,
-    wsServer: null,
-    protocol: null,
-    readyState: WebSocket.CLOSED,
-    reconnectAttempts: 0,
-    reconnectTimer: null,
-    lastToken: null,
-    lastTokenRequestAt: 0,
-    awaitingToken: false,
-  };
-  teamStates.set(teamId, created);
-  return created;
-}
+const state = {
+  ports: new Set(),
+  socket: null,
+  wsServer: null,
+  protocol: null,
+  active: false,
+  readyState: WebSocket.CLOSED,
+  reconnectAttempts: 0,
+  reconnectTimer: null,
+};
 
 function sendToPort(port, message) {
   try {
@@ -30,43 +17,27 @@ function sendToPort(port, message) {
   }
 }
 
-function broadcast(state, message) {
+function broadcast(message) {
   for (const port of state.ports) {
     sendToPort(port, message);
   }
 }
 
-function emitStatus(state) {
-  broadcast(state, {
+function emitStatus() {
+  broadcast({
     kind: "STATUS",
-    teamId: state.teamId,
     readyState: state.readyState,
   });
 }
 
-function setReadyState(state, readyState) {
+function setReadyState(readyState) {
   state.readyState = readyState;
-  emitStatus(state);
+  emitStatus();
 }
 
-function clearStateIfUnused(state) {
+function cleanupIfUnused() {
   if (state.ports.size > 0) return;
-
-  if (state.reconnectTimer) {
-    clearTimeout(state.reconnectTimer);
-    state.reconnectTimer = null;
-  }
-
-  if (state.socket) {
-    try {
-      state.socket.close(1000);
-    } catch {
-      // ignore
-    }
-    state.socket = null;
-  }
-  state.readyState = WebSocket.CLOSED;
-  teamStates.delete(state.teamId);
+  stop();
 }
 
 async function normalizePayload(data) {
@@ -75,47 +46,21 @@ async function normalizePayload(data) {
   return String(data);
 }
 
-function requestToken(state) {
-  const now = Date.now();
-  if (now - state.lastTokenRequestAt < 1500) {
-    return;
-  }
-
-  state.lastTokenRequestAt = now;
-  state.awaitingToken = true;
-
-  broadcast(state, {
-    kind: "NEED_TOKEN",
-    teamId: state.teamId,
-  });
-}
-
-function scheduleReconnect(state) {
-  if (state.reconnectTimer || state.awaitingToken) return;
-
-  const step = Math.min(state.reconnectAttempts, 6);
-  const delay = Math.min(300 * 2 ** step, 10000);
+function scheduleReconnect() {
+  if (!state.active || state.reconnectTimer) return;
+  const delay = state.reconnectAttempts === 0 ? 0 : 60_000;
   state.reconnectAttempts += 1;
 
   state.reconnectTimer = setTimeout(() => {
     state.reconnectTimer = null;
-    if (state.socket) return;
-
-    if (state.lastToken) {
-      connectSocket(state, null);
-    } else {
-      requestToken(state);
-    }
+    void requestTokenAndConnect();
   }, delay);
 }
 
-function connectSocket(state, token) {
+async function requestTokenAndConnect() {
+  if (!state.active) return;
   if (!state.wsServer || !state.protocol) {
-    broadcast(state, {
-      kind: "ERROR",
-      teamId: state.teamId,
-      message: "Missing websocket server config.",
-    });
+    broadcast({ kind: "ERROR", message: "Missing websocket server config." });
     return;
   }
 
@@ -128,72 +73,88 @@ function connectSocket(state, token) {
     return;
   }
 
-  if (token) {
-    state.lastToken = token;
-    state.awaitingToken = false;
+  try {
+    const res = await fetch("/api/ws-token", {
+      method: "POST",
+      headers: {
+        "x-ws-reconnect-count": String(state.reconnectAttempts),
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`Token request failed (${res.status})`);
+    }
+    const data = await res.json();
+    const token = data?.token;
+    if (!token) {
+      throw new Error("Token response missing token");
+    }
+
+    const url = new URL(`${state.protocol}//${state.wsServer}`);
+    url.searchParams.set("token", token);
+
+    const socket = new WebSocket(url.toString());
+    state.socket = socket;
+    setReadyState(socket.readyState);
+
+    socket.onopen = () => {
+      if (state.socket !== socket) return;
+      state.reconnectAttempts = 0;
+      setReadyState(socket.readyState);
+    };
+
+    socket.onmessage = async (event) => {
+      if (state.socket !== socket) return;
+      const payload = await normalizePayload(event.data);
+      broadcast({ kind: "PAYLOAD", payload });
+    };
+
+    socket.onerror = () => {
+      if (state.socket !== socket) return;
+      setReadyState(socket.readyState);
+    };
+
+    socket.onclose = () => {
+      if (state.socket !== socket) return;
+      state.socket = null;
+      setReadyState(WebSocket.CLOSED);
+      scheduleReconnect();
+    };
+  } catch (err) {
+    broadcast({
+      kind: "ERROR",
+      message: err instanceof Error ? err.message : String(err),
+    });
+    setReadyState(WebSocket.CLOSED);
+    scheduleReconnect();
   }
+}
 
-  const tokenToUse = token || state.lastToken;
-
-  if (!tokenToUse) {
-    requestToken(state);
-    return;
-  }
-
+function stop() {
+  state.active = false;
+  state.reconnectAttempts = 0;
   if (state.reconnectTimer) {
     clearTimeout(state.reconnectTimer);
     state.reconnectTimer = null;
   }
-
-  const url = new URL(`${state.protocol}//${state.wsServer}`);
-  url.searchParams.append("token", tokenToUse);
-
-  const socket = new WebSocket(url.toString());
-  state.socket = socket;
-  setReadyState(state, socket.readyState);
-
-  socket.onopen = () => {
-    if (state.socket !== socket) return;
-    state.reconnectAttempts = 0;
-    setReadyState(state, socket.readyState);
-  };
-
-  socket.onmessage = async (event) => {
-    if (state.socket !== socket) return;
-    const payload = await normalizePayload(event.data);
-    broadcast(state, {
-      kind: "PAYLOAD",
-      teamId: state.teamId,
-      payload,
-      from: "shared-worker",
-    });
-  };
-
-  socket.onerror = () => {
-    if (state.socket !== socket) return;
-    setReadyState(state, socket.readyState);
-  };
-
-  socket.onclose = (event) => {
-    if (state.socket !== socket) return;
-    setReadyState(state, WebSocket.CLOSED);
-    state.socket = null;
-
-    const authLikeClose =
-      event.code === 4001 ||
-      event.code === 4003 ||
-      event.code === 1008 ||
-      event.code === 4401 ||
-      event.code === 4403;
-
-    if (authLikeClose) {
-      state.lastToken = null;
-      requestToken(state);
-      return;
+  if (state.socket) {
+    try {
+      state.socket.close(1000);
+    } catch {
+      // ignore
     }
+    state.socket = null;
+  }
+  setReadyState(WebSocket.CLOSED);
+}
 
-    scheduleReconnect(state);
-  };
+function start() {
+  if (!state.active) {
+    state.active = true;
+    state.reconnectAttempts = 0;
+  }
+  if (!state.socket && !state.reconnectTimer) {
+    void requestTokenAndConnect();
+  }
 }
 
 onconnect = (event) => {
@@ -207,43 +168,24 @@ onconnect = (event) => {
     const kind = data.kind;
 
     if (kind === "INIT") {
-      const { teamId, wsServer, protocol, token } = data;
-      if (!teamId || !wsServer || !protocol) return;
-
-      const state = getState(teamId);
-      state.wsServer = wsServer;
-      state.protocol = protocol;
+      const { wsServer, protocol, active } = data;
+      if (wsServer) state.wsServer = wsServer;
+      if (protocol) state.protocol = protocol;
       state.ports.add(port);
-      portTeamMap.set(port, teamId);
 
-      sendToPort(port, {
-        kind: "STATUS",
-        teamId,
-        readyState: state.readyState,
-      });
+      sendToPort(port, { kind: "STATUS", readyState: state.readyState });
 
-      connectSocket(state, token);
-      return;
-    }
-
-    if (kind === "TOKEN") {
-      const { teamId, token } = data;
-      if (!teamId) return;
-      const state = teamStates.get(teamId);
-      if (!state) return;
-      connectSocket(state, token);
+      if (active === false) {
+        stop();
+      } else {
+        start();
+      }
       return;
     }
 
     if (kind === "DISCONNECT") {
-      const teamId = portTeamMap.get(port);
-      if (!teamId) return;
-      const state = teamStates.get(teamId);
-      if (!state) return;
-
       state.ports.delete(port);
-      portTeamMap.delete(port);
-      clearStateIfUnused(state);
+      cleanupIfUnused();
     }
   };
 };

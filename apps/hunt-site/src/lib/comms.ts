@@ -62,14 +62,26 @@ export async function sendBotMessage(
       const chunks = message.match(/[\s\S]{1,2000}/g);
       if (chunks) {
         for (const chunk of chunks) {
-          await axios.post(webhookURL, {
-            content: chunk,
+          await fetch(webhookURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              content: chunk,
+            }),
           });
         }
       }
     } else {
-      await axios.post(webhookURL, {
-        content: message,
+      await fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: message,
+        }),
       });
     }
   } catch (e) {
@@ -144,16 +156,17 @@ export async function sendToWebsocketServer(
 
   try {
     const url = new URL("/broadcast", `${protocol}//${wsServer}`);
-    await axios.post(
-      url.toString(),
-      {
+    await fetch(url.toString(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
         teamId,
         ...msg,
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+      }),
+    });
   } catch (e) {
     console.error("Failed to send websocket message:", e);
   }
