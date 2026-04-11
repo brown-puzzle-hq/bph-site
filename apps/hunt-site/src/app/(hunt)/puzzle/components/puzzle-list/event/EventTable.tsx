@@ -41,7 +41,10 @@ export default function EventTable({
                   {event.name.trim() ? event.name : "\u200b"}
                   {inputBox && (
                     <div className="flex items-center space-x-2">
-                      <PencilLine className="size-4" />
+                      <div className="size-4">
+                        {/* Note: div needed to guarantee size-4 */}
+                        <PencilLine className="size-4" />
+                      </div>
                       {event.answer !== null ? (
                         <span
                           className={

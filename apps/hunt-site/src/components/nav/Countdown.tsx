@@ -3,17 +3,19 @@ import { useState, useEffect } from "react";
 import { formatDuration } from "~/lib/utils";
 
 export default function Countdown({ targetDate }: { targetDate: Date }) {
+  const targetMs = targetDate.getTime();
+
   const [timeRemaining, setTimeRemaining] = useState(
-    targetDate.getTime() - Date.now(),
+    () => targetMs - Date.now(),
   );
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeRemaining(targetDate.getTime() - Date.now());
-    }, 1000);
+    const update = () => setTimeRemaining(targetMs - Date.now());
+    update();
+    const intervalId = setInterval(update, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [targetMs]);
 
   if (timeRemaining <= 0) return null;
 

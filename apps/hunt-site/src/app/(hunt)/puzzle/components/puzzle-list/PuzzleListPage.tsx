@@ -82,13 +82,10 @@ export default function PuzzleListPage({
 
           const labelStyle: CSSProperties = {
             left: `calc(50% + ${labelDx}%)`,
-            ...(labelPosition === "top"
-              ? {
-                  top: `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
-                }
-              : {
-                  top: `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
-                }),
+            top:
+              labelPosition === "top"
+                ? `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`
+                : `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
           };
 
           return (
@@ -112,6 +109,27 @@ export default function PuzzleListPage({
                   }}
                 />
               </Link>
+
+              {/* Dummy */}
+              <div
+                className="peer absolute z-10 hidden opacity-0 sm:flex"
+                style={labelStyle}
+              >
+                <div
+                  className={cn(
+                    "relative -translate-x-1/2",
+                    labelPosition === "top" && "-translate-y-full",
+                  )}
+                >
+                  {/* Name */}
+                  <Link
+                    href={`/puzzle/${round.id}`}
+                    className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                  >
+                    {round.name}
+                  </Link>
+                </div>
+              </div>
 
               {/* Round name */}
               <div

@@ -30,7 +30,7 @@ export default function SeenPuzzleIcon({ index }: { index: number }) {
   return (
     <button
       className={cn(
-        "absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 transition-all duration-200 ease-out",
+        "pointer-events-auto absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 transition-all duration-200 ease-out",
         isDisappearing && "scale-125 opacity-0 blur-sm",
       )}
       onClick={() => {
