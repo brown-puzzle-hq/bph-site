@@ -3,11 +3,14 @@ const state = {
   socket: null,
   wsServer: null,
   protocol: null,
+  clientBuild: null,
   active: false,
   readyState: WebSocket.CLOSED,
   reconnectAttempts: 0,
   reconnectTimer: null,
 };
+
+const WS_CONNECTED_MESSAGE = JSON.stringify({ kind: "__WS_CONNECTED" });
 
 function sendToPort(port, message) {
   try {
@@ -91,6 +94,7 @@ async function requestTokenAndConnect() {
 
     const url = new URL(`${state.protocol}//${state.wsServer}`);
     url.searchParams.set("token", token);
+    url.searchParams.set("clientBuild", state.clientBuild ?? "XXXXXXXX-X");
 
     const socket = new WebSocket(url.toString());
     state.socket = socket;
@@ -98,13 +102,18 @@ async function requestTokenAndConnect() {
 
     socket.onopen = () => {
       if (state.socket !== socket) return;
-      state.reconnectAttempts = 0;
       setReadyState(socket.readyState);
     };
 
     socket.onmessage = async (event) => {
       if (state.socket !== socket) return;
       const payload = await normalizePayload(event.data);
+
+      if (payload === WS_CONNECTED_MESSAGE) {
+        state.reconnectAttempts = 0;
+        return;
+      }
+
       broadcast({ kind: "PAYLOAD", payload });
     };
 
@@ -168,9 +177,10 @@ onconnect = (event) => {
     const kind = data.kind;
 
     if (kind === "INIT") {
-      const { wsServer, protocol, active } = data;
+      const { wsServer, protocol, active, clientBuild } = data;
       if (wsServer) state.wsServer = wsServer;
       if (protocol) state.protocol = protocol;
+      if (clientBuild) state.clientBuild = clientBuild;
       state.ports.add(port);
 
       sendToPort(port, { kind: "STATUS", readyState: state.readyState });

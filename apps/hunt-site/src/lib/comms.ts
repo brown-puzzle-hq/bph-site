@@ -124,7 +124,7 @@ export async function sendEmail(
   }
 
   // Remaining BCC with HQ as primary recipient
-  while (bcc && bcc.length > 0) {
+  while (bcc.length > 0) {
     batches.push({
       to: [HUNT_EMAIL],
       bcc: bcc.splice(0, MAX_RECIPIENTS_PER_EMAIL - 1),

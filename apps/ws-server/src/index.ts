@@ -10,6 +10,8 @@ interface WsJwtPayload extends JwtPayload {
   scope: string;
 }
 
+const WS_CONNECTED_MESSAGE = JSON.stringify({ kind: "__WS_CONNECTED" });
+
 // https://github.com/Luka967/websocket-close-codes
 const CLOSE_CODES = {
   INVALID_TOKEN: 1007 as const,
@@ -40,8 +42,10 @@ wss.on("connection", (ws, req) => {
   // Get the token from the URL
   const url = new URL(req.url || "", "http://dummy");
   const token = url.searchParams.get("token");
+  const clientBuild = url.searchParams.get("clientBuild");
+  const prefix = "[WSV-" + (clientBuild ?? "XXXXXXXX-X") + "]";
   if (!token) {
-    console.error("No token provided");
+    console.error(prefix, "No token provided");
     ws.close(CLOSE_CODES.UNAUTHORIZED, "No token provided");
     return;
   }
@@ -54,12 +58,12 @@ wss.on("connection", (ws, req) => {
       decoded.aud !== "ws-server" ||
       decoded.scope !== "ws-connect"
     ) {
-      console.error("Invalid claim(s)", decoded);
+      console.error(prefix, "Invalid claim(s)", decoded);
       ws.close(CLOSE_CODES.FORBIDDEN, "Invalid claim(s)");
       return;
     }
     if (!decoded.sub) {
-      console.error("No team provided");
+      console.error(prefix, "No team provided");
       ws.close(CLOSE_CODES.MISSING_TEAM, "No team provided");
       return;
     }
@@ -68,13 +72,13 @@ wss.on("connection", (ws, req) => {
     if (!channels.has(teamId)) channels.set(teamId, new Set());
     channels.get(teamId)!.add(ws);
     socketToTeam.set(ws, teamId);
-    console.log("Added to channel", teamId);
+    console.log(prefix, "Added to channel", teamId);
   } catch (e) {
     if (e instanceof TokenExpiredError) {
-      console.error("Token expired", token);
+      console.error(prefix, "Token expired at", e.expiredAt.toISOString());
       ws.close(CLOSE_CODES.SESSION_EXPIRED, "Token expired");
     } else {
-      console.error("Invalid token", token);
+      console.error(prefix, "Invalid token");
       ws.close(CLOSE_CODES.INVALID_TOKEN, "Invalid token");
     }
     return;
@@ -85,9 +89,15 @@ wss.on("connection", (ws, req) => {
     const teamId = socketToTeam.get(ws);
     if (teamId && channels.has(teamId)) {
       channels.get(teamId)!.delete(ws);
-      console.log("Removed from channel", teamId);
+      console.log(prefix, "Removed from channel", teamId);
     }
   });
+
+  try {
+    ws.send(WS_CONNECTED_MESSAGE);
+  } catch {
+    // Ignore send failures; connection may already be closing.
+  }
 });
 
 app.post("/broadcast", express.json(), (req, res) => {
@@ -115,7 +125,7 @@ app.post("/broadcast", express.json(), (req, res) => {
       return;
     }
   } catch (e) {
-    console.error("Invalid token", token);
+    console.error("Invalid token");
     res.status(401).send("Invalid token");
     return;
   }

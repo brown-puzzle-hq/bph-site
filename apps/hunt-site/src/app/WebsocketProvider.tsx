@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "~/lib/utils";
 
 /** Bumped when `public/ws-shared-worker.js` changes so tabs load the new script. */
-const WS_SHARED_WORKER_BUILD = "20260411-1";
+const WS_SHARED_WORKER_BUILD = "20260411-2";
 
 type WebSocketContextValue = {
   transport: "shared-worker" | null;
@@ -231,6 +231,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         kind: "INIT",
         wsServer,
         protocol,
+        clientBuild: WS_SHARED_WORKER_BUILD,
         active: status === "authenticated" && Boolean(session),
       });
     } catch {
