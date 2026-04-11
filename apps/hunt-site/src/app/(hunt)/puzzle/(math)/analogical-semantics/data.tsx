@@ -38,7 +38,18 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Analogical Semantics
+man : woman :: A : herself
+italy : mussolini :: B : franco
+B : mexico :: portugal : C
+A : C :: herself : D
+goober : D :: E : route
+D : E :: F : environmentalists
+copper : F :: (G : help) : saint
+G : freckle :: (D : E) : (A : H)
+B : H :: I : (C : (A : F))
+(I : G) : (D : F) :: (C : H) : (E : J)
+J + I = _____`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

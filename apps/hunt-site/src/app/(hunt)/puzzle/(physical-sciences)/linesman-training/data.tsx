@@ -83,7 +83,8 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Linesman Training
+Make sure you're face-to-face to observe the flags, though keep all text hidden. We've given notches on a few tiles—be sure to line them up to help you put things together.`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

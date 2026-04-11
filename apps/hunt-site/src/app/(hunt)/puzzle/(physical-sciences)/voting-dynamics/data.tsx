@@ -94,7 +94,17 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Voting Dynamics
+In this pageant, four competitors are competing in two races: STYLE and VERVE. The people have voted -- now we need to count the ballots.
+
+The election works by Single Transferable Vote:
+Ineligible votes are automatically transferred before any other calculations.
+The threshold for winning is floor(n/2)+1, where n is the number of remaining voters.
+If no candidate meets the threshold for winning, move the 1st place votes for the lowest candidate(s) to their next eligible options simultaneously.
+If a voter runs out of eligible preferences, they no longer count against the threshold for winning, and their vote is cast for no-one.
+A vote for a candidate is only eligible if it is a large hole that punches out all four corners of the rectangle.
+
+Who wins for STYLE? Who wins for VERVE? (Submit your answer in the form "WINNER 1 AND WINNER 2".)`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

@@ -58,7 +58,8 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = null;
+export const copyText = `Scacchic Fabrication
+Is there any light in here?! The board's been unwoven with six moves to go! We'll both do our best, but we need to see where we're placing our pieces...`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.
