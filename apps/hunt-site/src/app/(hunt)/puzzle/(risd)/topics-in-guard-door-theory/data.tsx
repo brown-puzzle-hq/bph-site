@@ -75,6 +75,7 @@ const game3: GameProps = {
     [12, 13],
     [10, 15],
     [16, 17],
+    [17, 22],
     [13, 18],
     [16, 21],
   ],
@@ -141,6 +142,7 @@ const game6: GameProps = {
   height: 5,
   width: 5,
   blackWalls: [
+    [2, 7],
     [12, 13],
     [17, 18],
     [16, 21],
