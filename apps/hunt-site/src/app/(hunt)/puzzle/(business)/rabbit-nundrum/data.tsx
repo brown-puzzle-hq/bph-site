@@ -27,7 +27,82 @@ export const inPersonBody = (
       </b>
     </div>
     <div>
-      Please read the GENERAL INSTRUCTIONS before any of the other instructions.
+      Please read the following GENERAL GUIDELINES before any of the other
+      instructions.
+    </div>
+    <div className="space-y-4">
+      <div>
+        Each person on your team should look at the sheet corresponding to a
+        single color of rabbit and follow the <b>Instructions</b> contained
+        therein.
+      </div>
+      <div className="font-bold underline">
+        You should pinky promise to only look at your own sheet, though you are
+        free to communicate any information you want.
+      </div>
+      <div>
+        You are about to execute an important tea party between important
+        rabbits. To ensure everything goes smoothly, here are a few guidelines:
+        <ol className="list-dec list-inside">
+          <li>
+            The rabbit wearing <b>The Hat</b> is <b>The Hatter</b>. They become{" "}
+            <b>The Hatter</b> as soon as they put on <b>The Hat</b>, and stop
+            being <b>The Hatter</b> as soon as they take it off. A rabbit that
+            is given <b>The Hat</b> puts it on unless indicated otherwise.
+          </li>
+          <li>
+            When a rabbit is <b>The Hatter</b>, they still follow their standard
+            Instructions.
+          </li>
+          <li>
+            When a <b>New Step</b> is called, <b>The Hatter</b> will read aloud
+            the letter written on the side of their body facing toward the
+            center of the table (this does not count as an <b>Instruction</b>,
+            because it is one of the general guidelines), then follow any{" "}
+            <b>Instructions</b> they wish to follow. <b>The Hatter</b> always
+            acts first, and completes all of their relevant <b>Instructions</b>{" "}
+            before another rabbit acts.
+          </li>
+          <li>
+            Rabbits always sit back down facing toward the center of the table;
+            if they move directly between seats, they preserve their
+            orientation.
+          </li>
+          <li>
+            When a rabbit asks another rabbit to do something, they will
+            cooperate unless they have a reason to refuse.
+          </li>
+          <li>
+            Unless indicated otherwise, rabbits will drink tea from the cup in
+            front of them exactly four <b>Instructions</b> after it is served.
+          </li>
+          <li>
+            There will always be a rabbit with an <b>Instruction</b> to follow.
+          </li>
+        </ol>
+      </div>
+      <div>
+        Here are some recommended role distributions for teams with fewer than 6
+        solvers:
+        <div className="px-4">
+          5: One person should take both the green and blue rabbits, and the
+          others should each take one rabbit.
+          <br />
+          4: One person should take the white and purple rabbits, another person
+          should take the green and blue rabbits, and the others should each
+          take one rabbit.
+          <br />
+          3: One person should take the pink and blue rabbits, another should
+          take the white and purple rabbits, and the other should take the brown
+          and green rabbits.
+          <br />
+          2: One person should take the green, brown, and pink rabbits, and the
+          other should take the rest.
+          <br />
+          1: We would strongly recommend attempting this puzzle with at least
+          two solvers.
+        </div>
+      </div>
     </div>
   </div>
 );
@@ -64,8 +139,6 @@ export const remoteBody = (
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-import Solution from "./solution/solution.mdx";
-// export const solutionBody = <Solution />;
 export const solutionBody = null;
 
 /**
@@ -95,6 +168,18 @@ export const partialSolutions: Record<string, string> = {
 export const tasks: Record<string, JSX.Element> = {
   INSIDEHATTER: (
     <div className="max-w-3xl space-y-6">
+      <p>Do what must be done.</p>
+    </div>
+  ),
+};
+
+/**
+ * Specifically for The Rabbit 'Nundrum, remoteTasks will be displayed instead of tasks
+ * for remote teams. Make sure the keys match!
+ */
+export const remoteTasks = {
+  INSIDEHATTER: (
+    <div className="max-w-3xl space-y-6">
       <p>Do what you must.</p>
       <div className="mt-4 grid grid-cols-1 gap-4">
         <Image src={murder} alt="A white rabbit, beheaded." />
@@ -106,9 +191,3 @@ export const tasks: Record<string, JSX.Element> = {
     </div>
   ),
 };
-
-/**
- * Specifically for The Rabbit 'Nundrum, remoteTasks will be displayed instead of tasks
- * for remote teams. Make sure the keys match!
- */
-export const remoteTasks = tasks;

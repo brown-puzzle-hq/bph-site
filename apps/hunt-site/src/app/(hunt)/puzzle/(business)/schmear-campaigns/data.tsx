@@ -24,6 +24,8 @@ export const inPersonBody = (
         Things are getting dirty as these dancing bagels fight to be your
         breakfast.
       </i>
+    </div>{" "}
+    <div className="flex-justify-center mb-4">
       <Image className="mb-4" src={loc1} alt="" />
       <Image className="mb-4" src={loc2} alt="" />
       <Image className="mb-4" src={loc3} alt="" />
