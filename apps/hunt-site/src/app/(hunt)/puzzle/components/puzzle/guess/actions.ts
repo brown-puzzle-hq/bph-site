@@ -226,7 +226,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // If the team has unlocked the pin interaction, message the interaction channel
   if (pinInteraction !== "none") {
-    const interactionMessage = `📌 **${pinInteraction === "brown" ? "Brown" : "Non-Brown"} Pin Interaction** for [${teamId}](${HUNT_URL}/team/${teamId}) after [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId})`;
+    const interactionMessage = `📌 **${pinInteraction === "brown" ? "Brown" : "Non-Brown"} Pin Interaction** for [${teamId}](${HUNT_URL}/admin/graph?team=${teamId}) after [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId})`;
     notifications.push(
       sendBotMessage(interactionMessage, "interaction", "@lore"),
     );
