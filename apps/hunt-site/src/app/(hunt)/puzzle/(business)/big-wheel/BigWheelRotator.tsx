@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 type WheelAsset = {
   label: string;
@@ -19,6 +19,9 @@ type BigWheelRotatorProps = {
 
 const WHEEL_SIZES_PCT = [36, 44, 52, 60, 68, 76, 84, 92, 100]; // inner -> outer
 const WHEEL_RADIUS_PCT = WHEEL_SIZES_PCT.map((sizePct) => sizePct / 2);
+const INITIAL_ROTATIONS_DEG = [
+  211, 37, 294, 123, 279, 16, 332, 88, 246,
+] as const;
 
 const normalizeDegrees = (deg: number) => {
   const normalized = deg % 360;
@@ -77,12 +80,8 @@ export default function BigWheelRotator({ wheels }: BigWheelRotatorProps) {
   const [dragWheelIndex, setDragWheelIndex] = useState<number | null>(null);
 
   const [rotationsDeg, setRotationsDeg] = useState<number[]>(() =>
-    Array.from({ length: wheels.length }, () => 0),
+    INITIAL_ROTATIONS_DEG.slice(0, wheels.length),
   );
-
-  useEffect(() => {
-    setRotationsDeg(createRandomRotations(wheels.length));
-  }, [wheels.length]);
 
   const wheelsReversed = useMemo(() => [...wheels].reverse(), [wheels]);
 
