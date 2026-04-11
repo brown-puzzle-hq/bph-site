@@ -25,12 +25,12 @@ export const INITIAL_PUZZLES: string[] = [
 export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "advanced-logical-cooking-techniques": ["topics-in-guard-door-theory"],
   "anthropology-of-computers": [],
-  "local-criminology": [],
+  "applied-criminology": [],
   "applied-probability": [
     "serialized-storytelling",
     "architecture-on-college-hill",
   ],
-  law: [],
+  "bar-exam": [],
   "big-wheel": ["architecture-on-college-hill", "characters-in-flight"],
   "card-game-theory": [
     "mischievous-literature",
@@ -184,14 +184,14 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
 export const META_PUZZLES: string[] = [
   "anthropology-of-computers",
   "psychoceramics",
-  "local-criminology",
+  "applied-criminology",
   "theological-chemistry",
   "underwater-basketweaving",
   "geographical-textiles",
   "thermodynamic-zoology",
   "maritime-studies",
   "luck-practicum",
-  "law",
+  "bar-exam",
   "cubist-linguistics",
 ];
 
@@ -288,7 +288,7 @@ export type PoolUnlock = {
 
 export const POOL_UNLOCKS: PoolUnlock[] = [
   {
-    name: "local-criminology",
+    name: "applied-criminology",
     threshold: 3,
     feeders: [
       "schmear-campaigns",
@@ -377,7 +377,7 @@ export const POOL_UNLOCKS: PoolUnlock[] = [
     ],
   },
   {
-    name: "law",
+    name: "bar-exam",
     threshold: 4,
     feeders: [
       "applied-probability",
@@ -453,8 +453,8 @@ export const POOL_UNLOCKS: PoolUnlock[] = [
 
 export const FEEDER_ORDER: Record<string, number> = {
   "anthropology-of-computers": 1,
-  "local-criminology": 2,
-  law: 3,
+  "applied-criminology": 2,
+  "bar-exam": 3,
   "cubist-linguistics": 4,
   "geographical-textiles": 5,
   "luck-practicum": 6,

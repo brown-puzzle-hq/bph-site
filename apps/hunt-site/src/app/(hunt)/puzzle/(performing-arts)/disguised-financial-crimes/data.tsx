@@ -81,13 +81,12 @@ export const solutionBody = <Solution />;
 
 export const authors = null;
 
-
 export const copyText = `Disguised Financial Crimes
 This puzzle can be found on the 3rd floor of Page-Robinson Hall. You should bring your tape and red string. If you are a non-Brown team whose solving room is not located in this building, please call us to get access.
 
 We recommend using online tools to solve this puzzle.
 
-You and your partner, Detective Rolfsen, have finally unknotted the whole conspiracy: APMA-Econ majors are taxonomically lizards in disguise.`
+You and your partner, Detective Rolfsen, have finally unknotted the whole conspiracy: APMA-Econ majors are taxonomically lizards in disguise.`;
 
 export const partialSolutions: Record<string, string> = {};
 

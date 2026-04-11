@@ -19,10 +19,21 @@ DRY_RUN=1
 [[ -f "$CSV" ]] || { echo "Missing $CSV" >&2; exit 1; }
 [[ -d "$PUZZLE_ROOT" ]] || { echo "Missing $PUZZLE_ROOT" >&2; exit 1; }
 
-while IFS= read -r line || [[ -n "$line" ]]; do
-  [[ -z "$line" || "$line" == old\ id,* ]] && continue
-  IFS=',' read -r old_id new_id _ <<<"$line"
-  [[ -n "$old_id" && -n "$new_id" && "$old_id" != "$new_id" ]] || continue
+mapfile -t pairs < <(python3 - "$CSV" <<'PY'
+import csv, sys
+with open(sys.argv[1], newline="", encoding="utf-8") as f:
+    for row in csv.DictReader(f):
+        old_id = (row.get("old id") or "").strip()
+        new_id = (row.get("new id") or "").strip()
+        if not old_id or not new_id or old_id == new_id:
+            continue
+        print(f"{old_id}\t{new_id}")
+PY
+)
+
+for pair in "${pairs[@]}"; do
+  old_id="${pair%%$'\t'*}"
+  new_id="${pair#*$'\t'}"
 
   count=0
   old_path=""
@@ -45,6 +56,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     git -C "$GIT_ROOT" mv -- "$old_rel" "$new_rel"
     echo "OK: $old_id -> $new_id"
   fi
-done <"$CSV"
+done
 
 [[ "$DRY_RUN" -eq 1 ]] && echo "Dry run only. Re-run with --apply."

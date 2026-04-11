@@ -4,7 +4,7 @@
  * Feel free to make this creative, because the route to the puzzle will be
  * example.com/puzzle/puzzleId.
  */
-export const puzzleId = "local-criminology";
+export const puzzleId = "applied-criminology";
 
 /**
  * The body renders above the guess submission form. Put flavor text, images,
@@ -116,7 +116,7 @@ export const authors = null;
  * The `copyText` should provide a convenient text representation of the puzzle
  * that can be copied to the clipboard. Set this to `null` to remove the copy button.
  */
-export const copyText = `Local Criminology
+export const copyText = `Applied Criminology
 This is a metapuzzle. You will need to use some answers to puzzles from the Department rounds in order to solve it.
 You study hard, making an index card for each chapter of your Rhode Island law class. 
 How can you stop your sentencing?

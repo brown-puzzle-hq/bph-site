@@ -7,10 +7,7 @@ export const puzzleId = "itty-bitty-kitties";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 flex justify-center">
-      <Image
-        src={kitties}
-        alt="Itty-Bitty Kitties"
-      />
+      <Image src={kitties} alt="Itty-Bitty Kitties" />
     </div>
   </div>
 );

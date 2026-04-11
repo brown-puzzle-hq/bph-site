@@ -4,8 +4,8 @@ export { background };
 export const roundName = "Backpack";
 
 import anthropology_of_computers_black from "./icons-black/anthropology-of-computers.png";
-import applied_criminology_black from "./icons-black/local-criminology.png";
-import bar_exam_black from "./icons-black/law.png";
+import applied_criminology_black from "./icons-black/applied-criminology.png";
+import bar_exam_black from "./icons-black/bar-exam.png";
 import cubist_linguistics_black from "./icons-black/cubist-linguistics.png";
 import geographical_textiles_black from "./icons-black/geographical-textiles.png";
 import luck_practicum_black from "./icons-black/luck-practicum.png";
@@ -16,8 +16,8 @@ import thermodynamic_zoology_black from "./icons-black/thermodynamic-zoology.png
 import underwater_basketweaving_black from "./icons-black/underwater-basketweaving.png";
 
 import anthropology_of_computers_color from "./icons-color/anthropology-of-computers.png";
-import applied_criminology_color from "./icons-color/local-criminology.png";
-import bar_exam_color from "./icons-color/law.png";
+import applied_criminology_color from "./icons-color/applied-criminology.png";
+import bar_exam_color from "./icons-color/bar-exam.png";
 import cubist_linguistics_color from "./icons-color/cubist-linguistics.png";
 import geographical_textiles_color from "./icons-color/geographical-textiles.png";
 import luck_practicum_color from "./icons-color/luck-practicum.png";
@@ -38,7 +38,7 @@ export const icons: Record<string, PuzzleIcon> = {
     h: 8.3946,
     solveIcon: anthropology_of_computers_color,
   },
-  "local-criminology": {
+  "applied-criminology": {
     icon: applied_criminology_black,
     x: 25.4167,
     y: 74.6324,
@@ -46,7 +46,7 @@ export const icons: Record<string, PuzzleIcon> = {
     h: 9.1299,
     solveIcon: applied_criminology_color,
   },
-  law: {
+  "bar-exam": {
     icon: bar_exam_black,
     x: 35.463,
     y: 56.0661,
