@@ -98,7 +98,7 @@ const rebusCells: Array<{ r: number; c: number }> = [
   { r: 6, c: 12 },
   { r: 6, c: 22 },
   { r: 5, c: 18 },
-  { r: 9, c: 15 },
+  { r: 9, c: 17 },
   { r: 9, c: 16 },
   { r: 10, c: 18 },
   { r: 14, c: 14 },
