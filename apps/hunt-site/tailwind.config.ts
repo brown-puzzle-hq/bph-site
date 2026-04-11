@@ -79,6 +79,20 @@ export default {
             },
           },
         },
+        solution: {
+          css: {
+            "--tw-prose-body": theme("colors.main-text"),
+            "--tw-prose-headings": theme("colors.main-header"),
+            "--tw-prose-links": theme("colors.link"),
+            "--tw-prose-bold": theme("colors.main-header"),
+            "--tw-prose-captions": theme("colors.main-text"),
+            "--tw-prose-bullets": theme("colors.main-text"),
+            "--tw-prose-counters": theme("colors.main-text"),
+            "--tw-prose-hr": theme("colors.main-text"),
+            "--tw-prose-code": theme("colors.main-text"),
+            maxWidth: "none",
+          },
+        },
         "custom-colors": {
           css: {
             "--tw-prose-body": theme("colors.stone[100]"), // Light off-white for body text

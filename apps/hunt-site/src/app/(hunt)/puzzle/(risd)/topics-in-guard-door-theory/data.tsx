@@ -203,7 +203,8 @@ export const inPersonBody = true;
 
 export const remoteBody = inPersonBody;
 
-export const solutionBody = null;
+import Solution from "./solution/solution.mdx";
+export const solutionBody = <Solution />;
 
 export const authors = null;
 

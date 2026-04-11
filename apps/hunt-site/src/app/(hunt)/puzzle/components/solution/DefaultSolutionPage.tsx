@@ -55,7 +55,9 @@ export default async function DefaultSolutionPage({
         </div>
       )}
       <div className="no-scrollbar overflow-auto">
-        <div className="mx-auto w-fit">{solutionBody}</div>
+        <article className="prose prose-solution mx-auto max-w-3xl">
+          {solutionBody}
+        </article>
       </div>
     </div>
   );

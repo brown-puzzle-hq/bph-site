@@ -35,7 +35,8 @@ export const remoteBody = (
  * The `solutionBody` renders in the solution page.
  * If there are no solutions available, set it null.
  */
-export const solutionBody = null;
+import Solution from "./solution/solution.mdx";
+export const solutionBody = <Solution />;
 
 /**
  * The `authors` string renders below the `solutionBody`.

@@ -214,7 +214,7 @@ export const inPersonBody = (
   </div>
 );
 export const remoteBody = inPersonBody;
-export const solutionBody = <div className="max-w-3xl">Solution TBD.</div>;
+export const solutionBody = null;
 export const authors = "";
 export const copyText = null;
 export const partialSolutions: Record<string, string> = {};

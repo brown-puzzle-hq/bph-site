@@ -1,0 +1,123 @@
+Puzzle Rules:
+
+- Sudoku rules: place the digits 1-9 once each in every row, every column, and every 3x3 box
+- Thermometer rules: digits along a thermometer strictly increase from the bulb to the tip
+- Sandwich rules: the digits between 1 and 9 in the indicated row/column sum to the sandwich clue outside the grid (excluding the 1 and 9\)
+
+Notation reference:
+
+- (a,b) \= row a, column b:
+- “Mark” \= all possible options for a specified cell
+- “Corner mark” \= the specified digit is in one of the indicated cells within the box containing those cells
+- “Remove” \= remove the marking (“mark” or “corner mark”) of the specified digit(s)
+
+Some thermometer properties to note:
+
+- 1 can only appear in the bulb of a thermometer
+- 9 can only appear in the tip of a thermometer
+
+Logical steps:
+
+1. Place 9 in (1,1) and 1 in (1,6); cannot reach 25 sandwich any other way in row 1
+   1. Mark 4678 between 1 and 9 in row 1 to reach 25
+2. Place 5 in (1,7), 3 in (1,8), 2 in (1,9); only way to fill the remaining digits in row 1 due to thermometer
+3. Place 1 in (2,9); bulb \<2
+   1. Mark 2345 in (9,6); thermo bulb must be ≤5
+4. Place 9 in (4,6); 14 sandwich can be made in 2, or 4 with 2345, but (9,6) ≤5 bc bulb of 5-cell thermo, so cannot make it in 4 (since one of the digits 2345 must be in (9,6))
+   1. Mark 68 between 1 and 9 in column 6 to reach 14
+   2. Remove 68 from (1,4) and (1,5); 68 pair already in the box
+   3. Remove 47 from (1,2) and (1,3); 47 pair already in the row
+5. Place 9 in (2,5); any further left/right makes it impossible to reach 18 sandwich in row 2 (too large)
+   1. Mark 468 between 1 and 9 in row 2 to reach 18 (must contain 4), only ways to make 18 given 68 in (2,6)
+   2. Corner mark 4 in (2,7), (2,8); surpass 18 clue in row 2 otherwise
+   3. Mark 235 in the remaining box 2 cells, with 23 in (3,4) and 35 in (3,5)
+   4. Mark 12 in (3,3), to fulfill the thermometer
+6. Place 9 in (3,8); cannot be on bulb, putting it in (3,9) makes 18 sandwich impossible
+7. Place 1,2,3,6,7 in (3,3)-(3,7); only possible way to make 18 (minimized makes 18\)
+   - Note: (3,7) ≠ 4 because 4 is already in box 3 ((2,7) or (2,8))
+8. Place 8 in (3,9); nowhere else to put 8 in box 3
+   1. Mark 45 in (3,1) & (3,2); only digits left in row 3
+   2. Remove 5 mark from row 2 box 1; 45 pair in box already
+9. Place 5 in (2,4); other options placed in the box already
+10. Place 4 in (4,5) and 1 in (5,5); only way to fulfill 7 sandwich clue
+    1. Corner mark 1 in (6,7) or (6,8); no other places in the box (cannot be on thermo body)
+    2. Corner mark 1 in (4,1) or (4,2); sudoku
+11. Place 4 in (1,4) and 7 in (1,5); 4 already placed in column 5
+12. Place 1 in (4,2) and 9 in (9,2); cannot reach 23 sandwich otherwise
+    1. Mark 8,7,5,3 between 1 and 9 in column 2: maximized digits exactly equal 23
+13. Place 6 in (1,2), 2 in (2,2), 4 in (3,2); other options impossible due to sandwiched digits
+14. Place 5 in (3,1); 4 already in row 3
+15. Place 5 in (9,5); other options don’t work: 2 forces 1 into bulb (1 already in column 6), 6 forces 7 above it (7 already in column), 8 breaks thermometer
+16. Place 6 in (8,5); other options don’t work (8 breaks thermometer, 2\<5)
+    1. Mark 234 in (9,6); thermo bulb
+    2. Mark 78 in (7,4); thermo rules
+    3. Mark 89 in (6,3); thermo rules
+    4. Mark 28 in (6,5) and (7,5); sudoku
+17. Place 9 in (6,3); given 1 in either (6,7) or (6,8), placing 9 farther left or right makes the 22 clue impossible (farther left, i.e. (6,1): need 2+3+4+5+8=22 (minimized), but can’t place 4; if farther right, cannot get big enough)
+18. Place 1 in (6,8); cannot make 22 with 3 numbers (8+7+6=21)
+19. Place 3 in (5,4); only number that works for thermometer (≠1,2,4,5 by sudoku, ≠7,8,9 by thermo, 6 forces another 8 into column 3\)
+    1. Mark 25 in (5,6); sudoku+thermo rules
+    2. Mark 57 in (6,6); sudoku+thermo rules
+    3. Mark 678 in (6,4); sudoku
+    4. Mark 456, 567, 678 on the sequential cells of the thermo beginning at (5,4)=3; thermo rules
+20. Place 2 in (4,1); nowhere else to place 2 in row 4
+21. Place 3 in (4,9); nowhere else place 3 in row 4
+22. Place 2 in (6,7); no other options work:
+    - 1,3,5,7,9: don’t work by sudoku
+    - 4: no way to make 18 using the markings in r6,c456
+    - 6: no way to make 16 using the markings in r6,c456
+    - 8: only way is (6,4)=7, (6,5)=2, (6,6)=5, but then no options for (5,6)
+23. Place 8 in (6,5) and 2 in (7,5); sudoku
+24. Place 7 in (6,4) and 5 in (6,6); only way to make 22 sandwich
+25. Place 2 in (5,6); thermo+sudoku
+26. Place 6 in (4,4); sudoku
+27. Place 4,5 on thermo in r45,c3 (only options)
+28. Place 8 in (4,7); 567 triple in row 4 —\> can’t put 6
+29. Place 8 in (4,7) and 7 in (4,8); sudoku \+ thermo
+    1. Mark 56 in (5,8); thermo+sudoku
+30. Place 4 in (6,9); nowhere else for 4 in box 6
+31. Place 6 in (6,1); sudoku
+32. Place 8 in (7,4); sudoku
+    1. Mark 456 in (7,8); sudoku
+    2. Mark 28 pair in r89,c8 (sudoku, 456 triple in c8)
+33. Place 1 in (9,4) and 9 in (8,4); sudoku
+34. Place 3 in (6,2); sudoku
+    1. Mark 46 in (6,1) and (6,9); sudoku
+35. Place 1 in (8,7); only place that can make the 13 sandwich:
+    - (8,1): forces 5,6, or 8 into (8,3); breaks sudoku rules
+    - Nowhere else allowed by sudoku on 1
+36. Place 7 in (8,6); 13 sandwich clue
+37. Place 1 in (7,1); sudoku (nowhere else for 1 in box 7\)
+38. Place 5 in (8,9); only option: 1,2,3,4,6,7,9 ruled out by sudoku, 8 already in box (28 pair)
+39. Place 5 in (5,8); sudoku (new 46 pair in column)
+40. Place 8 in (8,2); sudoku
+41. Place 2 in (8,8); sudoku
+42. Place 8 in (9,8); sudoku
+43. Place 3 in (8,3); sudoku
+44. Place 4 in (8,1); sudoku
+45. Place 7 in (9,1); sudoku
+46. Place 5 in (7,2); sudoku
+47. Place 6 in (7,3); sudoku
+48. Place 2 in (9,3); sudoku
+
+At this point, you have all the needed information to solve the sandwich clues, but I’ll still work out the rest of the sudoku:
+
+51. Place 4 in (7,8); sudoku
+52. Place 6 in (2,8); sudoku
+53. Place 4 in (2,7); sudoku
+54. Place 3 in (7,6); sudoku
+55. Place 4 in (9,6); sudoku
+56. Place 9 in (7,7); sudoku
+57. Place 7 in (7,9); sudoku
+58. Place 6 in (5,6); sudoku
+59. Place 9 in (5,9); sudoku
+60. Place 3 in (9,7); sudoku
+61. Place 6 in (9.9); sudoku
+62. Place 7 in (5,2); sudoku
+63. Place 8 in (6,1); sudoku
+64. Place 7 in (2,3); sudoku
+65. Place 3 in (2,1); sudoku
+
+The four question mark sandwich clues, going around the grid clockwise (bottom left \-\> top right) are:  
+2, 15, 9, 12  
+Indexing these into the alphabet gives: BOIL
