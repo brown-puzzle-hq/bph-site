@@ -9,6 +9,7 @@ import { EnlargedImage } from "~/components/ui/enlarged-component";
 import { queryDatabase } from "./actions";
 import CopyButton from "../puzzle/CopyButton";
 import { extractEmails, extractNames } from "~/lib/team-members";
+import schema from "./schema.svg";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("emails");
@@ -69,7 +70,7 @@ export default function Page() {
       <div className="mb-4 flex justify-center">
         <EnlargedImage
           props={{
-            src: "/sql/schema.svg",
+            src: schema,
             alt: "Database Schema",
             width: 600,
             height: 600,
