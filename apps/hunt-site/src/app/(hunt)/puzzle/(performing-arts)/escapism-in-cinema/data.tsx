@@ -34,7 +34,7 @@ export const CHAINS: ChainConfig[] = [
   {
     nodes: [
       { type: "small", text: "" },
-      { type: "big", text: "Hail Caesar!" },
+      { type: "big", text: "Hail, Caesar!" },
       { type: "small", text: "" },
       { type: "big", text: "Ocean's Eleven" },
       { type: "small", text: "Brad Pitt" },
@@ -65,7 +65,7 @@ export const CHAINS: ChainConfig[] = [
       { type: "small", text: "Sam Rockwell" },
       { type: "big", text: "IF" },
       { type: "small", text: "" },
-      { type: "big", text: "Deadpool and Wolverine" },
+      { type: "big", text: "Deadpool & Wolverine" },
       { type: "small", text: "" },
     ],
   },
@@ -83,7 +83,7 @@ export const CHAINS: ChainConfig[] = [
       { type: "small", text: "" },
       { type: "big", text: "" },
       { type: "small", text: "Bruce Willis" },
-      { type: "big", text: "Bonfire of the Vanities" },
+      { type: "big", text: "The Bonfire of the Vanities" },
       { type: "small", text: "" },
     ],
   },
@@ -147,8 +147,7 @@ export const inPersonBody = <Game chains={CHAINS} />;
 
 export const remoteBody = inPersonBody;
 
-import Solution from "./solution/solution.mdx";
-export const solutionBody = <Solution />;
+export const solutionBody = null;
 
 export const authors = null;
 
