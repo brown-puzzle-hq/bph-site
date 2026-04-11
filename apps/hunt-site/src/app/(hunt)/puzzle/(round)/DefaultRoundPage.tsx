@@ -115,11 +115,11 @@ export default async function DefaultRoundPage({
             left: `calc(50% + ${labelDx}%)`,
             ...(labelPosition === "top"
               ? {
-                  top: `calc(0% - 0.5rem + ${labelDy}%)`,
-                }
+                top: `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
+              }
               : {
-                  top: `calc(100% + 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
-                }),
+                top: `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
+              }),
           };
 
           return (
@@ -146,7 +146,7 @@ export default async function DefaultRoundPage({
 
               {/* Puzzle name */}
               <div
-                className="absolute z-10 hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] sm:flex"
+                className="pointer-events-none absolute z-10 hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
                 style={labelStyle}
               >
                 <div
@@ -164,7 +164,7 @@ export default async function DefaultRoundPage({
                   {/* Name */}
                   <Link
                     href={`/puzzle/${puzzle.id}`}
-                    className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                    className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
                   >
                     {puzzle.name}
                   </Link>

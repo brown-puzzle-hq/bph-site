@@ -51,7 +51,6 @@ export default function GuessForm({
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    form.reset();
     startTransition(async () => {
       try {
         const { error } = await handleGuess(puzzleId, data.guess);
@@ -60,18 +59,29 @@ export default function GuessForm({
             description: error,
           });
         }
+        form.reset();
       } catch (e) {
         toast.error("Failed to submit guess. Please try again.");
       }
     });
   };
 
+  const description = isSolved ? (
+    "This puzzle has been solved."
+  ) : numberOfGuessesLeft === "infinity" ? (
+    <>
+      <Infinity className="mb-[1px] mr-[3px] inline-flex size-4" />
+      guesses left
+    </>
+  ) : numberOfGuessesLeft ? (
+    `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
+  ) : (
+    "No guesses left. Please contact HQ for help."
+  );
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex justify-center space-x-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-x-4">
         <FormField
           control={form.control}
           name="guess"
@@ -80,12 +90,9 @@ export default function GuessForm({
               <FormControl>
                 <Input
                   {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  onBlur={() => {
-                    const cleaned = sanitizeAnswer(form.getValues("guess"));
-                    form.setValue("guess", cleaned, { shouldValidate: true });
+                  onBlur={(e) => {
+                    field.onBlur();
+                    field.onChange(sanitizeAnswer(e.target.value));
                   }}
                   className="border-2 border-blue-900 bg-white/10 uppercase focus-visible:ring-0 focus-visible:ring-offset-0"
                   disabled={isSolved || !numberOfGuessesLeft || isPending}
@@ -102,18 +109,7 @@ export default function GuessForm({
                         : ""
                   }
                 >
-                  {isSolved ? (
-                    "This puzzle has been solved."
-                  ) : numberOfGuessesLeft === "infinity" ? (
-                    <span className="flex items-center space-x-[3px]">
-                      <Infinity className="size-4 pt-[1px]" />
-                      <span>guesses left</span>
-                    </span>
-                  ) : numberOfGuessesLeft ? (
-                    `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
-                  ) : (
-                    "You have no guesses left. Please contact HQ for help."
-                  )}
+                  {description}
                 </FormDescription>
                 <FormMessage className="text-error" />
               </div>

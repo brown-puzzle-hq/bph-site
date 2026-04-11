@@ -55,7 +55,7 @@ export default async function Home() {
   const huntStartTime =
     interactionMode === "in-person" ? IN_PERSON.START_TIME : REMOTE.START_TIME;
 
-  if (role !== "testsolver" && currDate < huntStartTime) {
+  if (role !== "testsolver" && role !== "admin" && currDate < huntStartTime) {
     return (
       <div className="mb-12 px-4 pt-6 text-center">
         <h1 className="mb-2">Puzzles</h1>

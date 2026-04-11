@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 
@@ -142,7 +142,10 @@ async function walkPuzzleDirectories(
   return { found, extraneous };
 }
 
-main().catch((err) => {
+try {
+  await main();
+} catch (err) {
   console.error("❌ Puzzle map generation crashed:", err);
-  process.exit(0);
-});
+} finally {
+  await client.end();
+}

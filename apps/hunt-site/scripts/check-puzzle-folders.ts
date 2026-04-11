@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 import { HUNT_NAME } from "@/config/client";
@@ -100,7 +100,10 @@ function extractQuotedValue(line: string, key: string): string | null {
   return match?.[2] ?? null;
 }
 
-main().catch((err) => {
+try {
+  await main();
+} catch (err) {
   console.error("❌ Folder check crashed:", err);
-  process.exit(0);
-});
+} finally {
+  await client.end();
+}

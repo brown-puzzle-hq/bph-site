@@ -2,6 +2,7 @@ import "server-only";
 
 import { sanitizeAnswer } from "@/config/client";
 import { auth } from "@/auth";
+import { DrizzleQueryError } from "drizzle-orm/errors";
 
 type PermissionRequirement =
   | { level: "admin" }
@@ -54,20 +55,14 @@ export async function checkPermissions(req: PermissionRequirement) {
   return { error: null, user: session.user };
 }
 
-export function ensureError(value: unknown): Error {
-  if (value instanceof Error) return value;
-
-  let stringified;
-  try {
-    stringified = JSON.stringify(value);
-  } catch {
-    stringified = "[Unable to stringify the thrown value]";
+/**
+ * Check whether an error represents a duplicate insertion
+ */
+export function isDupErr(error: unknown): boolean {
+  if (error instanceof DrizzleQueryError && error.cause) {
+    return "code" in error.cause && error.cause.code === "23505";
   }
-
-  const error = new Error(
-    `This value was thrown as is, not through an Error: ${stringified}`,
-  );
-  return error;
+  return false;
 }
 
 export function displayStoredPuzzleGuess(

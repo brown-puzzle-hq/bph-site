@@ -52,7 +52,6 @@ export default function DefaultPostHuntPuzzlePage({
   const [numberOfGuessesLeft, setNumberOfGuessesLeft] =
     useState<NumberOfGuesses>(20);
   const [isSolved, setIsSolved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Guess form
   const GuessForm = ({ puzzleAnswer }: FormProps) => {
@@ -75,8 +74,6 @@ export default function DefaultPostHuntPuzzlePage({
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-      setError(null);
-
       const guess = data.guess;
       const isCorrect = sanitizeAnswer(guess) === sanitizeAnswer(puzzleAnswer);
 
@@ -107,12 +104,22 @@ export default function DefaultPostHuntPuzzlePage({
       form.reset();
     };
 
+    const description = isSolved ? (
+      "This puzzle has been solved."
+    ) : numberOfGuessesLeft === "infinity" ? (
+      <>
+        <Infinity className="mb-[1px] mr-[3px] inline-flex size-4" />
+        guesses left
+      </>
+    ) : numberOfGuessesLeft ? (
+      `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
+    ) : (
+      "No guesses left. Please contact HQ for help."
+    );
+
     return (
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex justify-center space-x-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-x-4">
           <FormField
             control={form.control}
             name="guess"
@@ -121,13 +128,9 @@ export default function DefaultPostHuntPuzzlePage({
                 <FormControl>
                   <Input
                     {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setError(null);
-                    }}
-                    onBlur={() => {
-                      const cleaned = sanitizeAnswer(form.getValues("guess"));
-                      form.setValue("guess", cleaned, { shouldValidate: true });
+                    onBlur={(e) => {
+                      field.onBlur();
+                      field.onChange(sanitizeAnswer(e.target.value));
                     }}
                     className="bg-secondary-bg uppercase text-secondary-text"
                     disabled={isSolved || !numberOfGuessesLeft}
@@ -144,20 +147,9 @@ export default function DefaultPostHuntPuzzlePage({
                           : ""
                     }
                   >
-                    {isSolved ? (
-                      "This puzzle has been solved."
-                    ) : numberOfGuessesLeft === "infinity" ? (
-                      <span className="flex items-center space-x-[3px]">
-                        <Infinity className="size-4 pt-[1px]" />
-                        <span>guesses left</span>
-                      </span>
-                    ) : numberOfGuessesLeft ? (
-                      `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
-                    ) : (
-                      "You have no guesses left. Please contact HQ for help."
-                    )}
+                    {description}
                   </FormDescription>
-                  <FormMessage className="text-error">{error}</FormMessage>
+                  <FormMessage className="text-error" />
                 </div>
               </FormItem>
             )}

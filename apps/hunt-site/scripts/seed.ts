@@ -1,4 +1,4 @@
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import { faker } from "@faker-js/faker";
 import { teams, puzzles } from "@/db/schema";
 import readline from "node:readline/promises";
@@ -89,15 +89,14 @@ async function seed() {
   await db.insert(teams).values(fakeTeams);
 }
 
-seed()
-  .then(() => {
-    console.log("✅ Seeding complete!");
-    console.log(
-      "📁 Consider running `pnpm seed:folders` if you haven't already.",
-    );
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error("❌ Seeding failed:", err.message);
-    process.exit(1);
-  });
+try {
+  await seed();
+  console.log("✅ Seeding complete!");
+  console.log(
+    "📁 Consider running `pnpm seed:folders` if you haven't already.",
+  );
+} catch (err) {
+  console.error("❌ Seeding failed:", err);
+} finally {
+  await client.end();
+}

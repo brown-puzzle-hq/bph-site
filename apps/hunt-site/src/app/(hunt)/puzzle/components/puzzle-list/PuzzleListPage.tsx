@@ -14,7 +14,6 @@ import {
   allWhiteboardObjects,
 } from "./data";
 import { DORM_BACKGROUND_COLOR } from "~/config/styles";
-import { BadgeInfo, Info, MessageCircleQuestion } from "lucide-react";
 
 type PuzzleListPageProps = {
   availableRounds: PuzzleListRound[];
@@ -85,11 +84,11 @@ export default function PuzzleListPage({
             left: `calc(50% + ${labelDx}%)`,
             ...(labelPosition === "top"
               ? {
-                  top: `calc(0% - 0.5rem + ${labelDy}%)`,
-                }
+                top: `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
+              }
               : {
-                  top: `calc(100% + 0.5rem + ${labelDy}%)`,
-                }),
+                top: `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
+              }),
           };
 
           return (
@@ -116,7 +115,7 @@ export default function PuzzleListPage({
 
               {/* Round name */}
               <div
-                className="absolute z-10 hidden transition-transform peer-hover:-translate-y-1 sm:flex"
+                className="pointer-events-none absolute z-10 hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
                 style={labelStyle}
               >
                 <div
@@ -134,7 +133,7 @@ export default function PuzzleListPage({
                   {/* Name */}
                   <Link
                     href={`/puzzle/${round.id}`}
-                    className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                    className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
                   >
                     {round.name}
                   </Link>

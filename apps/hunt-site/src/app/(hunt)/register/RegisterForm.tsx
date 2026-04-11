@@ -155,7 +155,7 @@ export default function RegisterForm() {
     }
   };
 
-  const { errors } = useFormState({ control: form.control });
+  const { isSubmitting, errors } = useFormState({ control: form.control });
   const interactionMode = useWatch({
     control: form.control,
     name: "interactionMode",
@@ -638,7 +638,9 @@ export default function RegisterForm() {
           </FormDescription>
         </div>
 
-        <Button type="submit">Register</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          Register
+        </Button>
 
         <div className="my-8 text-sm">
           Already registered for the hunt?{" "}

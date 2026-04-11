@@ -6,7 +6,7 @@ import { hashSync } from "bcryptjs";
 import { IN_PERSON, HUNT_URL } from "@/config/client";
 import { sendBotMessage } from "~/lib/comms";
 import { type Team } from "@/db/types";
-import { ensureError } from "~/lib/server";
+import { isDupErr } from "~/lib/server";
 
 type TeamProperties = Pick<
   Team,
@@ -40,16 +40,12 @@ export async function insertTeam(teamProperties: TeamProperties) {
       createTime: new Date(),
     });
   } catch (e) {
-    const error = ensureError(e);
-    // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to register a duplicate username
-    if ("code" in error && error.code === "23505") {
-      return { error: "Username already taken." };
-    }
+    if (isDupErr(e)) return { error: "Username already taken." };
 
-    const errorMessage = `🐛 Error registering team ${teamProperties.id}: ${error.message}`;
+    const errorMessage = `🐛 Error registering team ${teamProperties.id}. Check server logs for details.`;
     sendBotMessage(errorMessage, "dev");
-    throw error;
+    throw e;
   }
 
   // Message registration channel

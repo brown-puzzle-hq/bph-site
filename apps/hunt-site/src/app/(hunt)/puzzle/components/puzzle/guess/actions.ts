@@ -30,7 +30,7 @@ import {
 } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { formatDuration } from "~/lib/utils";
-import { ensureError, assertPermissions } from "~/lib/server";
+import { isDupErr, assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -198,17 +198,15 @@ export async function handleGuess(puzzleId: string, guess: string) {
       }
     });
   } catch (e) {
-    const error = ensureError(e);
-    // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to submit the same guess twice
-    if ("code" in error && error.code === "23505") {
+    if (isDupErr(e)) {
       revalidatePath(`/puzzle/${puzzleId}`);
       return { error: "Already guessed!" };
     }
 
-    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
+    const errorMessage = `🐛 Error handling guess by team ${teamId} for puzzle ${puzzleId}. Check server logs for details.`;
     sendBotMessage(errorMessage, "dev");
-    throw error;
+    throw e;
   }
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
