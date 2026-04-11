@@ -166,7 +166,7 @@ export default function BigWheelRotator({ wheels }: BigWheelRotatorProps) {
   }, [wheels.length]);
 
   return (
-    <div className="relative size-[min(38rem,calc(100vw-32px))] rounded-lg border border-neutral-200 p-4">
+    <div className="relative size-[min(38rem,calc(100vw-32px))] rounded-lg p-4">
       <div
         ref={containerRef}
         className="relative size-full"
