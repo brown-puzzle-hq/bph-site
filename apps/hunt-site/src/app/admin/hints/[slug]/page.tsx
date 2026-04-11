@@ -7,6 +7,11 @@ import { IN_PERSON, REMOTE } from "@/config/client";
 import { displayStoredPuzzleGuess } from "~/lib/server";
 import { notFound } from "next/navigation";
 
+type PuzzleDataModule = {
+  partialSolutions?: Record<string, string>;
+  tasks?: Record<string, unknown>;
+};
+
 export default async function Page({
   params,
   searchParams,
@@ -56,35 +61,35 @@ export default async function Page({
     notFound();
   }
 
+  const [unlockRow, previousGuesses, puzzleModule] = await Promise.all([
+    db.query.unlocks.findFirst({
+      columns: { unlockTime: true },
+      where: and(
+        eq(unlocks.teamId, hint.team.id),
+        eq(unlocks.puzzleId, hint.puzzle.id),
+      ),
+    }),
+    db.query.guesses.findMany({
+      where: and(
+        eq(guesses.teamId, hint.team.id),
+        eq(guesses.puzzleId, hint.puzzle.id),
+      ),
+    }),
+    // Get partial solutions and tasks
+    import(`../../../(hunt)/puzzle/${hint.puzzle.id}/data.tsx`)
+      .then((loaded) => loaded as PuzzleDataModule)
+      .catch(() => null),
+  ]);
+
   // If there is no unlock, the unlock time is the start of the hunt
   const unlockTime =
-    (
-      await db.query.unlocks.findFirst({
-        columns: { unlockTime: true },
-        where: and(
-          eq(unlocks.teamId, hint.team.id),
-          eq(unlocks.puzzleId, hint.puzzle.id),
-        ),
-      })
-    )?.unlockTime ??
+    unlockRow?.unlockTime ??
     (hint.team.interactionMode === "in-person"
       ? IN_PERSON.START_TIME
       : REMOTE.START_TIME);
 
-  const previousGuesses = await db.query.guesses.findMany({
-    where: and(
-      eq(guesses.teamId, hint.team.id),
-      eq(guesses.puzzleId, hint.puzzle.id),
-    ),
-  });
-
-  // Get partial solutions and tasks
-  const module = await import(
-    `../../../(hunt)/puzzle/${hint.puzzle.id}/data.tsx`
-  ).catch(() => null);
-
-  const partialSolutions = module?.partialSolutions ?? {};
-  const tasks = module?.tasks ?? {};
+  const partialSolutions = puzzleModule?.partialSolutions ?? {};
+  const tasks = puzzleModule?.tasks ?? {};
 
   const processedGuesses = previousGuesses.map(
     ({ guess, isCorrect, submitTime }) => {
@@ -119,7 +124,7 @@ export default async function Page({
       {previousGuesses.length > 0 && (
         <div className="w-full space-y-2">
           <p className="w-full text-center text-sm font-semibold text-zinc-700">
-            Team's Guesses
+            Team&apos;s Guesses
           </p>
           <GuessTable previousGuesses={processedGuesses} />
         </div>

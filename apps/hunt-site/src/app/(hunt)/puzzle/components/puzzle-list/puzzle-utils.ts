@@ -19,16 +19,22 @@ export async function getAvailablePuzzles(
   }
   // Otherwise, fetch user-specific unlocked/solved puzzles
   else {
-    const initialPuzzles = await db.query.puzzles.findMany({
-      columns: { id: true, name: true, answer: true },
-      where: inArray(puzzles.id, INITIAL_PUZZLES),
-    });
-
-    const unlockedPuzzles = await db.query.unlocks.findMany({
-      columns: { unlockTime: true },
-      where: eq(unlocks.teamId, teamId),
-      with: { puzzle: { columns: { id: true, name: true, answer: true } } },
-    });
+    const [initialPuzzles, unlockedPuzzles, solvedPuzzles] = await Promise.all([
+      db.query.puzzles.findMany({
+        columns: { id: true, name: true, answer: true },
+        where: inArray(puzzles.id, INITIAL_PUZZLES),
+      }),
+      db.query.unlocks.findMany({
+        columns: { unlockTime: true },
+        where: eq(unlocks.teamId, teamId),
+        with: { puzzle: { columns: { id: true, name: true, answer: true } } },
+      }),
+      // Hide answers for unsolved puzzles
+      db.query.solves.findMany({
+        columns: { puzzleId: true },
+        where: eq(solves.teamId, teamId),
+      }),
+    ]);
 
     const allAvailable = [
       ...initialPuzzles.map((puzzle) => ({ ...puzzle, unlockTime: null })),
@@ -37,12 +43,6 @@ export async function getAvailablePuzzles(
         unlockTime: unlock.unlockTime,
       })),
     ];
-
-    // Hide answers for unsolved puzzles
-    const solvedPuzzles = await db.query.solves.findMany({
-      columns: { puzzleId: true },
-      where: eq(solves.teamId, teamId),
-    });
 
     availablePuzzles = allAvailable.map((puzzle) => ({
       ...puzzle,
@@ -61,13 +61,13 @@ export async function getAvailableEvents(
 ): Promise<AvailableEvent[]> {
   if (teamId !== undefined && interactionMode === "remote") return [];
 
-  // TODO: not a great way to order events
-  const events = await db.query.events.findMany({
-    orderBy: (events, { asc }) => [asc(events.startTime)],
-  });
-
   // Post-hunt view (all events, no answers)
   if (teamId === undefined) {
+    // TODO: not a great way to order events
+    const events = await db.query.events.findMany({
+      orderBy: (events, { asc }) => [asc(events.startTime)],
+    });
+
     return events.map((event) => ({
       ...event,
       answer: null,
@@ -76,9 +76,15 @@ export async function getAvailableEvents(
   }
 
   // Logged-in, in-person view
-  const finishedEvents = await db.query.answerTokens.findMany({
-    where: eq(answerTokens.teamId, teamId),
-  });
+  const [events, finishedEvents] = await Promise.all([
+    // TODO: not a great way to order events
+    db.query.events.findMany({
+      orderBy: (events, { asc }) => [asc(events.startTime)],
+    }),
+    db.query.answerTokens.findMany({
+      where: eq(answerTokens.teamId, teamId),
+    }),
+  ]);
 
   return events.map((event) => {
     const finishedEvent = finishedEvents.find((fe) => fe.eventId === event.id);

@@ -35,6 +35,10 @@ import { isDupErr, assertPermissions } from "~/lib/server";
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 type PinInteractionResult = "none" | "brown" | "non-brown";
+type PuzzleDataModule = {
+  tasks: Record<string, JSX.Element>;
+  partialSolutions: Record<string, string>;
+};
 
 /** Handles a guess for a puzzle. May call handleSolve. */
 export async function handleGuess(puzzleId: string, guess: string) {
@@ -50,14 +54,20 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // Check that the guess does not exceed guess limits
   // Don't penalize guess if it is a task or partialSolution
-  const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-    with: {
-      guesses: {
-        where: eq(guesses.teamId, teamId),
+  const [puzzle, puzzleModule] = await Promise.all([
+    db.query.puzzles.findFirst({
+      where: eq(puzzles.id, puzzleId),
+      with: {
+        guesses: {
+          where: eq(guesses.teamId, teamId),
+        },
       },
-    },
-  });
+    }),
+    // TODO: can we eliminate this... also doesn't generalize to hunt structure
+    import(`../../../${puzzleId}/data.tsx`)
+      .then((loaded) => loaded as PuzzleDataModule)
+      .catch(() => null),
+  ]);
 
   if (!puzzle) throw new Error("Puzzle not found.");
 
@@ -66,12 +76,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
     return { error: "Puzzle already solved!" };
   }
 
-  // TODO: can we eliminate this... also doesn't generalize to hunt structure
-  const module = await import(`../../../${puzzleId}/data.tsx`).catch(
-    () => null,
-  );
-  const tasks = module?.tasks ?? {};
-  const partialSolutions = module?.partialSolutions ?? {};
+  const tasks = puzzleModule?.tasks ?? {};
+  const partialSolutions = puzzleModule?.partialSolutions ?? {};
 
   // TODO: Could have a TOCTTOU error here
   // Check if the number of guesses is exceeded
@@ -87,8 +93,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
   // Check if the puzzle was solved by being the right string
   // or by using an answer token
   const normalizedGuess = sanitizeAnswer(guess);
-  var isCorrect = sanitizeAnswer(puzzle.answer) === normalizedGuess;
-  var solveType: SolveType = "guess";
+  let isCorrect = sanitizeAnswer(puzzle.answer) === normalizedGuess;
+  let solveType: SolveType = "guess";
 
   if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
     // If the answer is an answer token answer, check if the
@@ -205,20 +211,25 @@ export async function handleGuess(puzzleId: string, guess: string) {
     }
 
     const errorMessage = `🐛 Error handling guess by team ${teamId} for puzzle ${puzzleId}. Check server logs for details.`;
-    sendBotMessage(errorMessage, "dev");
+    await sendBotMessage(errorMessage, "dev");
     throw e;
   }
+
+  // Make websocket notifications to the clients & Discord notifications for admins
+  const notifications: Promise<unknown>[] = [];
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
   // Message the guess channel
   const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${normalizedGuess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
-  await sendBotMessage(guessMessage, "guess");
+  notifications.push(sendBotMessage(guessMessage, "guess"));
   /** END_SNIPPET:DISCORD_MESSAGE */
 
   // If the team has unlocked the pin interaction, message the interaction channel
   if (pinInteraction !== "none") {
     const interactionMessage = `📌 **${pinInteraction === "brown" ? "Brown" : "Non-Brown"} Pin Interaction** for [${teamId}](${HUNT_URL}/team/${teamId}) after [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId})`;
-    await sendBotMessage(interactionMessage, "interaction", "@lore");
+    notifications.push(
+      sendBotMessage(interactionMessage, "interaction", "@lore"),
+    );
   }
 
   // If the team has finished the hunt, message the interaction channel
@@ -226,11 +237,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
   if (finishedHunt) {
     const finishMessage = `🏆 **Hunt Finish** by [${teamId}](${HUNT_URL}/team/${teamId})`;
     const mention = interactionMode === "in-person" ? "@lore" : undefined;
-    sendBotMessage(finishMessage, "interaction", mention);
+    notifications.push(sendBotMessage(finishMessage, "interaction", mention));
   }
-
-  // Make websocket notifications to the clients
-  const notifications: Promise<unknown>[] = [];
 
   if (isCorrect && solveTimeMs !== null) {
     const minBluenoTime = solveTimeMs - MAX_SOLVE_DELAY;
@@ -295,7 +303,7 @@ export async function handleGuess(puzzleId: string, guess: string) {
   const results = await Promise.allSettled(notifications);
   for (const r of results) {
     if (r.status === "rejected") {
-      console.error("Websocket send failed:", r.reason);
+      console.error("Notification send failed:", r.reason);
     }
   }
 

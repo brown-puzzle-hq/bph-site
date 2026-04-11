@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { handleGuess } from "./actions";
 import { toast } from "sonner";
-import { NumberOfGuesses } from "../DefaultPuzzlePage";
+import type { NumberOfGuesses } from "../DefaultPuzzlePage";
 import { Infinity, SendHorizonal } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
 
@@ -60,7 +60,7 @@ export default function GuessForm({
           });
         }
         form.reset();
-      } catch (e) {
+      } catch {
         toast.error("Failed to submit guess. Please try again.");
       }
     });

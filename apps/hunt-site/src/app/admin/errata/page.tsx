@@ -4,11 +4,14 @@ import ErratumForm from "./ErratumForm";
 export const fetchCache = "force-no-store";
 
 export default async function Home() {
-  const puzzleList = await db.query.puzzles.findMany({
-    columns: { id: true, name: true },
-  });
+  const [puzzleList, errataRows] = await Promise.all([
+    db.query.puzzles.findMany({
+      columns: { id: true, name: true },
+    }),
+    db.query.errata.findMany(),
+  ]);
 
-  const errataList = (await db.query.errata.findMany()).sort(
+  const errataList = errataRows.sort(
     (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
   );
 

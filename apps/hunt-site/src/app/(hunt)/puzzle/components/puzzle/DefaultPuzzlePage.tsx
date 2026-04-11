@@ -57,13 +57,15 @@ export default async function DefaultPuzzlePage({
       notFound();
   }
 
-  // Puzzle answer
-  const puzzleAnswer = (await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-    columns: { answer: true },
-  }))!.answer;
-
-  const { error, user } = await checkPermissions({ level: "userAny" });
+  const [puzzleAnswerRow, { error, user }] = await Promise.all([
+    // Puzzle answer
+    db.query.puzzles.findFirst({
+      where: eq(puzzles.id, puzzleId),
+      columns: { answer: true },
+    }),
+    checkPermissions({ level: "userAny" }),
+  ]);
+  const puzzleAnswer = puzzleAnswerRow!.answer;
 
   // If user is not logged in, show puzzle without errata or guesses
   if (error) {
@@ -129,15 +131,18 @@ export default async function DefaultPuzzlePage({
     })
   ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
-  // Get previous guesses
-  const previousGuesses = await db.query.guesses.findMany({
-    columns: { guess: true, isCorrect: true, submitTime: true },
-    where: and(eq(guesses.teamId, teamId), eq(guesses.puzzleId, puzzleId)),
-  });
+  // Get previous guesses and solve state
+  const [previousGuesses, solveRow] = await Promise.all([
+    db.query.guesses.findMany({
+      columns: { guess: true, isCorrect: true, submitTime: true },
+      where: and(eq(guesses.teamId, teamId), eq(guesses.puzzleId, puzzleId)),
+    }),
+    db.query.solves.findFirst({
+      where: and(eq(solves.teamId, teamId), eq(solves.puzzleId, puzzleId)),
+    }),
+  ]);
 
-  const isSolved = !!(await db.query.solves.findFirst({
-    where: and(eq(solves.teamId, teamId), eq(solves.puzzleId, puzzleId)),
-  }));
+  const isSolved = !!solveRow;
 
   // Get the number of guesses left
   // If it is a puzzle with infinite guessses, set it to -1

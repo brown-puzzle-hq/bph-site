@@ -44,7 +44,7 @@ export async function insertTeam(teamProperties: TeamProperties) {
     if (isDupErr(e)) return { error: "Username already taken." };
 
     const errorMessage = `🐛 Error registering team ${teamProperties.id}. Check server logs for details.`;
-    sendBotMessage(errorMessage, "dev");
+    await sendBotMessage(errorMessage, "dev");
     throw e;
   }
 
