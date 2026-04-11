@@ -9,7 +9,7 @@ export const DISLODGED_CHAIN_SPACING = BIG_NODE_SIZE + 24;
 export const BOTTOM_STRIP_HEIGHT = 10 * (BIG_NODE_SIZE + 20);
 export const TOP_PADDING = 32;
 export const GRID_BOTTOM_PADDING = 24;
-export const BOTTOM_STRIP_CHAIN_GAP = 16;
+export const BOTTOM_STRIP_CHAIN_GAP = 100;
 
 export const PINK_CELLS = new Set<string>([
   "0,1",

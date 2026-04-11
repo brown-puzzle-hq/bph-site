@@ -36,7 +36,7 @@ export const CHAINS: ChainConfig[] = [
       { type: "small", text: "" },
       { type: "big", text: "Hail Caesar!" },
       { type: "small", text: "" },
-      { type: "big", text: "Oceans 11" },
+      { type: "big", text: "Ocean's Eleven" },
       { type: "small", text: "Brad Pitt" },
     ],
   },
@@ -46,9 +46,9 @@ export const CHAINS: ChainConfig[] = [
       { type: "big", text: "Easy Rider" },
       { type: "small", text: "" },
       { type: "big", text: "Sleepwalking" },
-      { type: "small", text: "Charlize Theron" },
-      { type: "big", text: "" },
       { type: "small", text: "" },
+      { type: "big", text: "" },
+      { type: "small", text: "Sean Bean" },
       {
         type: "big",
         text: "The Lord of the Rings: The Two Towers (Extended Edition)",
@@ -75,7 +75,7 @@ export const CHAINS: ChainConfig[] = [
       { type: "big", text: "" },
       { type: "small", text: "" },
       { type: "big", text: "Clueless" },
-      { type: "small", text: "Paul Rudd" },
+      { type: "small", text: "" },
     ],
   },
   {
@@ -104,11 +104,11 @@ export const CHAINS: ChainConfig[] = [
     nodes: [
       { type: "small", text: "" },
       { type: "big", text: "The Bourne Identity" },
-      { type: "small", text: "Julia Stiles" },
+      { type: "small", text: "" },
       { type: "big", text: "" },
       { type: "small", text: "" },
       { type: "big", text: "G.I. Joe: The Rise of Cobra" },
-      { type: "small", text: "Sharlto Copley" },
+      { type: "small", text: "Channing Tatum" },
     ],
   },
   {

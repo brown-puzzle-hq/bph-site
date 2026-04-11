@@ -59,25 +59,25 @@ export const authors = null;
  */
 export const copyText = `Herculean Math
 
-f(😎,🕶️,∅)=🙂
-f(🍺,∅,🍺)=🍻
-f(🌕,☀️,∅)=🌑
-f(🏝️,🌴,⛱️)=🏖️
-f(🪨,∅,Z)=🗿
+f(😎, 🕶️, ∅) = 🙂
+f(🍺, ∅, 🍺) = 🍻
+f(🌕, ☀️, ∅) = 🌑
+f(🏝️, 🌴, ⛱️) = 🏖️
+f(🪨, ∅, Z) = 🗿
 
-g(🪑,🦵)=4
-g(🙂,👁️)=2
-g(🐍,✋)=0
-g(⏱️,#️⃣)=12
-g(🪙,Z)=1
+g(🪑, 🦵) = 4
+g(🙂, 👁️) = 2
+g(🐍, ✋) = 0
+g(⏱️, #️⃣) = 12
+g(🪙, Z) = 1
 
-g(X,Z)=9
-f(X,Z,∅)=X
-g(f(X,Z,∅),Z)=10
-f(X,Z,Y)=X
-g(f(X,Z,Y),Z)=8
+g(X, Z) = 9
+f(X, Z, ∅) = X
+g(f(X, Z, ∅), Z) = 10
+f(X, Z, Y) = X
+g(f(X, Z, Y), Z) = 8
 
-🔑=Y+X+ f(🐜,🅰️,∅)`;
+🔑 = Y + X + f(🐜, 🅰️, ∅)`;
 
 /**
  * The `partialSolutions` object is used to prompt solutions with significant progress.

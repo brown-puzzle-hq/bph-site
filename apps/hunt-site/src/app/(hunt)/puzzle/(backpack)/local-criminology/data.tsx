@@ -19,7 +19,8 @@ export const inPersonBody = (
       </b>
     </div>
     <div className="mb-4">
-      You study hard, making an index card for each chapter of your law class.
+      You study hard, making an index card for each chapter of your Rhode Island
+      law class.
     </div>
     <div className="mb-4">
       <i>How can you stop your sentencing?</i>
@@ -117,7 +118,9 @@ export const authors = null;
  */
 export const copyText = `Local Criminology
 This is a metapuzzle. You will need to use some answers to puzzles from the Department rounds in order to solve it.
-You study hard, making an index card for each chapter of your law class, to figure out how to stop your sentencing.
+You study hard, making an index card for each chapter of your Rhode Island law class. 
+How can you stop your sentencing?
+
 §1
 Whereas the devices injured were definitively owned by the city government, ejection of the defendant's alibi is inherently justified.
 
