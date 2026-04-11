@@ -143,6 +143,7 @@ const game6: GameProps = {
   blackWalls: [
     [12, 13],
     [17, 18],
+    [16, 21],
   ],
   pinkWalls: [[1, 6]],
   greenSquares: [7, 13],
