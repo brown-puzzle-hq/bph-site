@@ -90,6 +90,9 @@ const getLetterPositionPct = (angleDeg: number, radiusPct: number) => {
   return { xPct, yPct };
 };
 
+const createShuffledRotations = () =>
+  Array.from({ length: WHEEL_COUNT }, () => Math.floor(Math.random() * 360));
+
 export default function BigWheelRotator({ wheels }: BigWheelRotatorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dragStateRef = useRef<DragState | null>(null);
@@ -121,7 +124,7 @@ export default function BigWheelRotator({ wheels }: BigWheelRotatorProps) {
   }, [wheels]);
 
   const [rotationsDeg, setRotationsDeg] = useState<number[]>(
-    Array.from({ length: WHEEL_COUNT }, () => 0),
+    createShuffledRotations,
   );
 
   const rotateWheelAndInners = useCallback(
@@ -182,11 +185,7 @@ export default function BigWheelRotator({ wheels }: BigWheelRotatorProps) {
   );
 
   const shuffleWheels = useCallback(() => {
-    setRotationsDeg(
-      Array.from({ length: WHEEL_COUNT }, () =>
-        Math.floor(Math.random() * 360),
-      ),
-    );
+    setRotationsDeg(createShuffledRotations());
   }, []);
 
   return (
