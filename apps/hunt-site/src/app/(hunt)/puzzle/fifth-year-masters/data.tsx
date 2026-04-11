@@ -93,7 +93,7 @@ export const inPersonBody = (
             <td className="px-4 py-2">Swiss cereal</td>
           </tr>
           <tr className="border-b border-gray-200">
-            <td className="px-4 py-2">People who cultivate plants, to sell</td>
+            <td className="px-4 py-2">People who cultivate plants to sell</td>
           </tr>
           <tr className="border-b border-gray-200">
             <td className="px-4 py-2">Silhouettes</td>
