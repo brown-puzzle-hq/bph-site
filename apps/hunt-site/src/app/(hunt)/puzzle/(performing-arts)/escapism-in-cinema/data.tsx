@@ -51,7 +51,7 @@ export const CHAINS: ChainConfig[] = [
       { type: "small", text: "Sean Bean" },
       {
         type: "big",
-        text: "The Lord of the Rings: The Two Towers (Extended Edition)",
+        text: "The Two Towers (Extended Edition)",
       },
       { type: "small", text: "" },
     ],

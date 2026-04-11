@@ -548,11 +548,13 @@ export default function Page() {
               <p className="text-center">
                 Megan Carlson ('26)
                 <br />
+                Julia Ceccarelli ('26)
+                <br />
                 Malcolm Certain ('26)
                 <br />
                 Kaylee Gallagher ('26)
                 <br />
-                Thomas Gordon* ('26)
+                Thomas Gordon ('26)*
                 <br />
                 Veronika Grytsai ('26)
                 <br />
@@ -560,7 +562,7 @@ export default function Page() {
                 <br />
                 Bailey Merlino ('26)
                 <br />
-                Arnav Singhal* ('26)
+                Arnav Singhal ('26)*
                 <br />
                 AJ Wu ('26)
                 <br />
@@ -599,6 +601,8 @@ export default function Page() {
                 Dylan Hunter ('29)
                 <br />
                 Madisyn Koza ('29)
+                <br />
+                Kenzi Mhamdi ('29)
                 <br />
                 Thea Miller-Priddy ('29)
                 <br />
