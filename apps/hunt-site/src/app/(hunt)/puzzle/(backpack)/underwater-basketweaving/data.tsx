@@ -13,12 +13,16 @@ export const inPersonBody = (
       </b>
     </div>
     <div className="mb-4 max-w-3xl space-y-4">
+      You're working on your final project, but your basket broke! Following the
+      guidelines below and using your sense of direction to guide your turns
+      will help you reconnect your basket's strands, and although the threads
+      that remain are rigid by now, think about how much string you'll save by
+      pulling the added threads tight!
+    </div>
+    <div className="mb-4 max-w-3xl">
       <i>
-        You're working on your final project, but your basket broke! Following
-        the guidelines below and using your sense of direction to guide your
-        turns will help you reconnect your basket's strands, and although the
-        threads that remain are rigid by now, think about how much string you'll
-        save by pulling the added threads tight!
+        What answer to this puzzle is as unnecessary as the concentration
+        itself?
       </i>
     </div>
     <div className="mb-4 max-w-3xl">
@@ -46,12 +50,6 @@ export const inPersonBody = (
         height={500}
       />
     </div>
-    <div className="mb-4 max-w-3xl">
-      <i>
-        While weaving your basket, what answer to this puzzle would be as
-        unnecessary as the concentration itself?
-      </i>
-    </div>
     <hr />
     <div className="mt-4 max-w-3xl space-y-4 pb-4">
       <b>Concentration Requirements:</b>
@@ -66,7 +64,7 @@ export const inPersonBody = (
           <b>PHYSICAL SCIENCES</b>: Scacchic Fabrication
         </li>
         <li>
-          <b>MATH</b>: Messy Placeholder
+          <b>MATH</b>: Itty Bitty Kitties: A Bi-Nya-ry Study
         </li>
         <li>
           <b>RISD</b>: Culinary Chemistry Lab

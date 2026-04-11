@@ -16,9 +16,9 @@ export const puzzleId = "advanced-logical-cooking-techniques";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4 font-bold">
-      ⚠️ Warning! This puzzle is difficult, especially compared to the other
-      puzzles in the hunt. This message is not part of the puzzle. ⚠️
+    <div className="mb-4 text-center font-bold">
+      Warning! This puzzle is difficult, especially compared to the other
+      puzzles in the hunt. This message is not part of the puzzle.
     </div>
     <div className="mb-4">
       <p>

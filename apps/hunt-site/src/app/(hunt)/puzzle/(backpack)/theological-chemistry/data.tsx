@@ -12,10 +12,10 @@ export const inPersonBody = (
         the Department rounds in order to solve it.
       </b>
     </div>
-    <div className="max-w-3xl space-y-4 text-center">
+    <div className="mb-4 max-w-3xl space-y-4">
       For your final project, you've been assigned Wicca.
     </div>
-    <div className="mb-4 max-w-3xl text-center">
+    <div className="mb-4 max-w-3xl">
       <i>How should you bond the different religious branches together?</i>
     </div>
     <div className="mb-4 flex justify-center">

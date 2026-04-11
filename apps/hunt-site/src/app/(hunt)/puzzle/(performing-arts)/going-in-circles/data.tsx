@@ -17,24 +17,28 @@ export const puzzleId = "going-in-circles";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 text-center">
-      <i>
-        POV: The year is 2011, and you are solving very hard math problems in
-        the Netherlands. This one seems to be stumping you, but you try looking
-        at the horizon…
-      </i>
-      <Image
-        src={GRAPH}
-        alt="Going in Circles graph"
-        width={750}
-        height={500}
-        className="mb-4"
-      />
+      <div className="mb-4 text-left">
+        <i>
+          POV: The year is 2011, and you are solving very hard math problems in
+          the Netherlands. This one seems to be stumping you, but you try
+          looking at the horizon…
+        </i>
+      </div>
+      <div className="inline-block text-center">
+        <Image
+          src={GRAPH}
+          alt="Going in Circles graph"
+          width={750}
+          height={500}
+          className="mb-4"
+        />
+      </div>
       <a
         rel="noopener noreferrer"
         target="_blank"
         href="https://www.geogebra.org/geometry/hkcrqf34"
       >
-        <u>Link to graph</u>
+        <u>Link to graph.</u>
       </a>
     </div>
   </div>

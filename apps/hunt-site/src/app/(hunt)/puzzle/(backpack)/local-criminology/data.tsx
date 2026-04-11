@@ -19,61 +19,61 @@ export const inPersonBody = (
       </b>
     </div>
     <div className="mb-4">
-      <i>
-        You study hard, making an index card for each chapter of your law class,
-        to figure out how to stop your sentencing.
-      </i>
+      You study hard, making an index card for each chapter of your law class.
     </div>
-    <div>
-      <b>§1</b>
+    <div className="mb-4">
+      <i>How can you stop your sentencing?</i>
+    </div>
+    <div className="mb-4">
+      <b>&emsp;§1</b>
       <br />
       Whereas the devices injured were definitively owned by the city
       government, ejection of the defendant's alibi is inherently justified.
       <br />
       <br />
-      <b>§2</b>
+      <b>&emsp;§2</b>
       <br />
       Whereas the business in question had criminal origins, its management of
       such an activity is clearly illegal.
       <br />
       <br />
-      <b>§3</b>
+      <b>&emsp;§3</b>
       <br />
       Whereas religious purposes were occurring less than a mile away from the
       offending action, the jury must find the suspect guilty.
       <br />
       <br />
-      <b>§4</b>
+      <b>&emsp;§4</b>
       <br />
       Whereas the instrument's location was just to the side of the trail,
       justice must be found.
       <br />
       <br />
-      <b>§5</b>
+      <b>&emsp;§5</b>
       <br />
       Whereas verbiage of this sort was used, we must find an adequate
       punishment for the offender.
       <br />
       <br />
-      <b>§6</b>
+      <b>&emsp;§6</b>
       <br />
       Whereas restricted areas were certainly entered with malicious intention,
       the victims must be avenged.
       <br />
       <br />
-      <b>§7</b>
+      <b>&emsp;§7</b>
       <br />
       Whereas the illegal details were used in lieu of real payment, any
       sensible court would convict the accused.
       <br />
       <br />
-      <b>§8</b>
+      <b>&emsp;§8</b>
       <br />
       Whereas the delivery became known to the state and is by no means under
       doubt, the defendant is deserving of punishment.
       <br />
       <br />
-      <b>§9</b>
+      <b>&emsp;§9</b>
       <br />
       Whereas the intended action of the defendant was in no doubt to use their
       false items in fraud, the truth should bring the jury to the right

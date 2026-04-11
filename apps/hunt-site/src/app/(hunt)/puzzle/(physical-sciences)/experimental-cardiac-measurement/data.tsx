@@ -15,14 +15,12 @@ export const puzzleId = "experimental-cardiac-measurement";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 space-y-4">
-      <b>
-        This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
-        up.
-      </b>
-      <p>
-        Practice setup: drag the labeled chips onto either side of the scale.
-        The balance responds to each chip's hardcoded weight.
-      </p>
+      <div className="text-center">
+        <b>
+          This is puzzle involves an interaction! Please email us at
+          brownpuzzlehq@gmail.com to schedule a time.
+        </b>
+      </div>
     </div>
   </div>
 );

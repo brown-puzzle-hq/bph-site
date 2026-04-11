@@ -465,7 +465,7 @@ const textHash = computePuzzleJsTextHashFromSolution(
 
 export const inPersonBody = (
   <div>
-    <div className="w-full space-y-4 text-center">
+    <div className="mb-4 w-full space-y-4 text-center">
       <i>
         Something is hidden episodically in this grid...
         <br />

@@ -84,11 +84,11 @@ export default function PuzzleListPage({
             left: `calc(50% + ${labelDx}%)`,
             ...(labelPosition === "top"
               ? {
-                top: `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
-              }
+                  top: `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`,
+                }
               : {
-                top: `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
-              }),
+                  top: `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
+                }),
           };
 
           return (

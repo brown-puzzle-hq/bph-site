@@ -16,12 +16,12 @@ export const inPersonBody = (
     <div className="mb-4">
       <i>What kind of test are you taking?</i>
     </div>
+    <div className="mb-4 flex justify-center">
+      <Image src={barExam} alt="Law" width={500} />
+    </div>
     <div className="mb-4">
       (We suggest using Wikipedia as your canonical source. Each circle
       represents one word.)
-    </div>
-    <div className="mb-4 flex justify-center">
-      <Image src={barExam} alt="Law" width={500} />
     </div>
     <hr />
     <div className="mt-4 max-w-3xl space-y-4 pb-4">

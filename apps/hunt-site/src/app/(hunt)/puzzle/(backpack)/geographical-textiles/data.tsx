@@ -23,11 +23,13 @@ export const inPersonBody = (
       <p>
         My Scottish grandmother is visiting me in the States, but we're having a
         hard time communicating. Every sentence she states needs too much
-        reading between the lines. How can we get out of this state of
-        confusion?
+        reading between the lines.
+      </p>
+      <p>
+        <i>How can we get out of this state of confusion?</i>
       </p>
     </div>
-    <div className="flex flex-col items-center justify-center space-y-4">
+    <div className="mb-4 flex flex-col items-center justify-center space-y-4">
       <Image src={image1} alt="Image 1" width={500} height={500} />
       <Image src={image2} alt="Image 2" width={500} height={500} />
       <Image src={image3} alt="Image 3" width={500} height={500} />

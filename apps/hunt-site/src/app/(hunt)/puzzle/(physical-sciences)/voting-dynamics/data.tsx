@@ -15,8 +15,8 @@ export const puzzleId = "voting-dynamics";
  * and interactive puzzle components here.
  */
 const body = (
-  <div className="mb-4">
-    <p>
+  <div>
+    <p className="mb-4">
       In this pageant, four competitors are competing in two races: STYLE and
       VERVE. The people have voted -- now we need to count the ballots.
     </p>
@@ -127,7 +127,7 @@ export const tasks: Record<string, JSX.Element> = {
         independent judges will determine the results individually. However,
         each judge has different opinions about what votes should be counted...
       </div>
-      <table>
+      <table className="mx-auto">
         <tbody className="w-full table-fixed border-collapse text-center">
           <tr>
             <td className="border-border border px-3">

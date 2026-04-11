@@ -13,10 +13,11 @@ export const puzzleId = "linesman-training";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
+    <div className="mb-4 text-center">
       <b>
-        This is a physical puzzle! Please come to HQ in Friedman 208 to pick it
-        up.
+        This is a physical puzzle that you should have received at kickoff! If
+        you think you did not receive the required materials, please come to HQ
+        in Friedman 208 to pick them up.
       </b>
     </div>
     <div>

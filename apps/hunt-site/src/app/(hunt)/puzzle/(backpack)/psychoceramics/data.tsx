@@ -20,12 +20,17 @@ export const inPersonBody = (
         the Department rounds in order to solve it.
       </b>
     </div>
-    <div className="mb-4 space-y-4 text-center">
+    <div className="mb-4 space-y-4">
       <p>
         My pottery usually gets top g-Rae-des, but they've shattered in the
-        kiln. How late will I be up redoing this assignment?
+        kiln.
       </p>
-      <p className="md:hidden">NB: wider screen recommended for this puzzle!</p>
+      <p>
+        <i>How late will I be up redoing this assignment?</i>
+      </p>
+      <p className="font-bold md:hidden">
+        NB: wider screen recommended for this puzzle!
+      </p>
     </div>
     <div className="max-w-[calc(100vw-96px)] overflow-auto">
       <JigsawPuzzle />

@@ -15,8 +15,12 @@ export const puzzleId = "scacchic-fabrication";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4 space-y-4">
-      <b>This is a physical puzzle. See hunt HQ for access to this puzzle.</b>
+    <div className="mb-4 space-y-4 text-center">
+      <b>
+        This is a physical puzzle that you should have received at kickoff! If
+        you think you did not receive the required materials, please come to HQ
+        in Friedman 208 to pick them up.
+      </b>
     </div>
     <div className="mb-4">
       <i>

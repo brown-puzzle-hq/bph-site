@@ -34,22 +34,26 @@ export const inPersonBody = (
       </b>
     </div>
     <div className="flex justify-around">
-      <div className="flex flex-col gap-4 text-center font-bold">
-        <span>↘</span>
+      <div className="flex flex-col gap-4 text-center">
+        <span>
+          <b>↘</b>
+        </span>
         <span>News host</span>
         <span>Underskirt</span>
         <span>Small coin</span>
         <span>Campaigned for office</span>
       </div>
-      <div className="flex flex-col gap-4 text-center font-bold">
-        <span>→</span>
+      <div className="flex flex-col gap-4 text-center">
+        <span>
+          <b>→</b>
+        </span>
         <span>Ltd.</span>
         <span>Rock from space</span>
         <span>Yogi Bear, Rat, and Mole, for three</span>
         <span>Annulment</span>
       </div>
     </div>
-    <div>
+    <div className="mt-6 flex justify-center">
       <Image src={dirt} alt="A figure with many red triangles" />
     </div>
   </div>
@@ -116,22 +120,26 @@ export const remoteBody = (
       </div>
     </div>
     <div className="flex justify-around">
-      <div className="flex flex-col gap-4 text-center font-bold">
-        <span>↘</span>
+      <div className="flex flex-col gap-4 text-center">
+        <span>
+          <b>↘</b>
+        </span>
         <span>News host</span>
         <span>Underskirt</span>
         <span>Small coin</span>
         <span>Campaigned for office</span>
       </div>
-      <div className="flex flex-col gap-4 text-center font-bold">
-        <span>→</span>
+      <div className="flex flex-col gap-4 text-center">
+        <span>
+          <b>→</b>
+        </span>
         <span>Ltd.</span>
         <span>Rock from space</span>
         <span>Yogi Bear, Rat, and Mole, for three</span>
         <span>Annulment</span>
       </div>
     </div>
-    <div className="flex justify-center">
+    <div className="mt-6 flex justify-center">
       <Image src={dirt} alt="A figure with many red triangles." />
     </div>
   </div>

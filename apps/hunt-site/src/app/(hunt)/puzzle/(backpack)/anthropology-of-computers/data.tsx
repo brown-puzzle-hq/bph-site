@@ -18,12 +18,12 @@ export const inPersonBody = (
         the Department rounds in order to solve it.
       </b>
     </div>
-    <div className="max-w-3xl space-y-4 pb-4 text-center">
+    <div className="mb-4 max-w-3xl space-y-4">
       Professor Conway hasn't told you what's going to be on the final — you're
       going in blind. So you stay up studying all night, taking no breaks
       between words, counting down until there's nothing left to review.
     </div>
-    <div className="mb-4 max-w-3xl text-center">
+    <div className="mb-4 max-w-3xl">
       <i>What will the final exam be?</i>
     </div>
     <hr />
