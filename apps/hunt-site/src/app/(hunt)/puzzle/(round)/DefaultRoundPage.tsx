@@ -9,7 +9,7 @@ import { checkPermissions } from "~/lib/server";
 import { getAvailablePuzzles } from "@/puzzle/components/puzzle-list/puzzle-utils";
 import type { AvailablePuzzle } from "@/puzzle/components/puzzle-list/types";
 import { notFound } from "next/navigation";
-import { ROUNDS, ALL_PUZZLES } from "~/config/server";
+import { ROUNDS, ALL_PUZZLES, FEEDER_ORDER } from "~/config/server";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { cn, decodeSeen } from "~/lib/utils";
@@ -82,7 +82,10 @@ export default async function DefaultRoundPage({
     const availablePuzzles = await getAvailablePuzzles(teamId);
     roundPuzzles = availablePuzzles
       .filter((puzzle) => round.puzzles.includes(puzzle.id))
-      .sort((puzzleA, puzzleB) => puzzleA.name.localeCompare(puzzleB.name));
+      .sort(
+        (puzzleA, puzzleB) =>
+          FEEDER_ORDER[puzzleA.id]! - FEEDER_ORDER[puzzleB.id]!,
+      );
   }
 
   return (

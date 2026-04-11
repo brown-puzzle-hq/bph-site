@@ -25,15 +25,20 @@ export const inPersonBody = (
   <div className="max-w-3xl space-y-4">
     <div className="text-center">
       <b>
-        This puzzle can be found on the 3rd floor of Page-Robinson Hall. If you
-        are a non-Brown team whose solving room is not located in this building,
-        please call us to get access.
+        This puzzle can be found on the 3rd floor of Page-Robinson Hall. You
+        should bring your tape and red string. If you are a non-Brown team whose
+        solving room is not located in this building, please call us to get
+        access.
       </b>
+    </div>
+    <div className="text-center">
+      <b>We recommend using online tools to solve this puzzle.</b>
     </div>
     <div className="mb-4">
       <i>
         You and your partner, Detective Rolfsen, have finally unknotted the
-        whole conspiracy: APMA-Econ majors are lizards in disguise.
+        whole conspiracy: APMA-Econ majors are taxonomically lizards in
+        disguise.
       </i>
     </div>
   </div>
@@ -44,7 +49,8 @@ export const remoteBody = (
     <div className="mb-4">
       <i>
         You and your partner, Detective Rolfsen, have finally unknotted the
-        whole conspiracy: APMA-Econ majors are lizards in disguise.
+        whole conspiracy: APMA-Econ majors are taxonomically lizards in
+        disguise.
       </i>
     </div>
     <div className="flex justify-around">

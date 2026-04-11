@@ -1,3 +1,4 @@
+import Link from "next/link";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -12,11 +13,15 @@ export const puzzleId = "architecture-on-college-hill";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
-      <i>
-        {" "}
-        Uh... this puzzle is not written yet :P If you need the answer ask us
-      </i>
+    <div className="mb-4 text-center font-bold">
+      This puzzle can be found{" "}
+      <Link
+        href="https://whereatbrown.com/puzzlehunt"
+        className="text-link hover:underline"
+      >
+        here.
+      </Link>{" "}
+      You do not need to visit any locations to solve this puzzle.
     </div>
   </div>
 );

@@ -216,6 +216,83 @@ export default async function Page() {
                   </TableRow>
                 )),
             )}
+            {allPuzzlesWithEverything
+              .filter((puzzle) => puzzle.id === "fifth-year-masters")
+              .map((puzzle) => (
+                <TableRow
+                  key={puzzle.id}
+                  className="transition-none hover:bg-inherit"
+                >
+                  <TableCell className="py-0">
+                    <div
+                      className={`inline-flex space-y-2 rounded-sm px-1 py-0.5`}
+                    >
+                      Capstone
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="py-0">
+                    <a
+                      className="font-bold text-blue-500 hover:underline"
+                      href={`/puzzle/${puzzle.id}`}
+                    >
+                      {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
+                    </a>
+                  </TableCell>
+                  <TableCell className="py-0">
+                    <p className="text-emerald-600">{puzzle.answer}</p>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {puzzle.unlocks}
+                  </TableCell>
+                  <TableCell className="text-center">{puzzle.solves}</TableCell>
+                  <TableCell className="text-center">
+                    {puzzle.guesses}
+                  </TableCell>
+                  <TableCell className="text-center">{puzzle.hints}</TableCell>
+                  <TableCell className="justify-center">
+                    {puzzle.inPersonBody && (
+                      <div className="flex justify-center">
+                        <a
+                          href={`/puzzle/${puzzle.id}?interactionMode=in-person`}
+                        >
+                          <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                        </a>
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="justify-center">
+                    {puzzle.remoteBody && (
+                      <div className="flex justify-center">
+                        <a href={`/puzzle/${puzzle.id}?interactionMode=remote`}>
+                          <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                        </a>
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="justify-center">
+                    {puzzle.solutionBody && (
+                      <div className="flex justify-center">
+                        <a href={`/puzzle/${puzzle.id}/solution`}>
+                          <KeyRound className="size-5 text-yellow-500 hover:opacity-75" />
+                        </a>
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="justify-center">
+                    <div className="flex justify-center">
+                      <a href={`/puzzle/${puzzle.id}/stats`}>
+                        <ChartColumn className="text-black-500 size-5 text-lime-600 hover:opacity-60" />
+                      </a>
+                    </div>
+                  </TableCell>
+                  <TableCell className="flex justify-center">
+                    {puzzle.copyText && (
+                      <CopyButton copyText={puzzle.copyText} />
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>

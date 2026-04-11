@@ -6,6 +6,9 @@ import img4 from "./schmear-4.jpeg";
 import img5 from "./schmear-5.jpeg";
 import img6 from "./schmear-6.jpeg";
 import img7 from "./schmear-7.jpeg";
+import loc1 from "./location A.jpeg";
+import loc2 from "./location B.jpeg";
+import loc3 from "./location C.jpeg";
 
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
@@ -21,11 +24,18 @@ export const puzzleId = "schmear-campaigns";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="mb-4 text-center font-bold">
+      This puzzle is scattered across campus! You don't need to enter any
+      buildings or restricted areas to solve this puzzle.
+    </div>
     <div className="mb-4">
       <i>
         Things are getting dirty as these dancing bagels fight to be your
         breakfast.
       </i>
+      <Image className="mb-4" src={loc1} alt="" />
+      <Image className="mb-4" src={loc2} alt="" />
+      <Image className="mb-4" src={loc3} alt="" />
     </div>
   </div>
 );

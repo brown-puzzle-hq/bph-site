@@ -1,3 +1,5 @@
+import Image from "next/image";
+import kitties from "./itty-bitty-kitties.png";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -12,11 +14,13 @@ export const puzzleId = "itty-bitty-kitties";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
-      <i>
-        {" "}
-        Uh... this puzzle is not written yet :P If you need the answer ask us
-      </i>
+    <div className="mb-4 flex justify-center">
+      <Image
+        src={kitties}
+        alt="Itty-Bitty Kitties"
+        // width={500}
+        // height={500}
+      />
     </div>
   </div>
 );
