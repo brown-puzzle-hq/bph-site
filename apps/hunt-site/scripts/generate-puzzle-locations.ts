@@ -9,7 +9,7 @@ const OUTPUT_PATH = path.join(
   process.cwd(),
   "src/generated/puzzle-locations.json",
 );
-const IGNORE = new Set(["example", "components", "(round)"]);
+const IGNORE = new Set(["example", "components", "(round)", "[...slug]"]);
 
 type Found = Record<string, string[]>;
 type PuzzleDirectoryMap = Record<string, string | null>;

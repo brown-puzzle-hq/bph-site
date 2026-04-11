@@ -8,7 +8,7 @@ import {
   errata,
   unlocks,
 } from "~/server/db/schema";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import ErratumDialog from "~/app/(hunt)/puzzle/components/puzzle/ErratumDialog";
 import GuessForm from "@/puzzle/components/puzzle/guess/GuessForm";
@@ -48,14 +48,8 @@ export default async function DefaultPuzzlePage({
   tasks,
   interactionMode,
 }: DefaultPuzzlePageProps) {
-  switch (await canViewPuzzle(puzzleId)) {
-    case "success":
-      break;
-    case "not_authenticated":
-      redirect("/login");
-    case "not_authorized":
-      notFound();
-  }
+  // Check if user can view puzzle
+  if ((await canViewPuzzle(puzzleId)) !== "success") redirect("/puzzle");
 
   const [puzzleAnswerRow, { error, user }] = await Promise.all([
     // Puzzle answer

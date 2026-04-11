@@ -7,7 +7,7 @@ import { getNumberOfHintsRemaining } from "@/config/server";
 import { sendBotMessage } from "~/lib/comms";
 import { HUNT_URL } from "@/config/client";
 import { assertPermissions } from "~/lib/server";
-import { assertCanViewPuzzle } from "../../actions";
+import { assertCanViewHint } from "../../actions";
 
 export type MessageType = "request" | "reply";
 
@@ -40,7 +40,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
       error: `You have an outstanding hint on the puzzle ${unansweredHint.puzzle.name}.`,
     };
 
-  await assertCanViewPuzzle(puzzleId);
+  await assertCanViewHint(puzzleId);
 
   const [request] = await db
     .insert(hints)

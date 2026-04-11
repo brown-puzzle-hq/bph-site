@@ -14,14 +14,8 @@ export default async function DefaultSolutionPage({
   solutionBody: React.ReactNode;
   authors: string | null;
 }) {
-  switch (await canViewSolution(puzzleId)) {
-    case "success":
-      break;
-    case "not_authenticated":
-      redirect("/login");
-    case "not_authorized":
-      redirect("/puzzle");
-  }
+  // Check if user can view solution
+  if ((await canViewSolution(puzzleId)) !== "success") redirect("/puzzle");
 
   // Puzzle answer
   const puzzleAnswer = (

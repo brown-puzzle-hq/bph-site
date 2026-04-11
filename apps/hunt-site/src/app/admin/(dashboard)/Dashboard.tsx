@@ -91,7 +91,7 @@ export async function Dashboard() {
   const endDate = new Date(
     Math.min(
       REMOTE.END_TIME.getTime(),
-      Math.max(IN_PERSON.START_TIME.getTime(), new Date().getTime()),
+      Math.max(IN_PERSON.START_TIME.getTime(), Date.now()),
     ),
   );
 

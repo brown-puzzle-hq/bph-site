@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
+import { type StaticImageData } from "next/image";
 import blueImg from "./art/blue_background.png";
 import grantImg from "./art/grant_back.png";
 import erikaImg from "./art/erika_back.png";
@@ -435,7 +435,7 @@ type Screen =
   | "chats"
   | "profileView"
   | "chatDetail"
-  | "profile |";
+  | "profile";
 
 type Match = {
   id: number;
@@ -655,11 +655,6 @@ export default function DateGame() {
   const [promoCode, setPromoCode] = useState("");
   const [isVIP, setIsVIP] = useState(false);
 
-  const getCharacterPool = () =>
-    isVIP ? [...characters, tinfoilCharacter] : characters;
-
-  const [seenIds, setSeenIds] = useState<Set<number>>(() => new Set());
-
   const characterPool = useMemo(
     () => (isVIP ? [...characters, tinfoilCharacter] : characters),
     [isVIP],
@@ -720,7 +715,7 @@ export default function DateGame() {
       },
     }));
 
-    //remove from queue
+    // remove from queue
     setMatchQueue((prev) => prev.slice(1));
 
     setScreen("chats");
@@ -731,9 +726,8 @@ export default function DateGame() {
 
     setMatchQueue((prev) => {
       if (prev.length === 0) return prev;
-
       const [first, ...rest] = prev;
-      return [...rest, first]; //move to end
+      return [...rest, first!];
     });
   };
 
@@ -741,7 +735,7 @@ export default function DateGame() {
     if (!activeChat) return;
     if (isProcessing) return;
 
-    const chat = chats[activeChat.id];
+    const chat = chats[activeChat.id]!;
     let i = chat.index;
 
     if (i >= script.length) return;
@@ -752,15 +746,16 @@ export default function DateGame() {
 
     // collect ALL consecutive "You" messages
     const userMessages: Message[] = [];
-
-    while (i < script.length && script[i].sender === "You") {
-      userMessages.push(script[i]);
+    while (true) {
+      const msg = script[i];
+      if (!msg || msg.sender !== "You") break;
+      userMessages.push(msg);
       i++;
     }
 
     // show all user messages immediately
     setChats((prev) => {
-      const current = prev[activeChat.id];
+      const current = prev[activeChat.id]!;
       return {
         ...prev,
         [activeChat.id]: {
@@ -772,8 +767,10 @@ export default function DateGame() {
 
     // collect character messages
     const responses: Message[] = [];
-    while (i < script.length && script[i].sender !== "You") {
-      responses.push(script[i]);
+    while (true) {
+      const msg = script[i];
+      if (!msg || msg.sender === "You") break;
+      responses.push(msg);
       i++;
     }
 
@@ -788,7 +785,7 @@ export default function DateGame() {
       setTimeout(
         () => {
           setChats((prev) => {
-            const current = prev[activeChat.id];
+            const current = prev[activeChat.id]!;
             return {
               ...prev,
               [activeChat.id]: {

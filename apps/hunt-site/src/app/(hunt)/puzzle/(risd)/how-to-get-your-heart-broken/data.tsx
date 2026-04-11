@@ -1,6 +1,6 @@
 import Image from "next/image";
 import map from "./meme.png";
-import DateGame from "./game";
+import DateGame from "./Game";
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -15,9 +15,7 @@ export const puzzleId = "how-to-get-your-heart-broken";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="max-w-3xl">
-      <DateGame />
-    </div>
+    <DateGame />
   </div>
 );
 

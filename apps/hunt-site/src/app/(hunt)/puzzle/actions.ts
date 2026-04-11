@@ -70,13 +70,11 @@ export async function assertCanViewPuzzle(puzzleId: string) {
   }
 }
 
-/** Checks whether the user can view the hint. Currently
- * ignores puzzleId. Returns a viewStatus string.
+/** Checks or asserts whether the user can view the hint.
+ * Currently just matches canViewPuzzle and assertCanViewPuzzle.
  */
-export async function canViewHint(puzzleId: string): Promise<viewStatus> {
-  const { error } = await checkPermissions({ level: "userAny" });
-  return error ? "not_authenticated" : "success";
-}
+export const canViewHint = canViewPuzzle;
+export const assertCanViewHint = assertCanViewPuzzle;
 
 /** Checks whether the user can view the solution.
  * Does not check whether the solution actually exists.

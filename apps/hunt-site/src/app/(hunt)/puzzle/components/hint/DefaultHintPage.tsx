@@ -5,7 +5,7 @@ import { eq, and, asc } from "drizzle-orm";
 import { replies, solves, hints, puzzles } from "~/server/db/schema";
 import { getNumberOfHintsRemaining } from "@/config/server";
 import HuntHintThreads from "./HuntHintThreads";
-import { canViewPuzzle } from "@/puzzle/actions";
+import { canViewHint, canViewPuzzle } from "@/puzzle/actions";
 import { checkPermissions } from "~/lib/server";
 
 export default async function DefaultHintPage({
@@ -13,15 +13,8 @@ export default async function DefaultHintPage({
 }: {
   puzzleId: string;
 }) {
-  // Check if user can view puzzle
-  switch (await canViewPuzzle(puzzleId)) {
-    case "success":
-      break;
-    case "not_authenticated":
-      redirect("/login");
-    case "not_authorized":
-      redirect("/puzzle");
-  }
+  // Check if user can view hint
+  if ((await canViewHint(puzzleId)) !== "success") redirect("/puzzle");
 
   const { error, user } = await checkPermissions({ level: "userAny" });
   if (error) {

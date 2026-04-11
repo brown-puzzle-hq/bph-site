@@ -8,7 +8,7 @@ import { IN_PERSON, REMOTE } from "@/config/client";
 import { checkPermissions } from "~/lib/server";
 import { getAvailablePuzzles } from "@/puzzle/components/puzzle-list/puzzle-utils";
 import type { AvailablePuzzle } from "@/puzzle/components/puzzle-list/types";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { ROUNDS, ALL_PUZZLES, FEEDER_ORDER } from "~/config/server";
 import Link from "next/link";
 import { cookies } from "next/headers";
@@ -55,10 +55,8 @@ export default async function DefaultRoundPage({
 
   // --- NOT LOGGED IN ---
   if (error) {
-    // If the hunt has not ended, 404
-    if (currDate < REMOTE.END_TIME) {
-      notFound();
-    }
+    // If the hunt has not ended, redirect
+    if (currDate < REMOTE.END_TIME) redirect("/puzzle");
 
     const availablePuzzles = await getAvailablePuzzles();
     roundPuzzles = availablePuzzles.filter((puzzle) =>
@@ -74,10 +72,9 @@ export default async function DefaultRoundPage({
         ? IN_PERSON.START_TIME
         : REMOTE.START_TIME;
 
-    // If the hunt has not started, 404
-    if (role !== "testsolver" && role !== "admin" && currDate < huntStartTime) {
-      notFound();
-    }
+    // If the hunt has not started, redirect
+    if (role !== "testsolver" && role !== "admin" && currDate < huntStartTime)
+      redirect("/puzzle");
 
     const availablePuzzles = await getAvailablePuzzles(teamId);
     roundPuzzles = availablePuzzles

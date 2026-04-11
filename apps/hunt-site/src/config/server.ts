@@ -517,8 +517,7 @@ function getTotalHints(role: string, interactionMode: string) {
     interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME;
 
   const timeDifference =
-    Math.min(new Date().getTime(), huntEndTime.getTime()) -
-    huntStartTime.getTime();
+    Math.min(Date.now(), huntEndTime.getTime()) - huntStartTime.getTime();
 
   const rate =
     interactionMode === "in-person"

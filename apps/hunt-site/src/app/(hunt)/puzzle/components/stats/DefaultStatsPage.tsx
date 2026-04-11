@@ -14,14 +14,8 @@ export default async function DefaultStatsPage({
 }: {
   puzzleId: string;
 }) {
-  switch (await canViewStats(puzzleId)) {
-    case "success":
-      break;
-    case "not_authenticated":
-      redirect("/login");
-    case "not_authorized":
-      redirect("/puzzle");
-  }
+  // Check if user can view stats
+  if ((await canViewStats(puzzleId)) !== "success") redirect("/puzzle");
 
   // For the header
   const totalUnlocksPromise = INITIAL_PUZZLES.includes(puzzleId)
