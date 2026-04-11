@@ -1,3 +1,20 @@
+import BigWheelRotator from "./BigWheelRotator";
+
+// Fill these in per wheel in this exact angle order:
+// [0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg]
+// 0deg is to the right, 90deg is at the top.
+const WHEEL_LETTERS: string[][] = [
+  ["*", "H", "", "C", "", "", "D", ""], // Wheel 1 (inner)
+  ["H", "O", "", "R", "", "", "A", "F"], // Wheel 2
+  ["U", "L", "H", "*", "", "", "R", "U"], // Wheel 3
+  ["C", "Y", "*", "P", "", "F", "*", "D"], // Wheel 4
+  ["K", "", "C", "!", "*", "R", "!", "*"], // Wheel 5
+  ["S", "C", "K", "", "A", "*", "", "E"], // Wheel 6
+  ["!", "O", "!", "", "T", "C", "", "!"], // Wheel 7
+  ["", "*", "", "", "S", "K", "", ""], // Wheel 8
+  ["", "!", "", "", "!", "!", "", ""], // Wheel 9 (outer)
+];
+
 /**
  * The puzzle ID is used to uniquely identify the puzzle in the database.
  * It should be equal to the name of the folder this file is currently under.
@@ -12,9 +29,17 @@ export const puzzleId = "big-wheel";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
-    <div className="mb-4">
-      <i>This is a physical puzzle. See hunt HQ for access to this puzzle.</i>
-    </div>
+    <BigWheelRotator
+      wheels={WHEEL_LETTERS.map((letters, index) => ({
+        label:
+          index === 0
+            ? "Wheel 1 (inner)"
+            : index === WHEEL_LETTERS.length - 1
+              ? "Wheel 9 (outer)"
+              : `Wheel ${index + 1}`,
+        letters,
+      }))}
+    />
   </div>
 );
 
