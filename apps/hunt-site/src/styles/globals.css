@@ -123,15 +123,19 @@
     background: hsl(0 0% 80%) !important;
   }
 
-  /* In avionic-intersectionality, active-entry highlighting should not replace
-     rebus shading with PuzzleJS blue. Keep rebus visibly distinct by using a
-     darker rebus tone while marked/hovered. */
+  /* In avionic-intersectionality, keep rebus cells darker than default and
+     preserve that distinction during active-entry highlighting. */
+  .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="avionic-intersectionality"]
+    table.puzzle-grid-content
+    td.rebus-cell:not(.marked):not(.hovered) {
+    background: hsl(0 0% 72%) !important;
+  }
   .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="avionic-intersectionality"]
     table.puzzle-grid-content
     td.rebus-cell.marked,
   .puzzle-player.crossword-sparse.crossword-floating[data-puzzle-id="avionic-intersectionality"]
     table.puzzle-grid-content
     td.rebus-cell.hovered {
-    background: hsl(0 0% 68%) !important;
+    background: hsl(0 0% 60%) !important;
   }
 }

@@ -10,17 +10,6 @@ interface Props {
 
 function renderClueText(text: string | undefined) {
   if (!text) return null;
-  if (text === "__IMAGE_WHALES_SHOOT__") {
-    return (
-      <Image
-        src={whalesShootImg}
-        alt="clue image"
-        width={800}
-        height={600}
-        className="h-auto max-w-full"
-      />
-    );
-  }
   return text;
 }
 

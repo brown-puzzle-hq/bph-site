@@ -5,30 +5,30 @@ import RebusControlsClient from "./RebusControlsClient";
 
 export const puzzleId = "avionic-intersectionality";
 const GRID_ROWS = 19;
-const GRID_COLS = 25;
+const GRID_COLS = 26;
 
 // - '.' = cell
 // - '@' = off-grid empty space
 const gridDefRaw: string[] = [
-  "@@@@@@@@@@@@@@@@@.@@@.@@@",
-  "@@@@.@@@@.............@@@",
-  "@@........@@@@@@@.@@@.@@@",
-  "@@@@.@@@@.@.@@.@@.@@@@@@@",
-  ".....................@@@@",
-  "@.@@.@@@@.@.@@.@@.@@.@@@@",
-  "@.@@....@@.....@@......@@",
-  "@.@@.@@@@@@@@@.@@@@@.@@@@",
-  "@........@@.@@.......@@@@",
-  "@.@@.@@@@@@.@.@@.@@.@@@@@",
-  "@.@@.@@@@.@.@.....@.@@@@@",
-  "@.@@.@@@@.@.@.@@.@@.@@@@@",
-  "@@@@.@............@@@@@@@",
-  "@@@@.@.@@.@.@.@@.@@@@@@@@",
-  "@......@@.@.@....@@@@@@@@",
-  "@@@@.@.@@@@.@@@@.@@@@@@@@",
-  "@@@@.@@@@......@....@@@@@",
-  "@@@@@@@@@@@.@@@@@@@@@@@@@",
-  "@@@@@@@@@@@@@@@@@@@@@@@@@",
+  "@@@@@@@@@@@@@@@@@@@@@@@@@@",
+  "@@@.@@@@@@@@@@@@@@@@@@@@@@",
+  "@@@.@@@@@@@@@.@@@@@@@@@@@@",
+  "@@@.@@@@@@@@@.@@@@@@@@@@@@",
+  "@@@.@@@@.@@@@.@@@@@@@@@@@@",
+  "@@@.@@@@.@@@@.@@@@.@@@@@@@",
+  "@@@.@@@@.@.............@@@",
+  "@@@.@@@@.@@@@.@@@@.@@@@@@@",
+  "@@@.@@@@.@@@@.@@@@.@@@@@@@",
+  "@.....................@@@@",
+  "@@@.@@@@.@@@@@@@@@.@@@.@@@",
+  "@@@.@@.........@@@......@@",
+  "@@@.@@@@.@@.@@@.@@@@.@@@@@",
+  "@@@.@@@@.@@.@@@.@@@@.@@@@@",
+  "@@@.@@@..........@@@.@@@@@",
+  "@@@.@@@@.@@.@@@.@@@@.@@@@@",
+  "@@@.@@@@@@@@@@@.@@@@@@@@@@",
+  "@@@@@@@@@@@@@@@@@@@@@@@@@@",
+  "@@@@@@@@@@@@@@@@@@@@@@@@@@",
 ];
 
 // If you accidentally enter the grid as 25 rows × 19 cols (swapped), we'll
@@ -89,20 +89,20 @@ const gridDef = normalizeGrid(gridDefRaw, GRID_ROWS, GRID_COLS);
 // Rebus cells: put the coordinates for shaded rebus squares here.
 // (0-indexed, in the 19x25 grid)
 const rebusCells: Array<{ r: number; c: number }> = [
-  { r: 0, c: 17 },
-  { r: 1, c: 11 },
-  { r: 1, c: 21 },
-  { r: 3, c: 4 },
-  { r: 4, c: 15 },
-  { r: 4, c: 16 },
-  { r: 5, c: 17 },
-  { r: 8, c: 4 },
-  { r: 11, c: 16 },
-  { r: 12, c: 10 },
-  { r: 12, c: 12 },
-  { r: 14, c: 16 },
-  { r: 15, c: 11 },
-  { r: 16, c: 11 },
+  { r: 3, c: 3 },
+  { r: 8, c: 3 },
+  { r: 8, c: 8 },
+  { r: 10, c: 8 },
+  { r: 11, c: 9 },
+  { r: 11, c: 12 },
+  { r: 6, c: 12 },
+  { r: 6, c: 22 },
+  { r: 5, c: 18 },
+  { r: 9, c: 15 },
+  { r: 9, c: 16 },
+  { r: 10, c: 18 },
+  { r: 14, c: 14 },
+  { r: 14, c: 15 },
 ];
 
 function assertRebusCells(
@@ -143,40 +143,29 @@ function makeFills(
 const fillsDef = makeFills(GRID_ROWS, GRID_COLS, rebusCells);
 assertRebusCells(gridDef, rebusCells);
 
-const OVERLAY_SCALE = 1.09;
+const OVERLAY_SCALE = 1.05;
+const OVERLAY_SCALE_X = 1;
+const OVERLAY_SCALE_Y = 1;
+const OVERLAY_OFFSET_X = 52;
+const OVERLAY_OFFSET_Y = 126;
 
 const ACROSS_CLUE_LIST: string[] = [
-  "Jackal-headed Egyptian god",
-  "__IMAGE_WHALES_SHOOT__",
-  "Cowlike",
-  "Coriander",
-  '"Concrete jungle where dreams are made of" song',
-  "Annual holiday on June 25th",
-  "One of the five gifted in a classic Christmas song",
-  "This kind of police. Would, hate this clue",
-  "Shakespearean king",
-  "Wine valley",
-  "Reddish pigment made from dirt",
-  "3rd, 5th, and 4th name of the general who razed Carthage",
-  "Sunroom",
-  "Number one rule of improv",
+  "Animal on Wyoming's flag",
+  "Home of (x,y)",
+  "Concrete jungle where dreams are made of song",
+  "3rd, 4th, and 5th names of the general who razed Carthage",
+  "Mirror pep talk opener",
 ];
 
 const DOWN_CLUE_LIST: string[] = [
   "What Gen Alpha farms",
-  "Animal on Wyoming's flag",
+  "A gymnast's beam",
   "Attraction to more than one gender",
-  "New York corner store",
-  "Home of (x,y)",
-  "Mites commonly found in grass",
-  "Ray Tomlinson sent the first one",
-  "Not a nerd?",
-  "One whose pants are on fire",
-  'A kind of "hop" from Harlem',
-  "___ van Beethoven",
+  "Annual holiday on June 25th",
+  "Sits between Os and Pt on the table",
+  "Brown's satire newspaper",
   "Strategic alibi through lack of evidence",
-  "Fencing discipline",
-  "A tough Master at the gym",
+  "Baltic island",
 ];
 
 export const inPersonBody = (
@@ -200,7 +189,14 @@ export const inPersonBody = (
               mode: "crossword",
             }}
           />
-          <CrosswordOverlay puzzleId={puzzleId} scale={OVERLAY_SCALE} />
+          <CrosswordOverlay
+            puzzleId={puzzleId}
+            scale={OVERLAY_SCALE}
+            scaleX={OVERLAY_SCALE_X}
+            scaleY={OVERLAY_SCALE_Y}
+            offsetX={OVERLAY_OFFSET_X}
+            offsetY={OVERLAY_OFFSET_Y}
+          />
         </div>
 
         <RebusControlsClient puzzleId={puzzleId} />

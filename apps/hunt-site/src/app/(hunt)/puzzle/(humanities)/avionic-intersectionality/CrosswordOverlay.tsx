@@ -7,6 +7,10 @@ import overlayImg from "./overlay.png";
 type Props = {
   puzzleId: string;
   scale?: number;
+  scaleX?: number;
+  scaleY?: number;
+  offsetX?: number;
+  offsetY?: number;
 };
 
 type Box = {
@@ -22,7 +26,14 @@ function getPuzzleContainer(puzzleId: string) {
   );
 }
 
-export default function CrosswordOverlay({ puzzleId, scale = 1 }: Props) {
+export default function CrosswordOverlay({
+  puzzleId,
+  scale = 1,
+  scaleX = 1,
+  scaleY = 1,
+  offsetX = 0,
+  offsetY = 0,
+}: Props) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [box, setBox] = useState<Box | null>(null);
   const [processedSrc, setProcessedSrc] = useState<string | null>(null);
@@ -47,10 +58,15 @@ export default function CrosswordOverlay({ puzzleId, scale = 1 }: Props) {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // Key out near-white pixels (overlay background) to transparency.
-        // Use a "near-neutral white" test so we keep faint pink/red border.
+        // Key out near-white pixels (overlay background) to transparency,
+        // then remap near-black neutral pixels to orange.
         const whiteMin = 245;
         const whiteDelta = 6;
+        const blackMax = 45;
+        const blackDelta = 10;
+        const orangeR = 255;
+        const orangeG = 140;
+        const orangeB = 0;
         for (let i = 0; i < data.length; i += 4) {
           const r = data[i] ?? 0;
           const g = data[i + 1] ?? 0;
@@ -59,6 +75,13 @@ export default function CrosswordOverlay({ puzzleId, scale = 1 }: Props) {
           const max = Math.max(r, g, b);
           if (min >= whiteMin && max - min <= whiteDelta) {
             data[i + 3] = 0;
+            continue;
+          }
+
+          if (max <= blackMax && max - min <= blackDelta) {
+            data[i] = orangeR;
+            data[i + 1] = orangeG;
+            data[i + 2] = orangeB;
           }
         }
         ctx.putImageData(imageData, 0, 0);
@@ -163,15 +186,23 @@ export default function CrosswordOverlay({ puzzleId, scale = 1 }: Props) {
   const scaleClamped = Number.isFinite(scale)
     ? Math.min(2, Math.max(0.5, scale))
     : 1;
+  const scaleXClamped = Number.isFinite(scaleX)
+    ? Math.min(1.5, Math.max(0.5, scaleX))
+    : 1;
+  const scaleYClamped = Number.isFinite(scaleY)
+    ? Math.min(1.5, Math.max(0.5, scaleY))
+    : 1;
+  const offsetXSafe = Number.isFinite(offsetX) ? offsetX : 0;
+  const offsetYSafe = Number.isFinite(offsetY) ? offsetY : 0;
 
   return (
     <div ref={rootRef} className="pointer-events-none absolute inset-0 z-20">
       {box
         ? (() => {
-            const width = box.width * scaleClamped;
-            const height = box.height * scaleClamped;
-            const left = box.left + (box.width - width) / 2;
-            const top = box.top + (box.height - height) / 2;
+            const width = box.width * scaleClamped * scaleXClamped;
+            const height = box.height * scaleClamped * scaleYClamped;
+            const left = box.left + (box.width - width) / 2 + offsetXSafe;
+            const top = box.top + (box.height - height) / 2 + offsetYSafe;
 
             return (
               <div
