@@ -82,8 +82,8 @@ export const CHAINS: ChainConfig[] = [
     nodes: [
       { type: "small", text: "" },
       { type: "big", text: "" },
-      { type: "small", text: "Bruce Willis" },
-      { type: "big", text: "The Bonfire of the Vanities" },
+      { type: "small", text: "Brad Pitt" },
+      { type: "big", text: "Beyond All Boundaries" },
       { type: "small", text: "" },
     ],
   },
@@ -137,7 +137,7 @@ export const CHAINS: ChainConfig[] = [
   },
   {
     nodes: [
-      { type: "small", text: "Tom Hanks" },
+      { type: "small", text: "Kevin Bacon" },
       { type: "big", text: "" },
     ],
   },
