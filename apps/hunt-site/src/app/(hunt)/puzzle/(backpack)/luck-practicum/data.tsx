@@ -31,17 +31,17 @@ export const inPersonBody = (
     <div className="mb-4">
       <i>What will you need to pass your thesis defense?</i>
     </div>
-    <div className="mb-6 grid grid-cols-5 gap-4">
-      <Image src={image1} alt="Image 1" width={500} height={500} />
-      <Image src={image2} alt="Image 2" width={500} height={500} />
-      <Image src={image3} alt="Image 3" width={500} height={500} />
-      <Image src={image4} alt="Image 4" width={500} height={500} />
-      <Image src={image5} alt="Image 5" width={500} height={500} />
-      <Image src={image6} alt="Image 6" width={500} height={500} />
-      <Image src={image7} alt="Image 7" width={500} height={500} />
-      <Image src={image8} alt="Image 8" width={500} height={500} />
-      <Image src={image9} alt="Image 9" width={500} height={500} />
-      <Image src={image10} alt="Image 10" width={500} height={500} />
+    <div className="mb-6 grid grid-cols-5 items-center justify-items-center gap-4">
+      <Image src={image1} alt="Image 1" height={160} />
+      <Image src={image2} alt="Image 2" height={160} />
+      <Image src={image3} alt="Image 3" height={160} />
+      <Image src={image4} alt="Image 4" height={160} />
+      <Image src={image5} alt="Image 5" height={160} />
+      <Image src={image6} alt="Image 6" height={160} />
+      <Image src={image7} alt="Image 7" height={160} />
+      <Image src={image8} alt="Image 8" height={160} />
+      <Image src={image9} alt="Image 9" height={160} />
+      <Image src={image10} alt="Image 10" height={160} />
     </div>
     <hr />
     <div className="mt-4 max-w-3xl space-y-4 pb-4">

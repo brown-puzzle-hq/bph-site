@@ -37,8 +37,9 @@ export const inPersonBody = (
         rel="noopener noreferrer"
         target="_blank"
         href="https://www.geogebra.org/geometry/hkcrqf34"
+        className="text-link hover:underline"
       >
-        <u>Link to graph.</u>
+        Link to graph.
       </a>
     </div>
   </div>

@@ -152,38 +152,46 @@ export const inPersonBody = (
       </tbody>
     </table>
 
-    <div className="mb-4">
-      Hits:
-      <ul className="ml-6 list-disc">
-        <li>Patrol Boat, B2</li>
-        <li>Submarine, B4</li>
-        <li>Destroyer, B9</li>
-        <li>Battleship, E7</li>
-        <li>Submarine, F2</li>
-        <li>Aircraft Carrier, F9</li>
-        <li>Patrol Boat, H6</li>
-        <li>Destroyer, I4</li>
-      </ul>
-    </div>
+    <div className="grid grid-cols-4">
+      <div></div>
+      <div className="mb-4 flex justify-center">
+        <div className="mx-auto">
+          <p className="ml-2 font-bold">Hits:</p>
+          <ul className="ml-6 list-disc">
+            <li>Patrol Boat, B2</li>
+            <li>Submarine, B4</li>
+            <li>Destroyer, B9</li>
+            <li>Battleship, E7</li>
+            <li>Submarine, F2</li>
+            <li>Aircraft Carrier, F9</li>
+            <li>Patrol Boat, H6</li>
+            <li>Destroyer, I4</li>
+          </ul>
+        </div>
+      </div>
 
-    <div className="mb-4">
-      Misses:
-      <ul className="ml-6 list-disc">
-        <li>A2</li>
-        <li>A4</li>
-        <li>A9</li>
-        <li>D9</li>
-        <li>E8</li>
-        <li>F3</li>
-        <li>F7</li>
-        <li>G2</li>
-        <li>H7</li>
-        <li>I2</li>
-        <li>I5</li>
-        <li>I6</li>
-        <li>J4</li>
-        <li>J9</li>
-      </ul>
+      <div className="mb-4 flex justify-center">
+        <div>
+          <p className="ml-2 font-bold">Misses:</p>
+          <ul className="ml-6 list-disc">
+            <li>A2</li>
+            <li>A4</li>
+            <li>A9</li>
+            <li>D9</li>
+            <li>E8</li>
+            <li>F3</li>
+            <li>F7</li>
+            <li>G2</li>
+            <li>H7</li>
+            <li>I2</li>
+            <li>I5</li>
+            <li>I6</li>
+            <li>J4</li>
+            <li>J9</li>
+          </ul>
+        </div>
+      </div>
+      <div></div>
     </div>
 
     <div className="italic">

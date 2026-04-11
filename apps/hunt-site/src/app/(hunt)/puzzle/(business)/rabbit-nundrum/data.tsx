@@ -43,7 +43,7 @@ export const inPersonBody = (
       <div>
         You are about to execute an important tea party between important
         rabbits. To ensure everything goes smoothly, here are a few guidelines:
-        <ol className="list-dec list-inside">
+        <ol className="list-dec mt-4 list-inside px-4">
           <li>
             The rabbit wearing <b>The Hat</b> is <b>The Hatter</b>. They become{" "}
             <b>The Hatter</b> as soon as they put on <b>The Hat</b>, and stop
@@ -84,7 +84,7 @@ export const inPersonBody = (
       <div>
         Here are some recommended role distributions for teams with fewer than 6
         solvers:
-        <div className="px-4">
+        <div className="mt-4 px-4">
           5: One person should take both the green and blue rabbits, and the
           others should each take one rabbit.
           <br />
@@ -113,8 +113,11 @@ export const remoteBody = (
       <b>
         This was a physical puzzle. In addition to the plush rabbits (below),
         solvers received a series of documents, which you can access{" "}
-        <a href="https://drive.google.com/drive/folders/1Mypoz7cn6zmI0-88fX62ylPQgBFeR6MO">
-          <u>here</u>
+        <a
+          href="https://drive.google.com/drive/folders/1Mypoz7cn6zmI0-88fX62ylPQgBFeR6MO"
+          className="text-link hover:underline"
+        >
+          here
         </a>
         .
       </b>
