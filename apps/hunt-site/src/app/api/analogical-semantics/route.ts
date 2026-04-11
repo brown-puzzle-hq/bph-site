@@ -60,16 +60,18 @@ function machine(word1: string, word2?: string): string {
   const exclude = new Set([w1, w2].filter(Boolean) as string[]);
 
   let bestWord = "";
-  let bestCos = -Infinity;
+  let bestDist = Infinity;
   for (let i = 0; i < wordsLimited!.length; i++) {
     const word = wordsLimited![i]!;
     if (exclude.has(word)) continue;
     const emb = vectorsLimited![i]!;
-    const embNorm = norm(emb);
-    if (embNorm === 0) continue;
-    const cos = dot(emb, query) / (embNorm * queryNorm);
-    if (cos > bestCos) {
-      bestCos = cos;
+    const dist = norm([
+      emb[0] - query[0],
+      emb[1] - query[1],
+      emb[2] - query[2],
+    ]);
+    if (dist < bestDist) {
+      bestDist = dist;
       bestWord = word;
     }
   }

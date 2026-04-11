@@ -14,6 +14,9 @@ export const puzzleId = "analogical-semantics";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="mb-4">
+      <i>My LLM thinks that these words are related.</i>
+    </div>
     <AnalogicalSemanticsMachine />
   </div>
 );

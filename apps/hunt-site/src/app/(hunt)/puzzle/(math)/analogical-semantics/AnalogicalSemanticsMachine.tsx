@@ -162,7 +162,9 @@ export default function AnalogicalSemanticsMachine() {
 
       {/* Machine */}
       <div className="flex flex-1 flex-col rounded-xl border-2 border-blue-900 bg-white/10 px-4 py-6">
-        <div className="mb-1 text-center text-2xl font-bold">Machine</div>
+        <div className="mb-1 text-center text-2xl font-bold">
+          Embeddings Machine
+        </div>
         <div className="mb-5 text-center text-sm">Enter up to two words</div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
