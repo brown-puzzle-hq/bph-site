@@ -5,7 +5,7 @@ import { eq, and, asc } from "drizzle-orm";
 import { replies, solves, hints, puzzles } from "~/server/db/schema";
 import { getNumberOfHintsRemaining } from "@/config/server";
 import HuntHintThreads from "./HuntHintThreads";
-import { canViewHint, canViewPuzzle } from "@/puzzle/actions";
+import { canViewHint } from "@/puzzle/actions";
 import { checkPermissions } from "~/lib/server";
 
 export default async function DefaultHintPage({
@@ -88,7 +88,7 @@ export default async function DefaultHintPage({
   };
 
   return (
-    <div className="mb-12 w-full max-w-4xl">
+    <div className="mb-12 w-full max-w-3xl">
       <HuntHintThreads
         previousHints={previousHints}
         hintRequestState={hintState}

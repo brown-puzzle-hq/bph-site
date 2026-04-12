@@ -27,9 +27,28 @@ import { type Team } from "@/db/types";
 import { toast } from "sonner";
 import { formatPhoneNumber } from "~/lib/team-members";
 
-const roundTextColor: Record<string, string> = {};
+const roundTextColor: Record<string, string> = {
+  Business: "text-slate-600",
+  Humanities: "text-red-600",
+  Math: "text-blue-600",
+  "Performing Arts": "text-purple-500",
+  "Physical Sciences": "text-indigo-500",
+  RISD: "text-lime-500",
+  "Social Sciences": "text-orange-500",
+  Backpack: "text-amber-400",
+};
 
-const roundNodeColor: Record<string, string> = {};
+const roundNodeColor: Record<string, string> = {
+  Business: "oklch(55.4% 0.046 257.417)",
+  Humanities: "oklch(63.7% 0.237 25.331)",
+  Math: "oklch(62.3% 0.214 259.815)",
+  "Performing Arts": "oklch(62.7% 0.265 303.9)",
+  "Physical Sciences": "oklch(58.5% 0.233 277.117)",
+  RISD: "oklch(76.8% 0.233 130.85)",
+  "Social Sciences": "oklch(70.5% 0.213 47.604)",
+  Backpack: "oklch(87.9% 0.169 91.605)",
+  Defaut: "oklch(0.708 0 0)",
+};
 
 export type SearchedTeam = Omit<Team, "password"> & {
   unlocks: string[];

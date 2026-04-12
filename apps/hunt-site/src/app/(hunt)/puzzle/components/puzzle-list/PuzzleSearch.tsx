@@ -1,22 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { Puzzle } from "./types";
 import { X } from "lucide-react";
 
 export default function PuzzleSearch({ puzzles }: { puzzles: Puzzle[] }) {
   const [query, setQuery] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const results = query.trim()
     ? puzzles.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()))
     : [];
 
   return (
-    <div className="fixed left-4 right-4 top-[52px] z-10 sm:max-w-[325px]">
+    <div
+      ref={containerRef}
+      className="fixed left-4 right-4 top-[52px] z-10 sm:max-w-[325px]"
+    >
       <div className="relative space-y-1">
         <div className="flex w-full justify-between rounded-md bg-black p-2 pl-3">
           <input
+            ref={inputRef}
             type="text"
             placeholder="Search puzzles..."
             value={query}
@@ -29,7 +48,9 @@ export default function PuzzleSearch({ puzzles }: { puzzles: Puzzle[] }) {
             className="w-full bg-inherit text-sm focus:outline-none"
           />
           <button
-            onClick={() => setQuery("")}
+            onClick={() => {
+              setQuery("");
+            }}
             className={query ? "opacity-70 hover:opacity-100" : "hidden"}
           >
             <X className="size-4" />

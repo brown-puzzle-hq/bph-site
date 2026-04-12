@@ -11,6 +11,17 @@ import {
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
 
+const colorMap: Record<string, string> = {
+  Business: "text-slate-900 bg-slate-100",
+  Humanities: "text-red-900 bg-red-100",
+  Math: "text-blue-900 bg-blue-100",
+  "Performing Arts": "text-purple-900 bg-purple-100",
+  "Physical Sciences": "text-indigo-900 bg-indigo-100",
+  RISD: "text-lime-900 bg-lime-100",
+  "Social Sciences": "text-orange-900 bg-orange-100",
+  Backpack: "text-amber-900 bg-amber-100",
+};
+
 export default async function Page() {
   const query = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
@@ -98,8 +109,6 @@ export default async function Page() {
     }),
   );
 
-  const colorMap = {};
-
   return (
     <div className="container mx-auto mb-12">
       <h1 className="mb-2 text-center">Puzzles</h1>
@@ -136,11 +145,12 @@ export default async function Page() {
                     className="transition-none hover:bg-inherit"
                   >
                     <TableCell className="py-0">
-                      <div
-                        className={`inline-flex rounded-sm px-1 py-0.5 ${colorMap[round.name as keyof typeof colorMap] ?? ""} space-y-2`}
+                      <a
+                        className={`inline rounded-sm box-decoration-clone px-1 py-0.5 leading-6 ${colorMap[round.name as keyof typeof colorMap] ?? ""}`}
+                        href={`/puzzle/${round.name.toLowerCase().replace(/\s+/g, "-")}`}
                       >
                         {round.name}
-                      </div>
+                      </a>
                     </TableCell>
 
                     <TableCell className="py-0">
@@ -224,11 +234,11 @@ export default async function Page() {
                   className="transition-none hover:bg-inherit"
                 >
                   <TableCell className="py-0">
-                    <div
-                      className={`inline-flex space-y-2 rounded-sm px-1 py-0.5`}
+                    <a
+                      className={`inline-flex space-y-2 rounded-sm bg-green-100 px-1 py-0.5 text-green-900`}
                     >
                       Capstone
-                    </div>
+                    </a>
                   </TableCell>
 
                   <TableCell className="py-0">
