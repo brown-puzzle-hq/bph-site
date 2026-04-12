@@ -51,7 +51,7 @@ async function normalizePayload(data) {
 
 function scheduleReconnect() {
   if (!state.active || state.reconnectTimer) return;
-  const delay = state.reconnectAttempts === 0 ? 0 : 60_000;
+  const delay = state.reconnectAttempts === 0 ? 1_000 : 60_000;
   state.reconnectAttempts += 1;
 
   state.reconnectTimer = setTimeout(() => {

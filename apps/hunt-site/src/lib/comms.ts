@@ -92,8 +92,6 @@ export async function sendBotMessage(
 
 /** Email integration */
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendEmail(
   to: string[],
   subject: string,
@@ -108,6 +106,7 @@ export async function sendEmail(
   to = [...new Set(to)].filter(Boolean);
   bcc = [...new Set(bcc ?? [])].filter(Boolean);
   const batches: Array<{ to: string[]; bcc?: string[] }> = [];
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   // Drain TO
   while (to.length > MAX_RECIPIENTS_PER_EMAIL) {

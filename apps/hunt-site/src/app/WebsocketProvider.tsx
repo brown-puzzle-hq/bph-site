@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "~/lib/utils";
 
 /** Bumped when `public/ws-shared-worker.js` changes so tabs load the new script. */
-const WS_SHARED_WORKER_BUILD = "20260411-2";
+const WS_SHARED_WORKER_BUILD = "20260412-1";
 
 type WebSocketContextValue = {
   transport: "shared-worker" | null;
