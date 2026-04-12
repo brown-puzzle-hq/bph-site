@@ -81,10 +81,15 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // TODO: Could have a TOCTTOU error here
   // Check if the number of guesses is exceeded
+  // Made an exception for wafflesyzygy in applied-criminology
+  const guessLimit =
+    teamId === "wafflesyzygy" && puzzleId === "applied-criminology"
+      ? NUMBER_OF_GUESSES_PER_PUZZLE + 10
+      : NUMBER_OF_GUESSES_PER_PUZZLE;
   if (
     puzzle.guesses.filter(
       ({ guess }) => !(guess in tasks || guess in partialSolutions),
-    ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
+    ).length >= guessLimit
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
     return { error: "You have no guesses left. Please contact HQ for help." };
