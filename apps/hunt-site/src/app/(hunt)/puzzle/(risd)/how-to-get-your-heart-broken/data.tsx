@@ -15,6 +15,10 @@ export const puzzleId = "how-to-get-your-heart-broken";
  */
 export const inPersonBody = (
   <div className="max-w-3xl">
+    <div className="mb-4 text-center font-bold">
+      Erratum: The zodiac sign for Erika should be treated as Cancer the first
+      time it is used, and then Gemini the second time.
+    </div>
     <DateGame />
   </div>
 );
