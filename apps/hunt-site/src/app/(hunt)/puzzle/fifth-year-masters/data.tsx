@@ -5,8 +5,8 @@ export const puzzleId = "fifth-year-masters";
 export const inPersonBody = (
   <div className="max-w-3xl">
     <div className="mb-4 text-center font-bold">
-      This puzzle is a capstone. It uses the structure of the hunt (but not any of the
-      puzzle answers).
+      This puzzle is a capstone. It uses the structure of the hunt (but not any
+      of the puzzle answers).
     </div>
     <div className="mb-4">
       You've done 11 concentrations during your time here… but something was
@@ -121,7 +121,7 @@ export const authors = null;
 
 export const copyText: CopyData = {
   "text/plain": `Fifth Year Master's
-This puzzle is a capstone. It uses the structure of the hunt (but not any puzzle titles or answers).
+This puzzle is a capstone. It uses the structure of the hunt (but not any of the puzzle answers).
 You've done 11 concentrations during your time here… but something was missing from each of them.
 If you add that missing piece, you'll be able to learn something new.
 What do you need to complete your education?
