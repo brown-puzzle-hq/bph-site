@@ -24,6 +24,7 @@ export type PuzzleListRound = {
   id: string;
   totalPuzzles: number;
   unlockedPuzzles: number;
+  finishThreshold: number;
   solvedPuzzles: number;
   monitor: number[]; // Indices of puzzles to monitor for "seen" status
 };

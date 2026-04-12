@@ -155,7 +155,7 @@ export default function PuzzleListPage({
                   >
                     {round.name}
                   </Link>
-                  {round.solvedPuzzles === round.totalPuzzles ? (
+                  {round.solvedPuzzles === round.finishThreshold ? (
                     <img
                       className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
                       src="/circle-check.svg"

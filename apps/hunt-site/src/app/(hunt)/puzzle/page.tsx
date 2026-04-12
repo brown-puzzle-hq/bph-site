@@ -88,6 +88,7 @@ export default async function Home() {
       id: round.name.toLowerCase().replace(/\s/g, "-"),
       totalPuzzles:
         round.name !== "Backpack" ? round.puzzles.length : unlockedPuzzles,
+      finishThreshold: round.puzzles.length,
       unlockedPuzzles,
       solvedPuzzles,
       monitor,
