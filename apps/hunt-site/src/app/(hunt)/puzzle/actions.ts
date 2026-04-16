@@ -42,9 +42,9 @@ export async function canViewPuzzle(puzzleId: string) {
   if (
     role === "testsolver" ||
     currentTime >
-    (interactionMode === "in-person"
-      ? IN_PERSON.START_TIME
-      : REMOTE.START_TIME)
+      (interactionMode === "in-person"
+        ? IN_PERSON.START_TIME
+        : REMOTE.START_TIME)
   ) {
     const isInitialPuzzle = INITIAL_PUZZLES.includes(puzzleId);
     const isUnlocked = !!(await db.query.unlocks.findFirst({

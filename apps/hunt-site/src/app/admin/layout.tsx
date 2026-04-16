@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "@/config/client";
 import AdminNavBar from "./AdminNavBar";
+import RetButton from "~/components/nav/RetButton";
 
 export const metadata: Metadata = {
   title: `${HUNT_NAME}`,
@@ -22,6 +23,7 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <Providers session={session}>
+          <RetButton />
           <CommandPalette />
           <Toaster
             expand={true}

@@ -6,6 +6,7 @@ import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
 import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
+import RetButton from "~/components/nav/RetButton";
 import { HUNT_NAME } from "@/config/client";
 import { HuntNavBar } from "./HuntNavBar";
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
     <html lang="en" className={GeistSans.variable}>
       <body className="bg-main-bg text-main-text">
         <Providers session={session}>
+          <RetButton />
           {session?.user.role === "admin" && <CommandPalette />}
           <Toaster
             expand={true}
