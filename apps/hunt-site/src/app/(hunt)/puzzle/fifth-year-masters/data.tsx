@@ -124,7 +124,7 @@ export const copyText: CopyData = {
 This puzzle is a capstone. It uses the structure of the hunt (but not any of the puzzle answers).
 You've done 11 concentrations during your time here… but something was missing from each of them.
 If you add that missing piece, you'll be able to learn something new.
-What do you need to complete your education?
+Your roommate has been outperforming you in every class. What do you need to finally surpass Blueno?
 
 DepartmentCourse Code
 BusinessBacteria or viruses
