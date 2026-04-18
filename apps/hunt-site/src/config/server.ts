@@ -279,7 +279,7 @@ export const ROUNDS: Round[] = [
     puzzles: META_PUZZLES.filter((puzzle) => puzzle !== "fifth-year-masters"),
   },
   {
-    name: "Capstone",
+    name: "Capstone: Fifth Year Master's",
     puzzles: ["fifth-year-masters"],
   },
 ];

@@ -25,7 +25,7 @@ type PuzzleListPageProps = {
 const numObjects = [4, 2, 1, 0];
 
 const priority: Record<string, number> = {
-  Capstone: 0,
+  "Capstone: Fifth Year Master's": 0,
   Backpack: 1,
 };
 
@@ -71,7 +71,7 @@ export default function PuzzleListPage({
         )}
         {/* Icons */}
         {availableRounds.map((round) => {
-          if (round.id === "capstone") return null;
+          if (round.name === "Capstone: Fifth Year Master's") return null;
 
           const {
             icon,
@@ -193,20 +193,20 @@ export default function PuzzleListPage({
           {availableRounds
             .sort((a, b) => (priority[a.name] ?? 2) - (priority[b.name] ?? 2))
             .map((round) => {
-              if (round.id === "capstone" && round.unlockedPuzzles === 0)
+              if (round.name === "Capstone: Fifth Year Master's" && round.unlockedPuzzles === 0)
                 return null;
 
               return (
                 <div key={round.id}>
                   <Link
                     href={
-                      round.id === "capstone"
+                      round.name === "Capstone: Fifth Year Master's"
                         ? "/puzzle/fifth-year-masters"
                         : `/puzzle/${round.id}`
                     }
                     className={cn(
                       "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
-                      (round.id === "backpack" || round.id === "capstone") &&
+                      (round.id === "backpack" || round.name === "Capstone: Fifth Year Master's") &&
                         "bg-black/20 font-bold",
                     )}
                     prefetch={false}
