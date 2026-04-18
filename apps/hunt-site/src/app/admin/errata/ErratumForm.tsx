@@ -95,13 +95,7 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                   <FormMessage />
                 </FormLabel>
                 <FormControl>
-                  <Select
-                    {...field}
-                    onValueChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <div className="truncate text-ellipsis text-left">
                         <SelectValue placeholder="Select" />
@@ -109,11 +103,15 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                     </SelectTrigger>
                     {/* TODO: figure out how to limit size of select entries */}
                     <SelectContent>
-                      {puzzleList?.map((puzzle) => (
-                        <SelectItem key={puzzle.id} value={puzzle.id}>
-                          {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
-                        </SelectItem>
-                      ))}
+                      {puzzleList
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((puzzle) => (
+                          <SelectItem key={puzzle.id} value={puzzle.id}>
+                            {puzzle.name.trim()
+                              ? puzzle.name
+                              : `[${puzzle.id}]`}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </FormControl>

@@ -28,7 +28,9 @@ export async function POST(request: Request) {
       ? console.warn
       : console.log;
 
-  logger(`/api/ws-token issued for ${user.id}`, { reconnectCount: reconnectCountValue });
+  logger(`/api/ws-token issued for ${user.id}`, {
+    reconnectCount: reconnectCountValue,
+  });
 
   return NextResponse.json({ token });
 }

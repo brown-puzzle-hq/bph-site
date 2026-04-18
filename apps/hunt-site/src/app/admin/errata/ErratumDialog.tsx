@@ -10,7 +10,7 @@ export default function ErratumDialog({
   return (
     <>
       {errataList.map((e) => (
-        <Alert className="my-2 bg-inherit text-inherit">
+        <Alert className="my-2 bg-inherit text-inherit" key={e.id}>
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             <p className="whitespace-pre-wrap">
               <strong>

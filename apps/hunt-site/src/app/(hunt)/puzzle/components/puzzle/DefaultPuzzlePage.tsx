@@ -108,10 +108,16 @@ export default async function DefaultPuzzlePage({
       Math.max(teamCreateTime.getTime(), huntStartTime.getTime()),
     );
   } else {
-    unlockTime = (await db.query.unlocks.findFirst({
-      where: and(eq(unlocks.teamId, teamId), eq(unlocks.puzzleId, puzzleId)),
-      columns: { unlockTime: true },
-    }))?.unlockTime ?? new Date();
+    unlockTime =
+      (
+        await db.query.unlocks.findFirst({
+          where: and(
+            eq(unlocks.teamId, teamId),
+            eq(unlocks.puzzleId, puzzleId),
+          ),
+          columns: { unlockTime: true },
+        })
+      )?.unlockTime ?? new Date();
   }
 
   const errataList: {

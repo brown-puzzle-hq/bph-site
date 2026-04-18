@@ -199,6 +199,7 @@ export const META_PUZZLES: string[] = [
 
 export type Round = {
   name: string;
+  id: string;
   puzzles: string[];
 };
 
@@ -206,6 +207,7 @@ export type Round = {
 export const ROUNDS: Round[] = [
   {
     name: "Business",
+    id: "business",
     puzzles: [
       "schmear-campaigns",
       "big-wheel",
@@ -216,6 +218,7 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Humanities",
+    id: "humanities",
     puzzles: [
       "sunk-modern-naval-investigative-methodology",
       "multi-clef-composition",
@@ -226,6 +229,7 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Math",
+    id: "math",
     puzzles: [
       "primary-investigation",
       "herculean-math",
@@ -236,6 +240,7 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Performing Arts",
+    id: "performing-arts",
     puzzles: [
       "serialized-storytelling",
       "escapism-in-cinema",
@@ -246,6 +251,7 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Physical Sciences",
+    id: "physical-sciences",
     puzzles: [
       "voting-dynamics",
       "scacchic-fabrication",
@@ -256,6 +262,7 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "RISD",
+    id: "risd",
     puzzles: [
       "culinary-chemistry-lab",
       "editing-practice",
@@ -266,6 +273,7 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Social Sciences",
+    id: "social-sciences",
     puzzles: [
       "collaborative-chorale",
       "ubpcosu-ii",
@@ -276,10 +284,12 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Backpack",
+    id: "backpack",
     puzzles: META_PUZZLES.filter((puzzle) => puzzle !== "fifth-year-masters"),
   },
   {
     name: "Capstone: Fifth Year Master's",
+    id: "capstone",
     puzzles: ["fifth-year-masters"],
   },
 ];

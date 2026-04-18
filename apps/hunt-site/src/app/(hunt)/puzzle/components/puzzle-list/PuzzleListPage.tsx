@@ -25,8 +25,8 @@ type PuzzleListPageProps = {
 const numObjects = [4, 2, 1, 0];
 
 const priority: Record<string, number> = {
-  "Capstone: Fifth Year Master's": 0,
-  Backpack: 1,
+  capstone: 0,
+  backpack: 1,
 };
 
 export default function PuzzleListPage({
@@ -71,7 +71,7 @@ export default function PuzzleListPage({
         )}
         {/* Icons */}
         {availableRounds.map((round) => {
-          if (round.name === "Capstone: Fifth Year Master's") return null;
+          if (round.id === "capstone") return null;
 
           const {
             icon,
@@ -191,22 +191,22 @@ export default function PuzzleListPage({
         <h1 className="mb-2 text-center">Rounds</h1>
         <div className="overflow-hidden text-sm font-medium">
           {availableRounds
-            .sort((a, b) => (priority[a.name] ?? 2) - (priority[b.name] ?? 2))
+            .sort((a, b) => (priority[a.id] ?? 2) - (priority[b.id] ?? 2))
             .map((round) => {
-              if (round.name === "Capstone: Fifth Year Master's" && round.unlockedPuzzles === 0)
+              if (round.id === "capstone" && round.unlockedPuzzles === 0)
                 return null;
 
               return (
                 <div key={round.id}>
                   <Link
                     href={
-                      round.name === "Capstone: Fifth Year Master's"
+                      round.id === "capstone"
                         ? "/puzzle/fifth-year-masters"
                         : `/puzzle/${round.id}`
                     }
                     className={cn(
                       "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
-                      (round.id === "backpack" || round.name === "Capstone: Fifth Year Master's") &&
+                      (round.id === "backpack" || round.id === "capstone") &&
                         "bg-black/20 font-bold",
                     )}
                     prefetch={false}
@@ -220,7 +220,7 @@ export default function PuzzleListPage({
                     <div className="flex space-x-1">
                       {Array.from({ length: round.totalPuzzles }, (_, i) => {
                         const isUnlocked = i < round.unlockedPuzzles;
-                        if (round.name === "Backpack" && !isUnlocked) return;
+                        if (round.id === "backpack" && !isUnlocked) return;
                         const isSolved = i < round.solvedPuzzles;
                         return (
                           <div

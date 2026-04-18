@@ -12,15 +12,15 @@ import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
 
 const colorMap: Record<string, string> = {
-  Business: "text-slate-900 bg-slate-100",
-  Humanities: "text-red-900 bg-red-100",
-  Math: "text-blue-900 bg-blue-100",
-  "Performing Arts": "text-purple-900 bg-purple-100",
-  "Physical Sciences": "text-indigo-900 bg-indigo-100",
-  RISD: "text-lime-900 bg-lime-100",
-  "Social Sciences": "text-orange-900 bg-orange-100",
-  Backpack: "text-amber-900 bg-amber-100",
-  Capstone: "text-green-900 bg-green-100",
+  business: "text-slate-900 bg-slate-100",
+  humanities: "text-red-900 bg-red-100",
+  math: "text-blue-900 bg-blue-100",
+  "performing-arts": "text-purple-900 bg-purple-100",
+  "physical-sciences": "text-indigo-900 bg-indigo-100",
+  risd: "text-lime-900 bg-lime-100",
+  "social-sciences": "text-orange-900 bg-orange-100",
+  backpack: "text-amber-900 bg-amber-100",
+  capstone: "text-green-900 bg-green-100",
 };
 
 export default async function Page() {
@@ -78,14 +78,12 @@ export default async function Page() {
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
       try {
-        const roundName = ROUNDS.find((round) =>
+        const roundId = ROUNDS.find((round) =>
           round.puzzles.includes(puzzle.id),
-        )
-          ?.name.toLowerCase()
-          .replace(/\s+/g, "-");
+        )?.id;
 
         const module = await import(
-          `../../(hunt)/puzzle/(${roundName})/${puzzle.id}/data.tsx`
+          `../../(hunt)/puzzle/(${roundId})/${puzzle.id}/data.tsx`
         ).catch(() => null);
 
         const { inPersonBody, remoteBody, solutionBody, copyText } =
@@ -147,8 +145,8 @@ export default async function Page() {
                   >
                     <TableCell className="py-0">
                       <a
-                        className={`inline rounded-sm box-decoration-clone px-1 py-0.5 leading-6 ${colorMap[round.name as keyof typeof colorMap] ?? ""}`}
-                        href={`/puzzle/${round.name.toLowerCase().replace(/\s+/g, "-")}`}
+                        className={`inline rounded-sm box-decoration-clone px-1 py-0.5 leading-6 ${colorMap[round.id] ?? ""}`}
+                        href={`/puzzle/${round.id}`}
                       >
                         {round.name}
                       </a>

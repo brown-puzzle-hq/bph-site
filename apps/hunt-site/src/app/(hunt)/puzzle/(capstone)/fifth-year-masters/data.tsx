@@ -15,7 +15,8 @@ export const inPersonBody = (
       If you add that missing piece, you'll be able to learn something new.
     </div>
     <div className="mb-4">
-      Your roommate has been outperforming you in every class. <i>What do you need to finally surpass Blueno?</i>
+      Your roommate has been outperforming you in every class.{" "}
+      <i>What do you need to finally surpass Blueno?</i>
     </div>
     <div className="flex justify-center">
       <table className="mb-4 border-collapse text-sm">

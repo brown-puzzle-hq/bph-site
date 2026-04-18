@@ -26,7 +26,7 @@ export default async function Home() {
     // Otherwise, let them see all puzzles and events without answers
     const availableRounds = ROUNDS.map((round) => ({
       name: round.name,
-      id: round.name.toLowerCase().replace(/\s/g, "-"),
+      id: round.id,
       totalPuzzles: round.puzzles.length,
       unlockedPuzzles: round.puzzles.length,
       solvedPuzzles: 0,
@@ -84,7 +84,7 @@ export default async function Home() {
       .filter((index) => seen[index] === "0");
     return {
       name: round.name,
-      id: round.name.toLowerCase().replace(/\s/g, "-"),
+      id: round.id,
       totalPuzzles: round.puzzles.length,
       unlockedPuzzles,
       solvedPuzzles,

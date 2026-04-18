@@ -28,28 +28,27 @@ import { toast } from "sonner";
 import { formatPhoneNumber } from "~/lib/team-members";
 
 const roundTextColor: Record<string, string> = {
-  Business: "text-slate-600",
-  Humanities: "text-red-600",
-  Math: "text-blue-600",
-  "Performing Arts": "text-purple-500",
-  "Physical Sciences": "text-indigo-500",
-  RISD: "text-lime-500",
-  "Social Sciences": "text-orange-500",
-  Backpack: "text-amber-400",
-  Capstone: "text-green-500",
+  business: "text-slate-600",
+  humanities: "text-red-600",
+  math: "text-blue-600",
+  "performing-arts": "text-purple-500",
+  "physical-sciences": "text-indigo-500",
+  risd: "text-lime-500",
+  "social-sciences": "text-orange-500",
+  backpack: "text-amber-400",
+  capstone: "text-green-500",
 };
 
 const roundNodeColor: Record<string, string> = {
-  Business: "oklch(55.4% 0.046 257.417)",
-  Humanities: "oklch(63.7% 0.237 25.331)",
-  Math: "oklch(62.3% 0.214 259.815)",
-  "Performing Arts": "oklch(62.7% 0.265 303.9)",
-  "Physical Sciences": "oklch(58.5% 0.233 277.117)",
-  RISD: "oklch(76.8% 0.233 130.85)",
-  "Social Sciences": "oklch(70.5% 0.213 47.604)",
-  Backpack: "oklch(87.9% 0.169 91.605)",
-  Capstone: "oklch(72.3% 0.219 149.579)",
-  Default: "oklch(0.708 0 0)",
+  business: "oklch(55.4% 0.046 257.417)",
+  humanities: "oklch(63.7% 0.237 25.331)",
+  math: "oklch(62.3% 0.214 259.815)",
+  "performing-arts": "oklch(62.7% 0.265 303.9)",
+  "physical-sciences": "oklch(58.5% 0.233 277.117)",
+  risd: "oklch(76.8% 0.233 130.85)",
+  "social-sciences": "oklch(70.5% 0.213 47.604)",
+  backpack: "oklch(87.9% 0.169 91.605)",
+  capstone: "oklch(72.3% 0.219 149.579)",
 };
 
 export type SearchedTeam = Omit<Team, "password"> & {
@@ -63,7 +62,8 @@ export type SearchedPuzzle = {
   requestedHints:
     | { id: number; request: string; response: string | null }[]
     | null;
-  round: string;
+  roundName: string;
+  roundId: string;
 };
 
 export default function Graph({
@@ -131,12 +131,14 @@ export default function Graph({
         return;
       }
 
+      const round = rounds.find((round) => round.puzzles.includes(puzzleId));
+
       // Set searched puzzle and remove team sidebar
       setSearchedPuzzle({
         puzzleId,
         ...result,
-        round:
-          rounds.find((round) => round.puzzles.includes(puzzleId))?.name || "",
+        roundName: round?.name || "",
+        roundId: round?.id || "",
       });
       setTeamSidebar(false);
 
@@ -255,12 +257,15 @@ export default function Graph({
             return;
           }
 
+          const round = rounds.find((round) =>
+            round.puzzles.includes(puzzleId),
+          );
+
           setSearchedPuzzle({
             puzzleId,
             ...result,
-            round:
-              rounds.find((round) => round.puzzles.includes(puzzleId))?.name ||
-              "",
+            roundName: round?.name || "",
+            roundId: round?.id || "",
           });
         } catch (e) {
           toast.error("Failed to search puzzle.");
@@ -388,6 +393,10 @@ export default function Graph({
     const amber400 = "oklch(0.828 0.189 84.429)";
     const neutral400 = "oklch(0.708 0 0)";
 
+    const roundId = rounds.find((round) =>
+      round.puzzles.includes(node.name),
+    )?.id;
+
     // If there is a searched team, use their solves and unlocks
     // Otherwise, use the round color
     const nodeColor = searchedTeam
@@ -396,10 +405,9 @@ export default function Graph({
         : searchedTeam.unlocks.includes(node.name)
           ? amber400
           : neutral400
-      : roundNodeColor[
-          rounds.find((round) => round.puzzles.includes(node.name))?.name ||
-            "Default"
-        ] || "oklch(0.708 0 0)";
+      : roundId
+        ? roundNodeColor[roundId] || "gray"
+        : "gray";
 
     // If showWords is OFF
     if (!showWords) {
@@ -780,7 +788,7 @@ export default function Graph({
                                   : isUnlock
                                     ? "text-amber-500"
                                     : "text-neutral-500"
-                                : roundTextColor[round.name]
+                                : roundTextColor[round.id]
                             }`}
                           >
                             {puzzle}
@@ -805,7 +813,7 @@ export default function Graph({
                     metaPuzzles.includes(searchedPuzzle.puzzleId)
                       ? "font-bold"
                       : ""
-                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : roundTextColor[searchedPuzzle.round]}`}
+                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : roundTextColor[searchedPuzzle.roundId]}`}
                 >
                   {searchedPuzzle.puzzleId}
                 </p>
