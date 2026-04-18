@@ -86,6 +86,7 @@ export default async function DefaultPuzzlePage({
   // 3. If user is team or testsolver, then:
   //    a. If the puzzle can be unlocked, then use the unlock time
   //    b. If the puzzle is an INITIAL_PUZZLE, then take MIN(teamCreateTime, huntStartTime)
+  //    c. If the puzzle is locked (but visible after hunt end), then use the current time
   let unlockTime;
   if (role === "admin") {
     unlockTime = new Date(0);
@@ -110,7 +111,7 @@ export default async function DefaultPuzzlePage({
     unlockTime = (await db.query.unlocks.findFirst({
       where: and(eq(unlocks.teamId, teamId), eq(unlocks.puzzleId, puzzleId)),
       columns: { unlockTime: true },
-    }))!.unlockTime;
+    }))?.unlockTime ?? new Date();
   }
 
   const errataList: {

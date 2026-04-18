@@ -40,11 +40,13 @@ const formatTime = (time: number | null) => {
   return time ? dateTimeFormatter.format(time) : "(never)";
 };
 
+type Stats = [number, number, number, number]; // CONNECTING, OPEN, CLOSING, CLOSED
+
 type WsStatsResponse = {
   updatedAt: string;
   teams: {
     teamId: string;
-    stats: number[];
+    stats: Stats;
   }[];
 };
 
@@ -287,28 +289,36 @@ export default function Debug({
             {wsTeams.length === 0 ? (
               <p className="text-sm text-gray-600">No active connections.</p>
             ) : (
-              wsTeams.map((t) => (
-                <div
-                  key={t.teamId}
-                  className="flex flex-col justify-between gap-2 rounded-md border p-2 md:flex-row md:items-center"
-                >
-                  <div className="font-mono text-sm">{t.teamId}</div>
-                  <div className="flex flex-wrap gap-2">
-                    <div className="rounded-md bg-yellow-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-yellow-600">
-                      CONNECTING {t.stats[WebSocket.CONNECTING]}
-                    </div>
-                    <div className="rounded-md bg-lime-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-lime-600">
-                      OPEN {t.stats[WebSocket.OPEN]}
-                    </div>
-                    <div className="rounded-md bg-yellow-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-yellow-600">
-                      CLOSING {t.stats[WebSocket.CLOSING]}
-                    </div>
-                    <div className="rounded-md bg-red-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-red-600">
-                      CLOSED {t.stats[WebSocket.CLOSED]}
+              wsTeams
+                .sort((a, b) => {
+                  const totalA =
+                    a.stats[0] + a.stats[1] + a.stats[2] + a.stats[3];
+                  const totalB =
+                    b.stats[0] + b.stats[1] + b.stats[2] + b.stats[3];
+                  return totalB - totalA || a.teamId.localeCompare(b.teamId);
+                })
+                .map((t) => (
+                  <div
+                    key={t.teamId}
+                    className="flex flex-col justify-between gap-2 rounded-md border p-2 md:flex-row md:items-center"
+                  >
+                    <div className="font-mono text-sm">{t.teamId}</div>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="rounded-md bg-yellow-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-yellow-600">
+                        CONNECTING {t.stats[WebSocket.CONNECTING]}
+                      </div>
+                      <div className="rounded-md bg-lime-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-lime-600">
+                        OPEN {t.stats[WebSocket.OPEN]}
+                      </div>
+                      <div className="rounded-md bg-yellow-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-yellow-600">
+                        CLOSING {t.stats[WebSocket.CLOSING]}
+                      </div>
+                      <div className="rounded-md bg-red-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-red-600">
+                        CLOSED {t.stats[WebSocket.CLOSED]}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))
             )}
           </div>
         )}
