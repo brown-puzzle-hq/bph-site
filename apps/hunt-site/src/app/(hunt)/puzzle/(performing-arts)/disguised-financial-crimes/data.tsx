@@ -1,12 +1,5 @@
 import Image from "next/image";
-import image1 from "./image1.png";
-import image2 from "./image2.png";
-import image3 from "./image3.png";
-import image4 from "./image4.png";
-import image5 from "./image5.png";
-import image6 from "./image6.png";
-import image7 from "./image7.png";
-import image8 from "./image8.png";
+import image from "./disguised_fin_crimes.png";
 import { CopyData } from "../../components/puzzle/CopyButton";
 
 export const puzzleId = "disguised-financial-crimes";
@@ -42,8 +35,8 @@ export const remoteBody = (
         disguise.
       </i>
     </div>
-    <div className="flex justify-around">
-      <div className="flex flex-col gap-4">
+    <div className="flex justify-center">
+      {/* <div className="flex flex-col gap-4">
         <span>
           <Image src={image1} alt="" height="200" />
         </span>
@@ -70,7 +63,8 @@ export const remoteBody = (
         <span>
           <Image src={image8} alt="" height="200" />
         </span>
-      </div>
+      </div> */}
+      <Image src={image} alt="Disguised Financial Crimes" />
     </div>
   </div>
 );

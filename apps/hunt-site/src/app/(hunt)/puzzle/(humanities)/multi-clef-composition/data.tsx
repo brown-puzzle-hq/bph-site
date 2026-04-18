@@ -11,8 +11,13 @@ import MCC7 from "./MCC_7.png";
 import MCC from "./Updated Multi-Clef Composition (drawing).svg";
 
 export const inPersonBody = (
-  <div className="mb-6 flex justify-center">
-    <Image src={MCC} alt="" />
+  <div className="max-w-3xl">
+    <div className="mb-4 text-center">
+      <b>When in doubt, use Cornell as a canonical source for this puzzle.</b>
+    </div>
+    <div className="flex justify-center">
+      <Image src={MCC} alt="" />
+    </div>
   </div>
 );
 

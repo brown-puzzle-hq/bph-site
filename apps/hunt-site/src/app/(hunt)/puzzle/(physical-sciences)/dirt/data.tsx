@@ -2,16 +2,77 @@ import Image from "next/image";
 import dirt from "./dirt.svg";
 import { CopyData } from "../../components/puzzle/CopyButton";
 
-import bag12front from "./dirt_12_front.jpg";
-import bag12back from "./dirt_12_back.jpg";
-import bag34front from "./dirt_34_front.jpg";
-import bag34back from "./dirt_34_back.jpg";
-import bag56front from "./dirt_56_front.jpg";
-import bag56back from "./dirt_56_back.jpg";
-import bag78front from "./dirt_78_front.jpg";
-import bag78back from "./dirt_78_back.jpg";
-import bag910front from "./dirt_910_front.jpg";
-import bag910back from "./dirt_910_back.jpg";
+import dark_1 from "./1_dark.png";
+import dark_2 from "./2_dark.png";
+import dark_3 from "./3_dark.png";
+import dark_4 from "./4_dark.png";
+import dark_5 from "./5_dark.png";
+import dark_6 from "./6_dark.png";
+import dark_7 from "./7_dark.png";
+import dark_8 from "./8_dark.png";
+import dark_9 from "./9_dark.png";
+import dark_10 from "./10_dark.png";
+
+const darks = [
+  dark_1,
+  dark_2,
+  dark_3,
+  dark_4,
+  dark_5,
+  dark_6,
+  dark_7,
+  dark_8,
+  dark_9,
+  dark_10,
+];
+
+import flash_1 from "./1_flash.png";
+import flash_2 from "./2_flash.png";
+import flash_3 from "./3_flash.png";
+import flash_4 from "./4_flash.png";
+import flash_5 from "./5_flash.png";
+import flash_6 from "./6_flash.png";
+import flash_7 from "./7_flash.png";
+import flash_8 from "./8_flash.png";
+import flash_9 from "./9_flash.png";
+import flash_10 from "./10_flash.png";
+
+const flashes = [
+  flash_1,
+  flash_2,
+  flash_3,
+  flash_4,
+  flash_5,
+  flash_6,
+  flash_7,
+  flash_8,
+  flash_9,
+  flash_10,
+];
+
+import triangle_1 from "./1_triangle.svg";
+import triangle_2 from "./2_triangle.svg";
+import triangle_3 from "./3_triangle.svg";
+import triangle_4 from "./4_triangle.svg";
+import triangle_5 from "./5_triangle.svg";
+import triangle_6 from "./6_triangle.svg";
+import triangle_7 from "./7_triangle.svg";
+import triangle_8 from "./8_triangle.svg";
+import triangle_9 from "./9_triangle.svg";
+import triangle_10 from "./10_triangle.svg";
+
+const triangles = [
+  triangle_1,
+  triangle_2,
+  triangle_3,
+  triangle_4,
+  triangle_5,
+  triangle_6,
+  triangle_7,
+  triangle_8,
+  triangle_9,
+  triangle_10,
+];
 
 export const puzzleId = "dirt";
 
@@ -53,60 +114,37 @@ export const remoteBody = (
   <div className="max-w-3xl">
     <div className="mb-4 text-center">
       <b>
-        This was a physical puzzle. In addition to the information below,
-        solvers received 10 bags of dirt:
+        This was a physical puzzle. In addition to the information below the
+        tables, solvers received ten numbered bags of dirt, each of which had a
+        triangle diagram on the back. Pictures of the dirt inside (without and
+        with flash) and the diagrams are shown below.
       </b>
-      <div className="mt-4 grid grid-cols-2 gap-4">
-        <Image
-          className="h-auto w-full"
-          src={bag12front}
-          alt="Two bags of dirt, numbered 1 and 2."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag12back}
-          alt="Two bags of dirt, marked with equilateral triangles made of 4 smaller equilateral triangles. The middle and top mini-triangles are marked with a dot on the left and right bags, respectively."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag34front}
-          alt="Two bags of dirt, numbered 3 and 4."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag34back}
-          alt="Two bags of dirt, marked with equilateral triangles made of 4 smaller equilateral triangles. The top and top mini-triangles are marked with a dot on the left and right bags, respectively."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag56front}
-          alt="Two bags of dirt, numbered 5 and 6."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag56back}
-          alt="Two bags of dirt, marked with equilateral triangles made of 4 smaller equilateral triangles. The top and left mini-triangles are marked with a dot on the left and right bags, respectively."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag78front}
-          alt="Two bags of dirt, numbered 7 and 8."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag78back}
-          alt="Two bags of dirt, marked with equilateral triangles made of 4 smaller equilateral triangles. The middle and top mini-triangles are marked with a dot on the left and right bags, respectively."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag910front}
-          alt="Two bags of dirt, numbered 9 and 10."
-        />
-        <Image
-          className="h-auto w-full"
-          src={bag910back}
-          alt="Two bags of dirt, marked with equilateral triangles made of 4 smaller equilateral triangles. The middle mini-triangle of the left bag is marked with a dot on the left and right bags, respectively."
-        />
+      <div className="mt-4 grid grid-cols-4 gap-4">
+        {darks.map((src, i) => (
+          <>
+            <div className="flex items-center justify-center text-6xl md:text-9xl">
+              {i + 1}
+            </div>
+            <Image
+              key={i}
+              className="h-auto w-full"
+              src={src}
+              alt={`Dark bag ${i + 1}`}
+            />
+            <Image
+              key={i}
+              className="h-auto w-full"
+              src={flashes[i]!}
+              alt={`Flash bag ${i + 1}`}
+            />
+            <Image
+              key={i}
+              className="h-auto w-full"
+              src={triangles[i]!}
+              alt={`Triangle bag ${i + 1}`}
+            />
+          </>
+        ))}
       </div>
     </div>
     <div className="flex justify-around">
