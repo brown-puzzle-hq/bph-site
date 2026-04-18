@@ -46,7 +46,8 @@ export default function AnalogicalSemanticsMachine() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const w1 = word1.trim();
-    if (!w1) return;
+    const w2 = word2.trim();
+    if (!w1 && !w2) return;
 
     setResult(null);
     setError(null);
@@ -56,7 +57,7 @@ export default function AnalogicalSemanticsMachine() {
         const res = await fetch("/api/analogical-semantics", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ word1: w1, word2: word2.trim() || undefined }),
+          body: JSON.stringify({ word1: w1, word2: w2 || undefined }),
         });
         const data = (await res.json()) as { result?: string; error?: string };
         if (data.result) {
@@ -187,7 +188,7 @@ export default function AnalogicalSemanticsMachine() {
           </div>
           <button
             type="submit"
-            disabled={isPending || !word1.trim()}
+            disabled={isPending || (!word1.trim() && !word2.trim())}
             className="w-full rounded-md border-2 border-blue-900 bg-blue-900 py-2 text-sm font-medium transition-all enabled:hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isPending ? "Running…" : "Run machine"}
