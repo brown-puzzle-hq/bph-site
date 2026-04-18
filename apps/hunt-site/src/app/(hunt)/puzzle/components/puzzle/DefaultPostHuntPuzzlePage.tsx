@@ -24,6 +24,7 @@ import {
 import { NumberOfGuesses } from "./DefaultPuzzlePage";
 import { Infinity, SendHorizontal } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
+import SeenSetter from "./SeenSetter";
 
 type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;
@@ -33,6 +34,7 @@ type DefaultPostHuntPuzzlePageProps = {
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
   interactionMode?: string;
+  puzzleIndex: number;
 };
 
 type FormProps = {
@@ -47,6 +49,7 @@ export default function DefaultPostHuntPuzzlePage({
   partialSolutions,
   tasks,
   interactionMode,
+  puzzleIndex,
 }: DefaultPostHuntPuzzlePageProps) {
   const [previousGuesses, setPreviousGuesses] = useState<Guess[]>([]);
   const [numberOfGuessesLeft, setNumberOfGuessesLeft] =
@@ -175,12 +178,9 @@ export default function DefaultPostHuntPuzzlePage({
 
   return (
     <div className="w-full px-4">
+      <SeenSetter index={puzzleIndex} />
       <div className="no-scrollbar overflow-auto">
-        <div className="mx-auto flex w-fit items-start justify-center space-x-2">
-          {copyText && <div className="min-w-6" />}
-          <div className="w-fit">{puzzleBody}</div>
-          {copyText && <CopyButton copyText={copyText} />}
-        </div>
+        <div className="mx-auto w-fit">{puzzleBody}</div>
       </div>
 
       {Object.keys(tasks).map((task) => {
@@ -194,13 +194,19 @@ export default function DefaultPostHuntPuzzlePage({
         }
       })}
 
-      <div className={cn("mx-auto mb-4 mt-6 max-w-3xl", copyText && "px-8")}>
+      <div className="mx-auto mb-4 mt-6 max-w-3xl">
         <GuessForm puzzleAnswer={puzzleAnswer} />
       </div>
 
       <div className="mx-auto max-w-3xl">
         <GuessTable previousGuesses={previousGuesses} />
       </div>
+
+      {copyText && (
+        <div className="fixed bottom-4 right-4 size-10">
+          <CopyButton copyText={copyText} />
+        </div>
+      )}
     </div>
   );
 }

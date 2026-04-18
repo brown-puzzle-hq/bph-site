@@ -8,16 +8,14 @@ import { X } from "lucide-react";
 export default function PuzzleSearch({ puzzles }: { puzzles: Puzzle[] }) {
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
-      ) {
+      )
         setQuery("");
-      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -35,7 +33,6 @@ export default function PuzzleSearch({ puzzles }: { puzzles: Puzzle[] }) {
       <div className="relative space-y-1">
         <div className="flex w-full justify-between rounded-md bg-black p-2 pl-3">
           <input
-            ref={inputRef}
             type="text"
             placeholder="Search puzzles..."
             value={query}
@@ -48,9 +45,7 @@ export default function PuzzleSearch({ puzzles }: { puzzles: Puzzle[] }) {
             className="w-full bg-inherit text-sm focus:outline-none"
           />
           <button
-            onClick={() => {
-              setQuery("");
-            }}
+            onClick={() => setQuery("")}
             className={query ? "opacity-70 hover:opacity-100" : "hidden"}
           >
             <X className="size-4" />

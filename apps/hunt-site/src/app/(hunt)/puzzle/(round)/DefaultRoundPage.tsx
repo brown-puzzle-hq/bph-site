@@ -130,7 +130,11 @@ export default async function DefaultRoundPage({
                 zIndex: z,
               }}
             >
-              <Link href={`/puzzle/${puzzle.id}`} className="peer block">
+              <Link
+                href={`/puzzle/${puzzle.id}`}
+                className="peer block"
+                prefetch={false}
+              >
                 <Image
                   src={(puzzle.answer && solveIcon) ?? icon}
                   alt={puzzle.name}
@@ -156,6 +160,7 @@ export default async function DefaultRoundPage({
                   <Link
                     href={`/puzzle/${puzzle.id}`}
                     className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                    prefetch={false}
                   >
                     {puzzle.name}
                   </Link>
@@ -183,6 +188,7 @@ export default async function DefaultRoundPage({
                   <Link
                     href={`/puzzle/${puzzle.id}`}
                     className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                    prefetch={false}
                   >
                     {puzzle.name}
                   </Link>
@@ -203,6 +209,7 @@ export default async function DefaultRoundPage({
         <Link
           href={"/puzzle"}
           className="fixed left-4 top-[72px] z-10 flex items-center space-x-0.5 rounded-md bg-black p-1 sm:pr-2"
+          prefetch={false}
         >
           <ChevronsLeft className="size-6 fill-white" />
           <p className="hidden font-semibold sm:block">Rounds</p>

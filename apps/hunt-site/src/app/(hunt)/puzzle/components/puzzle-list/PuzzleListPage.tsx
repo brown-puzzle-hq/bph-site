@@ -20,17 +20,20 @@ type PuzzleListPageProps = {
   availableEvents: AvailableEvent[];
   availablePuzzles: Puzzle[];
   solvedMetas: number;
-  hasEventInputBox: boolean;
 };
 
 const numObjects = [4, 2, 1, 0];
+
+const priority: Record<string, number> = {
+  Capstone: 0,
+  Backpack: 1,
+};
 
 export default function PuzzleListPage({
   availableRounds,
   availableEvents,
   availablePuzzles,
   solvedMetas,
-  hasEventInputBox,
 }: PuzzleListPageProps) {
   const category =
     solvedMetas >= 10 ? 3 : solvedMetas >= 7 ? 2 : solvedMetas >= 3 ? 1 : 0;
@@ -68,6 +71,8 @@ export default function PuzzleListPage({
         )}
         {/* Icons */}
         {availableRounds.map((round) => {
+          if (round.id === "capstone") return null;
+
           const {
             icon,
             x,
@@ -99,7 +104,11 @@ export default function PuzzleListPage({
                 zIndex: z,
               }}
             >
-              <Link href={`/puzzle/${round.id}`} className="peer block">
+              <Link
+                href={`/puzzle/${round.id}`}
+                className="peer block"
+                prefetch={false}
+              >
                 <Image
                   src={icon}
                   alt={round.name}
@@ -125,6 +134,7 @@ export default function PuzzleListPage({
                   <Link
                     href={`/puzzle/${round.id}`}
                     className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                    prefetch={false}
                   >
                     {round.name}
                   </Link>
@@ -152,10 +162,11 @@ export default function PuzzleListPage({
                   <Link
                     href={`/puzzle/${round.id}`}
                     className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
+                    prefetch={false}
                   >
                     {round.name}
                   </Link>
-                  {round.solvedPuzzles === round.finishThreshold ? (
+                  {round.solvedPuzzles === round.totalPuzzles ? (
                     <img
                       className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
                       src="/circle-check.svg"
@@ -180,57 +191,63 @@ export default function PuzzleListPage({
         <h1 className="mb-2 text-center">Rounds</h1>
         <div className="overflow-hidden text-sm font-medium">
           {availableRounds
-            .sort((a, b) =>
-              a.name === "Backpack" ? -1 : b.name === "Backpack" ? 1 : 0,
-            )
-            .map((round) => (
-              <div key={round.id}>
-                <Link
-                  href={`/puzzle/${round.id}`}
-                  className={cn(
-                    "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
-                    round.id === "backpack" && "bg-black/20 font-bold",
-                  )}
-                  prefetch={false}
-                >
-                  <div className="flex space-x-2">
-                    <p>{round.name}</p>
-                    {round.monitor.length > 0 && (
-                      <SeenRoundTableIcon monitor={round.monitor} />
+            .sort((a, b) => (priority[a.name] ?? 2) - (priority[b.name] ?? 2))
+            .map((round) => {
+              if (round.id === "capstone" && round.unlockedPuzzles === 0)
+                return null;
+
+              return (
+                <div key={round.id}>
+                  <Link
+                    href={
+                      round.id === "capstone"
+                        ? "/puzzle/fifth-year-masters"
+                        : `/puzzle/${round.id}`
+                    }
+                    className={cn(
+                      "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
+                      (round.id === "backpack" || round.id === "capstone") &&
+                        "bg-black/20 font-bold",
                     )}
-                  </div>
-                  <div className="flex space-x-1">
-                    {Array.from({ length: round.totalPuzzles }, (_, i) => {
-                      const isUnlocked = i < round.unlockedPuzzles;
-                      const isSolved = i < round.solvedPuzzles;
-                      return (
-                        <div
-                          key={i}
-                          className={cn(
-                            "size-3 rounded-full",
-                            isSolved
-                              ? "bg-green-500"
-                              : isUnlocked
-                                ? "bg-yellow-500"
-                                : "bg-slate-300",
-                          )}
-                        />
-                      );
-                    })}
-                  </div>
-                </Link>
-                <hr />
-              </div>
-            ))}
+                    prefetch={false}
+                  >
+                    <div className="flex space-x-2">
+                      <p>{round.name}</p>
+                      {round.monitor.length > 0 && (
+                        <SeenRoundTableIcon monitor={round.monitor} />
+                      )}
+                    </div>
+                    <div className="flex space-x-1">
+                      {Array.from({ length: round.totalPuzzles }, (_, i) => {
+                        const isUnlocked = i < round.unlockedPuzzles;
+                        if (round.name === "Backpack" && !isUnlocked) return;
+                        const isSolved = i < round.solvedPuzzles;
+                        return (
+                          <div
+                            key={i}
+                            className={cn(
+                              "size-3 rounded-full",
+                              isSolved
+                                ? "bg-green-500"
+                                : isUnlocked
+                                  ? "bg-yellow-500"
+                                  : "bg-slate-300",
+                            )}
+                          />
+                        );
+                      })}
+                    </div>
+                  </Link>
+                  <hr />
+                </div>
+              );
+            })}
         </div>
         {/* Event table */}
         {availableEvents.length > 0 && (
           <div className="mt-6">
             <h1 className="text-center">Events</h1>
-            <EventTable
-              availableEvents={availableEvents}
-              inputBox={hasEventInputBox}
-            />
+            <EventTable availableEvents={availableEvents} />
             <hr />
             <p className="p-2 text-xs font-medium">
               *Submit token to puzzle to consume.

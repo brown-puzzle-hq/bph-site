@@ -45,7 +45,6 @@ export default async function Home() {
         availableEvents={availableEvents}
         availablePuzzles={allPuzzles.map(({ id, name }) => ({ id, name }))}
         solvedMetas={0}
-        hasEventInputBox={false}
       />
     );
   }
@@ -86,17 +85,12 @@ export default async function Home() {
     return {
       name: round.name,
       id: round.name.toLowerCase().replace(/\s/g, "-"),
-      totalPuzzles:
-        round.name !== "Backpack" ? round.puzzles.length : unlockedPuzzles,
-      finishThreshold: round.puzzles.length,
+      totalPuzzles: round.puzzles.length,
       unlockedPuzzles,
       solvedPuzzles,
       monitor,
     };
   });
-
-  const hasEventInputBox =
-    interactionMode === "in-person" && currDate < IN_PERSON.END_TIME;
 
   const solvedMetas = availablePuzzles.filter(
     (puzzle) => puzzle.answer !== null && META_PUZZLES.includes(puzzle.id),
@@ -108,7 +102,6 @@ export default async function Home() {
       availableEvents={availableEvents}
       availablePuzzles={availablePuzzles.map(({ id, name }) => ({ id, name }))}
       solvedMetas={solvedMetas}
-      hasEventInputBox={hasEventInputBox}
     />
   );
 }

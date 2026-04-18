@@ -712,7 +712,7 @@ export default function ProfileForm({
 
           <div
             className={cn(
-              "fixed bottom-3 left-1/2 z-10 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300",
+              "fixed bottom-3 left-1/2 z-20 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300",
               isDirty ? "translate-y-0" : "translate-y-[5rem]",
             )}
           >

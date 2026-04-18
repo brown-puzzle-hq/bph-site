@@ -630,9 +630,9 @@ export default function Page() {
               </p>
               <h3 className="text-center">Technical Team</h3>
               <p className="text-center">
-                Jaclyn Cohen ('26)
-                <br />
                 Thomas Gordon ('26)
+                <br />
+                Veronika Grytsai ('26)
                 <br />
                 Arnav Singhal ('26)
                 <br />

@@ -119,31 +119,14 @@ export const remoteBody = (
         triangle diagram on the back. Pictures of the dirt inside (without and
         with flash) and the diagrams are shown below.
       </b>
-      <div className="mt-4 grid grid-cols-4 gap-4">
+      <div className="mt-4 space-y-4">
         {darks.map((src, i) => (
-          <>
-            <div className="flex items-center justify-center text-6xl md:text-9xl">
-              {i + 1}
-            </div>
-            <Image
-              key={i}
-              className="h-auto w-full"
-              src={src}
-              alt={`Dark bag ${i + 1}`}
-            />
-            <Image
-              key={i}
-              className="h-auto w-full"
-              src={flashes[i]!}
-              alt={`Flash bag ${i + 1}`}
-            />
-            <Image
-              key={i}
-              className="h-auto w-full"
-              src={triangles[i]!}
-              alt={`Triangle bag ${i + 1}`}
-            />
-          </>
+          <div className="grid grid-cols-4 items-center gap-4" key={i}>
+            <div className="mx-auto my-auto text-6xl md:text-9xl">{i + 1}</div>
+            <Image src={src} alt={`Dark bag ${i + 1}`} />
+            <Image src={flashes[i]!} alt={`Flash bag ${i + 1}`} />
+            <Image src={triangles[i]!} alt={`Triangle bag ${i + 1}`} />
+          </div>
         ))}
       </div>
     </div>

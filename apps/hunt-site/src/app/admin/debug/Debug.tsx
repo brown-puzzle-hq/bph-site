@@ -5,6 +5,8 @@ import { sendWebsocketMessage } from "./actions";
 import { useWebSocket } from "~/app/WebsocketProvider";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import useSWR from "swr";
+import { Switch } from "~/components/ui/switch";
 
 import { removeCookie, getCookies } from "typescript-cookie";
 import { decodeSeen, formatDuration } from "~/lib/utils";
@@ -38,6 +40,20 @@ const formatTime = (time: number | null) => {
   return time ? dateTimeFormatter.format(time) : "(never)";
 };
 
+type WsStatsResponse = {
+  updatedAt: string;
+  teams: {
+    teamId: string;
+    stats: number[];
+  }[];
+};
+
+const fetcher: (url: string) => Promise<WsStatsResponse> = async (url) => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  return (await res.json()) as WsStatsResponse;
+};
+
 export default function Debug({
   minSolveDelay,
   maxSolveDelay,
@@ -47,6 +63,16 @@ export default function Debug({
 }) {
   const debug = useWebSocket();
 
+  const [showWsTeamStats, setShowWsTeamStats] = useState(false);
+  const {
+    data: wsStats,
+    error: wsStatsError,
+    isLoading: wsStatsLoading,
+    isValidating: wsStatsValidating,
+  } = useSWR<WsStatsResponse, Error>("/api/ws-stats", fetcher, {
+    refreshInterval: 15000,
+  });
+
   const [puzzleId, setPuzzleId] = useState("example");
   const [puzzleName, setPuzzleName] = useState("Example");
   const [cookies, setCookies] = useState<Record<string, string>>({});
@@ -54,6 +80,15 @@ export default function Debug({
   useEffect(() => {
     setCookies(getCookies());
   }, []);
+
+  const wsTeams = wsStats?.teams ?? [];
+  const wsTotalTeams = wsTeams.length;
+  const wsTotalConns = wsTeams
+    .flatMap((t) => t.stats)
+    .reduce((sum, count) => sum + count, 0);
+  const wsUpdatedAtMs = wsStats?.updatedAt
+    ? new Date(wsStats.updatedAt).getTime()
+    : null;
 
   return (
     <div className="mx-auto mb-4 w-full max-w-3xl space-y-4 px-4 md:mb-12">
@@ -127,7 +162,7 @@ export default function Debug({
               Math.random() * (maxBluenoTime - minBluenoTime) + minBluenoTime,
             );
 
-            sendWebsocketMessage({
+            void sendWebsocketMessage({
               type: "SolvedPuzzle",
               puzzleId,
               puzzleName,
@@ -202,6 +237,81 @@ export default function Debug({
             </span>
           </div>
         </div>
+      </div>
+
+      <div className="rounded-md border p-4">
+        <div className="mb-2 flex items-center justify-between gap-4">
+          <h2 className="font-semibold">WS Server Stats</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">Show teams</span>
+            <Switch
+              checked={showWsTeamStats}
+              onCheckedChange={setShowWsTeamStats}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2 text-sm md:columns-2">
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-gray-600">Last update</span>
+            <span className="font-mono">
+              {wsStatsLoading
+                ? "(loading)"
+                : wsStatsError
+                  ? "(error)"
+                  : formatTime(wsUpdatedAtMs)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-gray-600">Total connections</span>
+            <span className="font-mono">
+              {wsStatsLoading ? "-" : wsStatsError ? "-" : wsTotalConns}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-gray-600">Polling</span>
+            <span className="font-mono">
+              {wsStatsValidating ? "UPDATING" : "OK"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-gray-600">Total teams</span>
+            <span className="font-mono">
+              {wsStatsLoading ? "-" : wsStatsError ? "-" : wsTotalTeams}
+            </span>
+          </div>
+        </div>
+
+        {showWsTeamStats && (
+          <div className="mt-4 space-y-2">
+            {wsTeams.length === 0 ? (
+              <p className="text-sm text-gray-600">No active connections.</p>
+            ) : (
+              wsTeams.map((t) => (
+                <div
+                  key={t.teamId}
+                  className="flex flex-col justify-between gap-2 rounded-md border p-2 md:flex-row md:items-center"
+                >
+                  <div className="font-mono text-sm">{t.teamId}</div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="rounded-md bg-yellow-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-yellow-600">
+                      CONNECTING {t.stats[WebSocket.CONNECTING]}
+                    </div>
+                    <div className="rounded-md bg-lime-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-lime-600">
+                      OPEN {t.stats[WebSocket.OPEN]}
+                    </div>
+                    <div className="rounded-md bg-yellow-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-yellow-600">
+                      CLOSING {t.stats[WebSocket.CLOSING]}
+                    </div>
+                    <div className="rounded-md bg-red-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-red-600">
+                      CLOSED {t.stats[WebSocket.CLOSED]}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       <p className="text-gray-600">View and reset cookies.</p>

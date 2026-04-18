@@ -199,7 +199,9 @@ export async function handleGuess(puzzleId: string, guess: string) {
           }
         }
 
-        if (wasMeta && solvedMetas === META_PUZZLES.length) {
+        const finishThreshold =
+          META_PUZZLES.length - (interactionMode === "in-person" ? 1 : 0);
+        if (wasMeta && solvedMetas === finishThreshold) {
           await tx
             .update(teams)
             .set({ finishTime: currDate })

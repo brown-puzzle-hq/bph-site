@@ -36,6 +36,7 @@ const roundTextColor: Record<string, string> = {
   RISD: "text-lime-500",
   "Social Sciences": "text-orange-500",
   Backpack: "text-amber-400",
+  Capstone: "text-green-500",
 };
 
 const roundNodeColor: Record<string, string> = {
@@ -47,7 +48,8 @@ const roundNodeColor: Record<string, string> = {
   RISD: "oklch(76.8% 0.233 130.85)",
   "Social Sciences": "oklch(70.5% 0.213 47.604)",
   Backpack: "oklch(87.9% 0.169 91.605)",
-  Defaut: "oklch(0.708 0 0)",
+  Capstone: "oklch(72.3% 0.219 149.579)",
+  Default: "oklch(0.708 0 0)",
 };
 
 export type SearchedTeam = Omit<Team, "password"> & {
@@ -93,10 +95,12 @@ export default function Graph({
   const handleSearchPuzzle = async () => {
     if (puzzleQuery === "") return;
 
+    const clean = (id: string | number | undefined) =>
+      typeof id === "string" ? id.toLowerCase().replace(/\W/g, "") : "";
     // Finds node by full id, then tries substring match
     const node =
-      data.nodes.find((node) => node.id === puzzleQuery) ||
-      data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
+      data.nodes.find((node) => clean(node.id) === clean(puzzleQuery)) ||
+      data.nodes.find((node) => clean(node.id).includes(clean(puzzleQuery))) ||
       null;
     if (!node) {
       puzzleQueryRef.current?.select();

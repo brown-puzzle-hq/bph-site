@@ -35,6 +35,34 @@ const wss = new WebSocketServer({ server });
 const channels = new Map<string, Set<WebSocket>>();
 const socketToTeam = new Map<WebSocket, string>();
 
+function fromServer(req: express.Request) {
+  if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
+
+  const auth = req.headers.authorization;
+  if (!auth?.startsWith("Bearer ")) {
+    console.error("No token provided");
+    return false;
+  }
+  const token = auth.slice(7);
+
+  try {
+    const decoded = verify(token, process.env.AUTH_SECRET) as WsJwtPayload;
+    if (
+      decoded.iss !== "hunt-site" ||
+      decoded.sub !== "hunt-site" ||
+      decoded.aud !== "ws-server" ||
+      decoded.scope !== "broadcast"
+    ) {
+      console.error("Invalid claim(s)", decoded);
+      return false;
+    }
+    return true;
+  } catch {
+    console.error("Invalid token");
+    return false;
+  }
+}
+
 wss.on("connection", (ws, req) => {
   // Make sure that AUTH_SECRET exists
   if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
@@ -75,7 +103,13 @@ wss.on("connection", (ws, req) => {
     console.log(prefix, "Added to channel", teamId);
   } catch (e) {
     if (e instanceof TokenExpiredError) {
-      console.error(prefix, "Token expired at", e.expiredAt.toISOString());
+      const { sub } = verify(token, process.env.AUTH_SECRET, {
+        ignoreExpiration: true,
+      });
+      console.error(
+        prefix,
+        `Token for ${sub} expired at ${e.expiredAt.toISOString()}`,
+      );
       ws.close(CLOSE_CODES.SESSION_EXPIRED, "Token expired");
     } else {
       console.error(prefix, "Invalid token");
@@ -88,7 +122,10 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     const teamId = socketToTeam.get(ws);
     if (teamId && channels.has(teamId)) {
-      channels.get(teamId)!.delete(ws);
+      const set = channels.get(teamId)!;
+      set.delete(ws);
+      socketToTeam.delete(ws);
+      if (set.size === 0) channels.delete(teamId);
       console.log(prefix, "Removed from channel", teamId);
     }
   });
@@ -101,32 +138,9 @@ wss.on("connection", (ws, req) => {
 });
 
 app.post("/broadcast", express.json(), (req, res) => {
-  // Make sure that AUTH_SECRET exists
-  if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set");
-
-  const auth = req.headers.authorization;
-  if (!auth?.startsWith("Bearer ")) {
-    console.error("No token provided");
-    res.status(401).send("No token provided");
-    return;
-  }
-  const token = auth.slice(7);
-
-  try {
-    const decoded = verify(token, process.env.AUTH_SECRET) as WsJwtPayload;
-    if (
-      decoded.iss !== "hunt-site" ||
-      decoded.sub !== "hunt-site" ||
-      decoded.aud !== "ws-server" ||
-      decoded.scope !== "broadcast"
-    ) {
-      console.error("Invalid claim(s)", decoded);
-      res.status(401).send("Invalid claim(s)");
-      return;
-    }
-  } catch (e) {
-    console.error("Invalid token");
-    res.status(401).send("Invalid token");
+  if (!fromServer(req)) {
+    console.error("Unauthorized broadcast");
+    res.status(401).send("Unauthorized");
     return;
   }
 
@@ -142,8 +156,33 @@ app.post("/broadcast", express.json(), (req, res) => {
       client.send(JSON.stringify(message));
     }
   }
-  console.log("Broadcasted message to team", teamId);
-  res.status(200).send("Broadcasted");
+  console.log("Broadcast message to team", teamId);
+  res.status(200).send("Broadcast");
+});
+
+app.get("/stats", (req, res) => {
+  if (!fromServer(req)) {
+    console.error("Unauthorized stats");
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const teams = Array.from(channels.entries()).map(([teamId, clients]) => {
+    const stats = [0, 0, 0, 0];
+    for (const client of clients) {
+      stats[client.readyState]++;
+    }
+
+    return {
+      teamId,
+      stats,
+    };
+  });
+
+  res.json({
+    updatedAt: new Date().toISOString(),
+    teams,
+  });
 });
 
 server.listen(1030, () => {

@@ -25,9 +25,14 @@ export const authConfig = {
       }
       if (trigger === "update") {
         const originalId = token.id;
-        if (token.role === "admin" && session?.impersonate)
+        if (token.role === "admin" && session?.impersonate) {
           token.id = session.impersonate;
-        if (session?.ret) token.id = token.sub;
+          console.log(`${token.sub} started impersonating ${token.id}`);
+        }
+        if (session?.ret) {
+          console.log(`${token.sub} stopped impersonating ${token.id}`);
+          token.id = token.sub;
+        }
         // Re-sync from DB
         if (typeof token.id === "string") {
           const team = await db.query.teams.findFirst({
@@ -38,13 +43,11 @@ export const authConfig = {
             token.displayName = team.displayName;
             token.role = team.role;
             token.interactionMode = team.interactionMode;
-          } else {
-            console.error(
-              `Could not find team with id ${token.id} during token update`,
-            );
-            token.id = originalId;
+            return token;
           }
         }
+        console.error(`Could not find team ${token.id} during token update`);
+        token.id = originalId;
       }
       return token;
     },

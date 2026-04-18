@@ -32,17 +32,18 @@ export function formatDuration(deltaMs: number): string {
 }
 
 export const decodeSeen = (value: string | undefined) => {
-  const bytes = value
-    ? new Uint8Array(value.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)))
-    : new Uint8Array(8);
-
-  // Convert to bit string
-  return Array.from(bytes)
-    .map((b) => b.toString(2).padStart(8, "0"))
-    .join("");
+  const trunc = value ?? "";
+  const bytes = new Uint8Array(8);
+  for (let i = 0; i < 8; i++) {
+    bytes[i] = parseInt(trunc.slice(i * 2, i * 2 + 2), 16) || 0;
+  }
+  return bytes.reduce((acc, b) => acc + b.toString(2).padStart(8, "0"), "");
 };
 
 export const encodeSeen = (bits: string) => {
-  const bytes = bits.match(/.{1,8}/g)!.map((b) => parseInt(b, 2));
-  return bytes.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const bytes = new Uint8Array(8);
+  for (let i = 0; i < 8; i++) {
+    bytes[i] = parseInt(bits.slice(i * 8, i * 8 + 8), 2) || 0;
+  }
+  return bytes.reduce((acc, b) => acc + b.toString(16).padStart(2, "0"), "");
 };

@@ -61,7 +61,7 @@ export async function getAvailableEvents(
 ): Promise<AvailableEvent[]> {
   if (teamId !== undefined && interactionMode === "remote") return [];
 
-  // Post-hunt view (all events, no answers)
+  // Post-hunt view (all events, all answers)
   if (teamId === undefined) {
     // TODO: not a great way to order events
     const events = await db.query.events.findMany({
@@ -70,7 +70,6 @@ export async function getAvailableEvents(
 
     return events.map((event) => ({
       ...event,
-      answer: null,
       spent: false,
     }));
   }

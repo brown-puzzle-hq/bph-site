@@ -1,18 +1,16 @@
-import { auth } from "@/auth";
 import { sign } from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { checkPermissions } from "~/lib/server";
 
 export async function POST(request: Request) {
-  const session = await auth();
-
-  if (!session) {
+  const { error, user } = await checkPermissions({ level: "userAny" });
+  if (error)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   const token = sign(
     {
       iss: "hunt-site",
-      sub: session.user.id,
+      sub: user.id,
       aud: "ws-server",
       scope: "ws-connect",
     },
@@ -27,10 +25,8 @@ export async function POST(request: Request) {
     : reconnectCountRaw;
   const logger =
     typeof reconnectCountValue === "number" && reconnectCountValue >= 5
-      ? console.error
-      : typeof reconnectCountValue === "number" && reconnectCountValue >= 3
-        ? console.warn
-        : console.log;
+      ? console.warn
+      : console.log;
 
   logger("/api/ws-token issued", { reconnectCount: reconnectCountValue });
 

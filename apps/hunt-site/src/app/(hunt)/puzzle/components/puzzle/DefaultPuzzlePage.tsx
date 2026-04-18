@@ -60,6 +60,7 @@ export default async function DefaultPuzzlePage({
     checkPermissions({ level: "userAny" }),
   ]);
   const puzzleAnswer = puzzleAnswerRow!.answer;
+  const puzzleIndex = ALL_PUZZLES.indexOf(puzzleId);
 
   // If user is not logged in, show puzzle without errata or guesses
   if (error) {
@@ -72,6 +73,7 @@ export default async function DefaultPuzzlePage({
         partialSolutions={partialSolutions}
         tasks={tasks}
         interactionMode={interactionMode}
+        puzzleIndex={puzzleIndex}
       />
     );
   }
@@ -166,7 +168,6 @@ export default async function DefaultPuzzlePage({
   const puzzleBody =
     puzzleInteractionMode === "remote" ? remoteBody : inPersonBody;
 
-  const puzzleIndex = ALL_PUZZLES.indexOf(puzzleId);
   const processedGuesses = previousGuesses.map(
     ({ guess, isCorrect, submitTime }) => {
       const finalGuess = displayStoredPuzzleGuess(

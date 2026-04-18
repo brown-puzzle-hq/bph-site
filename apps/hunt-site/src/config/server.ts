@@ -178,6 +178,7 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
     "itty-bitty-kitties",
     "trap-streets",
   ],
+  "fifth-year-masters": [],
 };
 
 /** List of meta puzzles. Solving all of the metas unlocks the runaround. */
@@ -193,6 +194,7 @@ export const META_PUZZLES: string[] = [
   "luck-practicum",
   "bar-exam",
   "cubist-linguistics",
+  "fifth-year-masters",
 ];
 
 export type Round = {
@@ -274,7 +276,11 @@ export const ROUNDS: Round[] = [
   },
   {
     name: "Backpack",
-    puzzles: META_PUZZLES,
+    puzzles: META_PUZZLES.filter((puzzle) => puzzle !== "fifth-year-masters"),
+  },
+  {
+    name: "Capstone",
+    puzzles: ["fifth-year-masters"],
   },
 ];
 
@@ -448,7 +454,11 @@ export const POOL_UNLOCKS: PoolUnlock[] = [
       "linesman-training",
     ],
   },
-  { name: "fifth-year-masters", threshold: 11, feeders: META_PUZZLES },
+  {
+    name: "fifth-year-masters",
+    threshold: 11,
+    feeders: META_PUZZLES.filter((puzzle) => puzzle !== "fifth-year-masters"),
+  },
 ];
 
 export const FEEDER_ORDER: Record<string, number> = {
@@ -542,7 +552,7 @@ export async function getNumberOfHintsRemaining(
   return totalHints - usedHints;
 }
 
-/** Duration bounds for Blueno solve time gimmick. */
+/** Duration bounds for Blueno solve time gimmick */
 export const MIN_SOLVE_DELAY = 5 * 1000; // 5 seconds
 export const MAX_SOLVE_DELAY = 5 * 60 * 1000; // 5 minutes
 export const MIN_BLUENO_TIME = 30 * 1000; // 30 seconds
