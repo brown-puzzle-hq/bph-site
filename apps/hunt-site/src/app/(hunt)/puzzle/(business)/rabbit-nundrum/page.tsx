@@ -30,9 +30,15 @@ export default async function Page({
       puzzleId={data.puzzleId}
       inPersonBody={data.inPersonBody}
       remoteBody={data.remoteBody}
-      copyText={data.copyText}
+      copyText={
+        puzzleInteractionMode === "in-person"
+          ? data.copyText
+          : data.remoteCopyText
+      }
       partialSolutions={data.partialSolutions}
-      tasks={puzzleInteractionMode === "remote" ? data.remoteTasks : data.tasks}
+      tasks={
+        puzzleInteractionMode === "in-person" ? data.tasks : data.remoteTasks
+      }
       interactionMode={searchParams?.interactionMode}
     />
   );
