@@ -15,7 +15,7 @@ import { X } from "lucide-react";
 const formatCookieValue = (key: string, value: string) => {
   if (key === "seen") {
     const bits = decodeSeen(value);
-    const groups = [5, 5, 5, 5, 5, 5, 5, 11];
+    const groups = [5, 5, 5, 5, 5, 5, 5, 11, 1];
     let offset = 0;
     const result = groups.map((size) => {
       const chunk = bits.slice(offset, offset + size);

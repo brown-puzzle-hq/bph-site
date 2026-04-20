@@ -30,6 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Reply, HintClaimer } from "./Columns";
+import Link from "next/link";
 
 interface HintTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,6 +38,7 @@ interface HintTableProps<TData, TValue> {
 }
 
 import { getCookie, setCookie } from "typescript-cookie";
+import { cn } from "~/lib/utils";
 
 export function HintTable<TData, TValue>({
   columns,
@@ -201,40 +203,23 @@ export function HintTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  onClick={(event) => {
-                    if (
-                      event.target instanceof HTMLElement &&
-                      event.target.classList.contains("hint-button")
-                    )
-                      return;
-                    if (event.metaKey || event.ctrlKey) {
-                      // Open in new tab
-                      window.open(
-                        `/admin/hints/${row.getValue("id")}`,
-                        "_blank",
-                      );
-                    } else {
-                      // Move to hint page
-                      router.push(`/admin/hints/${row.getValue("id")}`);
-                      router.refresh();
-                    }
-                  }}
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={`cursor-pointer ${isCompact && "py-0"}`}
-                >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={isCompact ? "py-0" : undefined}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                    <TableCell key={cell.id} className="p-0">
+                      {/* TODO: tables don't interact great with links, might want someting more like teams table */}
+                      <Link
+                        href={`/admin/hints/${row.getValue("id")}`}
+                        prefetch={false}
+                      >
+                        <div className={cn("p-2", isCompact && "py-0")}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </div>
+                      </Link>
                     </TableCell>
                   ))}
                 </TableRow>
