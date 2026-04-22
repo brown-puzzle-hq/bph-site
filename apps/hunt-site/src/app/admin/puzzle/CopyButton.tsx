@@ -14,26 +14,22 @@ export default function CopyButton({
   const { didCopy, handleCopy } = useCopyToClipboard(copyText);
 
   return (
-    <button className="relative size-5" onClick={handleCopy}>
+    <button className="relative size-5 hover:opacity-85" onClick={handleCopy}>
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <span
+        <Clipboard
           className={cn(
-            "transition-all duration-200",
+            "size-5 text-yellow-800 transition-all duration-200",
             didCopy && "scale-90 opacity-0",
           )}
-        >
-          <Clipboard className="size-5 text-yellow-800" />
-        </span>
+        />
       </div>
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <span
+        <Check
           className={cn(
-            "transition-all duration-200",
+            "size-5 text-yellow-800 transition-all duration-200",
             !didCopy && "scale-90 opacity-0",
           )}
-        >
-          <Check className="size-5 text-yellow-800" />
-        </span>
+        />
       </div>
     </button>
   );

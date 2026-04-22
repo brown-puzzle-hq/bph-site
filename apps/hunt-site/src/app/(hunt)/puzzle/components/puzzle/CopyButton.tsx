@@ -19,24 +19,20 @@ export default function CopyButton({
       onClick={handleCopy}
     >
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <span
+        <Clipboard
           className={cn(
             "transition-all duration-200",
             didCopy && "scale-90 opacity-0",
           )}
-        >
-          <Clipboard />
-        </span>
+        />
       </div>
       <div className="absolute left-1/2 top-1/2 mt-0.5 -translate-x-1/2 -translate-y-1/2">
-        <span
+        <Check
           className={cn(
             "transition-all duration-200",
             !didCopy && "scale-90 opacity-0",
           )}
-        >
-          <Check />
-        </span>
+        />
       </div>
     </button>
   );

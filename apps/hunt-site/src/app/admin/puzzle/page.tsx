@@ -185,7 +185,7 @@ export default async function Page() {
                           <a
                             href={`/puzzle/${puzzle.id}?interactionMode=in-person`}
                           >
-                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                            <Puzzle className="size-5 text-red-500 hover:opacity-85" />
                           </a>
                         </div>
                       )}
@@ -196,7 +196,7 @@ export default async function Page() {
                           <a
                             href={`/puzzle/${puzzle.id}?interactionMode=remote`}
                           >
-                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                            <Puzzle className="size-5 text-red-500 hover:opacity-85" />
                           </a>
                         </div>
                       )}
@@ -205,7 +205,7 @@ export default async function Page() {
                       {puzzle.solutionBody && (
                         <div className="flex justify-center">
                           <a href={`/puzzle/${puzzle.id}/solution`}>
-                            <KeyRound className="size-5 text-yellow-500 hover:opacity-75" />
+                            <KeyRound className="size-5 text-yellow-500 hover:opacity-85" />
                           </a>
                         </div>
                       )}
@@ -213,7 +213,7 @@ export default async function Page() {
                     <TableCell className="justify-center">
                       <div className="flex justify-center">
                         <a href={`/puzzle/${puzzle.id}/stats`}>
-                          <ChartColumn className="text-black-500 size-5 text-lime-600 hover:opacity-60" />
+                          <ChartColumn className="text-black-500 size-5 text-lime-600 hover:opacity-85" />
                         </a>
                       </div>
                     </TableCell>
