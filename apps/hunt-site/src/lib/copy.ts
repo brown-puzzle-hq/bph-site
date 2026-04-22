@@ -17,16 +17,19 @@ export function useCopyToClipboard(copyText: string | CopyData) {
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "text/plain": new Blob([copyData["text/plain"]], {
-            type: "text/plain",
-          }),
-          "text/html": new Blob([copyData["text/html"] ?? ""], {
-            type: "text/html",
-          }),
+      const items: Record<string, Blob> = {
+        "text/plain": new Blob([copyData["text/plain"]], {
+          type: "text/plain",
         }),
-      ]);
+      };
+
+      if (copyData["text/html"]) {
+        items["text/html"] = new Blob([copyData["text/html"]], {
+          type: "text/html",
+        });
+      }
+
+      await navigator.clipboard.write([new ClipboardItem(items)]);
 
       setDidCopy(true);
       if (resetTimerRef.current !== null) {
