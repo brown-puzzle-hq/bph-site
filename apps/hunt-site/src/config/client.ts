@@ -24,7 +24,7 @@ export const IN_PERSON = {
 
 export const REMOTE = {
   START_TIME: new Date("2026-04-18T16:00:00.000Z"), // April 18th, 12 PM EDT
-  END_TIME: new Date("2026-04-24T16:00:00.000Z"), // April 24th, 12 PM EDT
+  END_TIME: new Date("2026-04-24T16:30:00.000Z"), // April 24th, 12:30 PM EDT
   WRAPUP_TIME: new Date("2026-05-01T16:00:00.000Z"), // May 1st, 12 PM EDT
 };
 
