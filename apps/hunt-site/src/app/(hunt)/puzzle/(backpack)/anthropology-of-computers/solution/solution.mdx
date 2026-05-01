@@ -1,22 +1,22 @@
-Feeders are first processed into braille (i.e, “going in blind”) by converting each letter into a 2x3 pixel array and placing them side by side. For example, AIRBUS translates to
+Feeders are first processed into Braille (i.e, “going in blind”) by converting each letter into a 2x3 pixel array, ignoring spaces in words when converting as per the flavortext, and placing them side by side. For example, AIRBUS translates to
 
 ![][image1]
 
 [image1]: data:image/png;base64,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
 
-Ignore spaces in words when converting (“taking no breaks between words”).
+Inputting these resulting pixel forms into Conway's Game of Life, and counting the number of steps until they reach an empty board, yields
 
-Inputting these resulting pixel forms into Conway’s Game of Life, and counting the number of steps until they reach an empty board, yields
+| Feeder         | Steps until termination | Extracted letter |
+| :------------- | :---------------------- | :--------------- |
+| AIRBUS         | 20                      | T                |
+| BANANAS FOSTER | 21                      | U                |
+| CHAPE          | 18                      | R                |
+| DESOLATE       | 9                       | I                |
+| EARTHLIKE      | 14                      | N                |
+| FROUZIEST      | 7                       | G                |
+| GIVE AWAY      | 20                      | T                |
+| HEELBALL       | 5                       | E                |
+| ISLE           | 19                      | S                |
+| JUDICATORY     | 20                      | T                |
 
-AIRBUS - 20  
-BANANAS FOSTER - 21  
-CHAPE - 18  
-DESOLATE - 9  
-EARTHLIKE - 14  
-FROUZIEST - 7  
-GIVE AWAY - 20  
-HEELBALL - 5  
-ISLE - 19  
-JUDICATORY - 20
-
-When the feeders are arranged in alphabetical order, A1Z26 yields our answer, TURING TEST.
+When the feeders are arranged in alphabetical order, A1Z26 yields our answer, **TURING TEST**.

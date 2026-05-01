@@ -30,8 +30,8 @@ export const remoteBody = inPersonBody;
  * If there are no solutions available, set it null.
  */
 import Solution from "./solution/solution.mdx";
-// export const solutionBody = <Solution />;
-export const solutionBody = null;
+export const solutionBody = <Solution />;
+// export const solutionBody = null;
 
 /**
  * The `authors` string renders below the `solutionBody`.

@@ -1,17 +1,16 @@
-Operation is defined by **(A : B) \= B \- A** in embedding space  
-:: is \=
+Words are embedded, meaning they are associated with vectors. Then, the meaning of the statement A : B :: C : D is that D, relative to C is the same as B, relative to A. In vector language, this means our statement is D - C = B - A. Thus, the machine, when calculating relations between words A and B calculates A : B = B - A, and returns the word closest to this resulting relative displacement.
 
-Hence, to solve for A, in the first line, we simplify
+Notably, solvers can leave either of the inputs blank. The machine treats the blank input as the zero vector, so inputting blank : A returns A and inputting A : blank returns -A.
+
+For example, to solve for A, in the first line, we simplify
 
 man : woman :: A : herself  
 woman \- man \= herself \- A  
 A \= herself \- (woman \- man)
 
-Hence, submit into the machine first (man : woman) to get “uh”  
-then submit (uh : herself) to get himself. A \= himself  
-This continues…
+First, we enter into the machine (man : woman) to get “uh”, then enter (uh : herself) to get himself. Thus, A \= himself.
 
-The key is as follows
+Since the machine allows us find differences between words and allows you to invert words, we can solve for any arbitrary combination of words. Translating the given relationships to algebra and solving for the unknowns, we get the following key:
 
 **A \= himself**  
 **B \= spain**  
@@ -24,69 +23,4 @@ The key is as follows
 **I \= ball**  
 **J \= heel**
 
-The \+ sign is a concatenation operator. The solution is J \+ I \= heel \+ ball \= heelball.
-
-**Here is a list of relevant words and their relation to others:**
-
-uh \= woman \- man  
-himself \= herself \- (woman \- man) \= herself \- uh  
-202-547-4512 \= mussolini \- italy  
-spain \= franco \- (mussolini \- italy) \= franco \- 202-547-4512  
-el \= mexico \- spain  
-parentid \= \- portugal  
-brazil \= el \+ portugal \= el \- (- portugal) \= el \- parentid  
-sur \= brazil \- himself  
-wikitext \= \- herself  
-computer \= sur \+ herself \= sur \- (- herself) \= sur \- wikitext  
-gmina \= computer \- goober  
-medicaid \= route \- (computer \- goober) \= route \- gmina  
-kumar \= medicaid \- computer  
-municipality \= environmentalists \- (medicaid \- computer) \= environmentalists \- kumar  
-del \= municipality \- copper  
-hay \= saint \- help  
-deer \= (municipality \- copper) \- (saint \- help) \= del \- hay  
-spokeswoman \= freckle \- deer  
-boo \= computer \- medicaid \= \- kumar  
-referee \= (freckle \- deer) \- (computer \- medicaid) \= spokeswoman \- boo  
-nah \= \- himself  
-hierarchy \= (freckle \- deer) \- (computer \- medicaid) \+ himself \= referee \+ himself \= referee \- (- himself) \= referee \- nah  
-delta \= hierarchy \- spain  
-commune \= municipality \- himself  
-confederate \= (municipality \- himself) \- brazil \= commune \- brazil  
-ball \= confederate \- delta  
-username \= municipality \- computer  
-oblast \= deer \- ball  
-von \= (municipality \- computer) \- (deer \- ball) \= username \- oblast  
-armed \= brazil \- hierarchy  
-tan \= (municipality \- computer) \- (deer \- ball) \- (brazil \- hierarchy) \= von \- armed  
-shirt \= \- medicaid  
-heel \= (municipality \- computer) \- (deer \- ball) \- (brazil \- hierarchy) \+ medicaid \= (municipality \- computer) \- (deer \- ball) \- (brazil \- hierarchy) \- (- medicaid) \= (municipality \- computer) \- (deer \- ball) \- (brazil \- hierarchy) \- shirt \= tan \- shirt
-
-**Other words that solvers may find. These are not explicitly useful, but it allows for alternate solve path:**
-
-nasa \= help \- saint \= \- hay  
-surname \= man \- woman \= \- uh  
-1865 \= italy \- mussolini  
-timestamp \= (mussolini \- italy) \- franco \= 202-547-4512 \- franco  
-hanoi \= (italy \- mussolini) \- franco \= 1865 \- franco  
-sergei \= franco \- (italy \- mussolini) \= franco \- 1865  
-comedian \= spain \- mexico \= \- el  
-coordinator \= himself \- brazil \= \-sur  
-rosa \= wikitext \- sur \= \-computer  
-spokesman \= goober \- computer \= \-gmina  
-jorge \= kumar \- environmentalists \= \-municipality  
-bowler \= copper \- municipality \= \-del  
-dee \= hay \- del \= \-deer  
-starred \= deer \- freckle \= \-spokeswoman  
-screenplay \= boo \- spokeswoman \= \-referee  
-franz \= nah \- referee \= \-hierarchy  
-statesman \= spain \- hierarchy \= \-delta  
-songwriter \= himself \- municipality \= \-commune  
-openly \= brazil \- commune \= \-confederate  
-des \= delta \- confederate \= \-ball  
-salem \= computer \- municipality \= \-username  
-patricia \= ball \- deer \= \-oblast  
-locality \= oblast \- username \= \-von  
-hah \= hierarchy \- brazil \= \-armed  
-statistical \= armed \- von \= \-tan  
-grande \= shirt \- tan \= \-heel
+The \+ sign indicates that we should concatenate J and I, giving our answer of **HEELBALL**.
