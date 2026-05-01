@@ -3080,7 +3080,7 @@ export default function WrapUp() {
                   <TableRow>
                     <TableCell>
                       Sheet link:
-                      https://docs.google.com/spreadsheets/d/12GgDVWpm0ZSyM7RurA4A1KrRgp8I3MHIP3waLlkkO74/edit?gid=106433098#gid=106433098\n\nI've
+                      [REDACTED]\n\nI've
                       led myself down a chain of logic that seems mostly sound
                       but doesn't lead to an answer (or any clear path towards
                       an answer), would appreciate a nudge on what might be
