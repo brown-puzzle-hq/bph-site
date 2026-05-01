@@ -810,7 +810,7 @@ export default function WrapUp() {
             {/* STRUCTURE */}
             <TOCSection sectionId={23} tocTitle="Structure">
               <h2>Structure</h2>
-              <i>By Thomas Gordon and Arnav Singhal</i>
+              <i>By Arnav Singhal</i>
               <p>
                 While the structure was arguably more standard than last year,
                 we once again managed to fulfill one of our
@@ -887,7 +887,7 @@ export default function WrapUp() {
             {/* PUZZLES */}
             <TOCSection sectionId={24} tocTitle="Puzzles">
               <h2>Puzzles</h2>
-              <i>By Thomas Gordon and Arnav Singhal</i>
+              <i>By Arnav Singhal</i>
               <p>
                 New this year was having editors who had ownership over puzzles,
                 under occasional guidance from our editors-in-chief. None of
