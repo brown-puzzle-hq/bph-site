@@ -2,10 +2,10 @@ import chart from "./chart.png";
 
 This puzzle is based off of the game Battleship. We have a grid of letters analogous to the game board. Like in the game, solvers can figure out that letters run down the side and numbers run across the top.
 
-We are given a series of hits and misses. It can also be inferred from the flavortext that boats cannot occupy adjacent spaces horizontally or vertically (they need “fenders” between them). Using this information, and the canonical length of the boats in the game (Patrol Boat is 2 spaces long, Destroyer and Submarine are 3 spaces, Battleships are 4 spaces, Aircraft Carriers are 5 spaces), we can place the boats like so: (boats shown in red)
+We are given a series of hits and misses. It can also be inferred from the flavor text that boats cannot occupy adjacent spaces horizontally or vertically (they need “fenders” between them). Using this information, and the canonical length of the boats in the game (Patrol Boat is 2 spaces long, Destroyer and Submarine are 3 spaces, Battleships are 4 spaces, Aircraft Carriers are 5 spaces), we can place the boats like so: (boats shown in red)
 
 <img src={chart.src} alt={"Chart"} />
 
-We now return to the flavortext and fenders, which we are told sit between boats horizontally and vertically (not diagonally). So, we take each square that is directly adjacent to two boats vertically or horizontally (all the squares in between boats with fenders). When we read the letters in those squares in reading order (left to right starting from the top row and moving down the rows), we get **AMIDSHIPS**.
+We now return to the flavor text and fenders, which we are told sit between boats horizontally and vertically (not diagonally). So, we take each square that is directly adjacent to two boats vertically or horizontally (all the squares in between boats with fenders). When we read the letters in those squares in reading order (left to right starting from the top row and moving down the rows), we get AMIDSHIPS.
 
-This is our answer. **AMIDSHIPS**. If the website is not working and submitting the answer is having issues, that will not be answered in this solution. That sounds like a you problem.
+This is our answer. AMIDSHIPS. If the website is not working and submitting the answer is having issues, that will not be answered in this solution. That sounds like a you problem.
