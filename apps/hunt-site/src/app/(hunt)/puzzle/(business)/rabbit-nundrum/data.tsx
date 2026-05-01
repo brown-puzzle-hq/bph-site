@@ -131,7 +131,7 @@ export const remoteBody = (
 
 export const solutionBody = null;
 
-export const authors = "Aren Guralp and Thea Miller-Priddy";
+export const authors = "Aren Guralp with help from Thea Miller-Priddy";
 
 export const copyText = null;
 
@@ -160,7 +160,7 @@ export const remoteTasks = {
         <Image src={murder} alt="A white rabbit, beheaded." />
         <Image
           src={shifts}
-          alt="A slip of paper that says: SHIFT -8, +0, +0 +14, +15, +10, -2, +19, -15, -6, +16, -2"
+          alt="A slip of paper that says: SHIFT +10, -9, -5, -5 , +15, +10, -2, +19, -15, -6, +16, -2"
         />
       </div>
     </div>

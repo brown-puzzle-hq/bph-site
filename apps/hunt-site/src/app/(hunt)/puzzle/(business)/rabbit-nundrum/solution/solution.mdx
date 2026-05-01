@@ -1,1 +1,431 @@
-Solution TBD.
+This is a puzzle where you have to carefully follow a precise set of instructions to execute a tea party between six rabbits.
+
+Solvers were given six rabbits of different colors, each with a letter on their front and back, and a plastic tophat. Additionally, they received six printed-out sheets of instructions and told only to look at their own sheets.
+
+| Color       | Role             | Front | Back |
+| :---------: | :--------------:| :---: | :--: |
+| White       | Starting Hatter  | R     | I   |
+| Pink        | Copycat Hatter   | R     | H   |
+| Blue        | Dancer           | E     | R   |
+| Purple      | Host             | D     | R   |
+| Green       | Turnmaster       | A     | N   |
+| Brown       | Accountant       | S     | T   |
+
+Here is the starting seating order:
+
+|     |Seating|     |Away|
+|:---:|:-----:|:---:|:--:|
+|     |Brown |     ||
+|White|       |Pink ||
+|Purple|       |Green||
+|     |Blue   |     ||
+
+This will change as we go. An * next to a rabbit means they are facing out.
+
+Before we get started, a brief guide on **counting instructions**. The Brown rabbit is responsible for counting the actions that take place over the course of the tea party and categorizing them into **steps**. Specifically, they will count one **instruction** each time a rabbit follows one of the bullet-pointed instructions on their sheet (general guidelines do *not* count), subject to modifications (either by the Brown rabbit or via information contained in that instruction). Every five **instructions**, the Brown rabbit calls out a **New Step**, which is the trigger for The Hatter reading out the letter on the side of their body facing the center of the table and carrying out their **Hatter Instructions**. These count as instructions for the Brown rabbit. 
+
+A brief word on The Hatter: each rabbit's sheet has instructions on the back, and solvers are instructed not to look at them until they become The Hatter. These instructions generally disrupt the flow of the tea party in some way, or introduce additional complications. The Hatter carries these out at the start of a New Step, *after* reading out loud the letter written on the side of their body facing the center of the table. 
+
+The Copycat Hatter's job is also worth mentioning here; at the start of a New Step, after The Hatter has completed their actions, they will read off any letter written on the inner side of the rabbit sitting across from them.
+
+As a general rule, at the start of a new step, The Hatter will go first, read their letter, do their Hatter instructions, then the Copycat Hatter will read a letter (if they see one), then other instructions will follow.
+
+Headers indicate **Steps**, subheaders indicate **Instructions**, according to Brown's count. Some subheaders are used for events that don't count as instructions (like drinking tea) and some subheaders jump up in count (when Brown counts an instruction twice). The indented blocks provide justification; SI abbreviates Standard Instructions, and HI abbreviates Hatter Instructions.
+
+Note that I'm only including instructions that take place here; there are lots of instructions that *might* trigger that I'm not justifying the non-triggering of, but in each of these cases you can compare the instruction statements with the state of the tea party at the time to figure out why it souldn't trigger.
+## 1
+### 1
+Brown says "First Step!"
+
+    Brown SI; this is an instruction, while other step calls are not
+
+### 2
+Green asks White to turn around
+
+    Green SI; Green is sitting across from white
+
+|     |Seating|     |Away|
+|:---:|:-----:|:---:|:---:|
+|     |Brown |     ||
+|White*|       |Pink ||
+|Purple|       |Green||
+|     |Blue   |     ||
+
+### 3
+Purple leaves to get tea
+
+	Purple SI; a rabbit turned around for the first time
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |Brown |     | Purple|
+|White*|       |Pink | |
+| (empty) |       |Green||
+|     |Blue   |     ||
+
+### 4				
+Blue gets up to dance with Brown
+
+	Blue SI; their neighbor stood up, and they are sitting across from Brown
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |(empty)  |     | Purple|
+|White*|       |Pink | Blue|
+|(empty) |       |Green|Brown|
+|     | (empty)|     ||
+
+### 5
+White moves clockwise
+
+	White SI; their neighbors have both stood up, and White is facing out (so their right is CW)
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Purple|
+| (empty)|       |Pink | Blue|
+| (empty) |       |Green|Brown|
+|     |(empty) |     ||
+
+## 2
+### 0
+"New Step!"
+White is The Hatter and facing out, so they read an **I**
+
+### 1
+White gives The Hat to Green
+
+    White HI; Green was the most recent rabbit to speak to White
+
+### 2
+Blue drops Brown off in Purple's starting seat
+
+
+	Blue SI; the step/instruction count indicated below the SI that made Blue get up and dance has been fulfilled		
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Purple|
+| (empty)|       |Pink | |
+| Brown |       |Green| |
+|     |Blue|     ||
+
+### 4
+This instruction is counted for two because Brown is dizzy (indicated on Brown's sheet)
+
+Green turns	and asks Blue to turn
+
+    Green SI; someone sat down in an adjacent seat
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Purple|
+| (empty)|       |Pink | |
+| Brown |       |Green*| |
+|     |Blue|     ||
+
+### 5
+Blue turns with flair
+
+	Blue SI; someone has asked Blue to turn
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Purple|
+| (empty)|       |Pink | |
+| Brown |       |Green*| |
+|     |Blue*|     ||
+
+## 3
+### 0
+"New Step!"
+Green is The Hatter and facing out, so they read an **N**	
+
+### 1
+Green asks Blue to turn 17 times, and everyone else to turn 34 times
+
+    Green HI; they have just read their letter
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Purple|
+| (empty)|       |Pink | |
+| Brown |       |Green*| |
+|     |Blue|     ||			
+
+### 2
+Pink reads off an **S** from Brown
+
+	Pink SI; Brown is sitting across from them and facing in		
+
+### 3
+White takes hat from Green
+
+	White HI; Green still has the rabbit after HI has been followed and Pink has spoken			
+
+### 4
+Purple comes back, serves tea
+
+	Purple SI; the step/instruction count indicated in the "get up and get tea" instruction has been fulfilled		
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | |
+| Purple|       |Pink | |
+| Brown |       |Green*| |
+|     |Blue*|     ||
+
+### 5
+Blue gets up to dance with Pink
+
+	Blue SI; Blue has just been served tea, and while Purple whispered to them to enjoy, Blue is hard of hearing, so the rabbit they most recently heard speak was Pink (when they loudly read off Brown's letter)
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Blue|
+| Purple|       |(empty) | Pink|
+| Brown |       |Green*| |
+|     |(empty)|     ||
+
+
+## 4
+### 0
+"New Step!"
+White is The Hatter and facing out, so they read an **I**	
+
+### 1
+White gives hat to Purple
+
+    White HI; White has sharp ears, so they heard Purple when they whispered to them to enjoy, and so Purple was the most recent rabbit to speak to White
+
+### 2
+Purple gets up to run to the kitchen and pick up psychedelics	
+
+    Purple HI; they just received The Hat
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |White* |     | Purple|
+| (empty)|       |(empty) | Blue|
+| Brown |       |Green*|Pink |
+|     |(empty)|     ||
+
+### 3
+White moves clockwise
+
+	White SI; their neighbors have both stood up, and White is facing out (so their right is CW)
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |(empty) |     | Purple|
+| (empty)|       |White*|Blue |
+| Brown |       |Green*| Pink|
+|     |(empty)|     ||	
+
+Also, Purple comes back, because the instruction count in their HI has been fulfilled
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |(empty) |     | Blue|
+| Purple|       |White*| Pink|
+| Brown |       |Green*| |
+|     |(empty)|     ||	
+
+### 3		
+Every rabbit except for Blue drinks tea (since Blue doesn't have tea in their cup anymore)
+
+    Brown doesn't count this as an instruction, since tea-drinking rules are given in the General Guidelines
+
+### 4		
+White drinks the tea in the cup at their original seat	
+
+    White SI; that seat is unoccupied
+
+### 5
+Blue drops off Pink in White's previous seat and sits back down.
+
+	Blue SI; the step/instructions count indicated below the SI to get up and dance with Pink has been fulfilled
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |Pink|     | |
+| Purple|       |White*| |
+| Brown |       |Green*| |
+|     |Blue|     ||	
+
+## 5
+### 0
+"New Step!"
+Purple is The Hatter and facing in, so they read a **D**	
+
+### 1
+Purple puts psychedelics in the tea
+
+    Purple HI
+
+### 1
+All the seated rabbits with tea in their cups drink tea, except for Blue
+
+    Brown also doesn't count this, because Purple asked them to drink the tea; Blue doesn't drink tea because of information on their sheet, not because of an SI
+
+### 2
+Purple gives Pink The Hat
+
+    Purple HI; Pink drinks the tea the fastest (indicated on Pink's sheet), so Purple gives them The Hat
+
+### 3
+Pink reads off an **E** from Blue
+
+    Pink SI; Blue is sitting across from them and facing in
+    
+Importantly, Pink is on psychedelics here, so they see Blue as Green
+
+### 4	
+Green asks pink to turn and Pink refuses
+
+	Green SI; since Green is on psychedelics, they think Blue just put on The Hat, so they ask Pink to turn, and Pink refuses because the Hatter side of their sheet (*not* a HI) indicates they should refuse to do so.	
+
+### 5
+Green asks everyone to turn, and everyone turns
+    
+    Green SI; it is now Step 5, Instruction 5, and everyone turns because nobody has a reason to refuse (the Hatter side of Pink's sheet says to follow others' instructions if they are repeated twice in a row, which is what Green has just done)
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |Pink*|     | |
+| Purple*|       |White| |
+| Brown* |       |Green| |
+|     |Blue*|     ||	
+
+## 6
+### 0
+"New Step!"
+Pink is The Hatter and facing out, so they read an **H**		
+
+### 1
+Pink reads off an **A** from Green, and a **T** from Brown; 
+After they are done, Pink puts hat at center of table
+
+    Pink HI; Pink has previously read from Brown and Blue (seen as Green). Further, they will not read from themselves (i.e. the Pink rabbit). As such, Pink will read rabbits they see as Purple, Blue, and White from among the seated rabbits. Referring to the "first step after" column of the psychedelics table from Purple's HI, we know Pink sees Brown, Pink, and Green as these colors. Since Pink is standing, they will onyl read from Green and Brown, who are facing in and out respectively.
+
+### 2
+White makes Brown become The Hatter
+
+	White SI; The Hat has been placed on the table, and Brown is sitting across from White
+			
+### ?
+What happens next does not have to be counted precisely, because Brown's HI indicates they stop counting instructions when they become The Hatter. Each instruction will still be marked with a separate subheading for clarity.
+
+### ?
+Brown drinks Blue's tea	
+
+    Brown HI
+			
+### ?
+Blue takes Green's cup	
+    
+    Blue SI
+			
+### ?
+Green starts and argument with White
+    
+    Green SI; The Hat was taken from them previously, so this is the second time something is being taken from them
+			
+### ?
+Purple goes over to resolve the argument; when Green doesn't stop (despite being offered chocolate), Purple asks the adjacent rabbits (Blue and Pink) for help. Pink is happy to help (Pink SI), while Blue would like the chocolate (Blue SI). Either way, both are made to help out (this is guaranteed because Brown's Step 7 checksum is that every instruction has been followed).
+
+    Purple SI; Green SI; Blue SI; Pink SI;
+			
+### ?
+White says "New Step!"
+    
+	White SI; they are in an argument involving at least four rabbits		
+
+## 7
+### 0
+"New Step!"
+Brown is The Hatter and facing out, so they read a **T**		
+
+### 1
+Brown throws The Hat across the room
+
+    Brown HI; they heard someone say "New Step!"
+
+### 2
+Purple goes to pick up hat, gives it to Pink
+
+	Purple SI; the rabbit who threw the hat (Brown) is 5 seats to the right of Purple (who is facing out), so Purple gives The Hat to the rabbit 5 seats to their left (who is Pink)
+
+### 3
+Pink puts hat at center of table
+
+	Pink SI; they've achieved their ultimate goal of wearing The Hat
+
+### 4
+White gives The Hat to Brown
+
+	White SI		
+
+### 5
+Brown gives hat to Blue
+
+	Brown SI; they've already worn The Hat
+
+### 5
+Blue turns around in their seat
+
+    Blue SI; Brown's previous SI indicates they should let Blue act before the next rabbit that wants to act (in this case this is Brown, whose action is to say "New Step!")
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |Pink*|     | |
+| Purple*|       |White| |
+| Brown* |       |Green| |
+|     |Blue|     ||	
+
+## 8
+### 0
+"New Step!"
+Blue is The Hatter and facing in, so they read an **E**	
+
+### 1
+Blue gets up to dance, brings White, Green, Purple, Pink, Brown up to dance (in that order), and then the other rabbits sit back down clockwise in that order, and Blue sits down in the final empty seat; 
+Blue gives The Hat to Brown
+        
+    Blue HI; the above order is the chronological order of when each rabbit became The Hatter; Brown is both the first rabbit Blue danced with this entire tea party, and the most recent rabbit Blue danced with, so no matter how the coin flip lands Blue will give The Hat to Brown
+
+|     |Seating|     | Away |
+|:---:|:-----:|:---:|:----:|
+|     |Blue|     | |
+| Brown|       |White| |
+| Pink |       |Green| |
+|     |Purple|     ||			
+
+### 3	
+Brown counts this instruction double because they got dizzy from standing up (see Brown's sheet);
+Brown gives The Hat to Pink
+
+	Brown SI; Blue just gave Brown The Hat and Pink is sitting counterclockwise from Brown
+
+### 4	
+Pink puts The Hat at the center of the table
+
+	Pink SI; they've achieved their ultimate goal of putting on The Hat	
+
+### 5		
+White takes The Hat and puts it on
+
+	White SI; they've already followed this instruction twice
+
+## Step 9
+### 0
+"New Step!"
+White is The Hatter and facing in, so they read an **R**
+
+END! (Purple SI)
+
+If you take all of the letters read aloud in order, it will spell INSIDEHATTER. 
+
+Submitting it on the site yielded a partial answer confirmation; 
+- In-person teams got  "Do what must be done." This was all they could get from the site; they had to physically cut open the White rabbit in order to access the message "SHIFT -8, +0, +0, +14, +15, +10, -2, +19, -15, -6, +16, -2". Applying these as Caesar shifts to INSIDEHATTER, they obtained ANSWSOFTENUP, since the answer is **SOFTENUP**
+- Remote teams got "Do what you must." and two pictures; one of the White rabbit beheaded, and the other of a slip of paper they would have found inside. This message read "SHIFT +10, -9, -5, -5 , +15, +10, -2, +19, -15, -6, +16, -2". Applying these as Caesar shifts to INSIDEHATTER, they obtained SENDSOFTENUP, since the answer is **SOFTENUP**. (the prefix was changed between in-person and remote hunt to eliminate confusion)
