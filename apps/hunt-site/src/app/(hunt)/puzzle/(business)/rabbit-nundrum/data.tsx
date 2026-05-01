@@ -129,7 +129,8 @@ export const remoteBody = (
   </div>
 );
 
-export const solutionBody = null;
+import Solution from "./solution/solution.mdx";
+export const solutionBody = <Solution />;
 
 export const authors = "Aren Guralp with help from Thea Miller-Priddy";
 
