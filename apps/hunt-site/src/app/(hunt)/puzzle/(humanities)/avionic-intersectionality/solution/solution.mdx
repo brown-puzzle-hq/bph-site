@@ -1,1 +1,29 @@
-Solution TBD.
+import no_lines from "./cross_no_lines.png"
+import lines from "./lines.png"
+
+This puzzle is a kriss-kross. It works like a crossword, but the clues aren’t numbered. They are separated into across and down in alphabetical order of their answers. The solvers should answer all of them and then figure out where they all fit into the grid.
+
+The first twist is that there are rebuses in this puzzle. Every square that is greyed is a rebus. Furthermore, the rebuses are all airport codes of US capitals. This is hopefully clued by the title. 
+
+There are also dots on the grid. Each of these dots is actually a US state capital (with the start as DC). They should overlay a map of the US on the grid using the dots as lines. Then, look for words with two rebuses. These are flights. They should draw out all the flights (ie. GLOB<u>ALB</u>E<u>ATL</u>ESDAY goes from Albany to Atlanta). Each flight will cross another flight both on the map and on the grid (so GLOB<u>ALB</u>E<u>ATL</u>ESDAY crosses with AME<u>RIC</u>AN<u>BIS</u>ON and the Albany to Atlanta flight crosses with Richmond to Bismarck). 
+
+The solutions to the clues are the following:
+
+| Across Clues | Across Answers | Down Clues | Down Answers |
+| :---- | :---- | :---- | :---- |
+| Animal on Wyoming’s Flag | AMERICAN BISON | What Gen Alpha farms | AURA |
+| Home of (x,y) | CARTESIAN PLANE | A gymnasts beam | BALANCE |
+| "Concrete jungle where dreams are made of" song | EMPIRE STATE OF MIND | Attraction to more than one gender | BISEXUALITY |
+| 3rd, 4th, and 5th names of the general who razed Carthage | SCIPIO AEMILIANUS AFRICANUS | Annual holiday on June 25th | GLOBAL BEATLES DAY |
+| Mirror pep talk opener | YOU ARE | Sits between Os and Pt on the table | IR |
+|  |  | Brown’s satirical newspaper | NOSER |
+|  |  | Strategic alibi through lack of evidence | PLAUSIBLE DENIABILITY |
+|  |  | Baltic island | SAAREMAA |
+
+The filled-out grid looks like:
+<img src={no_lines.src} alt={"Filled in crossword"} />
+
+Then, drawing the lines of the flights on the grid looks like:
+<img src={lines.src} alt={"Lines drawn on crossword"} />
+
+Finally, the answer is the word formed by the letters that are crossed by two flights in top-to-bottom order. This spells out **AIRBUS**.

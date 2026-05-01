@@ -210,8 +210,9 @@ export const inPersonBody = (
   </div>
 );
 export const remoteBody = inPersonBody;
-export const solutionBody = null;
-export const authors = "";
+import Solution from "./solution/solution.mdx";
+export const solutionBody = <Solution />;
+export const authors = "Erin Finn";
 export const copyText = null;
 export const partialSolutions: Record<string, string> = {};
 export const tasks: Record<string, JSX.Element> = {};
