@@ -74,7 +74,8 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors =
+  "Megan Carlson, Isaac McGreevy, Bailey Merlino, Kevin Jaeger, Dylan Schenker, and Arnav Singhal";
 
 export const copyText: CopyData = {
   "text/plain": `Geographic Textiles

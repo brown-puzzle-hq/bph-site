@@ -16,7 +16,7 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Chai Harsha";
 
 export const copyText = `Analogical Semantics
 My LLM thinks that these words are related.

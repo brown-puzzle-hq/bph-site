@@ -209,7 +209,7 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Nate Chinman, Nicholas Cressman, and Jack de Haan";
 
 export const copyText = null;
 

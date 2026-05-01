@@ -57,7 +57,7 @@ export const solutionBody = <Solution />;
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = null;
+export const authors = "Dylan Schenker";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

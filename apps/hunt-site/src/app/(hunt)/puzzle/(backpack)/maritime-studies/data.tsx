@@ -95,7 +95,7 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Amara Fuchs, Phil Avilov, and Thomas Gordon";
 
 export const copyText: CopyData = {
   "text/plain": `Maritime Studies	

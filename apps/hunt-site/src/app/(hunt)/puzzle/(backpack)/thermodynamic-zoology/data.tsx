@@ -59,7 +59,7 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Aren Guralp and Thea Miller-Priddy";
 
 export const copyText: CopyData = {
   "text/plain": `Thermodynamic Zoology

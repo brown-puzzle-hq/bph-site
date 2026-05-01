@@ -1,11 +1,13 @@
+import { auth } from "~/server/auth/auth";
 import { REMOTE } from "@/config/client";
 import WrapUp from "./WrapUp";
 import { redirect } from "next/navigation";
-import { checkPermissions } from "~/lib/server";
 
 export default async function Page() {
-  const { error } = await checkPermissions({ level: "admin" });
-  if (error && new Date() < REMOTE.WRAPUP_TIME) redirect("/");
-
-  return <WrapUp />;
+  const session = await auth();
+  if (new Date() > REMOTE.WRAPUP_TIME || session?.user?.role === "admin") {
+    return <WrapUp />;
+  } else {
+    redirect("/");
+  }
 }

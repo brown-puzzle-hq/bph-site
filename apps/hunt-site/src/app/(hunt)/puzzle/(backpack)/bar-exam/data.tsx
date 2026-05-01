@@ -38,7 +38,7 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Thomas Gordon and Aren Guralp";
 
 export const copyText: CopyData = {
   "text/plain": `Bar Exam				

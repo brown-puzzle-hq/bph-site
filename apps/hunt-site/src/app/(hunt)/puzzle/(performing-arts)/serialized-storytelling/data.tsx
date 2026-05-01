@@ -513,7 +513,7 @@ export const inPersonBody = (
 export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
-export const authors = null;
+export const authors = "Isaac McGreevy and Kevin Jaeger";
 export const copyText: CopyData = {
   "text/plain": `Something is hidden episodically in this grid...																	
 2-16, 4-11, 3-10 [S], 1-6, 3-10 [D], 3-10 [A], 3-2, 2-6, 1-7, 6-16, 1-6, 7-8, 1-8																	

@@ -81,15 +81,15 @@ export const assertCanViewHint = assertCanViewPuzzle;
  * Returns a viewStatus string.
  */
 export async function canViewSolution(puzzleId: string): Promise<viewStatus> {
-  const { error, user } = await checkPermissions({ level: "userAny" });
-  if (error) return "not_authenticated";
-  const { id: teamId, role } = user;
+  // const { error, user } = await checkPermissions({ level: "userAny" });
+  // if (error) return "not_authenticated";
+  // const { id: teamId, role } = user;
 
-  // Made an exception for brumo in analogical-semantics
-  if (teamId === "brumo" && puzzleId === "analogical-semantics")
-    return "success";
+  // // Made an exception for brumo in analogical-semantics
+  // if (teamId === "brumo" && puzzleId === "analogical-semantics")
+  //   return "success";
 
-  return role === "admin" ? "success" : "not_authorized";
+  // return role === "admin" ? "success" : "not_authorized";
 
   // NOTE: the rest of this code is unreachable
   // Gate until solutions are written
@@ -98,9 +98,9 @@ export async function canViewSolution(puzzleId: string): Promise<viewStatus> {
   if (new Date() > REMOTE.WRAPUP_TIME) return "success";
 
   // If the hunt has not ended, users must be signed-in
-  // const { error, user } = await checkPermissions({ level: "userAny" });
+  const { error, user } = await checkPermissions({ level: "userAny" });
   if (error) return "not_authenticated";
-  // const { id: teamId, role } = user;
+  const { id: teamId, role } = user;
 
   // Admin can always view the solution
   if (role === "admin") return "success";

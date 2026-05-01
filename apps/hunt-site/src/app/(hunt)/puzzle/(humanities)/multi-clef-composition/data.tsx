@@ -26,7 +26,7 @@ export const remoteBody = inPersonBody;
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Nicholas Cressman, Jack de Haan, and Nate Chinman";
 
 export const copyText: CopyData = {
   "text/plain": `Multi-Clef Composition

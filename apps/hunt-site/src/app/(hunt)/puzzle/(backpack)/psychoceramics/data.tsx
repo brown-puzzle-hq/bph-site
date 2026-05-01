@@ -77,7 +77,8 @@ export const solutionBody = <Solution />;
 /**
  * The `authors` string renders below the `solutionBody`.
  */
-export const authors = "Megan Carlson, Bailey Merlino";
+export const authors =
+  "Megan Carlson, Bailey Merlino, Eno Thomson-Tribe, and Philip Yao";
 
 /**
  * The `copyText` should provide a convenient text representation of the puzzle

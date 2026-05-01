@@ -528,9 +528,9 @@ export default function Page() {
               </p>
               <h3 className="text-center">Editors</h3>
               <p className="text-center">
-                Thomas Gordon ('26)*
+                Thomas Gordon* ('26)
                 <br />
-                Arnav Singhal ('26)*
+                Arnav Singhal* ('26)
                 <br />
                 Nate Chinman ('28)
                 <br />
@@ -554,7 +554,7 @@ export default function Page() {
                 <br />
                 Kaylee Gallagher ('26)
                 <br />
-                Thomas Gordon ('26)*
+                Thomas Gordon* ('26)
                 <br />
                 Veronika Grytsai ('26)
                 <br />
@@ -562,7 +562,7 @@ export default function Page() {
                 <br />
                 Bailey Merlino ('26)
                 <br />
-                Arnav Singhal ('26)*
+                Arnav Singhal* ('26)
                 <br />
                 AJ Wu ('26)
                 <br />

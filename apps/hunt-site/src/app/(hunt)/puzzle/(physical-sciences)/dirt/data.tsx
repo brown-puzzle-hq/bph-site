@@ -159,7 +159,7 @@ export const remoteBody = (
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Thomas Gordon";
 
 export const copyText: CopyData = {
   "text/plain": `Dirt

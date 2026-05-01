@@ -72,7 +72,7 @@ export const remoteBody = (
 import Solution from "./solution/solution.mdx";
 export const solutionBody = <Solution />;
 
-export const authors = null;
+export const authors = "Thea Miller-Priddy and Eno Thomson-Tribe";
 
 export const copyText = `Disguised Financial Crimes
 This puzzle can be found on the 3rd floor of Page-Robinson Hall. You should bring your tape and red string. If you are a non-Brown team whose solving room is not located in this building, please call us to get access.
