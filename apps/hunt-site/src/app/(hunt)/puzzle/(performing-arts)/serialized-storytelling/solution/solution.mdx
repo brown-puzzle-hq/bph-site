@@ -115,26 +115,26 @@ import crossword from "./crossword.png";
 | 92D   | FU            | \_ Manchu, title character of 5 Christopher Lee films      |
 | 94D   | KO            | How some boxing matches end                                |
 
+After solving the crossword, solvers should notice that there are TV shows and episode titles hidden in the grid. The following diagram has them highlighted, with yellow indicating episodes, red indicating TV shows, and orange indicating both.
+
 <img src={crossword.src} alt="Crossword" />
 
-Yellow indicates episodes, red indicates TV shows, and yellow indicates both.
+Solvers find the shows that intersect with names of their episodes and take those letters, order them by the season and episode numbers given in the flavortext, and extract the intersection letter from the grid. There are two 1-6 pairs, but both extract an E, and the two 3-10 pairs are differentiated by the first letter of the show in brackets. This gives the following table:
 
-Find the shows that intersect with names of their episodes and take those letters.  
-Order using the list of numbers based on season and episode number.  
-1-6 repeats but are both E.  
-The 3-10s are differentiated by a letter in brackets, which is the first letter of the show the episode is from.
+| Season-episode number | Show          | Episode   | Intersection |
+| :---- | :------------- | :------------ | :-- |
+| 2-16 | HOUSE          | SAFE          | E   |
+| 4-11 | NCIS           | DRIVEN        | N   |
+| 3-10 | SUITS          | STAY          | T   |
+| 1-6  | SEVERANCE      | HIDE AND SEEK | E   |
+| 3-10 | DAREDEVIL      | KAREN         | R   |
+| 3-10 | ATLANTA        | TARRARE       | T   |
+| 3-2  | DAREDEVIL      | PLEASE        | A   |
+| 2-6  | SILICON VALLEY | HOMICIDE      | I   |
+| 1-7  | ATLANTA        | BAN           | N   |
+| 6-16 | HOMICIDE       | MERCY         | M   |
+| 1-6  | DAREDEVIL      | CONDEMNED     | E   |
+| 7-8  | MAD MEN        | SEVERANCE     | N   |
+| 1-8  | ATLANTA        | THE CLUB      | T   |
 
-| HOUSE          | SAFE          | E   | s2e16 |
-| :------------- | :------------ | :-- | :---- |
-| NCIS           | DRIVEN        | N   | s4e11 |
-| SUITS          | STAY          | T   | s3e10 |
-| SEVERANCE      | HIDE AND SEEK | E   | s1e6  |
-| DAREDEVIL      | KAREN         | R   | s3e10 |
-| ATLANTA        | TARRARE       | T   | s3e10 |
-| DAREDEVIL      | PLEASE        | A   | s3e2  |
-| SILICON VALLEY | HOMICIDE      | I   | s2e6  |
-| ATLANTA        | BAN           | N   | s1e7  |
-| HOMICIDE       | MERCY         | M   | s6e16 |
-| DAREDEVIL      | CONDEMNED     | E   | s1e6  |
-| MAD MEN        | SEVERANCE     | N   | s7e8  |
-| ATLANTA        | THE CLUB      | T   | s1e8  |
+Reading out the intersections in this order gives the answer **ENTERTAINMENT**.

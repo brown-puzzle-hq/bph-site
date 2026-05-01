@@ -1,1 +1,27 @@
-Solution TBD.
+import matrix from "./destiny_solution.png"
+
+The story in the first section of the puzzle clues some dates, which eventually leads to the main character's birthday. Specifically, the dad was born on December 19, 1972, and the mother was born in 1975, making their age gap three years. The main character was born in 2000, so their birthday is January 4, 2000.
+
+Once this birthday is found, they can input the birthday into a Destiny Matrix chart calculator. An example is shown. Some numbers may differ across websites, but all relevant numbers will be the same.
+
+<img src={matrix.src} alt="Destiny Matrix for correct birthday" />
+
+Matching the numbers found here to the diagram in the puzzle allows solvers to solve for x<sub>1</sub> through x<sub>13</sub>. Translating each letter from A=1 to Z=26 spells out the answer:
+
+| i | x<sub>i</sub> | Letter |
+| - | ------------- | ------ |
+| 1 | 2 | B |
+| 2 | 1 | A |
+| 3 | 14 | N |
+| 4 | 1 | A |
+| 5 | 14 | N |
+| 6 | 1 | A |
+| 7 | 19 | S |
+| 8 | 6 | F |
+| 9 | 15 | O |
+| 10 | 19 | S |
+| 11 | 20 | T |
+| 12 | 5 | E |
+| 13 | 18 | R |
+
+Reading the extracted letters by subscript order gives the answer: **BANANAS FOSTER**.
