@@ -2531,18 +2531,6 @@ export default function WrapUp() {
                 </TableHeader>
                 <TableBody className="pointer-events-none">
                   <TableRow>
-                    <TableCell>voting-dynamics</TableCell>
-                    <TableCell className="text-center">
-                      TOYNBEEANDPRETTY
-                    </TableCell>
-                    <TableCell className="text-center">86.7</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>linesman-training</TableCell>
-                    <TableCell className="text-center">KICKME</TableCell>
-                    <TableCell className="text-center">83.1</TableCell>
-                  </TableRow>
-                  <TableRow>
                     <TableCell>characters-in-flight</TableCell>
                     <TableCell className="text-center">FOWL</TableCell>
                     <TableCell className="text-center">70.6</TableCell>
