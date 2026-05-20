@@ -29,12 +29,10 @@ export default function WrapUp() {
     <TOCContext.Provider value={values}>
       <div className="flex px-4">
         <TableOfContents />
-
         {/* Spacer since TOC is fixed */}
-        <div className="md:w-1/3 xl:w-1/5"></div>
-
-        <div className="w-full md:w-2/3 xl:w-3/5">
-          <article className="prose prose-wrapup w-full max-w-none bg-black/30 p-6 prose-img:my-0">
+        <div className="md:w-1/4 xl:w-1/5"></div>
+        <div className="w-full md:w-3/4 xl:w-3/5">
+          <article className="prose prose-wrapup w-full max-w-none bg-black/20 p-6">
             <h1 className="font-semibold text-amber-300">Wrapup</h1>
             <p>
               Congratulations to the 15 in-person teams and <s>98</s> 100 remote
@@ -124,15 +122,15 @@ export default function WrapUp() {
               onValueChange={(value) => setActiveTab(value)}
               className="mb-6 mt-4 w-full"
             >
-              <TabsList className="grid grid-cols-2 space-x-1 bg-black/50 text-[#6c518e]">
+              <TabsList className="grid w-full grid-cols-2 space-x-1 bg-[#000060] text-main-text">
                 <TabsTrigger
-                  className="data-[state=active]:bg-blue-700 data-[state=active]:text-main-text"
+                  className="data-[state=active]:bg-blue-900 data-[state=active]:text-main-text"
                   value="in-person"
                 >
                   In-Person
                 </TabsTrigger>
                 <TabsTrigger
-                  className="data-[state=active]:bg-blue-700 data-[state=active]:text-main-text"
+                  className="data-[state=active]:bg-blue-900 data-[state=active]:text-main-text"
                   value="remote"
                 >
                   Remote
@@ -276,22 +274,22 @@ export default function WrapUp() {
               <div className="grid grid-cols-2 gap-4">
                 <img
                   src="/wrapup/images/image8.png"
-                  className="rounded-md"
+                  className="h-full rounded-md object-cover"
                   alt=""
                 />
                 <img
                   src="/wrapup/images/image26.png"
-                  className="rounded-md"
+                  className="h-full rounded-md object-cover"
                   alt=""
                 />
                 <img
                   src="/wrapup/images/image47.png"
-                  className="rounded-md"
+                  className="h-full rounded-md object-cover"
                   alt=""
                 />
                 <img
                   src="/wrapup/images/image31.png"
-                  className="rounded-md"
+                  className="h-full rounded-md object-cover"
                   alt=""
                 />
               </div>
@@ -470,7 +468,7 @@ export default function WrapUp() {
               </p>
               <img
                 src="/wrapup/images/image17.png"
-                className="rounded-md"
+                className="mx-auto w-1/2 rounded-md"
                 alt=""
               />
             </TOCSection>
@@ -1072,12 +1070,12 @@ export default function WrapUp() {
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <img
-                  src="/wrapup/images/image23.png"
+                  src="/wrapup/images/image44.png"
                   className="rounded-md"
                   alt=""
                 />
                 <img
-                  src="/wrapup/images/image44.png"
+                  src="/wrapup/images/image23.png"
                   className="rounded-md"
                   alt=""
                 />
@@ -1652,7 +1650,7 @@ export default function WrapUp() {
               <p>
                 A full list of credits can be found at the bottom of the{" "}
                 <a
-                  href="/info"
+                  href="/info#section-8"
                   className="text-link no-underline hover:underline"
                 >
                   info page
@@ -1949,14 +1947,6 @@ export default function WrapUp() {
                     <TableCell>The Coraline Schism</TableCell>
                     <TableCell className="text-center">0</TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell>pfrovidence pfreshman</TableCell>
-                    <TableCell className="text-center">1</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>The Blob Wizards</TableCell>
-                    <TableCell className="text-center">1</TableCell>
-                  </TableRow>
                 </TableBody>
               </Table>
               <h3>Most Hints (Finishers)</h3>
@@ -2014,7 +2004,7 @@ export default function WrapUp() {
                   </TableRow>
                 </TableBody>
               </Table>
-              <h3>Most Hints + Replies (Finishers)</h3>
+              <h3>Most Hints & Replies (Finishers)</h3>
               <Table className="my-0 w-fit">
                 <TableHeader>
                   <TableRow className="hover:bg-inherit">
@@ -2070,7 +2060,7 @@ export default function WrapUp() {
                 </TableBody>
               </Table>
 
-              <h3>Puzzle Stats</h3>
+              <h3>Puzzle Statistics</h3>
               <Table className="my-0 w-fit">
                 <TableHeader>
                   <TableRow className="hover:bg-inherit">
@@ -2516,7 +2506,7 @@ export default function WrapUp() {
                 </TableBody>
               </Table>
 
-              <h3>Puzzle Guess Stats</h3>
+              <h3>Common Incorrect Answers</h3>
               <Table className="my-0 w-fit">
                 <TableHeader>
                   <TableRow className="hover:bg-inherit">
@@ -2525,246 +2515,243 @@ export default function WrapUp() {
                       Top Incorrect
                     </TableHead>
                     <TableHead className="text-main-header">
-                      Relative Frequency
+                      Percent Frequency*
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="pointer-events-none">
                   <TableRow>
                     <TableCell>characters-in-flight</TableCell>
-                    <TableCell className="text-center">FOWL</TableCell>
+                    <TableCell>FOWL</TableCell>
                     <TableCell className="text-center">70.6</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>culinary-chemistry-lab</TableCell>
-                    <TableCell className="text-center">2AP</TableCell>
+                    <TableCell>2AP</TableCell>
                     <TableCell className="text-center">66.5</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>card-game-theory</TableCell>
-                    <TableCell className="text-center">ELECTROSPIRIT</TableCell>
+                    <TableCell>ELECTROSPIRIT</TableCell>
                     <TableCell className="text-center">65.5</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>applied-criminology</TableCell>
-                    <TableCell className="text-center">JAILBREAK</TableCell>
+                    <TableCell>JAILBREAK</TableCell>
                     <TableCell className="text-center">62.6</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>psychoceramics</TableCell>
-                    <TableCell className="text-center">CRACKOFDAWN</TableCell>
+                    <TableCell>CRACKOFDAWN</TableCell>
                     <TableCell className="text-center">42.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>bar-exam</TableCell>
-                    <TableCell className="text-center">LIFETRIAL</TableCell>
+                    <TableCell>LIFETRIAL</TableCell>
                     <TableCell className="text-center">38.8</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>primary-investigation</TableCell>
-                    <TableCell className="text-center">SHAPE</TableCell>
+                    <TableCell>SHAPE</TableCell>
                     <TableCell className="text-center">36.3</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>luck-practicum</TableCell>
-                    <TableCell className="text-center">ROYALFLUSH</TableCell>
+                    <TableCell>ROYALFLUSH</TableCell>
                     <TableCell className="text-center">33.3</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>escapism-in-cinema</TableCell>
-                    <TableCell className="text-center">PEACEONEARTH</TableCell>
+                    <TableCell>PEACEONEARTH</TableCell>
                     <TableCell className="text-center">32.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>mischievous-literature</TableCell>
-                    <TableCell className="text-center">BOOK</TableCell>
+                    <TableCell>BOOK</TableCell>
                     <TableCell className="text-center">24.3</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>ubpcosu-ii</TableCell>
-                    <TableCell className="text-center">YOUEXAM</TableCell>
+                    <TableCell>YOUEXAM</TableCell>
                     <TableCell className="text-center">23.4</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>rabbit-nundrum</TableCell>
-                    <TableCell className="text-center">MARGARITA</TableCell>
+                    <TableCell>MARGARITA</TableCell>
                     <TableCell className="text-center">20.0</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>ubpcosu-i</TableCell>
-                    <TableCell className="text-center">
-                      ESTITEBESPUULTOSUUSILE
-                    </TableCell>
+                    <TableCell>ESTITEBESPUULTOSUUSILE</TableCell>
                     <TableCell className="text-center">19.1</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>collaborative-chorale</TableCell>
-                    <TableCell className="text-center">DESOLATI</TableCell>
+                    <TableCell>DESOLATI</TableCell>
                     <TableCell className="text-center">16.6</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>fifth-year-masters</TableCell>
-                    <TableCell className="text-center">INURSAMAJOR</TableCell>
+                    <TableCell>INURSAMAJOR</TableCell>
                     <TableCell className="text-center">16.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>dirt</TableCell>
-                    <TableCell className="text-center">EARTHLAYER</TableCell>
+                    <TableCell>EARTHLAYER</TableCell>
                     <TableCell className="text-center">14.7</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>disguised-financial-crimes</TableCell>
-                    <TableCell className="text-center">FAIRCOIN</TableCell>
+                    <TableCell>FAIRCOIN</TableCell>
                     <TableCell className="text-center">13.4</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>applied-probability</TableCell>
-                    <TableCell className="text-center">NEWYORK</TableCell>
+                    <TableCell>NEWYORK</TableCell>
                     <TableCell className="text-center">13.0</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>avionic-intersectionality</TableCell>
-                    <TableCell className="text-center">AIRUSA</TableCell>
+                    <TableCell>AIRUSA</TableCell>
                     <TableCell className="text-center">13.0</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>analogical-semantics</TableCell>
-                    <TableCell className="text-center">HEEL</TableCell>
+                    <TableCell>HEEL</TableCell>
                     <TableCell className="text-center">12.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>schmear-campaigns</TableCell>
-                    <TableCell className="text-center">
-                      FIXFAKENUMBERS
-                    </TableCell>
+                    <TableCell>FIXFAKENUMBERS</TableCell>
                     <TableCell className="text-center">11.8</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>how-to-get-your-heart-broken</TableCell>
-                    <TableCell className="text-center">SOFTENUP</TableCell>
+                    <TableCell>SOFTENUP</TableCell>
                     <TableCell className="text-center">10.8</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>geographical-textiles</TableCell>
-                    <TableCell className="text-center">SCOTLAND</TableCell>
+                    <TableCell>SCOTLAND</TableCell>
                     <TableCell className="text-center">10.7</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>going-in-circles</TableCell>
-                    <TableCell className="text-center">
-                      NAMEOFTHISPROCESS
-                    </TableCell>
+                    <TableCell>NAMEOFTHISPROCESS</TableCell>
                     <TableCell className="text-center">10.6</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>cubist-linguistics</TableCell>
-                    <TableCell className="text-center">PICK</TableCell>
+                    <TableCell>PICK</TableCell>
                     <TableCell className="text-center">10.5</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>underwater-basketweaving</TableCell>
-                    <TableCell className="text-center">BLOWER</TableCell>
+                    <TableCell>BLOWER</TableCell>
                     <TableCell className="text-center">10.1</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>architecture-on-college-hill</TableCell>
-                    <TableCell className="text-center">MIGHTY</TableCell>
+                    <TableCell>MIGHTY</TableCell>
                     <TableCell className="text-center">9.5</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>experimental-cardiac-measurement</TableCell>
-                    <TableCell className="text-center">ANUBIS</TableCell>
+                    <TableCell>ANUBIS</TableCell>
                     <TableCell className="text-center">9.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>advanced-logical-cooking-techniques</TableCell>
-                    <TableCell className="text-center">FOIL</TableCell>
+                    <TableCell>FOIL</TableCell>
                     <TableCell className="text-center">7.8</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>scacchic-fabrication</TableCell>
-                    <TableCell className="text-center">FLUORESCENCE</TableCell>
+                    <TableCell>FLUORESCENCE</TableCell>
                     <TableCell className="text-center">7.1</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
                       sunk-modern-naval-investigative-methodology
                     </TableCell>
-                    <TableCell className="text-center">AMIDSHIP</TableCell>
+                    <TableCell>AMIDSHIP</TableCell>
                     <TableCell className="text-center">7.0</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>linear-algebra</TableCell>
-                    <TableCell className="text-center">BANANAFOSTER</TableCell>
+                    <TableCell>BANANAFOSTER</TableCell>
                     <TableCell className="text-center">6.9</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>multi-clef-composition</TableCell>
-                    <TableCell className="text-center">WATERMONITOR</TableCell>
+                    <TableCell>WATERMONITOR</TableCell>
                     <TableCell className="text-center">6.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>big-wheel</TableCell>
-                    <TableCell className="text-center">WEARINGS</TableCell>
+                    <TableCell>WEARINGS</TableCell>
                     <TableCell className="text-center">5.6</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>anthropology-of-computers</TableCell>
-                    <TableCell className="text-center">STUTTERING</TableCell>
+                    <TableCell>STUTTERING</TableCell>
                     <TableCell className="text-center">4.5</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>year-of-the-honse</TableCell>
-                    <TableCell className="text-center">JUDICIARY</TableCell>
+                    <TableCell>JUDICIARY</TableCell>
                     <TableCell className="text-center">4.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>editing-practice</TableCell>
-                    <TableCell className="text-center">COLDCUTS</TableCell>
+                    <TableCell>COLDCUTS</TableCell>
                     <TableCell className="text-center">4.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>topics-in-guard-door-theory</TableCell>
-                    <TableCell className="text-center">PARASITE</TableCell>
+                    <TableCell>PARASITE</TableCell>
                     <TableCell className="text-center">3.4</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>itty-bitty-kitties</TableCell>
-                    <TableCell className="text-center">FROWZIEST</TableCell>
+                    <TableCell>FROWZIEST</TableCell>
                     <TableCell className="text-center">3.0</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>thermodynamic-zoology</TableCell>
-                    <TableCell className="text-center">MAXWELL</TableCell>
+                    <TableCell>MAXWELL</TableCell>
                     <TableCell className="text-center">3.0</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>herculean-math</TableCell>
-                    <TableCell className="text-center">HYDRANT</TableCell>
+                    <TableCell>HYDRANT</TableCell>
                     <TableCell className="text-center">2.9</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>maritime-studies</TableCell>
-                    <TableCell className="text-center">ASPIRAL</TableCell>
+                    <TableCell>ASPIRAL</TableCell>
                     <TableCell className="text-center">2.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>theological-chemistry</TableCell>
-                    <TableCell className="text-center">BLOODLINKS</TableCell>
+                    <TableCell>BLOODLINKS</TableCell>
                     <TableCell className="text-center">2.2</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>trap-streets</TableCell>
-                    <TableCell className="text-center">GIVESWAY</TableCell>
+                    <TableCell>GIVESWAY</TableCell>
                     <TableCell className="text-center">2.1</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>serialized-storytelling</TableCell>
-                    <TableCell className="text-center">THICKENS</TableCell>
+                    <TableCell>THICKENS</TableCell>
                     <TableCell className="text-center">1.6</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
+              <p className="text-sm text-main-header">
+                *Relative to puzzle answer.
+              </p>
 
               <h3>First Solves</h3>
               <Table className="my-0 w-fit">
@@ -2774,172 +2761,24 @@ export default function WrapUp() {
                     <TableHead className="text-main-header">Puzzle</TableHead>
                     <TableHead className="text-main-header">Team</TableHead>
                     <TableHead className="text-main-header">
-                      Solve Duration
+                      Time After Start
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="pointer-events-none">
                   <TableRow>
                     <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
+                    <TableCell>big-wheel</TableCell>
+                    <TableCell>
                       puzzles at acceptable difficulties possibly harder
                     </TableCell>
-                    <TableCell className="text-center">0m 37.525s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">Cardinality</TableCell>
-                    <TableCell className="text-center">1m 11.697s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">
-                      scacchic-fabrication
-                    </TableCell>
-                    <TableCell className="text-center">
-                      puzzles at acceptable difficulties possibly harder
-                    </TableCell>
-                    <TableCell className="text-center">1m 17.491s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Living Off Hope
-                    </TableCell>
-                    <TableCell className="text-center">3m 6.116s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">
-                      scacchic-fabrication
-                    </TableCell>
-                    <TableCell className="text-center">
-                      Literally Real Genius
-                    </TableCell>
-                    <TableCell className="text-center">5m 54.933s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">
-                      characters-in-flight
-                    </TableCell>
-                    <TableCell className="text-center">
-                      Living Off Hope
-                    </TableCell>
-                    <TableCell className="text-center">7m 7.703s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Literally Real Genius
-                    </TableCell>
-                    <TableCell className="text-center">8m 34.989s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      We all found a team!
-                    </TableCell>
-                    <TableCell className="text-center">10m 36.782s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      17th On the Waiting List for My Puzzle Class
-                    </TableCell>
-                    <TableCell className="text-center">12m 12.892s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>in-person</TableCell>
-                    <TableCell className="text-center">
-                      characters-in-flight
-                    </TableCell>
-                    <TableCell className="text-center">Cardinality</TableCell>
-                    <TableCell className="text-center">15m 5.151s</TableCell>
+                    <TableCell>0m 37.525s</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>remote</TableCell>
-                    <TableCell className="text-center">
-                      applied-probability
-                    </TableCell>
-                    <TableCell className="text-center">深色墨喵</TableCell>
-                    <TableCell className="text-center">2m 57.855s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">Yuki</TableCell>
-                    <TableCell className="text-center">3m 5.994s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">resolve</TableCell>
-                    <TableCell className="text-center">5m 7.962s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Dissertation: Advanced Nonogrammetry
-                    </TableCell>
-                    <TableCell className="text-center">6m 57.962s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Mobius Strippers
-                    </TableCell>
-                    <TableCell className="text-center">8m 1.544s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Grad Unified Theory
-                    </TableCell>
-                    <TableCell className="text-center">8m 24.463s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      ⏖ METRICAL BROW N (WHERE N=2)
-                    </TableCell>
-                    <TableCell className="text-center">8m 31.267s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">
-                      applied-probability
-                    </TableCell>
-                    <TableCell className="text-center">
-                      Celestial &lt;64&gt;
-                    </TableCell>
-                    <TableCell className="text-center">9m 18.966s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Higher Veheducation
-                    </TableCell>
-                    <TableCell className="text-center">9m 41.211s</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>remote</TableCell>
-                    <TableCell className="text-center">big-wheel</TableCell>
-                    <TableCell className="text-center">
-                      Canceled My Upcoming (Hunt :sob:)
-                    </TableCell>
-                    <TableCell className="text-center">9m 52.947s</TableCell>
+                    <TableCell>applied-probability</TableCell>
+                    <TableCell>深色墨喵</TableCell>
+                    <TableCell>2m 57.855s</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -3016,111 +2855,33 @@ export default function WrapUp() {
                 </TableBody>
               </Table>
 
-              <h3>One-character Guesses</h3>
+              <h3>One-character Guess Frequency</h3>
               <Table className="my-0 w-fit">
                 <TableHeader>
                   <TableRow className="hover:bg-inherit">
-                    <TableHead className="text-main-header">Guess</TableHead>
-                    <TableHead className="text-main-header">Count</TableHead>
+                    <TableHead className="text-main-header">2</TableHead>
+                    <TableHead className="text-main-header">0</TableHead>
+                    <TableHead className="text-main-header">P</TableHead>
+                    <TableHead className="text-main-header">1</TableHead>
+                    <TableHead className="text-main-header">E</TableHead>
+                    <TableHead className="text-main-header">F</TableHead>
+                    <TableHead className="text-main-header">A</TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody className="pointer-events-none">
                   <TableRow>
-                    <TableCell>2</TableCell>
                     <TableCell className="text-center">3</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>0</TableCell>
                     <TableCell className="text-center">2</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>P</TableCell>
                     <TableCell className="text-center">1</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>1</TableCell>
                     <TableCell className="text-center">1</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>E</TableCell>
                     <TableCell className="text-center">1</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>F</TableCell>
                     <TableCell className="text-center">1</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>A</TableCell>
                     <TableCell className="text-center">1</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
 
-              <h3>Longest Hints</h3>
-              <Table className="my-0 w-fit">
-                <TableHeader>
-                  <TableRow className="hover:bg-inherit">
-                    <TableHead className="text-main-header">Request</TableHead>
-                    <TableHead className="text-main-header">Length</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="pointer-events-none">
-                  <TableRow>
-                    <TableCell>
-                      Sheet link:
-                      [REDACTED]\n\nI've
-                      led myself down a chain of logic that seems mostly sound
-                      but doesn't lead to an answer (or any clear path towards
-                      an answer), would appreciate a nudge on what might be
-                      mistaken here or what I might be missing.\n\n\nLooking at
-                      question 3, I see the verbs prefixed by 'c-' or 'd-',
-                      which is unfamiliar. Seeing that the verbs are in
-                      past-tense, it seems these might be a past tense
-                      indicator.\n\nProceeding with this, in question 2, the
-                      verb 'collected' is also in past tense, so I would expect
-                      it to begin with a 'c-' or 'd-' in the translation, which
-                      rules out options 2 and 4.\n\nContinuing with question 2,
-                      I have ustite = man and tu... = pernicious, so "but"
-                      should be found as either "pon" or "api".\n\nMoving to
-                      question 4 now, "kiki u... usika &lt;question word&gt;" is
-                      "what is the cost", "usika" means "are", and "...le" means
-                      hating (the "le" part is hate, not sure how to conjugate
-                      into present progressive tense yet). That means the first
-                      word in the sentence is either "you" or "but", and same
-                      for the first word after the comma. It makes more sense to
-                      me that "you" is the first word and "but" is the one after
-                      the comma, but I'm not certain of this [1]\n\nGoing with
-                      this assumption, this means "but" should be either "pon"
-                      or "ere", and combining with our earlier note means it
-                      should be "pon" (if the previous assumption is wrong, then
-                      "but" should be either "api" or "boh", in which case it's
-                      "api")\n\nProceeding with the first option, then this
-                      means option 1 is the correct answer for question 2, so
-                      the past tense indicator is 'd-'\n\nThis means question 3
-                      is either option 2 or 3. From Ubpcosu I we know "suso"
-                      means "why", so "whence" should be "jono" and the answer
-                      is option 2.\n\nGoing back to question 4, which is now
-                      down to options 3 and 4, "jono" does not me "what", so the
-                      answer should be option 3.\n\nThis implies "boh" means
-                      "you", so the answer to question 5 should be option
-                      4.\n\nFrom here it's not clear to me how to get any
-                      information about the meanings of api or ...tarosu, as
-                      they are only in incorrect answers, so we only have a few
-                      ideas of what they *don't* mean. Question 1 also seems
-                      entirely unhelpful, not sure if I'm missing something
-                      there.\n\n\n[1] looking further at my main uncertain
-                      deduction, if we instead assume the other sentence
-                      structure for question 4, if "api" is "but" then "ere" is
-                      "you", which does not appear in question 5 as an
-                      option.\n\nyou can also chase that question 2 would be
-                      option 3, and then the answer to question 3 would be
-                      option 1, which would mean "bewa" means both "whence" and
-                      "what", seemingly a contradiction\n\n
-                    </TableCell>
-                    <TableCell className="text-center">2699</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
               <h3>Shortest Hints</h3>
               <Table className="my-0 w-fit">
                 <TableHeader>
@@ -3149,32 +2910,6 @@ export default function WrapUp() {
                   <TableRow>
                     <TableCell>Long edge or short edge duplex?</TableCell>
                     <TableCell className="text-center">31</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>A more direct hint would be awesome!</TableCell>
-                    <TableCell className="text-center">36</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>We would love more of a direct hint!</TableCell>
-                    <TableCell className="text-center">36</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      flatdurian does not know where to start
-                    </TableCell>
-                    <TableCell className="text-center">39</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      thanks I think I will try some new thi3gs
-                    </TableCell>
-                    <TableCell className="text-center">42</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      (accidentally used a hint instead of replying)
-                    </TableCell>
-                    <TableCell className="text-center">46</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

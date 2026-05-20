@@ -64,6 +64,10 @@ export default {
             h3: {
               opacity: "0.9",
             },
+            img: {
+              marginTop: "0",
+              marginBottom: "0",
+            },
           },
         },
         info: {
