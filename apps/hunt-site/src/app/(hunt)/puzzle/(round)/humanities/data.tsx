@@ -19,7 +19,7 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 35.5469,
     h: 22.5914,
     labelPosition: "top",
-    labelDx: -16.5,
+    labelDx: -5.9,
   },
   "multi-clef-composition": {
     icon: columns,

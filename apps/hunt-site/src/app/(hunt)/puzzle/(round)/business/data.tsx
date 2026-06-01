@@ -25,7 +25,7 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 14.3272,
     w: 25.2686,
     h: 26.1628,
-    labelDx: -15,
+    labelDx: -3.8,
   },
   "rabbit-nundrum": {
     icon: money,
@@ -47,6 +47,6 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 16.196,
     w: 17.9932,
     h: 22.6329,
-    labelDx: 10,
+    labelDx: 1.8,
   },
 };

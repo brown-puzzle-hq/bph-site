@@ -45,7 +45,7 @@ export const registerFormSchema = z
       .trim()
       .min(5, { message: "Min 5 characters" })
       .max(50, { message: "Max 50 characters" })
-      .regex(/^\w+$/, {
+      .regex(/^[\w-]+$/, {
         message: "No special characters",
       }),
     displayName: z

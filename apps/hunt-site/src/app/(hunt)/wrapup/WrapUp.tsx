@@ -474,9 +474,11 @@ export default function WrapUp() {
             </TOCSection>
 
             {/* TECH */}
-            {/*
             <TOCSection sectionId={11} tocTitle="Tech">
               <h2>Tech</h2>
+              <p>
+                <i>By Alex Wang and Chloe Qiao</i>
+              </p>
             </TOCSection>
 
             <TOCSection
@@ -485,325 +487,331 @@ export default function WrapUp() {
               parentId={11}
             >
               <h3>Interactive Puzzles</h3>
-              <ul>
-                <li>One Guard No Doors + threshold optimization</li>
-                <li>Analogical Semantics + V8 serialization
-                  <ul>
-                    <li>We can see when you&rsquo;re botting</li>
-                  </ul>
-                </li>
-                <li>Escapism in Cinema</li>
-                <li>How to Get Your Heart Broken</li>
-                <li>Big Wheel</li>
-                <li>Experimental Cardiac Measurement (remote)
-                  <ul>
-                    <li>We built a custom component for the scales</li>
-                  </ul>
-                </li>
-                <li>Psychoceramics (jigsaw)</li>
-              </ul>
-            </TOCSection>
-
-            <TOCSection sectionId={13} tocTitle="PuzzleJS" parentId={11}>
-              <h3>PuzzleJS</h3>
               <p>
-                During 2025 Puzzlethon, Jack started implementation of PuzzleJS,
-                a neat library with a ton of components for crosswords, logic
-                puzzles, and more. We completed the integration of PuzzleJS into
-                bph-site for 2026 BPH, and the components were used in
-                Serialized Storytelling and Avionic Intersectionality.
+                This year’s hunt featured several interactive puzzles. Hopefully
+                they were usable enough.
+              </p>
+
+              <h4>Topics in Guard-Door Theory</h4>
+              <p>
+                Originally, to keep all data server-side, the client called a
+                server action on every move. We later decided that move
+                thresholds were not particularly sensitive and could be leaked
+                to the client. Thus, we optimized the system so that (1) puzzles
+                whose thresholds have been met do not trigger updates, (2)
+                puzzles call the server action only on identical threshold
+                matches, and (3) once a team unlocks all minigames, no more
+                checks occur. The server action takes and reverifies the entire
+                move sequence before unlocking new minigames.
+              </p>
+
+              <h4>Analogical Semantics</h4>
+              <p>
+                To make the warming process faster, we used V8 to serialize and
+                deserialize the word and vector objects.
+              </p>
+              <p>
+                By the way, we can see when you’re botting. The Python{" "}
+                <code>requests</code> library has its own user agent. Please be
+                nice. Unfortunately, Vercel charges just as much for an API call
+                as for a page load.
+              </p>
+
+              <h4>Escapism in Cinema</h4>
+              <p>
+                The original draft of Escapism in Cinema had “small” chain nodes
+                and “big” chain nodes. We made many tweaks to the UI to make it
+                usable on the web. Big thanks to all our testsolvers for their
+                feedback.
+              </p>
+
+              <h4>How to Get Your Heart Broken</h4>
+              <p>
+                This puzzle featured a dating simulator. Big thanks to Veronika,
+                the puzzle author, who also took charge of the tech
+                implementation.
+              </p>
+
+              <h4>Big Wheel!</h4>
+              <p>
+                This puzzle gave combination lock vibes. We were happy with the
+                end result, though calculating those letter rotations was a bit
+                of a nightmare.
+              </p>
+
+              <h4>Experimental Cardiac Measurement (remote)</h4>
+              <p>We made a little scale… yay!</p>
+
+              <h4>Psychoceramics</h4>
+              <p>
+                Thanks to MIT Puzzle Club for the snapping jigsaw functionality.
+                Condolences for any team whose progress may have been reset by
+                page reloads and other mishaps. Someday we’ll implement progress
+                saving.
+              </p>
+
+              <h4>Serialized Storytelling & Avionic Intersectionality</h4>
+              <p>
+                During Puzzlethon 2025, Jack started integration of PuzzleJS, a
+                neat library with several components for crosswords, logic
+                puzzles, and more. We finished the integration and used PuzzleJS
+                for these crossword-based puzzles.
               </p>
             </TOCSection>
 
-            <TOCSection sectionId={14} tocTitle="Landing" parentId={11}>
+            <TOCSection sectionId={13} tocTitle="Landing" parentId={11}>
               <h3>Landing</h3>
-              <ul>
-                <li>Very similar to last year</li>
-                <li>
-                  Originally wasn&rsquo;t parallax but then we thought it would
-                  look cool
-                </li>
-                <li>Less janky scroll than last year</li>
-                <li>
-                  Got rid of front page text (annoying to make mobile friendly)
-                </li>
-                <li>
-                  Tailwind math got even more complicated since we changed the
-                  system so that the art has more dead space at the bottom that
-                  only shows on mobile
-                </li>
-                <li>
-                  If you didn&rsquo;t notice, gates are closed when logged out
-                  but open when logged in
-                </li>
-              </ul>
+              <p>
+                In terms of tech, this year’s landing page was very similar to
+                last year. Originally, we were not planning to include a
+                parallax effect, but after uploading the art for the first time,
+                we decided it would look cool (sorry art). We removed the
+                spotlights from last year (college isn’t that exciting) but
+                added a subtle effect: the gates are closed when logged out and
+                open when logged in.
+              </p>
+
+              <p>
+                We decided to remove the landing page text since making it
+                mobile friendly was always a pain. Nevertheless, the Tailwind
+                math for the clickable gate overlay got even more complicated
+                since the dead space at the bottom grows responsively depending
+                on the window’s aspect ratio.
+              </p>
+              <code>
+                {
+                  'className="absolute left-1/2 top-[calc(max(71.3vw+56px,52.384vh-46.098px+56px))] h-[calc(max(26vw,19.1vh-16.81px))] w-[calc(max(27.16vw,19.95vh-16.8px))] -translate-x-1/2 -translate-y-14 rounded-lg hover:bg-black/10"'
+                }
+              </code>
+
+              <p>
+                Note that the responsive dead space barely impacts the overlay’s
+                placement. Would anyone have noticed if we stuck with last
+                year’s math? The user must be logged out, realize the overlay
+                exists, be on a window whose aspect ratio sufficiently warps the
+                overlay’s placement, and then hover their cursor around to
+                notice it does not perfectly track the gate...
+              </p>
             </TOCSection>
 
-            <TOCSection sectionId={15} tocTitle="Round Pages" parentId={11}>
+            <TOCSection sectionId={14} tocTitle="Round Pages" parentId={11}>
               <h3>Round Pages</h3>
-              <ul>
-                <li>Slightly better than Map but still a lot of work</li>
-                <li>Seen puzzles status</li>
-                <li>
-                  Debate about label movement on label hover, options for the
-                  jitter
-                </li>
-                <li>
-                  Wanted to strike a middle ground between getting people to
-                  look at the art and making navigation still a pleasant enough
-                  experience
-                  <ul>
-                    <li>Search bar like Map had last year</li>
-                    <li>Back to round buttons</li>
-                  </ul>
-                </li>
-              </ul>
+              <p>
+                We wanted to strike a middle ground between getting people to
+                look at the art and making navigation a pleasant enough
+                experience. Hopefully the search bar and back buttons were
+                sufficient.
+              </p>
+
+              <p>
+                The hunt included a cookie system to track seen puzzles and
+                highlight new puzzles. It uses one bit per puzzle plus some
+                buffer space to avoid spoiling hunt length. Since cookies do not
+                support arbitrary bytes, we opted for a hex encoding with an
+                overall length of 16 characters. Unfortunately, the supermeta
+                had an issue causing cookie size to double. You might want to
+                check memory usage. We’ll have future sites delete stale cookies
+                though.
+              </p>
+
+              <p>
+                We also had an internal debate on whether labels should move on
+                hover. This can cause a “jitter” loop if the label moves off the
+                cursor. Our solution was to expand the hitbox when hovered.
+              </p>
             </TOCSection>
 
-            <TOCSection
-              sectionId={16}
-              tocTitle="Story Gimmicks"
-              parentId={11}
-            >
+            <TOCSection sectionId={15} tocTitle="Story Gimmicks" parentId={11}>
               <h3>Story Gimmicks</h3>
-              <ul>
-                <li>Rotating whiteboard messages (threshold cutoffs)</li>
-                <li>Rotating items (threshold cutoffs)</li>
-                <li>
-                  Blueno solve time
-                  <ul>
-                    <li>
-                      Note: Blueno takes a minimum of 30 seconds to solve each
-                      puzzle. Nobody solved a puzzle in less than 30 seconds
-                      (feasible with an answer token). Solve message would not
-                      have included a Blueno entry.
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+              <p>
+                Depending how many metas the user has solved, the main puzzles
+                page selects a whiteboard message and a certain number of random
+                junk items. The thresholds were 3, 7, and 10 metas.
+              </p>
+
+              <p>
+                The solve toast hints that a team solved the puzzle 5 seconds to
+                5 minutes faster. At 7 metas, this team is revealed to be
+                Blueno. Note that Blueno takes a minimum of 30 seconds to solve
+                each puzzle. Sadly, nobody solved a puzzle in less than 30
+                seconds (which was feasible with an answer token). Such solve
+                toasts would omit the Blueno feature.
+              </p>
             </TOCSection>
 
-            <TOCSection sectionId={17} tocTitle="Copy Text" parentId={11}>
+            <TOCSection sectionId={16} tocTitle="Copy Text" parentId={11}>
               <h3>Copy Text</h3>
-              <ul>
-                <li>
-                  Had some progress last year but it was jank (regex check for
-                  html) and not used much
-                </li>
-                <li>
-                  Much more automated this year, figured out how to copy from
-                  Google sheets and paste into a parser (so mostly automated)
-                </li>
-                <li>Mostly used for fancy text formatting</li>
-                <li>
-                  Method for displaying images
-                  <ul>
-                    <li>Google sheets lets you do =IMAGE</li>
-                    <li>No clipboard way to resize cells</li>
-                    <li>Merged cells get saved</li>
-                    <li>Can paste merged cells with an =IMAGE</li>
-                  </ul>
-                </li>
-                <li>
-                  Weird image behavior
-                  <ul>
-                    <li>
-                      By default, sheets embeds an{" "}
-                      <code>&lt;img /&gt;</code> in the copy text
-                    </li>
-                    <li>
-                      This component does not paste properly on Safari. On
-                      Chrome, it can paste, but only with extra clipboard MIME
-                      entries
-                    </li>
-                    <li>
-                      More portable: swap{" "}
-                      <code>&lt;img /&gt;</code> with plaintext =IMAGE, pastes
-                      everywhere, no more jank!
-                    </li>
-                    <li>
-                      Except this conversion isn&rsquo;t automated yet
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+              <p>
+                Last year’s hunt had some formatted copy text, but this year, we
+                took it up a notch. We built a parser to generate the necessary
+                <code>text/html</code> metadata after copying cells on Google
+                Sheets. With the process mostly automated, we added copy text to
+                all relevant puzzles.
+              </p>
+
+              <p>
+                Displaying images was a little complicated. Clipboard data
+                cannot resize cells on Google Sheets, but luckily, cell merging
+                is supported. To prepare images for copy text, we merged cells
+                and inserted <code>=IMAGE</code> equations.
+              </p>
+
+              <p>
+                By default, Google Sheets converts <code>=IMAGE</code> equations
+                to <code>{"<img />"}</code> components when copying. These{" "}
+                <code>{"<img />"}</code> components do not paste on Safari. On
+                Chrome, they only paste if extra clipboard MIME entries are
+                included. For security reasons, adding custom MIME entries is a
+                rather convoluted process. To make things more robust, we
+                swapped the <code>{"<img />"}</code> components with their
+                plaintext <code>=IMAGE</code> representations.
+              </p>
             </TOCSection>
 
-            <TOCSection sectionId={18} tocTitle="Websockets" parentId={11}>
+            <TOCSection sectionId={17} tocTitle="Websockets" parentId={11}>
               <h3>Websockets</h3>
-              <ul>
-                <li>
-                  Added websockets &mdash; solves are broadcast to all team
-                  members
-                </li>
-                <li>
-                  Can force puzzle pages to refresh, only used for One Guard No
-                  Doors though (so that list of available games stays up to
-                  date)
-                </li>
-                <li>
-                  Security
-                  <ul>
-                    <li>Main site and websocket server share AUTH_SECRET</li>
-                    <li>Authentication over JWTs</li>
-                    <li>
-                      Main server creates a short-lived JWT for /broadcast POSTs
-                    </li>
-                    <li>
-                      Users request a new JWT using an api route; api route
-                      checks their session JWT and then makes a short-lived
-                      token; user forwards it when joining the websocket server
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  SharedWorker
-                  <ul>
-                    <li>Supported by most big browsers</li>
-                    <li>
-                      JavaScript that runs globally, interacts with tabs over
-                      ports
-                    </li>
-                    <li>
-                      No matter how many tabs you spawn, only one websocket
-                      connection
-                    </li>
-                    <li>
-                      Actually quite difficult to get people to update their
-                      version of the SharedWorker script. Some users would have
-                      a week-old script (which had some bugs) spamming the
-                      websocket server once every 1.5 seconds
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+              <p>
+                We added websockets this year! Puzzle unlocks, puzzle solves,
+                and hunt finishes are broadcast to all team members using
+                toasts. The websocket system can also force puzzle pages to
+                refresh. So far, we only use this for One Guard No Doors so that
+                the list of available games stays up to date.
+              </p>
+
+              <p>
+                The websocket server uses JWTs for authentication. The main site
+                and websocket server share an <code>AUTH_SECRET</code>, so the
+                main site can generate and use short-lived JWTs to trigger
+                broadcasts. Each user requests a short-lived JWT using the{" "}
+                <code>/ws-token</code> API route. This route checks the user’s
+                session and returns a corresponding JWT. The user forwards the
+                JWT when joining the websocket server.
+              </p>
+
+              <p>
+                This process makes websocket generation somewhat expensive. To
+                reduce server load, we made browser tabs share a single
+                connection using the SharedWorker interface. Supported by most
+                modern browsers, it allows an application to run global
+                JavaScript that interacts with website tabs using ports. No
+                matter how many tabs you open, the browser only opens one
+                websocket connection. Nevertheless, it was actually quite
+                difficult to make browsers update to new versions of the
+                SharedWorker script. During the hunt, some users had a week-old
+                script (with some bugs) spamming the websocket server every 1.5
+                seconds.
+              </p>
             </TOCSection>
 
-            <TOCSection sectionId={19} tocTitle="Admin" parentId={11}>
+            <TOCSection sectionId={18} tocTitle="Admin" parentId={11}>
               <h3>Admin</h3>
-              <ul>
-                <li>Impersonation using a lightweight session wrapper</li>
-                <li>
-                  Debug panel
-                  <ul>
-                    <li>
-                      Test websocket server with broadcast messages
-                    </li>
-                    <li>See local websocket status</li>
-                    <li>See teams with open websocket(s)</li>
-                    <li>View and reset cookies</li>
-                  </ul>
-                </li>
-                <li>Aforementioned copy helper</li>
-              </ul>
+              <p>
+                Admins can now impersonate other teams to view the hunt from
+                their perspective. Implementation was actually quite easy—we
+                just update the session, storing the original username for easy
+                return.
+              </p>
+
+              <p>
+                We also added an admin debug panel with several features. Admins
+                can broadcast messages to check on the websocket server, see the
+                local websocket status, see which teams have open websockets,
+                and view or reset cookies.
+              </p>
+
+              <p>
+                We also built our copy text parser directly into the website to
+                make it accessible for puzzle writers.
+              </p>
             </TOCSection>
 
-            <TOCSection
-              sectionId={20}
-              tocTitle="Documentation"
-              parentId={11}
-            >
-              <h3>Documentation</h3>
-              <ul>
-                <li>
-                  Last summer we wrote some documentation. It&rsquo;s pretty
-                  out of date though. More updates forthcoming (hopefully)!
-                </li>
-                <li>
-                  <a
-                    href="https://example.brownpuzzlehunt.com/docs"
-                    className="text-link no-underline hover:underline"
-                  >
-                    https://example.brownpuzzlehunt.com/docs
-                  </a>
-                </li>
-              </ul>
+            <TOCSection sectionId={19} tocTitle="Security" parentId={11}>
+              <h3>Security</h3>
+              <p>
+                Securing against malicious probes is not our primary goal.
+                Please be nice. Nevertheless, we implemented several changes
+                this year to make the site safer.
+              </p>
+
+              <p>
+                First, we split our configuration file between server-only
+                information and information that should be accessible for both
+                the client and server. This change minimizes our risk of leaking
+                important information such as puzzle IDs. For extra security, we
+                import “server-only” so that leaks will error loudly.
+              </p>
+
+              <p>
+                We also implemented a centralized authentication function with
+                different permission levels. This abstraction makes session
+                checks across relevant functions much simpler.
+              </p>
+
+              <p>
+                With this change, we also improved our consistency with respect
+                to error handling. The site now throws an Error for any
+                unexpected behavior. For security, Next.js obfuscates error
+                messages, but clients are prepared with generic toasts. Thought
+                notably, some errors are expected, such as duplicate guess
+                insertion. These must peacefully return{" "}
+                <code>&#123;error: ...&#125;</code> objects.
+              </p>
+
+              <p>
+                To aid with development, we added several scripts. Our check
+                script verifies certain configuration fields like puzzle layout
+                title and puzzle ID. We have generator scripts to reset and seed
+                the database. We also added a script that compares local file
+                structure to the database, warning on mismatch. This script
+                records the folder path of every puzzle. We’re hoping to use the
+                output configuration to cut down on certain areas of spaghetti.
+              </p>
+
+              <p>
+                Lastly, we updated locked puzzles and nonexistent puzzles to
+                behave the same. Accessing either will redirect to /puzzle. The
+                chance of guessing a puzzle slug is astronomically low, but hey,
+                now it’s zero (at least from the user’s perspective).
+              </p>
             </TOCSection>
 
-            <TOCSection
-              sectionId={21}
-              tocTitle="Validation & Security"
-              parentId={11}
-            >
-              <h3>Validation &amp; Security</h3>
-              <ul>
-                <li>
-                  More consistent error handling
-                  <ul>
-                    <li>
-                      Centralized authentication (common assertPermissions
-                      function)
-                    </li>
-                    <li>
-                      Throw Errors for things that shouldn&rsquo;t happen
-                      (instead of peacefully returning{" "}
-                      <code>{`{error: "..."}`}</code>)
-                    </li>
-                    <li>
-                      Still peacefully return errors on expected behavior (like
-                      guessing the same thing twice)
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  Configuration improvements (splitting into client/server) to
-                  minimize risk of leaking information, import
-                  &ldquo;server-only&rdquo;
-                </li>
-                <li>All functions should now do permission checking</li>
-                <li>
-                  Check scripts + generator scripts
-                  <ul>
-                    <li>
-                      Puzzle layout title, puzzle ID, puzzle locations
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  Locked puzzles and nonexistent puzzles now behave the same
-                  (both redirect to /puzzle)
-                </li>
-              </ul>
-            </TOCSection>
-
-            <TOCSection
-              sectionId={22}
-              tocTitle="Miscellaneous"
-              parentId={11}
-            >
+            <TOCSection sectionId={20} tocTitle="Miscellaneous" parentId={11}>
               <h3>Miscellaneous</h3>
-              <ul>
-                <li>Email batching</li>
-                <li>Combining awaits with Promise.all</li>
-                <li>Pool unlocks</li>
-                <li>Spaces in puzzle answers</li>
-                <li>Better handling of useSession for navbar reactivity</li>
-                <li>
-                  <a
-                    href="https://brownpuzzle.club/"
-                    className="text-link no-underline hover:underline"
-                  >
-                    https://brownpuzzle.club/
-                  </a>{" "}
-                  has moved to{" "}
-                  <a
-                    href="https://brownpuzzleclub.com/"
-                    className="text-link no-underline hover:underline"
-                  >
-                    https://brownpuzzleclub.com/
-                  </a>
-                </li>
-              </ul>
-              <p>List of services we use:</p>
-              <ul>
-                <li>Vercel</li>
-                <li>Neon</li>
-                <li>Resend</li>
-                <li>Render</li>
-                <li>Discord</li>
-              </ul>
+              <p>
+                We implemented email batching, improved async processing using
+                Promise.all, added pool unlocks, allowed spaces in puzzle
+                answers, and fixed our handling of useSession for navbar
+                reactivity.
+              </p>
+              <p>
+                Also, an important note: our club site (formerly
+                https://brownpuzzle.club) has moved to{" "}
+                <a href="https://brownpuzzleclub.com/">
+                  https://brownpuzzleclub.com/
+                </a>
+                .
+              </p>
             </TOCSection>
-            */}
+
+            <TOCSection sectionId={21} tocTitle="Services" parentId={11}>
+              <h3>Miscellaneous</h3>
+              <p>Here’s a list of the services we use:</p>
+              <ul>
+                <li>Vercel for deployment</li>
+                <li>Neon for the database</li>
+                <li>Resend to send emails</li>
+                <li>Render to host the websocket server</li>
+                <li>A Discord webhook to ping admins</li>
+              </ul>
+              <p>
+                Hosting is free year-round, but we upgrade everything when
+                running hunts. Some of these companies have actually updated
+                their billing policies since last year. Annoyingly, Vercel now
+                processes limits using a rolling time window. Unaware, we
+                downgraded our plan around a week after remote hunt leading to a
+                couple hours of downtime.
+              </p>
+            </TOCSection>
 
             {/* STRUCTURE */}
             <TOCSection sectionId={23} tocTitle="Structure">

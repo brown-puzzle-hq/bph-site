@@ -18,7 +18,7 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 0.0,
     w: 36.8408,
     h: 38.7043,
-    labelDx: 5,
+    labelDx: 2,
   },
   "ubpcosu-ii": {
     icon: cards,
@@ -26,7 +26,7 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 43.4385,
     w: 20.8984,
     h: 45.0997,
-    labelDy: -10,
+    labelDy: -4.5,
   },
   "trap-streets": {
     icon: meeple,
@@ -50,7 +50,7 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 0.0,
     w: 18.7012,
     h: 33.9701,
-    labelDx: -10,
-    labelDy: -5,
+    labelDx: -1.9,
+    labelDy: -1.8,
   },
 };

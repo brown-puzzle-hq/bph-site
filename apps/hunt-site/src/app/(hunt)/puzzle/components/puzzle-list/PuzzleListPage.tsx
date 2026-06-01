@@ -86,27 +86,29 @@ export default function PuzzleListPage({
           } = icons[round.id]!;
 
           const labelStyle: CSSProperties = {
-            left: `calc(50% + ${labelDx}%)`,
+            left: `calc(${x + w / 2 + labelDx}%)`,
             top:
               labelPosition === "top"
-                ? `calc(0% - 0.5rem + ${labelDy}% + var(--label-hover-shift, 0px))`
-                : `calc(100% + 0.5rem + ${labelDy}% - var(--label-hover-shift, 0px))`,
+                ? `calc(${y + labelDy}% - 0.5rem + var(--label-hover-shift, 0px))`
+                : `calc(${y + h + labelDy}% + 0.5rem - var(--label-hover-shift, 0px))`,
+            transform:
+              labelPosition === "top"
+                ? "translate(-50%, -100%)"
+                : "translate(-50%, 0)",
+            zIndex: 10,
           };
 
           return (
-            <div
-              key={round.id}
-              className="absolute"
-              style={{
-                left: `${x}%`,
-                top: `${y}%`,
-                width: `${w}%`,
-                zIndex: z,
-              }}
-            >
+            <div key={round.id}>
               <Link
                 href={`/puzzle/${round.id}`}
-                className="peer block"
+                className="peer absolute"
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  width: `${w}%`,
+                  zIndex: z,
+                }}
                 prefetch={false}
               >
                 <Image
@@ -121,62 +123,48 @@ export default function PuzzleListPage({
 
               {/* Dummy */}
               <div
-                className="peer absolute z-10 hidden opacity-0 sm:flex"
+                className="peer absolute hidden opacity-0 sm:flex"
                 style={labelStyle}
               >
-                <div
-                  className={cn(
-                    "relative -translate-x-1/2",
-                    labelPosition === "top" && "-translate-y-full",
-                  )}
+                {/* Name */}
+                <Link
+                  href={`/puzzle/${round.id}`}
+                  className="text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
+                  prefetch={false}
                 >
-                  {/* Name */}
-                  <Link
-                    href={`/puzzle/${round.id}`}
-                    className="text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
-                    prefetch={false}
-                  >
-                    {round.name}
-                  </Link>
-                </div>
+                  {round.name}
+                </Link>
               </div>
 
               {/* Round name */}
               <div
-                className="pointer-events-none absolute z-10 hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
+                className="pointer-events-none absolute hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
                 style={labelStyle}
               >
-                <div
-                  className={cn(
-                    "relative -translate-x-1/2",
-                    labelPosition === "top" && "-translate-y-full",
-                  )}
+                {/* Pointer */}
+                {labelPosition === "top" ? (
+                  <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
+                ) : (
+                  <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
+                )}
+                {/* Name */}
+                <Link
+                  href={`/puzzle/${round.id}`}
+                  className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
+                  prefetch={false}
                 >
-                  {/* Pointer */}
-                  {labelPosition === "top" ? (
-                    <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
-                  ) : (
-                    <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
-                  )}
-                  {/* Name */}
-                  <Link
-                    href={`/puzzle/${round.id}`}
-                    className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-1 text-main-text"
-                    prefetch={false}
-                  >
-                    {round.name}
-                  </Link>
-                  {round.solvedPuzzles === round.totalPuzzles ? (
-                    <img
-                      className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
-                      src="/circle-check.svg"
-                    />
-                  ) : (
-                    round.monitor.length > 0 && (
-                      <SeenRoundImageIcon monitor={round.monitor} />
-                    )
-                  )}
-                </div>
+                  {round.name}
+                </Link>
+                {round.solvedPuzzles === round.totalPuzzles ? (
+                  <img
+                    className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
+                    src="/circle-check.svg"
+                  />
+                ) : (
+                  round.monitor.length > 0 && (
+                    <SeenRoundImageIcon monitor={round.monitor} />
+                  )
+                )}
               </div>
             </div>
           );

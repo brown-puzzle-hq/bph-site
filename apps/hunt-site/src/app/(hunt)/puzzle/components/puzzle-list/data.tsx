@@ -20,7 +20,7 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 15.9129,
     h: 21.9424,
     labelPosition: "top",
-    labelDx: 10,
+    labelDx: 1.7,
   },
   business: { icon: business, x: 50.4606, y: 67.8657, w: 3.3082, h: 12.7698 },
   humanities: {

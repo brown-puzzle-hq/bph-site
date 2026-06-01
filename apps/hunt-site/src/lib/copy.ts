@@ -17,19 +17,7 @@ export function useCopyToClipboard(copyText: string | CopyData) {
 
   async function handleCopy() {
     try {
-      const items: Record<string, Blob> = {
-        "text/plain": new Blob([copyData["text/plain"]], {
-          type: "text/plain",
-        }),
-      };
-
-      if (copyData["text/html"]) {
-        items["text/html"] = new Blob([copyData["text/html"]], {
-          type: "text/html",
-        });
-      }
-
-      await navigator.clipboard.write([new ClipboardItem(items)]);
+      await navigator.clipboard.write([new ClipboardItem(copyData)]);
 
       setDidCopy(true);
       if (resetTimerRef.current !== null) {

@@ -18,8 +18,8 @@ export const icons: Record<string, PuzzleIcon> = {
     y: 0.9551,
     w: 32.5928,
     h: 48.2143,
-    labelDx: -20,
-    labelDy: -35,
+    labelDx: -6.6,
+    labelDy: -17,
   },
   "scacchic-fabrication": {
     icon: galaxy,
@@ -51,6 +51,6 @@ export const icons: Record<string, PuzzleIcon> = {
     w: 19.7998,
     h: 38.5797,
     labelPosition: "top",
-    labelDx: -45,
+    labelDx: -9.5,
   },
 };

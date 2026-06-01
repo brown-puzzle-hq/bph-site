@@ -12,6 +12,7 @@ export default async function Page({
   searchParams?: Record<string, string | undefined>;
 }) {
   const { error, user } = await checkPermissions({ level: "userAny" });
+  const isPostHuntAnonymous = !!error;
 
   let metGameIndices: number[] = [];
   if (!error) {
@@ -33,14 +34,19 @@ export default async function Page({
         ? null
         : threshold,
   );
-  const gamesToShow = data.allGames.slice(0, numPuzzlesToShow);
+  const gamesToShow = isPostHuntAnonymous
+    ? data.allGames
+    : data.allGames.slice(0, numPuzzlesToShow);
+  const thresholdsToShow = isPostHuntAnonymous
+    ? [...data.ONE_GUARD_THRESHOLDS]
+    : thresholds;
 
   const puzzleBody = (
     <div>
       <div className="mb-4 max-w-3xl space-y-4">
         <p>
           You come across one guard and no doors. The guard will chase you
-          around each map, and will defeat you upon entering your square.
+          around each map and will defeat you upon entering your square.
         </p>
         <p>
           Each turn, you must move exactly one square orthogonally, after which
@@ -58,7 +64,11 @@ export default async function Page({
           survive against the guard?
         </p>
       </div>
-      <PuzzleBody games={gamesToShow} thresholds={thresholds} />
+      <PuzzleBody
+        games={gamesToShow}
+        thresholds={thresholdsToShow}
+        isPostHuntAnonymous={isPostHuntAnonymous}
+      />
     </div>
   );
 

@@ -96,7 +96,7 @@ export default function Graph({
     if (puzzleQuery === "") return;
 
     const clean = (id: string | number | undefined) =>
-      typeof id === "string" ? id.toLowerCase().replace(/\W/g, "") : "";
+      typeof id === "string" ? id.toLowerCase().replace(/[^\w-]/g, "") : "";
     // Finds node by full id, then tries substring match
     const node =
       data.nodes.find((node) => clean(node.id) === clean(puzzleQuery)) ||
@@ -156,7 +156,7 @@ export default function Graph({
   };
 
   const handleSearchTeam = async () => {
-    const cleanedQuery = teamQuery.replace(/[^\w]/g, "").toLowerCase();
+    const cleanedQuery = teamQuery.replace(/[^\w-]/g, "").toLowerCase();
     try {
       const result = await getSearchedTeam(cleanedQuery);
 

@@ -37,6 +37,12 @@ function norm(v: Vec3) {
   return Math.sqrt(dot(v, v));
 }
 
+function isBotUserAgent(userAgent: string) {
+  return /(bot|crawler|spider|slurp|bingpreview|headless|phantomjs|curl|wget|python-requests|axios)/i.test(
+    userAgent,
+  );
+}
+
 function machine(word1?: string, word2?: string): string {
   loadEmbeddings();
   const w1 = word1?.trim().toLowerCase();
@@ -77,6 +83,11 @@ function machine(word1?: string, word2?: string): string {
 
 export async function POST(request: Request) {
   try {
+    const userAgent = request.headers.get("user-agent") || "";
+    if (isBotUserAgent(userAgent)) {
+      return NextResponse.json({ error: "No botting please" }, { status: 403 });
+    }
+
     const { word1, word2 } = (await request.json()) as {
       word1: string;
       word2?: string;

@@ -29,6 +29,7 @@ type GameFocus = {
 type UnlockProps = {
   /** If non-null, the client will submit exactly when `moveCount === unmetThreshold`. */
   unmetThreshold: number | null;
+  onThresholdMet?: (gameIndex: number) => void;
 };
 
 export default function Game({
@@ -45,6 +46,7 @@ export default function Game({
   isFocused,
   onFocus,
   onBlur,
+  onThresholdMet,
 }: GameProps & GameFocus & UnlockProps) {
   const [player, setPlayer] = useState<Square>(startSquare);
   const [guard, setGuard] = useState<Square>(guardStartSquare);
@@ -153,14 +155,27 @@ export default function Game({
     if (unmetThreshold === null) return;
     if (moveCount !== unmetThreshold) return;
     if (movesRef.current.length !== moveCount) return;
+
+    if (onThresholdMet) {
+      onThresholdMet(gameIndex);
+      return;
+    }
+
     submitThreshold(gameIndex, movesRef.current.slice(0, moveCount));
-  }, [unmetThreshold, moveCount, gameIndex]);
+  }, [unmetThreshold, moveCount, gameIndex, onThresholdMet]);
 
   useEffect(() => {
     if (gameOver) {
       const handler = (e: KeyboardEvent) => {
         if (!isContainerFocused()) return;
-        if (e.key === "r") resetGame();
+        if (
+          e.key === "ArrowUp" ||
+          e.key === "w" ||
+          e.key === "ArrowDown" ||
+          e.key === "s"
+        )
+          e.preventDefault();
+        else if (e.key === "r") resetGame();
       };
       window.addEventListener("keydown", handler);
       return () => window.removeEventListener("keydown", handler);
@@ -188,6 +203,10 @@ export default function Game({
         case "d":
           e.preventDefault();
           moveRight();
+          break;
+        case "r":
+          e.preventDefault();
+          resetGame();
           break;
       }
     };

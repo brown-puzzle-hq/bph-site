@@ -68,6 +68,15 @@ export default {
               marginTop: "0",
               marginBottom: "0",
             },
+            code: {
+              color: theme("colors.main-text"),
+              "&::before": {
+                content: "none",
+              },
+              "&::after": {
+                content: "none",
+              },
+            },
           },
         },
         info: {
