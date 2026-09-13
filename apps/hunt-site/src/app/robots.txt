@@ -1,7 +1,0 @@
-User-agent: *
-Disallow: /
-Allow: /$
-Allow: /info
-Allow: /favicon.ico
-Allow: /favicon.png
-Allow: /_next/static/
