@@ -12,7 +12,8 @@ import { HuntNavBar } from "./HuntNavBar";
 
 export const metadata: Metadata = {
   title: HUNT_NAME,
-  description: "",
+  description:
+    "Brown Puzzlehunt is an introductory puzzlehunt run by Brown and RISD students.",
   icons: [{ rel: "icon", url: "/favicon.png" }],
 };
 
