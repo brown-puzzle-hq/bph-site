@@ -39,6 +39,7 @@ export const solveTypeEnum = pgEnum("solve_type", SOLVE_TYPE_VALUES);
 export const unlockTypeEnum = pgEnum("unlock_type", UNLOCK_TYPE_VALUES);
 
 // NOTE: If you change the team schema, remember to update seed.ts
+/** BEGIN_SNIPPET:TEAM_SCHEMA */
 export const teams = createTable("team", {
   id: varchar("id", { length: 255 }).primaryKey(), // login username
   displayName: varchar("display_name", { length: 255 }).notNull(),
@@ -60,6 +61,7 @@ export const teams = createTable("team", {
     .notNull()
     .default(""),
 });
+/** END_SNIPPET:TEAM_SCHEMA */
 
 export const puzzles = createTable("puzzle", {
   // This is also the slug used in URLS to identify this puzzle

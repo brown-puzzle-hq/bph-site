@@ -1,0 +1,232 @@
+# Developing the site
+
+1. [Copying the repository](#copying-the-repository)
+2. [Setup](#setup)
+3. [Architecture](#architecture)
+4. [Files](#files)
+   1. [Hunt configuration](#hunt-configuration)
+   2. [Next.js and Tailwind](#nextjs-and-tailwind)
+   3. [Docs](#docs)
+5. [Communication](#communication)
+6. [Final Checks](#final-checks)
+7. [References](#references)
+
+## Copying the repository
+
+I recommend duplicating the repository for each hunt. If you want to get updates from the original repository, you can follow these steps:
+
+1. Create a bare clone of this repository.
+
+   ```
+   git clone --bare https://github.com/brown-puzzle-hq/bph-site.git
+   ```
+
+2. Create a new repository on GitHub. You will get a URL for this repository.
+
+3. Mirror-push to the new repository.
+
+   ```
+   cd bph-site.git
+   git push --mirror https://github.com/YOUR_USERNAME/NEW_REPOSITORY.git
+   ```
+
+4. Remove the temporary repository.
+
+   ```
+   cd ..
+   rm -rf bph-site.git
+   ```
+
+5. Clone the new repository to your local machine.
+
+   ```
+   git clone https://github.com/YOUR_USERNAME/NEW_REPOSITORY.git
+   ```
+
+6. Add the original repository as a remote branch `bph-site`.
+
+   ```
+   git remote add bph-site https://github.com/brown-puzzle-hq/bph-site.git
+   ```
+
+7. To get changes from the original repository, run
+
+   ```
+   git fetch bph-site
+   ```
+
+8. To merge changes from the original repository, run
+
+   ```
+   git merge public/main
+   ```
+
+There is more information on the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository).
+
+## Setup
+
+1. Populate the environment variables in `.env` (see `.env.example` below). If you don't have a preexisting database, the easiest way to get started is to create a Neon Postgres database through Vercel.
+
+{{{ env_example }}}
+
+2. Push the schema to the database. You need to do this every time the schema in `src/server/db/schema.ts` changes.
+
+   ```
+   pnpm run db:push
+   ```
+
+   You can view the current state of the database and edit tables on Drizzle Studio.
+
+   ```
+   pnpm run db:studio
+   ```
+
+3. Download all dependencies. You need to do this every time a dependency in `package.json` changes.
+
+   ```
+   pnpm install
+   ```
+
+4. Start the development server.
+
+   ```
+   pnpm run dev
+   ```
+
+   After a second, you'll see this text appear in the terminal:
+
+   ```
+   ▲ Next.js 14.2.15
+   - Local:        http://localhost:3000
+   - Environments: .env
+   ```
+
+   Navigate to [http://localhost:3000/](http://localhost:3000/) to see the development server.
+
+## Architecture
+
+The site is built using **Next.js v14** using the App Router. The databse is Neon **Postgres** with **Drizzle** ORM. The schema for the database is in the `src/server/db` folder.
+
+Most of the client-to-server communication is currently handled by Vercel **Server Actions**.
+Server Actions allow us to execute database queries or API calls inside of a React component without needing to explicitly define an API route.
+
+Note that Server Actions can only be defined in Server Components marked with the `use server` directive. To make them available in Client Components marked with the `use client` directive, they must be imported or passed as a prop. Server Actions are generally located in `actions.ts` files distributed throughout `src/app`.
+
+Authentication, authorization, and session management is handled by **Auth.js**.
+The project only supports username/password authentication using the `Credentials` provider.
+Sessions are stored in Json Web Tokens (JWTs). The setup is in the `src/server/auth` folder.
+
+On the frontend, the site has **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder. With Tailwind, most styling is done inline. Use `tailwind.config.ts` to edit default colors.
+
+{{{ color_config }}}
+
+## Files
+
+### Hunt configuration
+
+| Path                           | Description                      |
+| ------------------------------ | -------------------------------- |
+| .env                           | Environment variables            |
+| src/env.js                     | Mirorrs .env for the application |
+| src/hunt.config.ts             | Main hunt configuration file     |
+| src/app/(hunt)/\*\*/actions.ts | Server Actions                   |
+| src/middleware.ts              | Next.js request middleware       |
+
+The `.env` files need to be set up first. It affects database, Discord, and Resend integration. If you add new environment variables, be sure to update `src/env.js` to reflect the changes.
+
+Basic hunt settings are controlled via `src/hunt.config.ts`. More advanced logic (such as unlock structure) should be handled in the `actions.ts` files in the `src/app/(hunt)/components/puzzle/` folder.
+
+In particular, the default unlock structure is **adjacency-based**. You can customize the `handleSolve` function in `src/app/(hunt)/components/puzzle/guess/actions.ts`.
+
+| Path                                              | Functions                                                         |
+| ------------------------------------------------- | ----------------------------------------------------------------- |
+| ../puzzle/actions.ts                              | `canViewPuzzle`, `canViewHint`, `canViewSolution`, `canViewStats` |
+| ../puzzle/components/puzzle/guess/actions.ts      | `handleGuess`, `handleSolve`                                      |
+| ../puzzle/components/hint/actions.ts              | `insertHintRequest`, `editMessage`, `insertReply`                 |
+| ../puzzle/components/puzzle-list/event/actions.ts | `insertAnswerToken`                                               |
+
+Note that the site automatically protects certain pages depending on
+
+1. Team role (admin, testsolver, user)
+2. Time (before, during, or after `HUNT_START_TIME`)
+
+To debug permissions problem, check
+
+1. `src/middleware.ts`, which protects `/admin` pages
+2. `canViewPuzzle`, `canViewHint`, `canViewSolution`, and `canViewStats` functions in `src/app/(hunt)/components/puzzle/actions.ts`, which protects `/puzzle` pages
+3. `hunt.config.ts`, which controls the `HUNT_START_TIME`
+
+### Next.js and Tailwind
+
+| Path               | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| \*.tsx             | React component                                |
+| page.tsx           | Next.js page                                   |
+| layout.tsx         | Next.js layout page                            |
+| \*.ts              | Typescript file                                |
+| actions.ts         | Server Actions                                 |
+| folder             | Route segment                                  |
+| [folder]           | Dynamic route segment                          |
+| (folder)           | Group routes without affecting routing         |
+| tailwind.config.ts | Tailwind configuration file with custom styles |
+| styles/\*.css      | CSS file                                       |
+
+Next.js supports Typescript (`*.ts`) and React components (`*tsx`). Folders inside of `src/app` are treated as route segments. For example, `src/app/(hunt)/page.tsx` represents the index page at `/`, and `src/app/(hunt)/puzzle/example/page.tsx` represents the page at `/puzzle/example`.
+
+More information about the Next.js file structure [here](https://nextjs.org/docs/app/getting-started/project-structure).
+
+### Docs
+
+| Path            | Description                                       |
+| --------------- | ------------------------------------------------- |
+| next.config.mjs | Next.js configuration files, contains MDX plugins |
+| /docs           | Docs folder                                       |
+| /scripts        | Scripts folder                                    |
+| \*.md           | Markdown file                                     |
+| page.mdx        | MDX (Markdown + React) file                       |
+| \*.template.mdx | Handlebars template                               |
+
+The docs are written in MDX (`*.mdx`). Note that `page.mdx` files are automatically gets converted into a normal page at built-time.
+
+Sometimes, its useful to provide snippets of the codebase inside of the docs. To do that:
+
+1. Take a look at `/scripts/generate-docs.ts`, which is automatically called at runtime
+2. Make a `*.template.mdx` file in the folder
+3. Label the region that you want as a snippet
+4. Add the relevent paths and snippet names to `/scripts/generate-docs.ts`
+
+## Communication
+
+The site uses Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
+
+{{{ discord_message }}}
+
+## Final Checks
+
+Make sure that `hunt.config.ts` is correct.
+
+Before registration starts,
+
+1. Set `REGISTRATION_START_TIME` and `REGISTRATION_END_TIME`
+2. Set `HUNT_START_TIME` and `HUNT_END_TIME`
+
+Before the hunt starts,
+
+1. Set `NUMBER_OF_GUESSES_PER_PUZZLE`
+2. Set `INITIAL_PUZZLES` and `PUZZLE_UNLOCK_MAP`
+3. Set `getTotalHints`
+
+## References
+
+Make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
+
+Auth.js is formerly known as NextAuth.js.
+Most documentation out there is still for v4, so check that you are reading documentation for v5.
+
+- [Next.js](https://nextjs.org/docs/app) with the App Router
+- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
+- [Drizzle](https://orm.drizzle.team/docs/overview)
+- [Auth.js](https://authjs.dev/) v5
+- [Vercel Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
+- [Tailwind CSS](https://tailwindcss.com/docs/installation)
+- [Shadcn](https://ui.shadcn.com/docs)

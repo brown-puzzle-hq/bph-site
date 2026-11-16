@@ -41,10 +41,14 @@ export function sanitizeAnswer(answer: any) {
 
 /** ENUMS AND TYPES */
 
+/** BEGIN_SNIPPET:ROLE_ENUM */
 export const ROLE_VALUES = ["user", "admin", "testsolver"] as const;
+/** END_SNIPPET:ROLE_ENUM */
 export type Role = (typeof ROLE_VALUES)[number];
 
+/** BEGIN_SNIPPET:INTERACTION_MODE_ENUM */
 export const INTERACTION_MODE_VALUES = ["in-person", "remote"] as const;
+/** END_SNIPPET:INTERACTION_MODE_ENUM */
 export type InteractionMode = (typeof INTERACTION_MODE_VALUES)[number];
 
 export const HINT_STATUS_VALUES = [
