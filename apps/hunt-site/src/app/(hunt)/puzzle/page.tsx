@@ -6,15 +6,11 @@ import {
   getAvailablePuzzles,
 } from "./components/puzzle-list/puzzle-utils";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { ALL_PUZZLES, ROUNDS } from "~/config/server";
-import { decodeSeen } from "~/lib/utils";
+import { ROUNDS } from "~/config/server";
 
 export default async function Home() {
   const { error, user } = await checkPermissions({ level: "userAny" });
   const currDate = new Date();
-
-  const seen = decodeSeen(cookies().get("seen")?.value);
 
   // --- NOT LOGGED IN ---
   if (error) {
@@ -30,20 +26,13 @@ export default async function Home() {
       totalPuzzles: round.puzzles.length,
       unlockedPuzzles: round.puzzles.length,
       solvedPuzzles: 0,
-      monitor: round.puzzles
-        .map((puzzle) => ALL_PUZZLES.indexOf(puzzle))
-        .filter((index) => seen[index] === "0"),
     }));
-    const [availableEvents, allPuzzles] = await Promise.all([
-      getAvailableEvents(),
-      getAvailablePuzzles(),
-    ]);
+    const availableEvents = await getAvailableEvents();
 
     return (
       <PuzzleListPage
         availableRounds={availableRounds}
         availableEvents={availableEvents}
-        availablePuzzles={allPuzzles.map(({ id, name }) => ({ id, name }))}
       />
     );
   }
@@ -72,22 +61,15 @@ export default async function Home() {
     const unlockedList = round.puzzles.filter((puzzle) =>
       availablePuzzles.some((ap) => ap.id === puzzle),
     );
-    const unlockedPuzzles = unlockedList.length;
     const solvedList = unlockedList.filter((puzzle) =>
       availablePuzzles.some((ap) => ap.id === puzzle && ap.answer !== null),
     );
-    const solvedPuzzles = solvedList.length;
-    const monitor = unlockedList
-      .filter((puzzle) => !solvedList.includes(puzzle))
-      .map((puzzle) => ALL_PUZZLES.indexOf(puzzle))
-      .filter((index) => seen[index] === "0");
     return {
       name: round.name,
       id: round.id,
       totalPuzzles: round.puzzles.length,
-      unlockedPuzzles,
-      solvedPuzzles,
-      monitor,
+      unlockedPuzzles: unlockedList.length,
+      solvedPuzzles: solvedList.length,
     };
   });
 
@@ -95,7 +77,6 @@ export default async function Home() {
     <PuzzleListPage
       availableRounds={availableRounds}
       availableEvents={availableEvents}
-      availablePuzzles={availablePuzzles.map(({ id, name }) => ({ id, name }))}
     />
   );
 }

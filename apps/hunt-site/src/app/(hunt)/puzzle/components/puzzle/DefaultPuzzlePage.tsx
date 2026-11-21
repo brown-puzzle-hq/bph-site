@@ -21,11 +21,10 @@ import {
   IN_PERSON,
   REMOTE,
 } from "@/config/client";
-import { ALL_PUZZLES, INITIAL_PUZZLES } from "@/config/server";
+import { INITIAL_PUZZLES } from "@/config/server";
 import { displayStoredPuzzleGuess } from "~/lib/server";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 import { checkPermissions } from "~/lib/server";
-import SeenSetter from "./SeenSetter";
 
 export type NumberOfGuesses = number | "infinity";
 
@@ -60,7 +59,6 @@ export default async function DefaultPuzzlePage({
     checkPermissions({ level: "userAny" }),
   ]);
   const puzzleAnswer = puzzleAnswerRow!.answer;
-  const puzzleIndex = ALL_PUZZLES.indexOf(puzzleId);
 
   // If user is not logged in, show puzzle without errata or guesses
   if (error) {
@@ -73,7 +71,6 @@ export default async function DefaultPuzzlePage({
         partialSolutions={partialSolutions}
         tasks={tasks}
         interactionMode={interactionMode}
-        puzzleIndex={puzzleIndex}
       />
     );
   }
@@ -192,8 +189,6 @@ export default async function DefaultPuzzlePage({
 
   return (
     <div className="w-full px-4">
-      <SeenSetter index={puzzleIndex} />
-
       <div className="mx-auto max-w-3xl">
         <ErratumDialog errataList={errataList} />
       </div>

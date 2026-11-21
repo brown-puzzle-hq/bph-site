@@ -9,24 +9,8 @@ import useSWR from "swr";
 import { Switch } from "~/components/ui/switch";
 
 import { removeCookie, getCookies } from "typescript-cookie";
-import { decodeSeen, formatDuration } from "~/lib/utils";
+import { formatDuration } from "~/lib/utils";
 import { X } from "lucide-react";
-
-const formatCookieValue = (key: string, value: string, groups: number[]) => {
-  if (key === "seen") {
-    const bits = decodeSeen(value);
-    let offset = 0;
-    const result = groups.map((size) => {
-      const chunk = bits.slice(offset, offset + size);
-      offset += size;
-      return chunk;
-    });
-
-    return result.join(" ");
-  }
-
-  return value;
-};
 
 const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
@@ -55,7 +39,7 @@ const fetcher: (url: string) => Promise<WsStatsResponse> = async (url) => {
   return (await res.json()) as WsStatsResponse;
 };
 
-export default function Debug({ seenGroups }: { seenGroups: number[] }) {
+export default function Debug() {
   const debug = useWebSocket();
 
   const [showWsTeamStats, setShowWsTeamStats] = useState(false);
@@ -318,8 +302,7 @@ export default function Debug({ seenGroups }: { seenGroups: number[] }) {
             className="flex items-center justify-between tabular-nums"
           >
             <p>
-              <span className="font-semibold">{key}:</span>{" "}
-              {formatCookieValue(key, value, seenGroups)}
+              <span className="font-semibold">{key}:</span> {value}
             </p>
             <Button
               variant="ghost"

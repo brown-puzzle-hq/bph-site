@@ -24,7 +24,6 @@ import {
 import { NumberOfGuesses } from "./DefaultPuzzlePage";
 import { Infinity, SendHorizontal } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
-import SeenSetter from "./SeenSetter";
 
 type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;
@@ -34,7 +33,6 @@ type DefaultPostHuntPuzzlePageProps = {
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
   interactionMode?: string;
-  puzzleIndex: number;
 };
 
 type FormProps = {
@@ -49,7 +47,6 @@ export default function DefaultPostHuntPuzzlePage({
   partialSolutions,
   tasks,
   interactionMode,
-  puzzleIndex,
 }: DefaultPostHuntPuzzlePageProps) {
   const [previousGuesses, setPreviousGuesses] = useState<Guess[]>([]);
   const [numberOfGuessesLeft, setNumberOfGuessesLeft] =
@@ -178,7 +175,6 @@ export default function DefaultPostHuntPuzzlePage({
 
   return (
     <div className="w-full px-4">
-      <SeenSetter index={puzzleIndex} />
       <div className="no-scrollbar overflow-auto">
         <div className="mx-auto w-fit">{puzzleBody}</div>
       </div>

@@ -1,31 +1,23 @@
 import EventTable from "./event/EventTable";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
-import { SeenRoundImageIcon, SeenRoundTableIcon } from "./SeenRoundIcon";
-import PuzzleSearch from "./PuzzleSearch";
-import type { Puzzle, PuzzleListRound, AvailableEvent } from "./types";
+import type { PuzzleListRound, AvailableEvent } from "./types";
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { background, icons } from "./data";
-import { PUZZLE_LIST_BACKGROUND_COLOR } from "~/config/styles";
 
 type PuzzleListPageProps = {
   availableRounds: PuzzleListRound[];
   availableEvents: AvailableEvent[];
-  availablePuzzles: Puzzle[];
 };
 
 export default function PuzzleListPage({
   availableRounds,
   availableEvents,
-  availablePuzzles,
 }: PuzzleListPageProps) {
   return (
-    <div
-      style={{ backgroundColor: PUZZLE_LIST_BACKGROUND_COLOR }}
-      className="space-y-6 pb-12"
-    >
+    <div className="space-y-6 pb-12">
       {/* Map art. Rendered only when src/.../puzzle-list/data.tsx supplies a background. */}
       {background && (
         <div className="relative overflow-hidden">
@@ -113,15 +105,12 @@ export default function PuzzleListPage({
                   >
                     {round.name}
                   </Link>
-                  {round.solvedPuzzles === round.totalPuzzles ? (
+                  {round.solvedPuzzles === round.totalPuzzles && (
                     <img
                       className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
                       src="/circle-check.svg"
+                      alt="Round solved"
                     />
-                  ) : (
-                    round.monitor.length > 0 && (
-                      <SeenRoundImageIcon monitor={round.monitor} />
-                    )
                   )}
                 </div>
               </div>
@@ -129,11 +118,7 @@ export default function PuzzleListPage({
           })}
         </div>
       )}
-      {/* Search bar */}
-      {availablePuzzles.length > 0 && (
-        <PuzzleSearch puzzles={availablePuzzles} />
-      )}
-      <div className="mx-auto w-full max-w-3xl px-4">
+      <div className="mx-auto w-full max-w-3xl px-4 pt-6">
         {/* Round table */}
         <h1 className="mb-2 text-center">Rounds</h1>
         <div className="overflow-hidden text-sm font-medium">
@@ -141,17 +126,10 @@ export default function PuzzleListPage({
             <div key={round.id}>
               <Link
                 href={`/puzzle/${round.id}`}
-                className={cn(
-                  "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
-                )}
+                className="flex items-center justify-between p-2 transition-colors hover:bg-white/5"
                 prefetch={false}
               >
-                <div className="flex space-x-2">
-                  <p>{round.name}</p>
-                  {round.monitor.length > 0 && (
-                    <SeenRoundTableIcon monitor={round.monitor} />
-                  )}
-                </div>
+                <p>{round.name}</p>
                 <div className="flex space-x-1">
                   {Array.from({ length: round.totalPuzzles }, (_, i) => {
                     const isUnlocked = i < round.unlockedPuzzles;

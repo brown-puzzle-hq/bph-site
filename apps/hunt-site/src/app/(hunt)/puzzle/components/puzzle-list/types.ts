@@ -14,16 +14,10 @@ export type AvailableEvent = {
   startTime: string;
 };
 
-export type Puzzle = {
-  id: string;
-  name: string;
-};
-
 export type PuzzleListRound = {
   name: string;
   id: string;
   totalPuzzles: number;
   unlockedPuzzles: number;
   solvedPuzzles: number;
-  monitor: number[]; // Indices of puzzles to monitor for "seen" status
 };

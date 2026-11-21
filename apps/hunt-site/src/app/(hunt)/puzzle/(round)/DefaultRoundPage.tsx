@@ -9,11 +9,8 @@ import { checkPermissions } from "~/lib/server";
 import { getAvailablePuzzles } from "@/puzzle/components/puzzle-list/puzzle-utils";
 import type { AvailablePuzzle } from "@/puzzle/components/puzzle-list/types";
 import { redirect } from "next/navigation";
-import { ROUNDS, ALL_PUZZLES, FEEDER_ORDER } from "~/config/server";
+import { ROUNDS, FEEDER_ORDER } from "~/config/server";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { decodeSeen } from "~/lib/utils";
-import SeenPuzzleIcon from "./SeenPuzzleIcon";
 
 export type PuzzleIcon = {
   icon: StaticImageData;
@@ -51,7 +48,6 @@ export default async function DefaultRoundPage({
   const { error, user } = await checkPermissions({ level: "userAny" });
   const currDate = new Date();
 
-  const seen = decodeSeen(cookies().get("seen")?.value);
   const round = ROUNDS.find((round) => round.name === roundName);
   if (!round) redirect("/puzzle");
   let roundPuzzles: AvailablePuzzle[];
@@ -115,8 +111,6 @@ export default async function DefaultRoundPage({
               labelDy = 0,
               solveIcon,
             } = placement;
-            const puzzleIndex = ALL_PUZZLES.indexOf(puzzle.id);
-            const isSeen = seen[puzzleIndex] === "1";
 
             const labelStyle: CSSProperties = {
               left: `calc(${x + w / 2 + labelDx}%)`,
@@ -188,13 +182,12 @@ export default async function DefaultRoundPage({
                   >
                     {puzzle.name}
                   </Link>
-                  {puzzle.answer ? (
+                  {puzzle.answer && (
                     <img
                       className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
                       src="/circle-check.svg"
+                      alt="Puzzle solved"
                     />
-                  ) : (
-                    !isSeen && <SeenPuzzleIcon index={puzzleIndex} />
                   )}
                 </div>
               </div>

@@ -47,8 +47,6 @@ export const ROUNDS: Round[] = [
   },
 ];
 
-export const ALL_PUZZLES = ROUNDS.flatMap((round) => round.puzzles);
-
 /** POOL UNLOCK SYSTEM
  * A pool unlock makes `name` available once a team has solved `threshold` of
  * the puzzles in `feeders`. Unlike PUZZLE_UNLOCK_MAP, which fires on a single

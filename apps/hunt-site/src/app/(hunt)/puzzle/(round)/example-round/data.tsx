@@ -1,5 +1,8 @@
 import { type PuzzleIcon } from "../DefaultRoundPage";
 
+/** Must match the round's id in ROUNDS and this directory name. */
+export const roundId = "example-round";
+
 export const roundName = "Example Round";
 
 /** Round map art. Add an image here and pass it to DefaultRoundPage to draw a map. */
