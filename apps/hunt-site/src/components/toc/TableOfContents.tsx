@@ -140,7 +140,7 @@ export function TableOfContents() {
   });
 
   return (
-    <motion.div className="no-scrollbar fixed bottom-0 top-[80px] hidden flex-col gap-2 overflow-y-auto pr-2 md:flex md:w-1/3 xl:w-1/5">
+    <motion.div className="no-scrollbar fixed bottom-0 top-[80px] hidden flex-col gap-2 overflow-y-auto pr-2 md:flex md:w-1/4 xl:w-1/5">
       {topLevelSections.map(({ id, title }) => (
         <div key={id} className="flex flex-col">
           <span

@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/index";
-import { and, count, eq, inArray } from "drizzle-orm";
+import { and, count, eq, inArray, sql } from "drizzle-orm";
 import {
   puzzles,
   guesses,
@@ -15,40 +15,61 @@ import {
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   HUNT_URL,
-  type SolveType,
+  sanitizeAnswer,
+  IN_PERSON,
+  REMOTE,
 } from "@/config/client";
-import { PUZZLE_UNLOCK_MAP, META_PUZZLES } from "@/config/server";
+import type { SolveType, Role, InteractionMode } from "@/config/client";
+import { PUZZLE_UNLOCK_MAP, META_PUZZLES, POOL_UNLOCKS } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
-import { ensureError } from "~/lib/utils";
-import { assertPermissions } from "~/lib/server";
+import { formatDuration } from "~/lib/utils";
+import { isDupErr, assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+type PuzzleDataModule = {
+  tasks: Record<string, JSX.Element>;
+  partialSolutions: Record<string, string>;
+};
 
 /** Handles a guess for a puzzle. May call handleSolve. */
 export async function handleGuess(puzzleId: string, guess: string) {
   // Check that the user is logged in
-  const { id: teamId } = await assertPermissions({ level: "userAny" });
+  const {
+    id: teamId,
+    role,
+    interactionMode,
+  } = await assertPermissions({
+    level: "userAny",
+  });
   const currDate = new Date();
 
   // Check that the guess does not exceed guess limits
   // Don't penalize guess if it is a task or partialSolution
-  const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-    with: {
-      guesses: {
-        where: eq(guesses.teamId, teamId),
+  const [puzzle, puzzleModule] = await Promise.all([
+    db.query.puzzles.findFirst({
+      where: eq(puzzles.id, puzzleId),
+      with: {
+        guesses: {
+          where: eq(guesses.teamId, teamId),
+        },
       },
-    },
-  });
+    }),
+    // TODO: can we eliminate this... also doesn't generalize to hunt structure
+    import(`../../../${puzzleId}/data.tsx`)
+      .then((loaded) => loaded as PuzzleDataModule)
+      .catch(() => null),
+  ]);
 
-  if (!puzzle) throw new Error("Puzzle not found");
+  if (!puzzle) throw new Error("Puzzle not found.");
 
-  // TODO: can we eliminate this... also doesn't generalize to hunt structure
-  const module = await import(`../../../${puzzleId}/data.tsx`).catch(
-    () => null,
-  );
-  const tasks = module?.tasks ?? {};
-  const partialSolutions = module?.partialSolutions ?? {};
+  if (puzzle.guesses.find((g) => g.isCorrect)) {
+    revalidatePath(`/puzzle/${puzzleId}`);
+    return { error: "Puzzle already solved!" };
+  }
+
+  const tasks = puzzleModule?.tasks ?? {};
+  const partialSolutions = puzzleModule?.partialSolutions ?? {};
 
   // TODO: Could have a TOCTTOU error here
   // Check if the number of guesses is exceeded
@@ -58,13 +79,14 @@ export async function handleGuess(puzzleId: string, guess: string) {
     ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
-    throw new Error("You have no guesses left. Please contact HQ for help.");
+    return { error: "You have no guesses left. Please contact HQ for help." };
   }
 
   // Check if the puzzle was solved by being the right string
   // or by using an answer token
-  var isCorrect = puzzle.answer === guess;
-  var solveType: SolveType = "guess";
+  const normalizedGuess = sanitizeAnswer(guess);
+  let isCorrect = sanitizeAnswer(puzzle.answer) === normalizedGuess;
+  let solveType: SolveType = "guess";
 
   if (!isCorrect && !META_PUZZLES.includes(puzzleId)) {
     // If the answer is an answer token answer, check if the
@@ -73,8 +95,8 @@ export async function handleGuess(puzzleId: string, guess: string) {
     // If it does not exist, insert it into the table.
     // Mark the guess as correct with solveType "answer_token"
     const event = await db.query.events.findFirst({
-      columns: { id: true },
-      where: eq(events.answer, guess),
+      columns: { id: true, answer: true },
+      where: sql`regexp_replace(upper(${events.answer}), '[^A-Z0-9]', '', 'g') = ${normalizedGuess}`,
     });
 
     if (event) {
@@ -116,56 +138,77 @@ export async function handleGuess(puzzleId: string, guess: string) {
   // If the guess is correct, handle the solve
   let finishedHunt = false;
   let unlockedPuzzles: string[] = [];
+  let solveTimeMs: number | null = null;
   try {
     await db.transaction(async (tx) => {
       await tx.insert(guesses).values({
         teamId,
         puzzleId,
-        guess,
+        guess: normalizedGuess,
         isCorrect,
         submitTime: currDate,
       });
       if (isCorrect) {
-        const result = await handleSolve(tx, teamId, puzzleId, solveType);
-        finishedHunt = result.finishedHunt;
+        const result = await handleSolve(
+          tx,
+          teamId,
+          role,
+          interactionMode,
+          puzzleId,
+          solveType,
+          currDate,
+        );
+
         unlockedPuzzles = result.unlockedPuzzles;
+        solveTimeMs = result.solveTimeMs;
+
+        const wasMeta = META_PUZZLES.includes(puzzleId);
+
+        if (wasMeta && result.solvedMetas === META_PUZZLES.length) {
+          await tx
+            .update(teams)
+            .set({ finishTime: currDate })
+            .where(eq(teams.id, teamId));
+          finishedHunt = true;
+        }
       }
     });
   } catch (e) {
-    const error = ensureError(e);
-    // PostgreSQL error code 23505 is a unique constraint violation
     // This occurs when a team tries to submit the same guess twice
-    if ("code" in error && error.code === "23505") {
-      throw new Error("Already guessed!");
+    if (isDupErr(e)) {
+      revalidatePath(`/puzzle/${puzzleId}`);
+      return { error: "Already guessed!" };
     }
 
-    const errorMessage = `🐛 Error inserting solve for puzzle ${puzzleId} for team ${teamId}: ${error.message}`;
-    sendBotMessage(errorMessage, "dev");
-    throw error;
+    const errorMessage = `🐛 Error handling guess by team ${teamId} for puzzle ${puzzleId}. Check server logs for details.`;
+    await sendBotMessage(errorMessage, "dev");
+    throw e;
   }
+
+  // Make websocket notifications to the clients & Discord notifications for admins
+  const notifications: Promise<unknown>[] = [];
 
   /** BEGIN_SNIPPET:DISCORD_MESSAGE */
   // Message the guess channel
-  const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${guess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
-  await sendBotMessage(guessMessage, "guess");
+  const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${normalizedGuess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
+  notifications.push(sendBotMessage(guessMessage, "guess"));
   /** END_SNIPPET:DISCORD_MESSAGE */
 
-  // If the team has finished the hunt, message the finish channel
-  // Only ping the HQ role if it is the in-person hunt
+  // If the team has finished the hunt, message the interaction channel
+  // Only ping the lore role if it is the in-person hunt
   if (finishedHunt) {
     const finishMessage = `🏆 **Hunt Finish** by [${teamId}](${HUNT_URL}/team/${teamId})`;
-    sendBotMessage(finishMessage, "general");
+    const mention = interactionMode === "in-person" ? "@lore" : undefined;
+    notifications.push(sendBotMessage(finishMessage, "interaction", mention));
   }
 
-  // Make websocket notifications to the clients
-  const notifications: Promise<unknown>[] = [];
-
-  if (isCorrect) {
+  if (isCorrect && solveTimeMs !== null) {
     notifications.push(
       sendToWebsocketServer(teamId, {
         type: "SolvedPuzzle",
         puzzleId,
         puzzleName: puzzle.name,
+        solveTime: formatDuration(solveTimeMs),
       }),
     );
   }
@@ -211,25 +254,30 @@ export async function handleGuess(puzzleId: string, guess: string) {
   const results = await Promise.allSettled(notifications);
   for (const r of results) {
     if (r.status === "rejected") {
-      console.error("Websocket send failed:", r.reason);
+      console.error("Notification send failed:", r.reason);
     }
   }
+
+  return { error: null };
 }
 
-/** Handles a solve for a puzzle. Returns whether the hunt was finished. */
+/** Handles a solve for a puzzle. Returns updated information. */
 type SolveOutcome = {
-  finishedHunt: boolean;
+  solvedMetas: number;
   unlockedPuzzles: string[];
+  solveTimeMs: number;
 };
 
 async function handleSolve(
   tx: TxType,
   teamId: string,
+  role: Role,
+  interactionMode: InteractionMode,
   puzzleId: string,
   type: SolveType,
+  currDate: Date,
 ): Promise<SolveOutcome> {
   // Insert the solve into the solve table
-  const currDate = new Date();
   await tx.insert(solves).values({
     teamId,
     puzzleId,
@@ -237,12 +285,33 @@ async function handleSolve(
     type,
   });
 
-  var unlockedPuzzles: string[] = [];
-  var finishedHunt = false;
+  let unlockedPuzzles: string[] = [];
 
   // Unlock the next puzzles
-  const nextPuzzles = PUZZLE_UNLOCK_MAP[puzzleId];
-  if (nextPuzzles?.length) {
+  // Graph unlocks
+  // NOTE: copy, since pool unlocks below push onto this list and
+  // PUZZLE_UNLOCK_MAP is shared module state
+  const nextPuzzles = [...(PUZZLE_UNLOCK_MAP[puzzleId] ?? [])];
+
+  for (const pool of POOL_UNLOCKS) {
+    if (pool.feeders.includes(puzzleId)) {
+      const [query] = await tx
+        .select({ count: count() })
+        .from(solves)
+        .where(
+          and(
+            eq(solves.teamId, teamId),
+            inArray(solves.puzzleId, pool.feeders),
+          ),
+        );
+
+      if (query?.count === pool.threshold) {
+        nextPuzzles.push(pool.name);
+      }
+    }
+  }
+
+  if (nextPuzzles.length > 0) {
     const newUnlocks = nextPuzzles.map((puzzleId) => ({
       teamId,
       puzzleId,
@@ -256,24 +325,41 @@ async function handleSolve(
       .then((res) => res.map((r) => r.puzzleId));
   }
 
-  // Check if the team has just completed the hunt
-  // by solving the six metas
-  if (META_PUZZLES.includes(puzzleId)) {
-    const query = await tx
-      .select({ count: count() })
-      .from(solves)
-      .where(
-        and(eq(solves.teamId, teamId), inArray(solves.puzzleId, META_PUZZLES)),
-      );
+  // Get meta solve count
+  const [row] = await tx
+    .select({
+      solvedMetas: count(
+        sql`CASE WHEN ${inArray(solves.puzzleId, META_PUZZLES)} THEN 1 END`,
+      ),
+    })
+    .from(solves)
+    .where(eq(solves.teamId, teamId));
 
-    if (query[0]?.count === META_PUZZLES.length) {
-      await tx
-        .update(teams)
-        .set({ finishTime: new Date() })
-        .where(eq(teams.id, teamId));
-      finishedHunt = true;
-    }
+  const solvedMetas = row?.solvedMetas ?? 0;
+
+  // Solve time shown to the team is duration since they could first see the puzzle.
+  const unlockRow = await tx.query.unlocks.findFirst({
+    where: and(eq(unlocks.teamId, teamId), eq(unlocks.puzzleId, puzzleId)),
+    columns: { unlockTime: true },
+  });
+  const unlockTime = unlockRow?.unlockTime;
+
+  if (unlockTime) {
+    const solveTimeMs = currDate.getTime() - unlockTime.getTime();
+    return { solvedMetas, unlockedPuzzles, solveTimeMs };
   }
 
-  return { unlockedPuzzles, finishedHunt };
+  const teamRow = await tx.query.teams.findFirst({
+    where: eq(teams.id, teamId),
+    columns: { createTime: true },
+  });
+  const createTime = teamRow!.createTime;
+
+  const huntStartTime =
+    interactionMode === "in-person" ? IN_PERSON.START_TIME : REMOTE.START_TIME;
+  const effectiveUnlockTime =
+    role !== "user" || createTime > huntStartTime ? createTime : huntStartTime;
+
+  const solveTimeMs = currDate.getTime() - effectiveUnlockTime.getTime();
+  return { solvedMetas, unlockedPuzzles, solveTimeMs };
 }

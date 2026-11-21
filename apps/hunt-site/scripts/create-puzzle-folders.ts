@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 import { HUNT_NAME } from "@/config/client";
@@ -100,13 +100,13 @@ async function replaceLineMatching(
   await fs.writeFile(filePath, lines.join("\n"), "utf-8");
 }
 
-main()
-  .catch((err) => {
-    console.error("❌ Folder generation failed:", err);
-    process.exit(1);
-  })
-  .then(() => {
-    console.log(
-      "📁 Consider running `pnpm generate:puzzle-locations` if you haven't already.",
-    );
-  });
+try {
+  await main();
+  console.log(
+    "📁 Consider running `pnpm generate:puzzle-locations` if you haven't already.",
+  );
+} catch (err) {
+  console.error("❌ Folder generation failed:", err);
+} finally {
+  await client.end();
+}

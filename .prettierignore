@@ -1,0 +1,11 @@
+**/.git
+**/.github
+**/.svn
+**/.hg
+**/node_modules
+
+**/*.html
+**/*.md
+**/*.mdx
+**/*.yaml
+**/*.yml

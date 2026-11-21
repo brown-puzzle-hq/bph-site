@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
 import { HUNT_NAME } from "@/config/client";
 import AdminNavBar from "./AdminNavBar";
+import RetButton from "~/components/nav/RetButton";
 
 export const metadata: Metadata = {
   title: `${HUNT_NAME}`,
@@ -22,8 +23,18 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <Providers session={session}>
+          <RetButton />
           <CommandPalette />
-          <Toaster expand={true} visibleToasts={10} />
+          <Toaster
+            expand={true}
+            visibleToasts={10}
+            toastOptions={{
+              classNames: {
+                toast: "!border-2",
+                title: "!text-sm !font-semibold",
+              },
+            }}
+          />
           <AdminNavBar />
           <div className="min-h-[56px]" />
           {/* TODO: get rid of flex and pt-6 */}

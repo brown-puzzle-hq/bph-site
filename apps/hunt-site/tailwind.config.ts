@@ -22,27 +22,25 @@ export default {
       /** BEGIN_SNIPPET:COLOR_CONFIG */
       colors: {
         // Main is the primary color of the site
-        "main-bg": "#452c63",
-        "main-text": "#faf7fd", // whiter than it should be, but we need the brightness
-        "main-header": "#e7e3fc",
-        "main-accent": "#d4a7fc",
+        "main-bg": "#1B3AB4", // Background
+        "main-text": "#FAF7FD", // Basic text
+        "main-header": "#FAF7FD", // Header text
+        "main-bottom": "#5673E6", // Bottom gradient
 
-        // Secondary is for text fields
-        "secondary-bg": "#e7e3fc",
-        "secondary-text": colors.gray[300], // This text goes with a dark background
-        "secondary-accent": colors.black, // This text goes with a light background
+        "secondary-bg": "#E0F2FE", // Background of text field
+        "secondary-text": colors.gray[900], // Text color for text field
 
         // Other backgrounds
-        "footer-bg": "#322046",
-        "nav-bg": "#452c63",
+        "footer-bg": "#000042",
+        "nav-bg": colors.black,
         "tooltip-bg": colors.gray[900],
 
         // Other text colors
-        link: colors.blue[300],
+        link: colors.blue[200],
         "correct-guess": colors.emerald[300],
         "partial-guess": colors.yellow[300],
         "incorrect-guess": colors.rose[300],
-        error: colors.red[400],
+        error: colors.red[200],
       },
       /** END_SNIPPET:COLOR_CONFIG */
       typography: ({ theme }: { theme: any }) => ({
@@ -68,6 +66,19 @@ export default {
             h3: {
               opacity: "0.9",
             },
+            img: {
+              marginTop: "0",
+              marginBottom: "0",
+            },
+            code: {
+              color: theme("colors.main-text"),
+              "&::before": {
+                content: "none",
+              },
+              "&::after": {
+                content: "none",
+              },
+            },
           },
         },
         info: {
@@ -81,6 +92,20 @@ export default {
               fontStyle: "italic",
               textAlign: "center",
             },
+          },
+        },
+        solution: {
+          css: {
+            "--tw-prose-body": theme("colors.main-text"),
+            "--tw-prose-headings": theme("colors.main-header"),
+            "--tw-prose-links": theme("colors.link"),
+            "--tw-prose-bold": theme("colors.main-header"),
+            "--tw-prose-captions": theme("colors.main-text"),
+            "--tw-prose-bullets": theme("colors.main-text"),
+            "--tw-prose-counters": theme("colors.main-text"),
+            "--tw-prose-hr": theme("colors.main-text"),
+            "--tw-prose-code": theme("colors.main-text"),
+            maxWidth: "none",
           },
         },
         "custom-colors": {

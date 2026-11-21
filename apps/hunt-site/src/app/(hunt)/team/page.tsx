@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { db } from "~/server/db";
 import { count, max, sql } from "drizzle-orm";
-import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
+import { and, asc, desc, eq, lt } from "drizzle-orm";
 import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import { FormattedTime } from "~/lib/time";
@@ -70,81 +70,82 @@ function Leaderboard({ data }: { data: LeaderboardItem[] }) {
 }
 
 export default async function Home() {
-  const inPersonTeams: LeaderboardItem[] = await db
-    .select({
-      id: teams.id,
-      displayName: teams.displayName,
-      // Exclude finish time if it is after hunt end
-      finishTime: sql<Date | null>`
-      CASE 
-        WHEN ${teams.finishTime} > ${IN_PERSON.END_TIME} THEN NULL
-        ELSE ${teams.finishTime}
-      END`.as("finish_time"),
-      solves: count(solves).as("solves"),
-      lastSolveTime: max(solves.solveTime).as("last_solve_time"),
-    })
-    .from(teams)
-    // Filter out admin teams and teams who registered after the hunt end
-    .where(
-      and(
-        eq(teams.interactionMode, "in-person"),
-        eq(teams.role, "user"),
-        lt(teams.createTime, IN_PERSON.END_TIME),
+  const [inPersonTeams, remoteTeams, session] = await Promise.all([
+    db
+      .select({
+        id: teams.id,
+        displayName: teams.displayName,
+        // Exclude finish time if it is after hunt end
+        finishTime: sql<Date | null>`
+        CASE 
+          WHEN ${teams.finishTime} > ${IN_PERSON.END_TIME} THEN NULL
+          ELSE ${teams.finishTime}
+        END`.as("finish_time"),
+        solves: count(solves).as("solves"),
+        lastSolveTime: max(solves.solveTime).as("last_solve_time"),
+      })
+      .from(teams)
+      // Filter out admin teams and teams who registered after the hunt end
+      .where(
+        and(
+          eq(teams.interactionMode, "in-person"),
+          eq(teams.role, "user"),
+          lt(teams.createTime, IN_PERSON.END_TIME),
+        ),
+      )
+      // Get solves that were submitted before the hunt end
+      // This is used for `solves` and `lastSolveTime`
+      .leftJoin(
+        solves,
+        and(
+          eq(solves.teamId, teams.id),
+          lt(solves.solveTime, IN_PERSON.END_TIME),
+        ),
+      )
+      .groupBy(teams.id, teams.displayName, teams.finishTime)
+      .orderBy(
+        asc(sql`finish_time`),
+        desc(sql`solves`),
+        asc(sql`last_solve_time`),
       ),
-    )
-    // Get solves that were submitted before the hunt end
-    // This is used for `solves` and `lastSolveTime`
-    .leftJoin(
-      solves,
-      and(
-        eq(solves.teamId, teams.id),
-        lt(solves.solveTime, IN_PERSON.END_TIME),
+    db
+      .select({
+        id: teams.id,
+        displayName: teams.displayName,
+        // Exclude finish time if it is after hunt end
+        finishTime: sql<Date | null>`
+        CASE 
+          WHEN ${teams.finishTime} > ${REMOTE.END_TIME} THEN NULL
+          ELSE ${teams.finishTime}
+        END`.as("finish_time"),
+        solves: count(solves).as("solves"),
+        lastSolveTime: max(solves.solveTime).as("last_solve_time"),
+      })
+      .from(teams)
+      // Filter out admin teams and teams who registered after the hunt end
+      .where(
+        and(
+          eq(teams.interactionMode, "remote"),
+          eq(teams.role, "user"),
+          lt(teams.createTime, REMOTE.END_TIME),
+        ),
+      )
+      // Get solves that were submitted before the hunt end
+      // This is used for `solves` and `lastSolveTime`
+      .leftJoin(
+        solves,
+        and(eq(solves.teamId, teams.id), lt(solves.solveTime, REMOTE.END_TIME)),
+      )
+      .groupBy(teams.id, teams.displayName, teams.finishTime, teams.createTime)
+      .orderBy(
+        asc(sql`finish_time`),
+        desc(sql`solves`),
+        asc(sql`last_solve_time`),
       ),
-    )
-    .groupBy(teams.id, teams.displayName, teams.finishTime)
-    .orderBy(
-      asc(sql`finish_time`),
-      desc(sql`solves`),
-      asc(sql`last_solve_time`),
-    );
-
-  const remoteTeams: LeaderboardItem[] = await db
-    .select({
-      id: teams.id,
-      displayName: teams.displayName,
-      // Exclude finish time if it is after hunt end
-      finishTime: sql<Date | null>`
-      CASE 
-        WHEN ${teams.finishTime} > ${REMOTE.END_TIME} THEN NULL
-        ELSE ${teams.finishTime}
-      END`.as("finish_time"),
-      solves: count(solves).as("solves"),
-      lastSolveTime: max(solves.solveTime).as("last_solve_time"),
-    })
-    .from(teams)
-    // Filter out admin teams and teams who registered after the hunt end
-    .where(
-      and(
-        eq(teams.interactionMode, "remote"),
-        eq(teams.role, "user"),
-        lt(teams.createTime, REMOTE.END_TIME),
-      ),
-    )
-    // Get solves that were submitted before the hunt end
-    // This is used for `solves` and `lastSolveTime`
-    .leftJoin(
-      solves,
-      and(eq(solves.teamId, teams.id), lt(solves.solveTime, REMOTE.END_TIME)),
-    )
-    .groupBy(teams.id, teams.displayName, teams.finishTime, teams.createTime)
-    .orderBy(
-      asc(sql`finish_time`),
-      desc(sql`solves`),
-      asc(sql`last_solve_time`),
-    );
+    auth(),
+  ]);
 
   const now = new Date();
-  const session = await auth();
 
   return (
     <div className="mx-auto mb-12 max-w-2xl px-4 pt-6">
@@ -153,9 +154,9 @@ export default async function Home() {
         defaultValue={session?.user.interactionMode ?? "in-person"}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2 space-x-1 bg-footer-bg text-[#6c518e]">
+        <TabsList className="grid w-full grid-cols-2 space-x-1 bg-[#000080] text-main-text">
           <TabsTrigger
-            className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
+            className="data-[state=active]:bg-main-bg data-[state=active]:text-main-text"
             value="in-person"
           >
             In-Person
@@ -164,7 +165,7 @@ export default async function Home() {
             )}
           </TabsTrigger>
           <TabsTrigger
-            className="data-[state=active]:bg-[#5e437e] data-[state=active]:text-main-text"
+            className="data-[state=active]:bg-main-bg data-[state=active]:text-main-text"
             value="remote"
           >
             Remote

@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 import { HUNT_NAME } from "@/config/client";
@@ -18,6 +18,12 @@ async function main() {
   let hadError = false;
 
   for (const [puzzleId, rel] of Object.entries(locations)) {
+    if (rel === null) {
+      console.error(`❌ ${puzzleId}: no folder found`);
+      hadError = true;
+      continue;
+    }
+
     const targetDir = path.join(PUZZLE_ROOT, rel);
     const title = `${namesFromDB[puzzleId]} - ${HUNT_NAME}`;
 
@@ -74,12 +80,10 @@ async function main() {
   }
 
   if (hadError) {
-    console.error("\n❌ Puzzle folder check failed.");
+    console.error("❌ Puzzle folder check failed.");
   } else {
     console.log("🎉 Puzzle folder check passed.");
   }
-
-  process.exit(0);
 }
 
 async function findLineMatching(
@@ -96,7 +100,10 @@ function extractQuotedValue(line: string, key: string): string | null {
   return match?.[2] ?? null;
 }
 
-main().catch((err) => {
+try {
+  await main();
+} catch (err) {
   console.error("❌ Folder check crashed:", err);
-  process.exit(1);
-});
+} finally {
+  await client.end();
+}

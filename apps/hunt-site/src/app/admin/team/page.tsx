@@ -2,7 +2,7 @@ import { db } from "@/db/index";
 import { columns } from "./Columns";
 import { TeamTable } from "./TeamTable";
 import { count, sql } from "drizzle-orm";
-import { and, asc, desc, eq, ne } from "drizzle-orm/expressions";
+import { and, asc, desc, eq, ne } from "drizzle-orm";
 import { teams, solves } from "~/server/db/schema";
 import { IN_PERSON, REMOTE } from "@/config/client";
 

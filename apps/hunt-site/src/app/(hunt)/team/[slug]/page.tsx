@@ -27,6 +27,10 @@ export default async function Page({
       role: true,
       members: true,
       interactionMode: true,
+      numCommunity: true,
+      phoneNumber: true,
+      roomNeeded: true,
+      solvingLocation: true,
     },
     where: eq(teams.id, teamId),
   });
@@ -34,7 +38,7 @@ export default async function Page({
   if (!team) notFound();
 
   return (
-    <div className="mx-auto mb-12 w-full max-w-xl px-4 pt-6">
+    <div className="mx-auto mb-12 w-full max-w-2xl px-4 pt-6">
       <ProfileForm id={teamId} initialProperties={team} />
     </div>
   );

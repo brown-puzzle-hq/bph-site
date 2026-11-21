@@ -12,23 +12,27 @@ export async function insertAnswerToken(eventId: string, guess: string) {
   const currDate = new Date();
 
   // Check that the team has not already had a token
-  const token = await db.query.answerTokens.findFirst({
-    where: and(
-      eq(answerTokens.teamId, teamId),
-      eq(answerTokens.eventId, eventId),
-    ),
-  });
+  const [token, event] = await Promise.all([
+    db.query.answerTokens.findFirst({
+      where: and(
+        eq(answerTokens.teamId, teamId),
+        eq(answerTokens.eventId, eventId),
+      ),
+    }),
+    // Check that the token is valid
+    db.query.events.findFirst({
+      where: eq(events.id, eventId),
+    }),
+  ]);
+
   if (token) {
     revalidatePath("/puzzle");
-    throw new Error("Token already used!");
+    return { error: "Token already used!" };
   }
 
-  // Check that the token is valid
-  const event = await db.query.events.findFirst({
-    where: eq(events.id, eventId),
-  });
-  if (!event) throw new Error("Event not found!");
-  if (event.answer !== guess) throw new Error("Incorrect token!");
+  if (!event) throw new Error("Event not found.");
+  if (event.answer.replace(/\s+/g, "") !== guess)
+    return { error: "Incorrect token!" };
 
   // Insert a token into the token table
   await db.insert(answerTokens).values({
@@ -38,4 +42,6 @@ export async function insertAnswerToken(eventId: string, guess: string) {
   });
 
   revalidatePath("/puzzle");
+
+  return { error: null };
 }

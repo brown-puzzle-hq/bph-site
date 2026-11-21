@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq, and, gt } from "drizzle-orm";
 import {
@@ -13,7 +12,9 @@ import { redirect } from "next/navigation";
 import GuessTable from "@/puzzle/components/puzzle/guess/GuessTable";
 import ErratumDialog from "~/app/(hunt)/puzzle/components/puzzle/ErratumDialog";
 import GuessForm from "@/puzzle/components/puzzle/guess/GuessForm";
-import CopyButton from "@/puzzle/components/puzzle/CopyButton";
+import CopyButton, {
+  type CopyData,
+} from "@/puzzle/components/puzzle/CopyButton";
 import { canViewPuzzle } from "@/puzzle/actions";
 import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
@@ -21,7 +22,7 @@ import {
   REMOTE,
 } from "@/config/client";
 import { INITIAL_PUZZLES } from "@/config/server";
-import { cn } from "~/lib/utils";
+import { displayStoredPuzzleGuess } from "~/lib/server";
 import DefaultPostHuntPuzzlePage from "./DefaultPostHuntPuzzlePage";
 import { checkPermissions } from "~/lib/server";
 
@@ -31,7 +32,7 @@ type DefaultPuzzlePageProps = {
   puzzleId: string;
   inPersonBody: React.ReactNode;
   remoteBody: React.ReactNode;
-  copyText: string | null;
+  copyText: string | CopyData | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
   interactionMode?: string;
@@ -46,22 +47,18 @@ export default async function DefaultPuzzlePage({
   tasks,
   interactionMode,
 }: DefaultPuzzlePageProps) {
-  switch (await canViewPuzzle(puzzleId)) {
-    case "success":
-      break;
-    case "not_authenticated":
-      redirect("/login");
-    case "not_authorized":
-      redirect("/puzzle");
-  }
+  // Check if user can view puzzle
+  if ((await canViewPuzzle(puzzleId)) !== "success") redirect("/puzzle");
 
-  // Puzzle answer
-  const puzzleAnswer = (await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-    columns: { answer: true },
-  }))!.answer;
-
-  const { error, user } = await checkPermissions({ level: "userAny" });
+  const [puzzleAnswerRow, { error, user }] = await Promise.all([
+    // Puzzle answer
+    db.query.puzzles.findFirst({
+      where: eq(puzzles.id, puzzleId),
+      columns: { answer: true },
+    }),
+    checkPermissions({ level: "userAny" }),
+  ]);
+  const puzzleAnswer = puzzleAnswerRow!.answer;
 
   // If user is not logged in, show puzzle without errata or guesses
   if (error) {
@@ -86,6 +83,7 @@ export default async function DefaultPuzzlePage({
   // 3. If user is team or testsolver, then:
   //    a. If the puzzle can be unlocked, then use the unlock time
   //    b. If the puzzle is an INITIAL_PUZZLE, then take MIN(teamCreateTime, huntStartTime)
+  //    c. If the puzzle is locked (but visible after hunt end), then use the current time
   let unlockTime;
   if (role === "admin") {
     unlockTime = new Date(0);
@@ -107,10 +105,16 @@ export default async function DefaultPuzzlePage({
       Math.max(teamCreateTime.getTime(), huntStartTime.getTime()),
     );
   } else {
-    unlockTime = (await db.query.unlocks.findFirst({
-      where: and(eq(unlocks.teamId, teamId), eq(unlocks.puzzleId, puzzleId)),
-      columns: { unlockTime: true },
-    }))!.unlockTime;
+    unlockTime =
+      (
+        await db.query.unlocks.findFirst({
+          where: and(
+            eq(unlocks.teamId, teamId),
+            eq(unlocks.puzzleId, puzzleId),
+          ),
+          columns: { unlockTime: true },
+        })
+      )?.unlockTime ?? new Date();
   }
 
   const errataList: {
@@ -127,14 +131,18 @@ export default async function DefaultPuzzlePage({
     })
   ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
-  // Get previous guesses
-  const previousGuesses = await db.query.guesses.findMany({
-    where: and(eq(guesses.teamId, teamId), eq(guesses.puzzleId, puzzleId)),
-  });
+  // Get previous guesses and solve state
+  const [previousGuesses, solveRow] = await Promise.all([
+    db.query.guesses.findMany({
+      columns: { guess: true, isCorrect: true, submitTime: true },
+      where: and(eq(guesses.teamId, teamId), eq(guesses.puzzleId, puzzleId)),
+    }),
+    db.query.solves.findFirst({
+      where: and(eq(solves.teamId, teamId), eq(solves.puzzleId, puzzleId)),
+    }),
+  ]);
 
-  const isSolved = !!(await db.query.solves.findFirst({
-    where: and(eq(solves.teamId, teamId), eq(solves.puzzleId, puzzleId)),
-  }));
+  const isSolved = !!solveRow;
 
   // Get the number of guesses left
   // If it is a puzzle with infinite guessses, set it to -1
@@ -159,6 +167,26 @@ export default async function DefaultPuzzlePage({
   const puzzleBody =
     puzzleInteractionMode === "remote" ? remoteBody : inPersonBody;
 
+  const processedGuesses = previousGuesses.map(
+    ({ guess, isCorrect, submitTime }) => {
+      const finalGuess = displayStoredPuzzleGuess(
+        guess,
+        isCorrect,
+        puzzleAnswer,
+      );
+      const status = isCorrect
+        ? ("correct" as const)
+        : guess in partialSolutions
+          ? ("partial" as const)
+          : guess in tasks
+            ? ("task" as const)
+            : ("incorrect" as const);
+      const partialTip =
+        status === "partial" ? partialSolutions[guess] : undefined;
+      return { guess: finalGuess, status, partialTip, submitTime };
+    },
+  );
+
   return (
     <div className="w-full px-4">
       <div className="mx-auto max-w-3xl">
@@ -166,11 +194,7 @@ export default async function DefaultPuzzlePage({
       </div>
 
       <div className="no-scrollbar overflow-auto">
-        <div className="mx-auto flex w-fit items-start justify-center space-x-2">
-          {copyText && <div className="min-w-6" />}
-          <div className="w-fit">{puzzleBody}</div>
-          {copyText && <CopyButton copyText={copyText} />}
-        </div>
+        <div className="mx-auto w-fit">{puzzleBody}</div>
       </div>
 
       {Object.keys(tasks).map((task) => {
@@ -184,7 +208,7 @@ export default async function DefaultPuzzlePage({
         }
       })}
 
-      <div className={cn("mx-auto mb-4 mt-6 max-w-3xl", copyText && "px-8")}>
+      <div className="mx-auto mb-4 mt-6 max-w-3xl">
         <GuessForm
           puzzleId={puzzleId}
           numberOfGuessesLeft={numberOfGuessesLeft}
@@ -193,13 +217,14 @@ export default async function DefaultPuzzlePage({
       </div>
 
       <div className="mx-auto max-w-3xl">
-        <GuessTable
-          puzzleAnswer={puzzleAnswer}
-          previousGuesses={previousGuesses}
-          partialSolutions={partialSolutions}
-          tasks={tasks}
-        />
+        <GuessTable previousGuesses={processedGuesses} />
       </div>
+
+      {copyText && (
+        <div className="fixed bottom-4 right-4 size-10">
+          <CopyButton copyText={copyText} />
+        </div>
+      )}
     </div>
   );
 }

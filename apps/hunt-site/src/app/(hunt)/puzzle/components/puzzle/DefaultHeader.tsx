@@ -1,10 +1,9 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
 import { puzzles } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
-import { canViewHint, canViewSolution, canViewStats } from "../../actions";
+import { canViewSolution, canViewStats } from "../../actions";
 
 export default async function DefaultHeader({
   puzzleId,
@@ -13,10 +12,15 @@ export default async function DefaultHeader({
   puzzleId: string;
   hasSolution: boolean;
 }) {
-  // Get puzzle name
-  const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-  });
+  const [puzzle, canStats, canSolution] = await Promise.all([
+    // Get puzzle name
+    db.query.puzzles.findFirst({
+      where: eq(puzzles.id, puzzleId),
+    }),
+    canViewStats(puzzleId),
+    canViewSolution(puzzleId),
+  ]);
+
   if (!puzzle) redirect("/puzzle");
 
   return (
@@ -31,19 +35,17 @@ export default async function DefaultHeader({
           >
             Puzzle
           </Link>
-          {(await canViewHint(puzzleId)) === "success" && (
-            <>
-              <span className="text-gray-500">|</span>
-              <Link
-                href={`/puzzle/${puzzleId}/hint`}
-                className="text-link hover:underline"
-                prefetch={false}
-              >
-                Hint
-              </Link>
-            </>
-          )}
-          {hasSolution && (await canViewSolution(puzzleId)) === "success" && (
+          <>
+            <span className="text-gray-500">|</span>
+            <Link
+              href={`/puzzle/${puzzleId}/hint`}
+              className="text-link hover:underline"
+              prefetch={false}
+            >
+              Hint
+            </Link>
+          </>
+          {hasSolution && canSolution === "success" && (
             <>
               <span className="text-gray-500">|</span>
               <Link
@@ -55,7 +57,7 @@ export default async function DefaultHeader({
               </Link>
             </>
           )}
-          {(await canViewStats(puzzleId)) === "success" && (
+          {canStats === "success" && (
             <>
               <span className="text-gray-500">|</span>
               <Link

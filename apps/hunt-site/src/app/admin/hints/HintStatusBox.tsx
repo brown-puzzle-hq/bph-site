@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { Reply, HintClaimer } from "./Columns";
 import { useTransition } from "react";
-import { ensureError } from "~/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const { data: session } = useSession();
@@ -17,30 +17,38 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const replies: Reply[] = row.getValue("replies");
   const teamId: string = row.getValue("teamId");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
-  const handleClaim = () => {
+  const handleClaim = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     startTransition(async () => {
       try {
-        await claimHint(hintId);
-        window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
+        const { error } = await claimHint(hintId);
+        if (error) {
+          toast.error("Failed to claim hint.", {
+            description: error,
+          });
+        } else {
+          window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
+        }
       } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to claim hint.", {
-          description: error.message,
-        });
+        toast.error("Failed to claim hint. Please try again.");
       }
     });
   };
 
-  const handleUnclaim = () => {
+  const handleUnclaim = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     startTransition(async () => {
       try {
-        await unclaimHint(hintId);
+        const { error } = await unclaimHint(hintId);
+        if (error) {
+          toast.error("Failed to unclaim hint.", {
+            description: error,
+          });
+        }
       } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to unclaim hint.", {
-          description: error.message,
-        });
+        toast.error("Failed to unclaim hint. Please try again.");
       }
     });
   };
@@ -79,9 +87,10 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
             ? "rounded-md border border-yellow-600 text-yellow-600"
             : "rounded-md border border-gray-600 text-gray-600"
         }
-        onClick={() =>
-          (window.location.href = `/admin/hints/${hintId}?reply=true`)
-        }
+        onClick={(e) => {
+          e.preventDefault();
+          router.push(`/admin/hints/${hintId}?reply=true`);
+        }}
       >
         <p className="px-1">REPLY</p>
       </button>

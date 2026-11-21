@@ -12,7 +12,7 @@ import { cn } from "~/lib/utils";
 
 export default async function AdminNavBar() {
   const style: NavBarStyle = {
-    item: "data-[active=true]:bg-slate-400/15 hover:!bg-slate-400/20 transition-all",
+    item: "data-[active=true]:bg-slate-400/15 hover:!bg-slate-400/20 transition-colors",
     bar: "bg-white/30 backdrop-blur-md backdrop-filter",
     sheet: "bg-white",
   };
@@ -23,7 +23,8 @@ export default async function AdminNavBar() {
     Feedback: "/admin/feedback",
     Graph: "/admin/graph",
     Queries: "/admin/sql",
-    Websockets: "/admin/websockets",
+    Debug: "/admin/debug",
+    Clipboard: "/admin/clipboard-inspector",
   };
 
   const OtherMenuItems = () => (
@@ -126,8 +127,8 @@ export default async function AdminNavBar() {
       type: "link",
     },
     {
-      title: "Websockets",
-      href: "/admin/websockets",
+      title: "Debug",
+      href: "/admin/debug",
       type: "link",
     },
     {

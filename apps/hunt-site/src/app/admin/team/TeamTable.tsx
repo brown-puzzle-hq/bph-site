@@ -41,7 +41,7 @@ import {
   ROLE_VALUES,
   INTERACTION_MODE_VALUES,
 } from "@/config/client";
-import { cn, ensureError } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 import { Checkbox } from "~/components/ui/checkbox";
 import { updateTeams } from "./actions";
 import { toast } from "sonner";
@@ -175,13 +175,15 @@ export function TeamTable<TData, TValue>({
   function handleEditRow<F extends keyof ClientEditableFields>(
     teamId: string,
     field: F,
-    cellValue: any,
+    cellValue: string,
   ) {
     setEditedRows((prev) => {
       const prevEdits = prev[teamId] ?? {};
       const oldValue = prevEdits[field]?.old ?? cellValue;
       const options = fieldToOptions[field];
-      const prevIndex = options.indexOf(prevEdits[field]?.new ?? cellValue);
+      const prevIndex = (options as readonly string[]).indexOf(
+        prevEdits[field]?.new ?? cellValue,
+      );
       const nextIndex = (prevIndex + 1) % options.length;
       const newValue = options[nextIndex];
 
@@ -244,10 +246,7 @@ export function TeamTable<TData, TValue>({
     try {
       await updateTeams(editedTeams);
     } catch (e) {
-      const error = ensureError(e);
-      toast("Failed to save edits.", {
-        description: error.message,
-      });
+      toast("Failed to save edits. Please try again.");
     }
   };
 
@@ -450,7 +449,7 @@ export function TeamTable<TData, TValue>({
         </div>
       </div>
       <div
-        className={`fixed bottom-3 left-1/2 z-10 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300 ${
+        className={`fixed bottom-3 left-1/2 z-20 flex w-full max-w-xl -translate-x-1/2 transform px-4 transition-transform duration-300 ${
           Object.keys(editedRows).length !== 0
             ? "translate-y-0"
             : "translate-y-[5rem]"

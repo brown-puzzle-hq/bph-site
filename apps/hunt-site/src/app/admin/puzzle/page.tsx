@@ -10,6 +10,7 @@ import {
 } from "~/components/ui/table";
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
+import { ROUND_TABLE_COLORS } from "~/config/styles";
 
 export default async function Page() {
   const query = await db.query.puzzles.findMany({
@@ -66,8 +67,12 @@ export default async function Page() {
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
       try {
+        const roundId = ROUNDS.find((round) =>
+          round.puzzles.includes(puzzle.id),
+        )?.id;
+
         const module = await import(
-          `../../(hunt)/puzzle/${puzzle.id}/data.tsx`
+          `../../(hunt)/puzzle/(${roundId})/${puzzle.id}/data.tsx`
         ).catch(() => null);
 
         const { inPersonBody, remoteBody, solutionBody, copyText } =
@@ -92,15 +97,13 @@ export default async function Page() {
     }),
   );
 
-  const colorMap = {};
-
   return (
     <div className="container mx-auto mb-12">
       <h1 className="mb-2 text-center">Puzzles</h1>
       <div className="overflow-y-auto rounded-md px-4">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-inherit">
+            <TableRow className="transition-none hover:bg-inherit">
               <TableHead className="w-fit py-0">Round</TableHead>
               <TableHead className="w-1/6 min-w-56 py-0">Name</TableHead>
               <TableHead className="w-10 break-all py-0">Answer</TableHead>
@@ -122,22 +125,20 @@ export default async function Page() {
               allPuzzlesWithEverything
                 .filter((puzzle) => round.puzzles.includes(puzzle.id))
                 .sort((puzzleA, puzzleB) =>
-                  META_PUZZLES.includes(puzzleA.id)
-                    ? META_PUZZLES.includes(puzzleB.id)
-                      ? puzzleA.name.localeCompare(puzzleB.name)
-                      : -1
-                    : META_PUZZLES.includes(puzzleB.id)
-                      ? 1
-                      : puzzleA.name.localeCompare(puzzleB.name),
+                  puzzleA.name.localeCompare(puzzleB.name),
                 )
                 .map((puzzle) => (
-                  <TableRow key={puzzle.id} className="hover:bg-inherit">
+                  <TableRow
+                    key={puzzle.id}
+                    className="transition-none hover:bg-inherit"
+                  >
                     <TableCell className="py-0">
-                      <div
-                        className={`inline-flex rounded-sm px-1 py-0.5 ${colorMap[round.name as keyof typeof colorMap] ?? ""} space-y-2`}
+                      <a
+                        className={`inline rounded-sm box-decoration-clone px-1 py-0.5 leading-6 ${ROUND_TABLE_COLORS[round.id] ?? ""}`}
+                        href={`/puzzle/${round.id}`}
                       >
                         {round.name}
-                      </div>
+                      </a>
                     </TableCell>
 
                     <TableCell className="py-0">
@@ -173,7 +174,7 @@ export default async function Page() {
                           <a
                             href={`/puzzle/${puzzle.id}?interactionMode=in-person`}
                           >
-                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                            <Puzzle className="size-5 text-red-500 hover:opacity-85" />
                           </a>
                         </div>
                       )}
@@ -184,7 +185,7 @@ export default async function Page() {
                           <a
                             href={`/puzzle/${puzzle.id}?interactionMode=remote`}
                           >
-                            <Puzzle className="size-5 text-red-500 hover:opacity-75" />
+                            <Puzzle className="size-5 text-red-500 hover:opacity-85" />
                           </a>
                         </div>
                       )}
@@ -193,7 +194,7 @@ export default async function Page() {
                       {puzzle.solutionBody && (
                         <div className="flex justify-center">
                           <a href={`/puzzle/${puzzle.id}/solution`}>
-                            <KeyRound className="size-5 text-yellow-500 hover:opacity-75" />
+                            <KeyRound className="size-5 text-yellow-500 hover:opacity-85" />
                           </a>
                         </div>
                       )}
@@ -201,15 +202,13 @@ export default async function Page() {
                     <TableCell className="justify-center">
                       <div className="flex justify-center">
                         <a href={`/puzzle/${puzzle.id}/stats`}>
-                          <ChartColumn className="text-black-500 size-5 text-lime-600 hover:opacity-60" />
+                          <ChartColumn className="text-black-500 size-5 text-lime-600 hover:opacity-85" />
                         </a>
                       </div>
                     </TableCell>
-                    <TableCell className="justify-center">
+                    <TableCell className="flex justify-center">
                       {puzzle.copyText && (
-                        <div className="flex justify-center hover:opacity-60">
-                          <CopyButton copyText={puzzle.copyText} />
-                        </div>
+                        <CopyButton copyText={puzzle.copyText} />
                       )}
                     </TableCell>
                   </TableRow>

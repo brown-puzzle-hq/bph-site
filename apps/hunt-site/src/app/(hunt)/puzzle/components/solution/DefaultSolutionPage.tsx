@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
@@ -14,14 +13,8 @@ export default async function DefaultSolutionPage({
   solutionBody: React.ReactNode;
   authors: string | null;
 }) {
-  switch (await canViewSolution(puzzleId)) {
-    case "success":
-      break;
-    case "not_authenticated":
-      redirect("/login");
-    case "not_authorized":
-      redirect("/puzzle");
-  }
+  // Check if user can view solution
+  if ((await canViewSolution(puzzleId)) !== "success") redirect("/puzzle");
 
   // Puzzle answer
   const puzzleAnswer = (
@@ -45,7 +38,7 @@ export default async function DefaultSolutionPage({
     <div className="mb-12 w-full space-y-4 px-4">
       <div className="flex items-center justify-center gap-1 text-lg font-medium">
         Answer:
-        <p className="rounded-md bg-main-text px-1 py-0.5 transition-all duration-300 hover:bg-inherit">
+        <p className="rounded-md bg-main-text px-1 py-0.5 transition-colors duration-300 hover:bg-inherit">
           {puzzleAnswer}
         </p>
       </div>
@@ -55,7 +48,9 @@ export default async function DefaultSolutionPage({
         </div>
       )}
       <div className="no-scrollbar overflow-auto">
-        <div className="mx-auto w-fit">{solutionBody}</div>
+        <article className="prose prose-solution mx-auto max-w-3xl">
+          {solutionBody}
+        </article>
       </div>
     </div>
   );

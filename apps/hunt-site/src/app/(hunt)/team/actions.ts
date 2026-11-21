@@ -14,11 +14,15 @@ type TeamProperties = Partial<
   Pick<
     Team,
     | "displayName"
+    | "password"
     | "primaryEmail"
     | "role"
     | "members"
     | "interactionMode"
-    | "password"
+    | "numCommunity"
+    | "phoneNumber"
+    | "roomNeeded"
+    | "solvingLocation"
   >
 >;
 
@@ -57,13 +61,17 @@ export async function updateTeam(id: string, teamProperties: TeamProperties) {
       role: teams.role,
       members: teams.members,
       interactionMode: teams.interactionMode,
+      numCommunity: teams.numCommunity,
+      phoneNumber: teams.phoneNumber,
+      roomNeeded: teams.roomNeeded,
+      solvingLocation: teams.solvingLocation,
     });
 
   if (!updatedTeam) {
     throw new Error("No team matching the given ID was found.");
   }
 
-  revalidatePath(`/team/${id}`, "page");
+  revalidatePath(`/team/${id}`);
   return { updatedTeam };
 }
 

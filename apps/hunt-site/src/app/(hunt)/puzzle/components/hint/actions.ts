@@ -7,7 +7,7 @@ import { getNumberOfHintsRemaining } from "@/config/server";
 import { sendBotMessage } from "~/lib/comms";
 import { HUNT_URL } from "@/config/client";
 import { assertPermissions } from "~/lib/server";
-import { assertCanViewPuzzle } from "../../actions";
+import { assertCanViewHint } from "../../actions";
 
 export type MessageType = "request" | "reply";
 
@@ -23,7 +23,7 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
   const hasHint =
     (await getNumberOfHintsRemaining(teamId, role, interactionMode)) > 0;
 
-  if (!hasHint) throw new Error("No hints remaining.");
+  if (!hasHint) return { error: "No hints remaining." };
 
   const unansweredHint = await db.query.hints.findFirst({
     columns: { id: true },
@@ -35,13 +35,12 @@ export async function insertHintRequest(puzzleId: string, hint: string) {
     },
   });
 
-  if (unansweredHint) {
-    throw new Error(
-      `You have an outstanding hint on the puzzle ${unansweredHint.puzzle.name}.`,
-    );
-  }
+  if (unansweredHint)
+    return {
+      error: `You have an outstanding hint on the puzzle ${unansweredHint.puzzle.name}.`,
+    };
 
-  await assertCanViewPuzzle(puzzleId);
+  await assertCanViewHint(puzzleId);
 
   const [request] = await db
     .insert(hints)

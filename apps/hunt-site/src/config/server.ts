@@ -28,8 +28,13 @@ export const PUZZLE_UNLOCK_MAP: Record<string, string[]> = {
   "example-5": ["example-4", "example-5"],
 };
 
+/** List of meta puzzles. Solving all of the metas unlocks the runaround. */
+export const META_PUZZLES: string[] = ["example-1"];
+
 export type Round = {
   name: string;
+  /** Route segment for the round page under src/app/(hunt)/puzzle/(round) */
+  id: string;
   puzzles: string[];
 };
 
@@ -37,12 +42,29 @@ export type Round = {
 export const ROUNDS: Round[] = [
   {
     name: "Example Round",
+    id: "example-round",
     puzzles: ["example-1", "example-2", "example-3", "example-4", "example-5"],
   },
 ];
 
-/** List of meta puzzles. Solving all of the metas unlocks the runaround. */
-export const META_PUZZLES: string[] = ["example-1"];
+/** POOL UNLOCK SYSTEM
+ * A pool unlock makes `name` available once a team has solved `threshold` of
+ * the puzzles in `feeders`. Unlike PUZZLE_UNLOCK_MAP, which fires on a single
+ * solve, this counts solves across a set. Leave empty if the hunt does not
+ * use pool unlocks.
+ */
+export type PoolUnlock = {
+  name: string;
+  threshold: number;
+  feeders: string[];
+};
+
+export const POOL_UNLOCKS: PoolUnlock[] = [];
+
+/** Display order for puzzles within a round page. Puzzles with no entry sort
+ * last, in the order they appear in ROUNDS. Leave empty to keep ROUNDS order.
+ */
+export const FEEDER_ORDER: Record<string, number> = {};
 
 /* HINTING SYSTEM
  * Teams currently get a hint request every three hours since the start of the hunt.
@@ -61,8 +83,7 @@ function getTotalHints(role: string, interactionMode: string) {
     interactionMode === "in-person" ? IN_PERSON.END_TIME : REMOTE.END_TIME;
 
   const timeDifference =
-    Math.min(new Date().getTime(), huntEndTime.getTime()) -
-    huntStartTime.getTime();
+    Math.min(Date.now(), huntEndTime.getTime()) - huntStartTime.getTime();
 
   const rate =
     interactionMode === "in-person"

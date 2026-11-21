@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import { puzzles } from "@/db/schema";
 import "dotenv/config";
 
@@ -9,7 +9,7 @@ const OUTPUT_PATH = path.join(
   process.cwd(),
   "src/generated/puzzle-locations.json",
 );
-const IGNORE = new Set(["example", "components"]);
+const IGNORE = new Set(["example", "components", "(round)", "[...slug]"]);
 
 type Found = Record<string, string[]>;
 type PuzzleDirectoryMap = Record<string, string | null>;
@@ -91,16 +91,14 @@ async function main() {
 
   if (hadError) {
     console.error("❌ Puzzle directory map generation failed.");
-    process.exit(1);
+  } else {
+    console.log(
+      `🎉 Puzzle directory map written to ${path.relative(
+        process.cwd(),
+        OUTPUT_PATH,
+      )} (${Object.keys(puzzleDirectoryMap).length} puzzles)`,
+    );
   }
-
-  console.log(
-    `🎉 Puzzle directory map written to ${path.relative(
-      process.cwd(),
-      OUTPUT_PATH,
-    )} (${Object.keys(puzzleDirectoryMap).length} puzzles)`,
-  );
-  process.exit(0);
 }
 
 async function walkPuzzleDirectories(
@@ -144,7 +142,10 @@ async function walkPuzzleDirectories(
   return { found, extraneous };
 }
 
-main().catch((err) => {
+try {
+  await main();
+} catch (err) {
   console.error("❌ Puzzle map generation crashed:", err);
-  process.exit(1);
-});
+} finally {
+  await client.end();
+}

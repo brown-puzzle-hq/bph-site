@@ -5,9 +5,9 @@ import { Providers } from "~/app/providers";
 import { type Metadata } from "next";
 import { Toaster } from "sonner";
 import { CommandPalette } from "~/components/nav/CommandPalette";
+import RetButton from "~/components/nav/RetButton";
 import { HUNT_NAME } from "@/config/client";
 import { HuntNavBar } from "./HuntNavBar";
-import { HuntNavBarSpacer } from "@/components/nav/HuntNavBarSpacer";
 
 export const metadata: Metadata = {
   title: HUNT_NAME,
@@ -23,16 +23,13 @@ export default async function RootLayout({
     <html lang="en" className={GeistSans.variable}>
       <body className="bg-main-bg text-main-text">
         <Providers session={session}>
+          <RetButton />
           {session?.user.role === "admin" && <CommandPalette />}
           <Toaster expand={true} visibleToasts={10} />
-          <div className="bg-main-bg bg-gradient-to-t from-[#872C3E] to-main-bg">
-            {/* Navbar */}
-            <div className="bg-nav-bg">
-              <HuntNavBar />
-            </div>
-
-            {/* Navbar spacer */}
-            <HuntNavBarSpacer />
+          <div className="bg-main-bg bg-gradient-to-t from-main-bottom to-main-bg">
+            <HuntNavBar />
+            {/* No extra component since we don't need Landing art to reach top */}
+            <div className="min-h-[56px]" />
             <main className="min-h-[calc(100vh-56px-32px)]">{children}</main>
             <footer className="min-h-1rem bg-footer-bg py-2 text-center text-xs">
               Powered by{" "}

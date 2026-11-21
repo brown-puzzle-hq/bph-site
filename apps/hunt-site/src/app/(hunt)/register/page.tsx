@@ -2,9 +2,10 @@ import {
   REGISTRATION_START_TIME,
   REGISTRATION_END_TIME,
 } from "@/config/client";
-import { RegisterForm } from "./RegisterForm";
+import RegisterForm from "./RegisterForm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { FormattedTime } from "~/lib/time";
 
 export default async function Home() {
   // Redirect register page to home page if the user is logged in
@@ -16,7 +17,9 @@ export default async function Home() {
   if (new Date() < REGISTRATION_START_TIME) {
     return (
       <div className="flex min-h-[calc(100vh-56px-32px)] grow flex-col items-center justify-center">
-        <p>Registration has not started yet.</p>
+        <p>
+          Registration starts <FormattedTime time={REGISTRATION_START_TIME} />.
+        </p>
       </div>
     );
   }
@@ -30,7 +33,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="mx-auto mb-12 w-full max-w-xl px-4 pt-6">
+    <div className="mx-auto mb-12 w-full max-w-2xl px-4 pt-6">
       <h1 className="mb-6 text-center">Register</h1>
       <RegisterForm />
     </div>

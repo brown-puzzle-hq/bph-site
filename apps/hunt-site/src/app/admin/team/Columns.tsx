@@ -7,9 +7,12 @@ import {
   Waypoints,
   Trophy,
   Puzzle,
+  Eye,
 } from "lucide-react";
 import { FormattedTime } from "~/lib/time";
 import { type Team } from "@/db/types";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export type TeamTableRow = Pick<
   Team,
@@ -22,6 +25,22 @@ export type TeamTableRow = Pick<
 > & {
   rank: number | null;
 };
+
+function ImpersonateButton({ teamId }: { teamId: string }) {
+  const { update } = useSession();
+  const router = useRouter();
+
+  const handleImpersonate = async () => {
+    await update({ impersonate: teamId });
+    router.refresh();
+  };
+
+  return (
+    <button onClick={handleImpersonate} className="hover:opacity-85">
+      <Eye className="size-4 text-green-500" />
+    </button>
+  );
+}
 
 // Define the columns for the table using TanStack
 export const columns: ColumnDef<TeamTableRow>[] = [
@@ -85,6 +104,7 @@ export const columns: ColumnDef<TeamTableRow>[] = [
         >
           <Waypoints className="size-4 text-orange-500" />
         </a>
+        <ImpersonateButton teamId={row.getValue("id")} />
       </div>
     ),
   },
