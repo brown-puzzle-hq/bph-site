@@ -21,16 +21,17 @@ import {
 import { getSearchedTeam, getSearchedPuzzle } from "./actions";
 import { FormattedTime } from "~/lib/time";
 import { deserializeMembers } from "~/lib/team-members";
-import { cn, ensureError } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 import { type GraphConfig } from "./page";
 import { type Team } from "@/db/types";
 import { toast } from "sonner";
+import { formatPhoneNumber } from "~/lib/team-members";
+import {
+  ROUND_NODE_COLORS as roundNodeColor,
+  ROUND_TEXT_COLORS as roundTextColor,
+} from "~/config/styles";
 
-const roundTextColor: Record<string, string> = {};
-
-const roundNodeColor: Record<string, string> = {};
-
-export type SearchedTeam = Omit<Team, "password" | "roomNeeded"> & {
+export type SearchedTeam = Omit<Team, "password"> & {
   unlocks: string[];
   solves: string[];
 };
@@ -41,7 +42,8 @@ export type SearchedPuzzle = {
   requestedHints:
     | { id: number; request: string; response: string | null }[]
     | null;
-  round: string;
+  roundName: string;
+  roundId: string;
 };
 
 export default function Graph({
@@ -73,10 +75,12 @@ export default function Graph({
   const handleSearchPuzzle = async () => {
     if (puzzleQuery === "") return;
 
+    const clean = (id: string | number | undefined) =>
+      typeof id === "string" ? id.toLowerCase().replace(/[^\w-]/g, "") : "";
     // Finds node by full id, then tries substring match
     const node =
-      data.nodes.find((node) => node.id === puzzleQuery) ||
-      data.nodes.find((node) => node.name.includes(puzzleQuery)) ||
+      data.nodes.find((node) => clean(node.id) === clean(puzzleQuery)) ||
+      data.nodes.find((node) => clean(node.id).includes(clean(puzzleQuery))) ||
       null;
     if (!node) {
       puzzleQueryRef.current?.select();
@@ -100,12 +104,21 @@ export default function Graph({
         puzzleId,
       );
 
+      if ("error" in result) {
+        toast.error("Failed to search puzzle.", {
+          description: result.error,
+        });
+        return;
+      }
+
+      const round = rounds.find((round) => round.puzzles.includes(puzzleId));
+
       // Set searched puzzle and remove team sidebar
       setSearchedPuzzle({
         puzzleId,
         ...result,
-        round:
-          rounds.find((round) => round.puzzles.includes(puzzleId))?.name || "",
+        roundName: round?.name || "",
+        roundId: round?.id || "",
       });
       setTeamSidebar(false);
 
@@ -118,17 +131,22 @@ export default function Graph({
 
       setPuzzleQuery("");
     } catch (e) {
-      const error = ensureError(e);
-      toast.error("Failed to fetch.", {
-        description: error.message,
-      });
+      toast.error("Failed to search puzzle. Please try again.");
     }
   };
 
   const handleSearchTeam = async () => {
-    const cleanedQuery = teamQuery.replace(/[^\w]/g, "").toLowerCase();
+    const cleanedQuery = teamQuery.replace(/[^\w-]/g, "").toLowerCase();
     try {
       const result = await getSearchedTeam(cleanedQuery);
+
+      if ("error" in result) {
+        teamQueryRef.current?.select();
+        setTeamQueryShaking(true);
+        setTimeout(() => setTeamQueryShaking(false), 200);
+        setSearchedTeam(null);
+        return;
+      }
 
       setTeamQuery(result.id);
       setSearchedTeam(result);
@@ -141,11 +159,7 @@ export default function Graph({
       params.set("team", result.id);
       router.push(`?${params.toString()}`);
     } catch (e) {
-      teamQueryRef.current?.select();
-      setTeamQueryShaking(true);
-      setTimeout(() => setTeamQueryShaking(false), 200);
-      setSearchedTeam(null);
-      return;
+      toast.error("Failed to search team. Please try again.");
     }
   };
 
@@ -179,14 +193,18 @@ export default function Graph({
       if (teamId) {
         try {
           const result = await getSearchedTeam(teamId);
-          setTeamQuery(teamId);
-          setSearchedTeam(result);
-          setTeamSidebar(!puzzleId);
+          if ("error" in result) {
+            toast.error("Failed to search team.", {
+              description: result.error,
+            });
+            teamId = null;
+          } else {
+            setTeamQuery(teamId);
+            setSearchedTeam(result);
+            setTeamSidebar(!puzzleId);
+          }
         } catch (e) {
-          const error = ensureError(e);
-          toast.error("Failed to fetch.", {
-            description: error.message,
-          });
+          toast.error("Failed to search team.");
           teamId = null;
         }
       }
@@ -212,18 +230,25 @@ export default function Graph({
         try {
           const result = await getSearchedPuzzle(teamId || null, puzzleId);
 
+          if ("error" in result) {
+            toast.error("Failed to search puzzle.", {
+              description: result.error,
+            });
+            return;
+          }
+
+          const round = rounds.find((round) =>
+            round.puzzles.includes(puzzleId),
+          );
+
           setSearchedPuzzle({
             puzzleId,
             ...result,
-            round:
-              rounds.find((round) => round.puzzles.includes(puzzleId))?.name ||
-              "",
+            roundName: round?.name || "",
+            roundId: round?.id || "",
           });
         } catch (e) {
-          const error = ensureError(e);
-          toast.error("Failed to fetch.", {
-            description: error.message,
-          });
+          toast.error("Failed to search puzzle.");
         }
       }
     };
@@ -348,6 +373,10 @@ export default function Graph({
     const amber400 = "oklch(0.828 0.189 84.429)";
     const neutral400 = "oklch(0.708 0 0)";
 
+    const roundId = rounds.find((round) =>
+      round.puzzles.includes(node.name),
+    )?.id;
+
     // If there is a searched team, use their solves and unlocks
     // Otherwise, use the round color
     const nodeColor = searchedTeam
@@ -356,10 +385,9 @@ export default function Graph({
         : searchedTeam.unlocks.includes(node.name)
           ? amber400
           : neutral400
-      : roundNodeColor[
-          rounds.find((round) => round.puzzles.includes(node.name))?.name ||
-            "Default"
-        ] || "oklch(0.708 0 0)";
+      : roundId
+        ? roundNodeColor[roundId] || "gray"
+        : "gray";
 
     // If showWords is OFF
     if (!showWords) {
@@ -636,15 +664,36 @@ export default function Graph({
                 <span className="font-semibold"> Primary email: </span>
                 {searchedTeam.primaryEmail}
               </p>
+              {searchedTeam.interactionMode === "in-person" && (
+                <>
+                  <p>
+                    <span className="font-semibold">Community members: </span>
+                    {searchedTeam.numCommunity}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone number: </span>
+                    {formatPhoneNumber(searchedTeam.phoneNumber)}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Room needed: </span>
+                    {searchedTeam.roomNeeded ? "Yes" : "No"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Solving location: </span>
+                    {searchedTeam.solvingLocation}
+                  </p>
+                </>
+              )}
               <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                 Members
               </p>
               <table>
                 {deserializeMembers(searchedTeam.members).map(
                   (member, index) => (
-                    <tr className="w-full align-top">
+                    <tr key={`member-${index}`} className="w-full align-top">
                       <td className="text-center">{index + 1}</td>
-                      <td className="break-words pl-2">{member.name}</td>
+                      <td className="break-words pl-2">{member.firstName}</td>
+                      <td className="break-words pl-2">{member.lastName}</td>
                       <td className="break-words pl-2">{member.email}</td>
                     </tr>
                   ),
@@ -695,7 +744,7 @@ export default function Graph({
                 )}
               </div>
               {rounds.map((round) => (
-                <>
+                <div key={round.name}>
                   <p className="my-1 rounded-[2px] bg-neutral-400 pl-0.5 font-semibold text-white">
                     {round.name}
                   </p>
@@ -704,7 +753,7 @@ export default function Graph({
                     const isUnlock = searchedTeam?.unlocks.includes(puzzle);
                     const isMeta = metaPuzzles.includes(puzzle);
                     return (
-                      <div>
+                      <div key={puzzle}>
                         <button
                           className="w-full text-left hover:bg-neutral-200"
                           onClick={async () =>
@@ -719,7 +768,7 @@ export default function Graph({
                                   : isUnlock
                                     ? "text-amber-500"
                                     : "text-neutral-500"
-                                : roundTextColor[round.name]
+                                : (roundTextColor[round.id] ?? "")
                             }`}
                           >
                             {puzzle}
@@ -728,7 +777,7 @@ export default function Graph({
                       </div>
                     );
                   })}
-                </>
+                </div>
               ))}
             </div>
           ) : (
@@ -744,7 +793,7 @@ export default function Graph({
                     metaPuzzles.includes(searchedPuzzle.puzzleId)
                       ? "font-bold"
                       : ""
-                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : roundTextColor[searchedPuzzle.round]}`}
+                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : (roundTextColor[searchedPuzzle.roundId] ?? "")}`}
                 >
                   {searchedPuzzle.puzzleId}
                 </p>
@@ -799,7 +848,7 @@ export default function Graph({
                       className={`${
                         guess.isCorrect ? "text-lime-600" : "text-rose-500"
                       }`}
-                      id={`guess=${i}`}
+                      key={`guess-${i}`}
                     >
                       {guess.guess}
                     </p>
@@ -816,12 +865,9 @@ export default function Graph({
                   {searchedPuzzle.requestedHints
                     ?.sort((a, b) => a.id - b.id)
                     .map((hint) => (
-                      <div>
+                      <div key={`hint-${hint.id}`}>
                         <div className="flex justify-between space-x-2 py-1">
-                          <p
-                            id={`hint-${hint.id}`}
-                            className="max-w-full break-words"
-                          >
+                          <p className="max-w-full break-words">
                             {hint.request}
                           </p>
                           <div>

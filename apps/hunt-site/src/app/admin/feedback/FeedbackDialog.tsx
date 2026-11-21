@@ -24,7 +24,7 @@ export default function FeedbackDialog({
     <div className="space-y-4">
       {feedbackList.length > 0 &&
         feedbackList.map((feedback) => (
-          <Card className="bg-inherit shadow-none" key={feedback.id}>
+          <Card className="rounded-md bg-inherit shadow-none" key={feedback.id}>
             <CardHeader className="p-4 pb-0.5">
               <CardDescription className={teamSide ? "text-main-header" : ""}>
                 <strong>

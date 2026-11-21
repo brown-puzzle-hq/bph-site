@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect, Fragment, startTransition } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import {
   Check,
@@ -9,6 +10,8 @@ import {
   CornerUpLeft,
   Pencil,
   RefreshCcw,
+  SendHorizonal,
+  Trash2,
   X,
 } from "lucide-react";
 import { IN_PERSON, REMOTE } from "@/config/client";
@@ -21,7 +24,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { type HintStatus } from "@/config/client";
-import { ensureError } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
 
 type TableProps = {
   previousHints: PreviousHints;
@@ -81,6 +84,7 @@ export default function HuntHintThreads({
   reply,
 }: TableProps) {
   const { data: session } = useSession();
+  const router = useRouter();
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
   const [request, setRequest] = useState<string>("");
   const [newReply, setNewReply] = useState<Reply | null>(
@@ -89,7 +93,7 @@ export default function HuntHintThreads({
   const [edit, setEdit] = useState<EditedMessage | null>(null);
   const [hiddenReplies, setHiddenReplies] = useState<number[]>([]);
 
-  const handleSubmitRequest = async (puzzleId: string, message: string) => {
+  const handleSubmitRequest = async (puzzleId: string) => {
     setOptimisticHints((prev) => [
       ...prev,
       {
@@ -108,23 +112,38 @@ export default function HuntHintThreads({
     ]);
     setRequest("");
 
-    startTransition(async () => {
-      try {
-        const { id } = await insertHintRequest(puzzleId, message);
-        setOptimisticHints((prev) =>
-          prev.map((hint) => (hint.id === 0 ? { ...hint, id } : hint)),
-        );
-      } catch (e) {
+    try {
+      const result = await insertHintRequest(puzzleId, request);
+      if ("error" in result) {
         setOptimisticHints((prev) => prev.filter((hint) => hint.id !== 0));
-        // Don't revert request box in case hint limit was reached
-        navigator.clipboard.writeText(message);
-
-        const error = ensureError(e);
+        setRequest(request);
         toast.error("Failed to request hint.", {
-          description: error.message + " Request copied to clipboard.",
+          description: result.error,
+          action: (
+            <Button
+              className="ml-auto"
+              variant="outline"
+              onClick={() => {
+                setRequest("");
+                router.refresh();
+              }}
+            >
+              Refresh
+            </Button>
+          ),
         });
+      } else {
+        setOptimisticHints((prev) =>
+          prev.map((hint) =>
+            hint.id === 0 ? { ...hint, id: result.id } : hint,
+          ),
+        );
       }
-    });
+    } catch (e) {
+      setOptimisticHints((prev) => prev.filter((hint) => hint.id !== 0));
+      setRequest(request);
+      toast.error("Failed to request hint. Please try again.");
+    }
   };
 
   const handleSubmitEdit = async (
@@ -151,15 +170,13 @@ export default function HuntHintThreads({
       }),
     );
     setEdit(null);
-    startTransition(async () => {
-      try {
-        await editTeamMessage(id, value, type);
-      } catch {
-        setOptimisticHints(optimisticHints);
-        setEdit(edit);
-        toast.error("Failed to edit message.");
-      }
-    });
+    try {
+      await editTeamMessage(id, value, type);
+    } catch {
+      setOptimisticHints(optimisticHints);
+      setEdit(edit);
+      toast.error("Failed to edit message. Please try again.");
+    }
   };
 
   const handleSubmitReply = async (hintId: number, message: string) => {
@@ -183,27 +200,25 @@ export default function HuntHintThreads({
     );
     setNewReply(null);
 
-    startTransition(async () => {
-      try {
-        const { replyId } = await insertTeamReply(hintId, message);
-        setOptimisticHints((prev) =>
-          prev.map((hint) =>
-            hint.id === hintId
-              ? {
-                  ...hint,
-                  replies: hint.replies.map((reply) =>
-                    reply.id === 0 ? { ...reply, id: replyId } : reply,
-                  ),
-                }
-              : hint,
-          ),
-        );
-      } catch {
-        setOptimisticHints(optimisticHints);
-        setNewReply(newReply);
-        toast.error("Failed to submit reply.");
-      }
-    });
+    try {
+      const { replyId } = await insertTeamReply(hintId, message);
+      setOptimisticHints((prev) =>
+        prev.map((hint) =>
+          hint.id === hintId
+            ? {
+                ...hint,
+                replies: hint.replies.map((reply) =>
+                  reply.id === 0 ? { ...reply, id: replyId } : reply,
+                ),
+              }
+            : hint,
+        ),
+      );
+    } catch {
+      setOptimisticHints(optimisticHints);
+      setNewReply(newReply);
+      toast.error("Failed to submit reply. Please try again.");
+    }
   };
 
   const handleHideReplies = (hintId: number) => {
@@ -274,11 +289,14 @@ export default function HuntHintThreads({
     }
   }, []);
 
+  useEffect(() => {
+    setOptimisticHints(previousHints);
+  }, [previousHints]);
+
   return (
     <div className="px-1 text-sm">
       <div className="mb-6 break-words px-3">
-        <p className="mb-1 font-semibold text-main-header">Request</p>
-        <p className="text-main-text">
+        <p className="mb-2 font-medium">
           Please provide as much detail as possible to help us understand where
           you're at and where you're stuck! Specific clues, steps, and
           hypotheses are all helpful. If you're working with any spreadsheets,
@@ -286,7 +304,7 @@ export default function HuntHintThreads({
         </p>
         <AutosizeTextarea
           maxHeight={500}
-          className="mt-2 resize-none border-0 bg-white bg-opacity-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="resize-none border-0 bg-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
           disabled={
             hintRequestState.isSolved ||
             !!hintRequestState.unansweredHint ||
@@ -300,28 +318,26 @@ export default function HuntHintThreads({
           value={request}
           onChange={(e) => setRequest(e.target.value)}
         />
-        <div className="mt-2 text-main-text/70">
-          {getFormDescription(hintRequestState)}
+        <div className="flex items-center justify-between rounded-md bg-[#1E2861] p-1">
+          <p className="ml-1">{getFormDescription(hintRequestState)}</p>
+          <button
+            onClick={() => handleSubmitRequest(hintRequestState.puzzleId)}
+            disabled={
+              !request ||
+              hintRequestState.isSolved ||
+              !!hintRequestState.unansweredHint ||
+              hintRequestState.hintsRemaining < 1 ||
+              optimisticHints.some((hint) => !hint.response) ||
+              new Date() >
+                (session?.user.interactionMode === "in-person"
+                  ? IN_PERSON.END_TIME
+                  : REMOTE.END_TIME)
+            }
+            className="rounded-sm bg-blue-900 px-6 py-1.5 hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <SendHorizonal className="size-4 fill-main-text" />
+          </button>
         </div>
-        <button
-          onClick={() =>
-            handleSubmitRequest(hintRequestState.puzzleId, request)
-          }
-          disabled={
-            !request ||
-            hintRequestState.isSolved ||
-            !!hintRequestState.unansweredHint ||
-            hintRequestState.hintsRemaining < 1 ||
-            optimisticHints.some((hint) => !hint.response) ||
-            new Date() >
-              (session?.user.interactionMode === "in-person"
-                ? IN_PERSON.END_TIME
-                : REMOTE.END_TIME)
-          }
-          className="mt-2 rounded-md bg-black/30 px-3 py-2 font-medium text-main-text hover:opacity-85 disabled:pointer-events-none disabled:opacity-50"
-        >
-          Submit
-        </button>
         {(() => {
           const now = new Date();
           const hour = new Date(
@@ -337,8 +353,8 @@ export default function HuntHintThreads({
           );
         })() && (
           <p className="mt-2 text-white/70">
-            <span className="font-semibold">Writers' Strike:</span> hint answers
-            will be delayed until 9 AM EST.
+            <span className="font-semibold">Sabbatical:</span> hint answers will
+            be delayed until 9 AM EDT.
           </p>
         )}
       </div>
@@ -352,22 +368,20 @@ export default function HuntHintThreads({
               <b>Team</b>
               {/* If the hint request was made by the current user, allow edits */}
               {hint.team.id === session?.user.id && (
-                <div className="absolute -top-5 right-0">
+                <div className="pointer-events-none absolute -top-5 right-0 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
                   {edit?.id === hint.id && edit.type === "request" ? (
                     <div className="space-x-0.5">
                       <button
                         onClick={() =>
                           handleSubmitEdit(edit.id, edit.value, "request")
                         }
-                        className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                        className="rounded-md bg-black/20 p-1"
                       >
                         <Check className="size-4" />
                       </button>
                       <button
-                        onClick={() => {
-                          setEdit(null);
-                        }}
-                        className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                        onClick={() => setEdit(null)}
+                        className="rounded-md bg-black/20 p-1"
                       >
                         <X className="size-4" />
                       </button>
@@ -382,7 +396,7 @@ export default function HuntHintThreads({
                           type: "request",
                         });
                       }}
-                      className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                      className="rounded-md bg-black/20 p-1"
                     >
                       <Pencil className="size-4" />
                     </button>
@@ -395,7 +409,7 @@ export default function HuntHintThreads({
             {edit?.type === "request" && edit.id === hint.id ? (
               <AutosizeTextarea
                 maxHeight={500}
-                className="mb-1 mt-2 resize-none border-0 bg-white bg-opacity-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="mb-1 mt-2 resize-none border-0 bg-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
                 value={edit.value}
                 onChange={(e) => {
                   if (!edit) return;
@@ -421,7 +435,7 @@ export default function HuntHintThreads({
                 {/* reply button, only show if collapsed */}
                 {(!hint.replies.length || hiddenReplies.includes(hint.id)) &&
                   newReply?.hintId !== hint.id && (
-                    <div className="absolute -top-5 right-0">
+                    <div className="pointer-events-none absolute -top-5 right-0 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
                       <button
                         onClick={() => {
                           setEdit(null);
@@ -434,7 +448,7 @@ export default function HuntHintThreads({
                             message: "",
                           });
                         }}
-                        className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                        className="rounded-md bg-black/20 p-1"
                       >
                         <CornerUpLeft className="size-4" />
                       </button>
@@ -463,7 +477,7 @@ export default function HuntHintThreads({
               {hint.replies.length > 0 &&
                 (hiddenReplies.includes(hint.id) ? (
                   <button
-                    className="ml-3 flex items-center space-x-1.5 text-main-text/70 hover:opacity-85"
+                    className="ml-3 flex items-center space-x-1.5 hover:opacity-85"
                     onClick={() => handleHideReplies(hint.id)}
                   >
                     <ChevronDown className="-mx-1 size-5" />
@@ -474,11 +488,9 @@ export default function HuntHintThreads({
                     className="relative ml-3 flex items-center space-x-1.5 hover:opacity-85"
                     onClick={() => handleHideReplies(hint.id)}
                   >
-                    <div className="size-3 rounded-full bg-main-text/70" />
-                    <div className="absolute -left-[1px] bottom-0 h-[4px] border-l-2 border-main-text/70"></div>
-                    <p className="font-medium text-main-text/70">
-                      Hide Replies
-                    </p>
+                    <div className="size-3 rounded-full bg-main-text" />
+                    <div className="absolute -left-[1px] bottom-0 h-[4px] border-l-2 border-main-text"></div>
+                    <p className="font-medium">Hide Replies</p>
                   </button>
                 ))}
 
@@ -486,8 +498,8 @@ export default function HuntHintThreads({
                 .filter((reply) => reply.message !== "[Claimed]")
                 .map((reply, i, row) => (
                   <div
-                    key={`${reply.id}`}
-                    className="group ml-[17px] break-words rounded-r-md border-l-2 border-main-text/70 px-3 py-2 hover:bg-black/5"
+                    key={reply.id}
+                    className="group ml-[17px] break-words rounded-r-md border-l-2 border-main-text px-3 py-2 hover:bg-black/5"
                   >
                     {/* Top section with userId and edit button */}
                     <div className="relative flex justify-between">
@@ -496,7 +508,7 @@ export default function HuntHintThreads({
                       ) : (
                         <b>Admin</b>
                       )}
-                      <div className="absolute -top-5 right-0 flex space-x-0.5">
+                      <div className="pointer-events-none absolute -top-5 right-0 flex space-x-0.5 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100">
                         {i + 1 === row.length &&
                           !(edit?.type === "reply" && edit.id === reply.id) &&
                           newReply?.hintId !== hint.id && (
@@ -512,7 +524,7 @@ export default function HuntHintThreads({
                                   message: "",
                                 });
                               }}
-                              className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                              className="rounded-md bg-black/20 p-1"
                             >
                               <CornerUpLeft className="size-4" />
                             </button>
@@ -530,15 +542,13 @@ export default function HuntHintThreads({
                                     "reply",
                                   )
                                 }
-                                className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                                className="rounded-md bg-black/20 p-1"
                               >
                                 <Check className="size-4" />
                               </button>
                               <button
-                                onClick={() => {
-                                  setEdit(null);
-                                }}
-                                className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                                onClick={() => setEdit(null)}
+                                className="rounded-md bg-black/20 p-1"
                               >
                                 <X className="size-4" />
                               </button>
@@ -553,7 +563,7 @@ export default function HuntHintThreads({
                                   type: "reply",
                                 });
                               }}
-                              className="rounded-md bg-black/20 p-1 text-main-text opacity-0 group-hover:opacity-100"
+                              className="rounded-md bg-black/20 p-1"
                             >
                               <Pencil className="size-4" />
                             </button>
@@ -566,7 +576,7 @@ export default function HuntHintThreads({
                       {edit?.type === "reply" && edit.id === reply.id ? (
                         <AutosizeTextarea
                           maxHeight={500}
-                          className="mb-1 mt-2 resize-none border-0 bg-white bg-opacity-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          className="mb-1 mt-2 resize-none border-0 bg-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
                           value={edit.value}
                           onChange={(e) => {
                             if (!edit) return;
@@ -587,16 +597,16 @@ export default function HuntHintThreads({
                 <div
                   id={`${hint.id}-reply-request`}
                   key={`${hint.id}-reply-request`}
-                  className="group ml-[17px] break-words border-l-2 border-main-text/70 px-3 py-2"
+                  className="group ml-[17px] break-words border-l-2 border-main-text px-3 py-2"
                 >
-                  <p className="font-semibold">Reply</p>
-                  <p className="text-main-text/70">
+                  <p className="font-medium">Reply</p>
+                  <p className="mb-2">
                     Ask for clarification in this reply thread. Replies don't
                     count toward your hint limit!
                   </p>
                   <AutosizeTextarea
                     maxHeight={500}
-                    className="mt-1 resize-none border-0 bg-white bg-opacity-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="mt-1 resize-none border-0 bg-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
                     value={newReply.message}
                     onChange={(e) => {
                       if (newReply === null) return;
@@ -606,23 +616,21 @@ export default function HuntHintThreads({
                       });
                     }}
                   />
-                  <div className="mb-1 mt-2 flex items-center space-x-2">
+                  <div className="flex items-center justify-between space-x-2 rounded-md bg-[#1E2861] p-1">
+                    <button
+                      onClick={() => setNewReply(null)}
+                      className="rounded-sm p-1 hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+                    >
+                      <Trash2 className="size-5" />
+                    </button>
                     <button
                       onClick={() =>
                         handleSubmitReply(hint.id, newReply.message)
                       }
                       disabled={!newReply.message}
-                      className="rounded-sm bg-black/30 px-2.5 py-1.5 font-medium text-main-text hover:opacity-85 disabled:opacity-50"
+                      className="rounded-sm bg-blue-900 px-6 py-1.5 hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
                     >
-                      Send
-                    </button>
-                    <button
-                      onClick={() => {
-                        setNewReply(null);
-                      }}
-                      className="h-fit text-main-text/70 hover:underline"
-                    >
-                      Cancel
+                      <SendHorizonal className="size-4 fill-main-text" />
                     </button>
                   </div>
                 </div>

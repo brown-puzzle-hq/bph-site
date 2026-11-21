@@ -2,24 +2,31 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
-  useEffect,
-  useCallback,
-  ReactNode,
+  type ReactNode,
 } from "react";
-import { toast } from "sonner";
-import { type SocketMessage } from "~/lib/comms";
-import Link from "next/link";
-import { CheckCircle, Unlock, Trophy } from "lucide-react";
-import axios from "axios";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { toast } from "sonner";
+import { CheckCircle, Trophy, Unlock } from "lucide-react";
+import { type SocketMessage } from "~/lib/comms";
+import { Button } from "@/components/ui/button";
 
-const TOAST_CLASS = "bg-[#703B50] text-white shadow-lg rounded-xl";
+/** Bumped when `public/ws-shared-worker.js` changes so tabs load the new script. */
+const WS_SHARED_WORKER_BUILD = "20260412-1";
 
 type WebSocketContextValue = {
-  readyState: number;
+  transport: "shared-worker" | null;
+  readyState: number | null;
+  lastConnectedAt: number | null;
+  lastClosedAt: number | null;
+  lastMessageAt: number | null;
+  lastMessageType: string | null;
 };
 
 export const WebSocketContext = createContext<WebSocketContextValue | null>(
@@ -34,154 +41,192 @@ export function useWebSocket() {
   return ctx;
 }
 
+type WorkerMessage =
+  | { kind: "PAYLOAD"; payload: string }
+  | { kind: "STATUS"; readyState: number }
+  | { kind: "PING" }
+  | { kind: "ERROR"; message: string };
+
 export function WebSocketProvider({ children }: { children: ReactNode }) {
-  const { data: session } = useSession();
-  const socketRef = useRef<WebSocket | null>(null);
-  const [readyState, setReadyState] = useState<number>(WebSocket.CLOSED);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleMessage = useCallback((event: MessageEvent) => {
+  const portRef = useRef<MessagePort | null>(null);
+  const routerRef = useRef(router);
+  const pathnameRef = useRef(pathname);
+
+  const [debug, setDebug] = useState<WebSocketContextValue>({
+    transport: null,
+    readyState: null,
+    lastConnectedAt: null,
+    lastClosedAt: null,
+    lastMessageAt: null,
+    lastMessageType: null,
+  });
+
+  useEffect(() => {
+    routerRef.current = router;
+  }, [router]);
+
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
+
+  const handleReadyState = useCallback((readyState: number) => {
+    const now = Date.now();
+    setDebug((prev) => {
+      if (prev.readyState === readyState) return prev;
+
+      return {
+        ...prev,
+        readyState,
+        lastConnectedAt:
+          readyState === WebSocket.OPEN ? now : prev.lastConnectedAt,
+        lastClosedAt: readyState === WebSocket.CLOSED ? now : prev.lastClosedAt,
+      };
+    });
+  }, []);
+
+  const handleSocketPayload = useCallback((payload: string) => {
+    const now = Date.now();
+
     try {
-      const data: SocketMessage = JSON.parse(event.data);
+      const data: SocketMessage = JSON.parse(payload);
 
-      const puzzleLink = (id: string, name: string) => (
-        <Link
-          href={`/puzzle/${id}`}
-          className="font-semibold text-white underline hover:text-purple-200"
-        >
-          {name}
-        </Link>
+      setDebug((prev) => ({
+        ...prev,
+        lastMessageAt: now,
+        lastMessageType: data.type,
+      }));
+
+      const puzzleLink = (id: string) => (
+        <Button asChild className="ml-auto" variant="outline">
+          <Link href={`/puzzle/${id}`} target="_blank">
+            View
+          </Link>
+        </Button>
       );
 
       switch (data.type) {
         case "SolvedPuzzle":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <CheckCircle className="h-6 w-6" />
-                <div>
-                  <div className="font-bold">Puzzle solved!</div>
-                  <div>{puzzleLink(data.puzzleId, data.puzzleName)}</div>
-                </div>
-              </div>
+          toast("Puzzle solved!", {
+            icon: <CheckCircle className="size-[18px]" />,
+            description: (
+              <>
+                {data.puzzleName} in{" "}
+                <span className="font-bold text-correct-guess">
+                  {data.solveTime}
+                </span>
+              </>
             ),
-            { duration: 4000 },
-          );
+            action: puzzleLink(data.puzzleId),
+          });
           break;
 
         case "UnlockedPuzzle":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <Unlock className="h-6 w-6" />
-                <div>
-                  <div className="font-bold">Puzzle unlocked!</div>
-                  <div>{puzzleLink(data.puzzleId, data.puzzleName)}</div>
-                </div>
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast("Puzzle unlocked!", {
+            icon: <Unlock className="size-[18px]" />,
+            description: data.puzzleName,
+            action: puzzleLink(data.puzzleId),
+          });
           break;
 
         case "FinishedHunt":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <Trophy className="h-6 w-6" />
-                <div className="font-bold">
-                  Congratulations on finishing the hunt!
-                </div>
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast("Hunt finished. Congratulations!", {
+            icon: <Trophy className="size-[18px]" />,
+            description: "Keep an eye on your email for next steps!",
+          });
           break;
 
         case "Toast":
-          toast.custom(
-            () => (
-              <div className={`flex items-center gap-3 p-4 ${TOAST_CLASS}`}>
-                <div className="font-bold">{data.title}</div>
-                {data.description && (
-                  <div className="text-white/90">{data.description}</div>
-                )}
-              </div>
-            ),
-            { duration: 4000 },
-          );
+          toast(data.title, { description: data.description });
+          break;
+
+        case "RefreshPuzzle":
+          if (pathnameRef.current === `/puzzle/${data.puzzleId}`) {
+            routerRef.current.refresh();
+          }
           break;
 
         default:
           break;
       }
-    } catch (err) {
-      console.error("Invalid WebSocket message:", event.data);
+    } catch {
+      console.error("Invalid WebSocket message:", payload);
+      setDebug((prev) => ({
+        ...prev,
+        lastMessageAt: now,
+        lastMessageType: null,
+      }));
     }
   }, []);
 
-  // Try to create a websocket
   useEffect(() => {
-    // Check that the user is logged in
-    if (!session) return;
-
-    // Check that websocket server exists
     const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
     const protocol = process.env.NEXT_PUBLIC_WEBSOCKET_PROTOCOL;
-    if (!wsServer || !protocol) {
-      console.warn("WebSocket server or protocol not configured.");
+
+    if (!wsServer || !protocol || typeof SharedWorker === "undefined") {
+      setDebug((prev) => ({ ...prev, transport: null, readyState: null }));
       return;
     }
 
-    let cancelled = false;
+    const worker = new SharedWorker(
+      `/ws-shared-worker.js?v=${WS_SHARED_WORKER_BUILD}`,
+    );
+    const port = worker.port;
+    portRef.current = port;
 
-    async function connect() {
-      try {
-        // Get permission token
-        const { data } = await axios.post("/api/ws-token");
-        const token = data.token;
+    setDebug((prev) => ({ ...prev, transport: "shared-worker" }));
 
-        if (cancelled) return;
+    port.onmessage = (event: MessageEvent<WorkerMessage>) => {
+      const msg = event.data;
+      if (!msg) return;
 
-        // Create the websocket
-        const url = new URL(`${protocol}//${wsServer}`);
-        url.searchParams.append("token", token);
-        const ws = new WebSocket(url.toString());
-        socketRef.current = ws;
-        setReadyState(ws.readyState);
-
-        // Initialize the websocket
-        ws.onopen = () => {
-          console.log("✅ WebSocket connected");
-          setReadyState(ws.readyState);
-        };
-        ws.onmessage = (event) => handleMessage(event);
-        ws.onerror = (err) => {
-          console.error("❌ WebSocket error", err);
-          setReadyState(ws.readyState);
-        };
-        ws.onclose = () => {
-          console.warn("⚠️ WebSocket closed");
-          setReadyState(ws.readyState);
-        };
-      } catch (err) {
-        console.error("Failed to connect to WebSocket server:", err);
+      // The worker reaps ports that stop answering, which is how it notices
+      // tabs that closed without sending DISCONNECT.
+      if (msg.kind === "PING") port.postMessage({ kind: "PONG" });
+      if (msg.kind === "STATUS") handleReadyState(msg.readyState);
+      if (msg.kind === "PAYLOAD") handleSocketPayload(msg.payload);
+      if (msg.kind === "ERROR") {
+        console.error("SharedWorker websocket error:", msg.message);
       }
-    }
-
-    connect();
+    };
 
     return () => {
-      socketRef.current?.close(1000);
-      cancelled = true;
+      portRef.current = null;
+      try {
+        port.postMessage({ kind: "DISCONNECT" });
+        port.close();
+      } catch {
+        // ignore
+      }
     };
-  }, [session]);
+  }, [handleReadyState, handleSocketPayload]);
+
+  useEffect(() => {
+    const port = portRef.current;
+    const wsServer = process.env.NEXT_PUBLIC_WEBSOCKET_SERVER;
+    const protocol = process.env.NEXT_PUBLIC_WEBSOCKET_PROTOCOL;
+    if (!port || !wsServer || !protocol) return;
+
+    if (status === "loading") return;
+
+    try {
+      port.postMessage({
+        kind: "INIT",
+        wsServer,
+        protocol,
+        clientBuild: WS_SHARED_WORKER_BUILD,
+        active: status === "authenticated" && Boolean(session),
+      });
+    } catch {
+      // ignore
+    }
+  }, [session, status]);
 
   return (
-    <WebSocketContext.Provider
-      value={{
-        readyState,
-      }}
-    >
+    <WebSocketContext.Provider value={debug}>
       {children}
     </WebSocketContext.Provider>
   );

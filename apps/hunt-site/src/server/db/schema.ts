@@ -51,6 +51,14 @@ export const teams = createTable("team", {
     .notNull()
     .defaultNow(),
   finishTime: timestamp("finish_time", { withTimezone: true }),
+
+  // Only for in-person teams
+  numCommunity: varchar("num_community", { length: 31 }).notNull().default(""),
+  phoneNumber: varchar("phone_number", { length: 31 }).notNull().default(""),
+  roomNeeded: boolean("room_needed").notNull().default(false),
+  solvingLocation: varchar("solving_location", { length: 255 })
+    .notNull()
+    .default(""),
 });
 /** END_SNIPPET:TEAM_SCHEMA */
 

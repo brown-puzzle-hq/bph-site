@@ -6,23 +6,29 @@ import Countdown from "@/components/nav/Countdown";
 import { IN_PERSON, REMOTE } from "@/config/client";
 import { cn } from "~/lib/utils";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function HuntNavBar() {
   const { data: session } = useSession();
   const now = new Date();
 
   const style: NavBarStyle = {
-    item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-all",
+    item: "data-[active=true]:bg-black/30 hover:!bg-slate-400/15 transition-colors",
     bar: "bg-nav-bg/30 backdrop-blur-md backdrop-filter",
-    sheet: "bg-nav-bg",
+    sheet: "bg-[#1A2A7A]/80",
   };
   const logoutSizing = "cursor-pointer rounded-md px-[6px] py-[4px]";
 
   const leftMenuItems: MenuItem[] = [
     {
       title: "Home",
-      href: "/",
-      type: "link",
+      element: (
+        <Link href="/" prefetch={false}>
+          <Image src="/favicon.png" alt="Home" width={28} height={28} />
+        </Link>
+      ),
+      type: "element",
     },
     {
       title: "Info",
@@ -101,6 +107,11 @@ export function HuntNavBar() {
     rightMenuItems.push({
       title: "Login",
       href: "/login",
+      type: "link",
+    });
+    rightMenuItems.push({
+      title: "Register",
+      href: "/register",
       type: "link",
     });
   }

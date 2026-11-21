@@ -1,6 +1,8 @@
 import "server-only";
 
+import { sanitizeAnswer } from "@/config/client";
 import { auth } from "@/auth";
+import { DrizzleQueryError } from "drizzle-orm/errors";
 
 type PermissionRequirement =
   | { level: "admin" }
@@ -51,4 +53,25 @@ export async function checkPermissions(req: PermissionRequirement) {
   }
 
   return { error: null, user: session.user };
+}
+
+/**
+ * Check whether an error represents a duplicate insertion
+ */
+export function isDupErr(error: unknown): boolean {
+  if (error instanceof DrizzleQueryError && error.cause) {
+    return "code" in error.cause && error.cause.code === "23505";
+  }
+  return false;
+}
+
+export function displayStoredPuzzleGuess(
+  storedGuess: string,
+  isCorrect: boolean,
+  puzzleAnswer: string,
+) {
+  if (!isCorrect) return storedGuess;
+  if (sanitizeAnswer(storedGuess) === sanitizeAnswer(puzzleAnswer))
+    return puzzleAnswer;
+  return `${storedGuess} → ${puzzleAnswer}`;
 }

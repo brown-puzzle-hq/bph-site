@@ -1,78 +1,36 @@
 "use client";
-import { Clipboard } from "lucide-react";
-import { toast } from "sonner";
 
-function renderTableToPlainText(html: string): string {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  const rows = doc.querySelectorAll("table tr");
+import { Check, Clipboard } from "lucide-react";
+import { type CopyData, useCopyToClipboard } from "~/lib/copy";
+import { cn } from "~/lib/utils";
 
-  const table: string[][] = [];
+export type { CopyData };
 
-  for (const row of rows) {
-    const cells = Array.from(row.querySelectorAll("th, td")).map(
-      (cell) => cell.textContent?.trim() ?? "",
-    );
-    table.push(cells);
-  }
-
-  // Find the max width of each column
-  const colWidths: number[] = [];
-  table.forEach((row) =>
-    row.forEach((cell, i) => {
-      colWidths[i] = Math.max(colWidths[i] || 0, cell.length);
-    }),
-  );
-
-  // Format rows
-  const formatted = table
-    .map((row) =>
-      row
-        .map((cell, i) => cell.padEnd(colWidths[i]!))
-        .join(" | ")
-        .trimEnd(),
-    )
-    .join("\n");
-
-  return formatted;
-}
-
-export default function CopyButton({ copyText }: { copyText: string }) {
-  const isHtml = /<\/?[a-z][\s\S]*>/i.test(copyText);
+export default function CopyButton({
+  copyText,
+}: {
+  copyText: string | CopyData;
+}) {
+  const { didCopy, handleCopy } = useCopyToClipboard(copyText);
 
   return (
-    <button
-      onClick={() => {
-        try {
-          const plainText = isHtml
-            ? renderTableToPlainText(copyText)
-            : copyText;
-          if (isHtml) {
-            const blobHtml = new Blob([copyText], { type: "text/html" });
-            const blobText = new Blob([plainText], { type: "text/plain" });
-            const clipboardItem = new ClipboardItem({
-              "text/html": blobHtml,
-              "text/plain": blobText,
-            });
-            navigator.clipboard.write([clipboardItem]);
-          } else {
-            navigator.clipboard.writeText(copyText);
-          }
-          toast("Copied to clipboar!", {
-            description: (
-              <span className="block max-w-[calc(100vw-64px)] truncate md:max-w-[356px]">
-                {plainText}
-              </span>
-            ),
-          });
-        } catch (error) {
-          toast.error("Failed to copy.", {
-            description: "An error occurred while copying.",
-          });
-        }
-      }}
-    >
-      <Clipboard className="size-5 text-yellow-800" />
+    <button className="relative size-5 hover:opacity-85" onClick={handleCopy}>
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Clipboard
+          className={cn(
+            "size-5 text-yellow-800 transition-all duration-200",
+            didCopy && "scale-90 opacity-0",
+          )}
+        />
+      </div>
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Check
+          className={cn(
+            "size-5 text-yellow-800 transition-all duration-200",
+            !didCopy && "scale-90 opacity-0",
+          )}
+        />
+      </div>
     </button>
   );
 }

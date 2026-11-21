@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,7 +54,7 @@ export function LoginForm() {
     } else if (result?.ok) {
       router.push("/");
     } else {
-      alert("An unexpected error occurred. Please try again.");
+      toast.error("Failed to log in. Please try again.");
     }
   };
 

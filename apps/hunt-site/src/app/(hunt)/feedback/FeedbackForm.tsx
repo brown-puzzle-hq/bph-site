@@ -28,6 +28,7 @@ import {
 import FeedbackDialog from "~/app/admin/feedback/FeedbackDialog";
 
 import { insertFeedback } from "./actions";
+import { CaseUpper, Eye, SendHorizonal } from "lucide-react";
 
 export const feedbackFormSchema = z.object({
   description: z.string().min(1, { message: "Required" }),
@@ -67,7 +68,7 @@ export default function FeedbackForm({
       setPreview(false);
       form.reset();
     } catch {
-      toast("Submission failed. Please try again.");
+      toast.error("Failed to submit feedback. Please try again.");
     }
   };
 
@@ -80,15 +81,17 @@ export default function FeedbackForm({
             name="description"
             render={({ field }) => (
               <>
-                <FormItem className="mb-4">
-                  <FormDescription className="text-main-text">
+                <FormItem className={preview ? "mb-4" : undefined}>
+                  <FormDescription className="font-medium">
                     Notice puzzle errata, website bugs, or anything else we
-                    should be aware of? Send us feedback here. This text box
-                    supports Markdown.
+                    should be aware of? Send us feedback here.{" "}
+                    <span className="italic">
+                      This textbox supports Markdown.
+                    </span>
                   </FormDescription>
                   <FormControl>
                     {preview ? (
-                      <Card className="bg-inherit">
+                      <Card className="rounded-md bg-inherit">
                         <CardHeader className="p-4 pb-0.5">
                           <CardDescription className="text-main-header">
                             <strong>
@@ -97,32 +100,40 @@ export default function FeedbackForm({
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0">
-                          <article className="prose prose-feedback text-main-text">
+                          <article className="prose prose-custom-colors prose-feedback">
                             {useRemarkSync(field.value) || <></>}
                           </article>
                         </CardContent>
                       </Card>
                     ) : (
                       <AutosizeTextarea
-                        className="bg-inherit text-main-text placeholder:text-white/40 focus-visible:ring-offset-0"
+                        className="border-0 bg-white/10 placeholder:text-white/80 focus-visible:ring-0 focus-visible:ring-offset-0"
                         placeholder="No response yet"
                         {...field}
                       />
                     )}
                   </FormControl>
                 </FormItem>
-                <div className="mb-4 flex space-x-2">
-                  <Button type="submit" disabled={field.value === ""}>
-                    Submit
-                  </Button>
-                  <Button
+                <div className="mb-4 flex items-center justify-between space-x-2 rounded-md bg-[#1E2861] p-1">
+                  <button
                     type="button"
-                    variant="secondary"
-                    onClick={() => setPreview((value) => !value)}
                     disabled={field.value === ""}
+                    onClick={() => setPreview((value) => !value)}
+                    className="rounded-sm p-1 text-sm font-medium hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
                   >
-                    {preview ? "Edit" : "Preview"}
-                  </Button>
+                    {preview ? (
+                      <CaseUpper className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={field.value === ""}
+                    className="rounded-sm bg-blue-900 px-6 py-1.5 hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+                  >
+                    <SendHorizonal className="size-4 fill-main-text" />
+                  </button>
                 </div>
               </>
             )}

@@ -14,18 +14,19 @@ export function focusAtEnd(input?: HTMLInputElement | null) {
   input.setSelectionRange(len, len);
 }
 
-export function ensureError(value: unknown): Error {
-  if (value instanceof Error) return value;
+/** Formats a duration in milliseconds as "Xd Yh Zm Ws" */
+/** NB: server actions cannot import from time.tsx      */
+export function formatDuration(deltaMs: number): string {
+  const totalSeconds = Math.floor(Math.max(0, deltaMs) / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-  let stringified;
-  try {
-    stringified = JSON.stringify(value);
-  } catch {
-    stringified = "[Unable to stringify the thrown value]";
-  }
-
-  const error = new Error(
-    `This value was thrown as is, not through an Error: ${stringified}`,
-  );
-  return error;
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
+  parts.push(`${seconds}s`);
+  return parts.join(" ");
 }

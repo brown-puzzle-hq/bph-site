@@ -23,6 +23,8 @@ import {
   UsersRound,
   Database,
   Waypoints,
+  Bug,
+  Clipboard,
 } from "lucide-react";
 
 const huntItems = [
@@ -88,6 +90,16 @@ const adminItems = [
     title: "Queries",
     href: "/admin/sql",
     icon: <Database className="text-blue-500" />,
+  },
+  {
+    title: "Debug",
+    href: "/admin/debug",
+    icon: <Bug className="text-blue-500" />,
+  },
+  {
+    title: "Clipboard",
+    href: "/admin/clipboard-inspector",
+    icon: <Clipboard className="text-blue-500" />,
   },
 ];
 

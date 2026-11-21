@@ -20,6 +20,10 @@ export async function getSearchedTeam(teamId: string) {
       finishTime: true,
       members: true,
       interactionMode: true,
+      numCommunity: true,
+      phoneNumber: true,
+      roomNeeded: true,
+      solvingLocation: true,
     },
     with: {
       unlocks: {
@@ -31,7 +35,7 @@ export async function getSearchedTeam(teamId: string) {
     },
   });
 
-  if (!result) throw new Error(`Team ${teamId} not found.`);
+  if (!result) return { error: `Team ${teamId} not found.` };
 
   const unlocks = result.unlocks.map((u) => u.puzzleId);
   const unlocksAndInitialPuzzles = [...unlocks, ...INITIAL_PUZZLES];
@@ -62,7 +66,7 @@ export async function getSearchedPuzzle(
       },
     });
 
-    if (!puzzle) throw new Error(`Puzzle ${puzzleId} not found.`);
+    if (!puzzle) return { error: `Puzzle ${puzzleId} not found.` };
 
     return {
       guesses: [],
@@ -88,7 +92,7 @@ export async function getSearchedPuzzle(
     },
   });
 
-  if (!result) throw new Error(`Team ${teamId} not found.`);
+  if (!result) return { error: `Team ${teamId} not found.` };
 
   return result;
 }

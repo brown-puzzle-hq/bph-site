@@ -7,7 +7,8 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { insertAnswerToken } from "./actions";
 import { SquareCheckBig } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
-import { cn, ensureError } from "~/lib/utils";
+import { cn } from "~/lib/utils";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   answer: z.preprocess(
@@ -39,12 +40,14 @@ export default function EventForm({ eventId }: FormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setError(false);
     try {
-      await insertAnswerToken(eventId, data.answer);
+      const { error } = await insertAnswerToken(eventId, data.answer);
+      if (error === "Incorrect token!") {
+        setError(true);
+        setShaking(true);
+        setTimeout(() => setShaking(false), 200);
+      }
     } catch (e) {
-      const error = ensureError(e);
-      setError(true);
-      setShaking(true);
-      setTimeout(() => setShaking(false), 200);
+      toast.error("Failed to submit token. Please try again.");
     }
   };
 

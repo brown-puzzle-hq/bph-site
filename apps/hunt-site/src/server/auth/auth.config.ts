@@ -16,23 +16,38 @@ export const authConfig = {
     // The jwt callback is called whenever a token is created
     // (i.e. at sign-in) or updated (i.e. `useSession`).
     // The returned value is encrypted and stored in a cookie.
-    jwt: async ({ token, user, trigger }) => {
+    jwt: async ({ token, user, trigger, session }) => {
       if (user) {
         token.id = user.id;
         token.displayName = user.displayName;
         token.role = user.role;
         token.interactionMode = user.interactionMode;
       }
-      if (trigger === "update" && typeof token.id === "string") {
-        const team = await db.query.teams.findFirst({
-          where: eq(teams.id, token.id),
-        });
-
-        if (team) {
-          token.displayName = team.displayName;
-          token.role = team.role;
-          token.interactionMode = team.interactionMode;
+      if (trigger === "update") {
+        const originalId = token.id;
+        if (token.role === "admin" && session?.impersonate) {
+          token.id = session.impersonate;
+          console.log(`${token.sub} started impersonating ${token.id}`);
         }
+        if (session?.ret) {
+          console.log(`${token.sub} stopped impersonating ${token.id}`);
+          token.id = token.sub;
+        }
+        // Re-sync from DB
+        if (typeof token.id === "string") {
+          const team = await db.query.teams.findFirst({
+            where: eq(teams.id, token.id),
+          });
+
+          if (team) {
+            token.displayName = team.displayName;
+            token.role = team.role;
+            token.interactionMode = team.interactionMode;
+            return token;
+          }
+        }
+        console.error(`Could not find team ${token.id} during token update`);
+        token.id = originalId;
       }
       return token;
     },
@@ -48,6 +63,7 @@ export const authConfig = {
           displayName: token.displayName as string,
           role: token.role as Role,
           interactionMode: token.interactionMode as InteractionMode,
+          sub: token.sub !== token.id ? token.sub : undefined,
         };
       }
       return session;

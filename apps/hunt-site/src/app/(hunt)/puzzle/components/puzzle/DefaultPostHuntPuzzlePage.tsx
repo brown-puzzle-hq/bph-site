@@ -3,7 +3,7 @@
 // Default PostHunt Page
 import { useState } from "react";
 import { cn } from "~/lib/utils";
-import CopyButton from "./CopyButton";
+import CopyButton, { type CopyData } from "./CopyButton";
 import GuessTable from "./guess/GuessTable";
 import { Guess } from "./guess/GuessTable";
 
@@ -22,14 +22,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { NumberOfGuesses } from "./DefaultPuzzlePage";
-import { Infinity } from "lucide-react";
+import { Infinity, SendHorizontal } from "lucide-react";
 import { sanitizeAnswer } from "@/config/client";
 
 type DefaultPostHuntPuzzlePageProps = {
   puzzleAnswer: string;
   inPersonBody: React.ReactNode;
   remoteBody: React.ReactNode;
-  copyText: string | null;
+  copyText: string | CopyData | null;
   partialSolutions: Record<string, string>;
   tasks: Record<string, React.ReactNode>;
   interactionMode?: string;
@@ -52,7 +52,6 @@ export default function DefaultPostHuntPuzzlePage({
   const [numberOfGuessesLeft, setNumberOfGuessesLeft] =
     useState<NumberOfGuesses>(20);
   const [isSolved, setIsSolved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Guess form
   const GuessForm = ({ puzzleAnswer }: FormProps) => {
@@ -75,18 +74,22 @@ export default function DefaultPostHuntPuzzlePage({
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-      setError(null);
-
       const guess = data.guess;
-      const isCorrect = data.guess === puzzleAnswer;
+      const isCorrect = sanitizeAnswer(guess) === sanitizeAnswer(puzzleAnswer);
 
-      setPreviousGuesses((prevGuesses) => [
-        ...prevGuesses,
+      setPreviousGuesses((prev) => [
+        ...prev,
         {
-          id: prevGuesses.length,
-          guess,
-          isCorrect,
-          teamId: "anonymous",
+          guess: isCorrect ? puzzleAnswer : guess,
+          status: isCorrect
+            ? "correct"
+            : guess in partialSolutions
+              ? "partial"
+              : guess in tasks
+                ? "task"
+                : "incorrect",
+          partialTip:
+            guess in partialSolutions ? partialSolutions[guess] : undefined,
           submitTime: new Date(),
         },
       ]);
@@ -101,12 +104,22 @@ export default function DefaultPostHuntPuzzlePage({
       form.reset();
     };
 
+    const description = isSolved ? (
+      "This puzzle has been solved."
+    ) : numberOfGuessesLeft === "infinity" ? (
+      <>
+        <Infinity className="mb-[1px] mr-[3px] inline-flex size-4" />
+        guesses left
+      </>
+    ) : numberOfGuessesLeft ? (
+      `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
+    ) : (
+      "No guesses left. Please contact HQ for help."
+    );
+
     return (
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex justify-center space-x-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-x-4">
           <FormField
             control={form.control}
             name="guess"
@@ -115,15 +128,11 @@ export default function DefaultPostHuntPuzzlePage({
                 <FormControl>
                   <Input
                     {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setError(null);
+                    onBlur={(e) => {
+                      field.onBlur();
+                      field.onChange(sanitizeAnswer(e.target.value));
                     }}
-                    onBlur={() => {
-                      const cleaned = sanitizeAnswer(form.getValues("guess"));
-                      form.setValue("guess", cleaned, { shouldValidate: true });
-                    }}
-                    className="bg-secondary-bg uppercase text-secondary-accent"
+                    className="bg-secondary-bg uppercase text-secondary-text"
                     disabled={isSolved || !numberOfGuessesLeft}
                     autoComplete="off"
                   />
@@ -138,29 +147,19 @@ export default function DefaultPostHuntPuzzlePage({
                           : ""
                     }
                   >
-                    {isSolved ? (
-                      "This puzzle has been solved."
-                    ) : numberOfGuessesLeft === "infinity" ? (
-                      <span className="flex items-center space-x-[3px]">
-                        <Infinity className="size-4 pt-[1px]" />
-                        <span>guesses left</span>
-                      </span>
-                    ) : numberOfGuessesLeft ? (
-                      `${numberOfGuessesLeft} ${numberOfGuessesLeft > 1 ? "guesses" : "guess"} left`
-                    ) : (
-                      "You have no guesses left. Please contact HQ for help."
-                    )}
+                    {description}
                   </FormDescription>
-                  <FormMessage className="text-error">{error}</FormMessage>
+                  <FormMessage className="text-error" />
                 </div>
               </FormItem>
             )}
           />
           <Button
             type="submit"
-            disabled={!form.watch("guess") || isSolved || !numberOfGuessesLeft}
+            disabled={isSolved || !numberOfGuessesLeft}
+            className="bg-blue-900 px-8 py-1.5 hover:bg-blue-900/90"
           >
-            Submit
+            <SendHorizontal className="size-4 fill-main-text" />
           </Button>
         </form>
       </Form>
@@ -169,19 +168,15 @@ export default function DefaultPostHuntPuzzlePage({
 
   // If there is an URL query, use that for admins and after the hunt ends
   // Otherwise, use the session interaction mode
-  const actualInteractionMode = interactionMode ?? "remote";
+  const puzzleInteractionMode = interactionMode ?? "remote";
 
   const puzzleBody =
-    actualInteractionMode === "in-person" ? inPersonBody : remoteBody;
+    puzzleInteractionMode === "in-person" ? inPersonBody : remoteBody;
 
   return (
     <div className="w-full px-4">
       <div className="no-scrollbar overflow-auto">
-        <div className="mx-auto flex w-fit items-start justify-center space-x-2">
-          {copyText && <div className="min-w-6" />}
-          <div className="w-fit">{puzzleBody}</div>
-          {copyText && <CopyButton copyText={copyText} />}
-        </div>
+        <div className="mx-auto w-fit">{puzzleBody}</div>
       </div>
 
       {Object.keys(tasks).map((task) => {
@@ -195,18 +190,19 @@ export default function DefaultPostHuntPuzzlePage({
         }
       })}
 
-      <div className={cn("mx-auto mb-4 mt-6 max-w-3xl", copyText && "px-8")}>
+      <div className="mx-auto mb-4 mt-6 max-w-3xl">
         <GuessForm puzzleAnswer={puzzleAnswer} />
       </div>
 
       <div className="mx-auto max-w-3xl">
-        <GuessTable
-          puzzleAnswer={puzzleAnswer}
-          previousGuesses={previousGuesses}
-          partialSolutions={partialSolutions}
-          tasks={tasks}
-        />
+        <GuessTable previousGuesses={previousGuesses} />
       </div>
+
+      {copyText && (
+        <div className="fixed bottom-4 right-4 size-10">
+          <CopyButton copyText={copyText} />
+        </div>
+      )}
     </div>
   );
 }

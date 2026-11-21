@@ -7,27 +7,20 @@ export default function ErratumDialog({
 }: {
   errataList: Erratum[];
 }) {
-  if (errataList.length > 0) {
-    return (
-      <>
-        {errataList.map((e) => (
-          <Alert className="mb-2 mt-2 bg-inherit text-inherit">
-            <AlertDescription
-              key={e.id}
-              className="overflow-hidden break-words"
-            >
-              <p className="whitespace-pre-wrap">
-                <strong>
-                  Erratum <FormattedTime time={e.timestamp} />
-                </strong>{" "}
-                ({`${e.puzzleId}`}): {e.description}
-              </p>
-            </AlertDescription>
-          </Alert>
-        ))}
-      </>
-    );
-  }
-
-  return;
+  return (
+    <>
+      {errataList.map((e) => (
+        <Alert className="my-2 bg-inherit text-inherit" key={e.id}>
+          <AlertDescription key={e.id} className="overflow-hidden break-words">
+            <p className="whitespace-pre-wrap">
+              <strong>
+                Erratum <FormattedTime time={e.timestamp} />
+              </strong>{" "}
+              ({`${e.puzzleId}`}): {e.description}
+            </p>
+          </AlertDescription>
+        </Alert>
+      ))}
+    </>
+  );
 }

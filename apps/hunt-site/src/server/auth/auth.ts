@@ -32,6 +32,7 @@ declare module "next-auth" {
       displayName: string;
       role: Role;
       interactionMode: InteractionMode;
+      sub?: string;
     };
   }
   interface User {

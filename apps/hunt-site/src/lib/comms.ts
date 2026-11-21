@@ -1,10 +1,11 @@
 import "server-only";
 
-import axios from "axios";
 import { Resend } from "resend";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { HUNT_DOMAIN, HUNT_NAME, HUNT_EMAIL } from "@/config/client";
 import { sign } from "jsonwebtoken";
+
+const MAX_RECIPIENTS_PER_EMAIL = 50;
 
 /** Discord integration */
 
@@ -27,11 +28,12 @@ const channelToWebhookURL: Record<Channel, string | undefined> = {
   dev: process.env.DISCORD_WEBHOOK_URL_DEV,
 };
 
-type Mention = "@hint" | "@HQ" | "@tech";
+type Mention = "@hint" | "@HQ" | "@lore" | "@tech";
 
 const mentionToRoleId: Record<Mention, string> = {
-  "@hint": "<@&1310029428864057504>",
+  "@hint": "<@&1477851452192981003>",
   "@HQ": "<@&900958940475559969>",
+  "@lore": "<@&1201541948880736378>",
   "@tech": "<@&1287563929282678795>",
 };
 
@@ -42,7 +44,7 @@ export async function sendBotMessage(
 ) {
   // Use the general channel if the other channels are not set
   const webhookURL =
-    channelToWebhookURL[channel] || process.env.DISCORD_WEBHOOK_URL;
+    channelToWebhookURL[channel] ?? process.env.DISCORD_WEBHOOK_URL;
 
   // Disable the webhook by not including it in the env file
   if (!webhookURL) {
@@ -61,15 +63,33 @@ export async function sendBotMessage(
       const chunks = message.match(/[\s\S]{1,2000}/g);
       if (chunks) {
         for (const chunk of chunks) {
-          await axios.post(webhookURL, {
-            content: chunk,
+          const res = await fetch(webhookURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              content: chunk,
+            }),
           });
+          if (!res.ok)
+            throw new Error(
+              `Discord responded ${res.status} ${res.statusText}`,
+            );
         }
       }
     } else {
-      await axios.post(webhookURL, {
-        content: message,
+      const res = await fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: message,
+        }),
       });
+      if (!res.ok)
+        throw new Error(`Discord responded ${res.status} ${res.statusText}`);
     }
   } catch (e) {
     console.error("Failed to send Discord message:", e);
@@ -89,28 +109,67 @@ export async function sendEmail(
     return;
   }
 
+  to = [...new Set(to)].filter(Boolean);
+  bcc = [...new Set(bcc ?? [])].filter(Boolean);
+  const batches: Array<{ to: string[]; bcc?: string[] }> = [];
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const response = await resend.emails.send({
-    from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
-    replyTo: `"Puzzle HQ" <${HUNT_EMAIL}>`,
-    to,
-    bcc,
-    subject,
-    react,
-  });
 
-  if (response.error) {
-    const errorMessage = `✉️ Email send failed: ${response.error.message}`;
+  // Drain TO
+  while (to.length > MAX_RECIPIENTS_PER_EMAIL) {
+    batches.push({ to: to.splice(0, MAX_RECIPIENTS_PER_EMAIL) });
+  }
+
+  // Remaining TO with as much BCC as possible
+  if (to.length > 0) {
+    const bccList = bcc.splice(0, MAX_RECIPIENTS_PER_EMAIL - to.length);
+    batches.push({
+      to,
+      bcc: bccList.length > 0 ? bccList : undefined,
+    });
+  }
+
+  // Remaining BCC with HQ as primary recipient
+  while (bcc.length > 0) {
+    batches.push({
+      to: [HUNT_EMAIL],
+      bcc: bcc.splice(0, MAX_RECIPIENTS_PER_EMAIL - 1),
+    });
+  }
+
+  if (batches.length === 0) {
+    console.warn("No email recipients after deduplication, skipping send.");
+    return;
+  }
+
+  const { error } = await resend.batch.send(
+    batches.map((batch) => ({
+      from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
+      replyTo: `"Puzzle HQ" <${HUNT_EMAIL}>`,
+      to: batch.to,
+      bcc: batch.bcc,
+      subject,
+      react,
+    })),
+  );
+
+  if (error) {
+    const errorMessage = `✉️ Email send failed: ${error.message}`;
     await sendBotMessage(errorMessage, "dev", "@tech");
   }
 }
 
 /** Broadcast via websockets */
 export type SocketMessage =
-  | { type: "SolvedPuzzle"; puzzleName: string; puzzleId: string }
+  | {
+      type: "SolvedPuzzle";
+      puzzleName: string;
+      puzzleId: string;
+      solveTime: string;
+    }
   | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "FinishedHunt" }
-  | { type: "Toast"; title: string; description: string };
+  | { type: "Toast"; title: string; description: string }
+  | { type: "RefreshPuzzle"; puzzleId: string };
 
 export async function sendToWebsocketServer(
   teamId: string,
@@ -133,16 +192,21 @@ export async function sendToWebsocketServer(
 
   try {
     const url = new URL("/broadcast", `${protocol}//${wsServer}`);
-    await axios.post(
-      url.toString(),
-      {
+    const res = await fetch(url.toString(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
         teamId,
         ...msg,
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+      }),
+    });
+    if (!res.ok)
+      throw new Error(
+        `Websocket server responded ${res.status} ${res.statusText}`,
+      );
   } catch (e) {
     console.error("Failed to send websocket message:", e);
   }

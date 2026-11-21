@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect, startTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
@@ -16,15 +17,8 @@ import {
   insertAdminReply,
   MessageType,
 } from "../actions";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { FormattedTime, ElapsedTime } from "~/lib/time";
-import { ensureError } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 
 type TableProps = {
   hint: Hint;
@@ -81,7 +75,8 @@ export default function AdminHintThread({
   reply,
 }: TableProps) {
   const { data: session } = useSession();
-  const [statusLoading, setStatusLoading] = useState(true);
+  const router = useRouter();
+  const [statusLoading, setStatusLoading] = useState(false);
 
   const handleStatus = async (
     selectedStatus: "no_response" | "answered" | "refunded",
@@ -91,18 +86,13 @@ export default function AdminHintThread({
       status: selectedStatus,
     }));
     setStatusLoading(true);
-    startTransition(async () => {
-      try {
-        await editHintStatus(hint.id, selectedStatus);
-        setStatusLoading(false);
-      } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to update status.", {
-          description: error.message,
-        });
-        setOptimisticHint(optimisticHint);
-      }
-    });
+    try {
+      await editHintStatus(hint.id, selectedStatus);
+      setStatusLoading(false);
+    } catch (e) {
+      setOptimisticHint(optimisticHint);
+      toast.error("Failed to update status. Please try again.");
+    }
   };
 
   const [optimisticHint, setOptimisticHint] = useState(hint);
@@ -118,17 +108,17 @@ export default function AdminHintThread({
       claimer: { id: session!.user.id, displayName: session!.user.displayName },
     }));
 
-    startTransition(async () => {
-      try {
-        await claimHint(hint.id);
-      } catch (e) {
-        const error = ensureError(e);
+    try {
+      const { error } = await claimHint(hint.id);
+      if (error) {
         toast.error("Failed to claim hint.", {
-          description: error.message,
+          description: error,
         });
-        setOptimisticHint(optimisticHint);
       }
-    });
+    } catch (e) {
+      setOptimisticHint(optimisticHint);
+      toast.error("Failed to claim hint. Please try again.");
+    }
   };
 
   const handleUnclaim = async () => {
@@ -138,49 +128,64 @@ export default function AdminHintThread({
     }));
     setResponse("");
 
-    startTransition(async () => {
-      try {
-        await unclaimHint(hint.id);
-      } catch (e) {
-        const error = ensureError(e);
+    try {
+      const { error } = await unclaimHint(hint.id);
+      if (error) {
         toast.error("Failed to unclaim hint.", {
-          description: error.message,
+          description: error,
         });
-        setOptimisticHint(optimisticHint);
-        setResponse(response);
       }
-    });
+    } catch (e) {
+      setOptimisticHint(optimisticHint);
+      setResponse(response);
+      toast.error("Failed to unclaim hint. Please try again.");
+    }
   };
 
-  const handleSubmitResponse = async (message: string) => {
+  const handleSubmitResponse = async () => {
     setOptimisticHint((hint) => ({
       ...hint,
       claimer: {
         id: session!.user.id,
         displayName: session!.user.displayName,
       },
-      response: response,
+      response,
       status: "answered",
     }));
     setResponse("");
 
-    startTransition(async () => {
-      try {
-        await insertHintResponse(hint.id, message);
-      } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to submit response.", {
-          description: response
-            ? error.message + " Response copied to clipboard."
-            : error.message,
-        });
-        if (response) navigator.clipboard.writeText(response);
+    try {
+      const { error } = await insertHintResponse(hint.id, response);
+      if (error) {
         setOptimisticHint(optimisticHint);
+        setResponse(response);
+        toast.error("Failed to submit response.", {
+          description: error,
+          action: (
+            <Button
+              className="ml-auto"
+              onClick={() => {
+                setResponse("");
+                router.refresh();
+              }}
+            >
+              Refresh
+            </Button>
+          ),
+        });
       }
-    });
+    } catch (e) {
+      setOptimisticHint(optimisticHint);
+      setResponse(response);
+      toast.error("Failed to submit response. Please try again.");
+    }
   };
 
-  const handleSubmitEdit = (id: number, value: string, type: MessageType) => {
+  const handleSubmitEdit = async (
+    id: number,
+    value: string,
+    type: MessageType,
+  ) => {
     setOptimisticHint((hint) => {
       if (!hint) return hint;
       switch (type) {
@@ -198,18 +203,13 @@ export default function AdminHintThread({
       }
     });
     setEdit(null);
-    startTransition(async () => {
-      try {
-        await editAdminMessage(id, value, type);
-      } catch (e) {
-        const error = ensureError(e);
-        toast.error("Failed to edit message.", {
-          description: error.message,
-        });
-        setOptimisticHint(optimisticHint);
-        setEdit(edit);
-      }
-    });
+    try {
+      await editAdminMessage(id, value, type);
+    } catch (e) {
+      setOptimisticHint(optimisticHint);
+      setEdit(edit);
+      toast.error("Failed to edit message. Please try again.");
+    }
   };
 
   const handleSubmitReply = async (
@@ -233,30 +233,25 @@ export default function AdminHintThread({
 
     if (message !== "[Claimed]") setNewReply(null);
 
-    startTransition(async () => {
-      const replyId = await insertAdminReply(hintId, message, emailTeam);
+    const replyId = await insertAdminReply(hintId, message, emailTeam);
 
-      if (replyId === null) {
-        // Revert optimistic update
-        setOptimisticHint((hint) => ({
-          ...hint,
-          replies: hint.replies.filter((reply) => reply.id !== 0),
-        }));
-        setNewReply(newReply); // Works since variable changes are not instant
-        toast.error("Failed to submit reply.", {
-          description:
-            "Please try again. If the problem persists, contact HQ or use the feedback form.",
-        });
-      } else {
-        // Update replyId
-        setOptimisticHint((hint) => ({
-          ...hint,
-          replies: hint.replies.map((reply) =>
-            reply.id === 0 ? { ...reply, id: replyId } : reply,
-          ),
-        }));
-      }
-    });
+    if (replyId === null) {
+      // Revert optimistic update
+      setOptimisticHint((hint) => ({
+        ...hint,
+        replies: hint.replies.filter((reply) => reply.id !== 0),
+      }));
+      setNewReply(newReply); // Works since variable changes are not instant
+      toast.error("Failed to submit reply. Please try again.");
+    } else {
+      // Update replyId
+      setOptimisticHint((hint) => ({
+        ...hint,
+        replies: hint.replies.map((reply) =>
+          reply.id === 0 ? { ...reply, id: replyId } : reply,
+        ),
+      }));
+    }
   };
 
   useEffect(() => {
@@ -266,12 +261,13 @@ export default function AdminHintThread({
         block: "center",
       });
     }
-    setStatusLoading(false);
   }, []);
 
   useEffect(() => {
     setOptimisticHint(hint);
   }, [hint]);
+
+  const answered = optimisticHint.status === "answered";
 
   return (
     <>
@@ -338,18 +334,17 @@ export default function AdminHintThread({
               <span className="font-semibold">Status:</span>
             </p>
             {optimisticHint.status !== "no_response" && (
-              <Select
-                value={optimisticHint.status}
-                onValueChange={handleStatus}
+              <button
+                className={cn(
+                  answered
+                    ? "bg-emerald-200 text-emerald-900"
+                    : "bg-yellow-200 text-yellow-900",
+                  "rounded-md px-1 font-medium outline-none transition-opacity",
+                )}
+                onClick={() => handleStatus(answered ? "refunded" : "answered")}
               >
-                <SelectTrigger className="h-5 w-36 p-1 focus:ring-0">
-                  <SelectValue placeholder={hint.status} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="answered">Answered</SelectItem>
-                  <SelectItem value="refunded">Refunded</SelectItem>
-                </SelectContent>
-              </Select>
+                {answered ? "Answered" : "Refunded"}
+              </button>
             )}
             {statusLoading && <RefreshCw className="size-4 animate-spin" />}
           </div>
@@ -422,7 +417,7 @@ export default function AdminHintThread({
                   // No claim and no response
                   <div>
                     <Button
-                      className="bg-emerald-700 text-white hover:bg-emerald-900"
+                      className="bg-emerald-700 text-white hover:bg-emerald-800"
                       onClick={handleClaim}
                     >
                       Claim
@@ -431,7 +426,7 @@ export default function AdminHintThread({
                 ) : optimisticHint.claimer.id === session?.user.id ? (
                   <div className="flex space-x-2">
                     <Button
-                      onClick={() => handleSubmitResponse(response)}
+                      onClick={() => handleSubmitResponse()}
                       disabled={!response}
                     >
                       Submit

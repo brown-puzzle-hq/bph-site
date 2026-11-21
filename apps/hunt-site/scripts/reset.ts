@@ -1,7 +1,7 @@
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { sql } from "drizzle-orm";
-import { db } from "@/db/index";
+import { client, db } from "@/db/index";
 import "dotenv/config";
 
 async function reset() {
@@ -52,8 +52,10 @@ async function reset() {
   process.exit(0);
 }
 
-reset().catch((err) => {
-  console.error("❌ Reset failed");
-  console.error(err);
-  process.exit(1);
-});
+try {
+  await reset();
+} catch (err) {
+  console.error("❌ Reset failed:", err);
+} finally {
+  await client.end();
+}

@@ -24,9 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import ErratumDialog from "./ErratumDialog";
 import { insertErratum } from "./actions";
 import { Erratum } from "@/db/types";
-import { ensureError } from "~/lib/utils";
 
 type FormProps = {
   puzzleList: { id: string; name: string }[];
@@ -72,73 +72,75 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
 
       form.setValue("description", "");
     } catch (e) {
-      const error = ensureError(e);
-      toast("Failed to submit erratum.", {
-        description: error.message,
-      });
+      toast.error("Failed to submit erratum. Please try again.");
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
-          name="puzzleId"
-          render={({ field }) => (
-            <FormItem className="mb-4 w-full max-w-96">
-              <FormLabel className="flex justify-between">
-                <span className="text-black">Puzzle</span>
-                <FormMessage className="text-error" />
-              </FormLabel>
-              <FormControl>
-                <Select
-                  {...field}
-                  onValueChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  value={field.value}
-                >
-                  <SelectTrigger>
-                    <div className="truncate text-ellipsis text-left">
-                      <SelectValue placeholder="Select" />
-                    </div>
-                  </SelectTrigger>
-                  {/* TODO: figure out how to limit size of select entries */}
-                  <SelectContent>
-                    {puzzleList?.map((puzzle) => (
-                      <SelectItem key={puzzle.id} value={puzzle.id}>
-                        {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem className="py-4">
-              <FormLabel className="flex flex-row justify-between">
-                <span className="text-black">Description</span>
-                <FormMessage />
-              </FormLabel>
-              <FormControl>
-                <AutosizeTextarea
-                  maxHeight={500}
-                  className="resize-none"
-                  placeholder="No response yet"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <>
+      {errataList.length > 0 && (
+        <div className="w-full pb-4">
+          <ErratumDialog errataList={errataList} />
+        </div>
+      )}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="puzzleId"
+            render={({ field }) => (
+              <FormItem className="mb-4 w-full max-w-96">
+                <FormLabel className="flex justify-between">
+                  <span className="text-black">Puzzle</span>
+                  <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <div className="truncate text-ellipsis text-left">
+                        <SelectValue placeholder="Select" />
+                      </div>
+                    </SelectTrigger>
+                    {/* TODO: figure out how to limit size of select entries */}
+                    <SelectContent>
+                      {puzzleList
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((puzzle) => (
+                          <SelectItem key={puzzle.id} value={puzzle.id}>
+                            {puzzle.name.trim()
+                              ? puzzle.name
+                              : `[${puzzle.id}]`}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="mb-4">
+                <FormLabel className="flex flex-row justify-between">
+                  <span className="text-black">Description</span>
+                  <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <AutosizeTextarea
+                    maxHeight={500}
+                    className="resize-none"
+                    placeholder="No response yet"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </>
   );
 }
