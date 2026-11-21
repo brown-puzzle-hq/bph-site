@@ -36,7 +36,10 @@ export default function SeenPuzzleIcon({ index }: { index: number }) {
       onClick={() => {
         const seen = decodeSeen(getCookie("seen"));
         const updatedSeen = seen.slice(0, index) + "1" + seen.slice(index + 1);
-        setCookie("seen", encodeSeen(updatedSeen));
+        setCookie("seen", encodeSeen(updatedSeen), {
+          expires: 365,
+          path: "/",
+        });
         setIsDisappearing(true);
         setTimeout(() => setIsSeen(true), 200);
       }}

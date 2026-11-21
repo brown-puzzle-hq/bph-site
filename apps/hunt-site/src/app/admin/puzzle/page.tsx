@@ -10,18 +10,7 @@ import {
 } from "~/components/ui/table";
 import { ChartColumn, KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
-
-const colorMap: Record<string, string> = {
-  business: "text-slate-900 bg-slate-100",
-  humanities: "text-red-900 bg-red-100",
-  math: "text-blue-900 bg-blue-100",
-  "performing-arts": "text-purple-900 bg-purple-100",
-  "physical-sciences": "text-indigo-900 bg-indigo-100",
-  risd: "text-lime-900 bg-lime-100",
-  "social-sciences": "text-orange-900 bg-orange-100",
-  backpack: "text-amber-900 bg-amber-100",
-  capstone: "text-green-900 bg-green-100",
-};
+import { ROUND_TABLE_COLORS } from "~/config/styles";
 
 export default async function Page() {
   const query = await db.query.puzzles.findMany({
@@ -145,7 +134,7 @@ export default async function Page() {
                   >
                     <TableCell className="py-0">
                       <a
-                        className={`inline rounded-sm box-decoration-clone px-1 py-0.5 leading-6 ${colorMap[round.id] ?? ""}`}
+                        className={`inline rounded-sm box-decoration-clone px-1 py-0.5 leading-6 ${ROUND_TABLE_COLORS[round.id] ?? ""}`}
                         href={`/puzzle/${round.id}`}
                       >
                         {round.name}

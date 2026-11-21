@@ -7,229 +7,174 @@ import type { Puzzle, PuzzleListRound, AvailableEvent } from "./types";
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import {
-  background,
-  icons,
-  rotatingObjects,
-  allWhiteboardObjects,
-} from "./data";
-import { DORM_BACKGROUND_COLOR } from "~/config/styles";
+import { background, icons } from "./data";
+import { PUZZLE_LIST_BACKGROUND_COLOR } from "~/config/styles";
 
 type PuzzleListPageProps = {
   availableRounds: PuzzleListRound[];
   availableEvents: AvailableEvent[];
   availablePuzzles: Puzzle[];
-  solvedMetas: number;
-};
-
-const numObjects = [4, 2, 1, 0];
-
-const priority: Record<string, number> = {
-  capstone: 0,
-  backpack: 1,
 };
 
 export default function PuzzleListPage({
   availableRounds,
   availableEvents,
   availablePuzzles,
-  solvedMetas,
 }: PuzzleListPageProps) {
-  const category =
-    solvedMetas >= 10 ? 3 : solvedMetas >= 7 ? 2 : solvedMetas >= 3 ? 1 : 0;
-  const randomRotatingObjects = rotatingObjects.sort(() => Math.random() - 0.5);
-  const whiteboardObjects = allWhiteboardObjects[category] || [];
-  const randomWhiteboardObject =
-    whiteboardObjects[Math.floor(Math.random() * whiteboardObjects.length)];
   return (
     <div
-      style={{ backgroundColor: DORM_BACKGROUND_COLOR }}
+      style={{ backgroundColor: PUZZLE_LIST_BACKGROUND_COLOR }}
       className="space-y-6 pb-12"
     >
-      {/* Dorm art */}
-      <div className="relative overflow-hidden">
-        {/* Background art */}
-        <Image src={background} alt="Dorm" className="w-screen shadow-lg" />
-        {/* Rotating objects */}
-        {randomRotatingObjects
-          .slice(0, numObjects[category])
-          .map((obj, index) => (
-            <Image
-              key={index}
-              src={obj}
-              alt="Rotating Object"
-              className="absolute inset-0"
-            />
-          ))}
-        {/* Whiteboard object */}
-        {randomWhiteboardObject && (
-          <Image
-            src={randomWhiteboardObject}
-            alt="Whiteboard Object"
-            className="absolute inset-0"
-          />
-        )}
-        {/* Icons */}
-        {availableRounds.map((round) => {
-          if (round.id === "capstone") return null;
+      {/* Map art. Rendered only when src/.../puzzle-list/data.tsx supplies a background. */}
+      {background && (
+        <div className="relative overflow-hidden">
+          <Image src={background} alt="Rounds" className="w-screen shadow-lg" />
+          {availableRounds.map((round) => {
+            const placement = icons[round.id];
+            if (!placement) return null;
 
-          const {
-            icon,
-            x,
-            y,
-            w,
-            h,
-            z,
-            labelPosition = "bottom",
-            labelDx = 0,
-            labelDy = 0,
-          } = icons[round.id]!;
+            const {
+              icon,
+              x,
+              y,
+              w,
+              h,
+              z,
+              labelPosition = "bottom",
+              labelDx = 0,
+              labelDy = 0,
+            } = placement;
 
-          const labelStyle: CSSProperties = {
-            left: `calc(${x + w / 2 + labelDx}%)`,
-            top:
-              labelPosition === "top"
-                ? `calc(${y + labelDy}% - 0.5rem + var(--label-hover-shift, 0px))`
-                : `calc(${y + h + labelDy}% + 0.5rem - var(--label-hover-shift, 0px))`,
-            transform:
-              labelPosition === "top"
-                ? "translate(-50%, -100%)"
-                : "translate(-50%, 0)",
-            zIndex: 10,
-          };
+            const labelStyle: CSSProperties = {
+              left: `calc(${x + w / 2 + labelDx}%)`,
+              top:
+                labelPosition === "top"
+                  ? `calc(${y + labelDy}% - 0.5rem + var(--label-hover-shift, 0px))`
+                  : `calc(${y + h + labelDy}% + 0.5rem - var(--label-hover-shift, 0px))`,
+              transform:
+                labelPosition === "top"
+                  ? "translate(-50%, -100%)"
+                  : "translate(-50%, 0)",
+              zIndex: 10,
+            };
 
-          return (
-            <div key={round.id}>
-              <Link
-                href={`/puzzle/${round.id}`}
-                className="peer absolute"
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                  width: `${w}%`,
-                  zIndex: z,
-                }}
-                prefetch={false}
-              >
-                <Image
-                  src={icon}
-                  alt={round.name}
+            return (
+              <div key={round.id}>
+                <Link
+                  href={`/puzzle/${round.id}`}
+                  className="peer absolute"
                   style={{
-                    width: "100%",
-                    height: `${h}%`,
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    width: `${w}%`,
+                    zIndex: z,
                   }}
-                />
-              </Link>
-
-              {/* Dummy */}
-              <div
-                className="peer absolute hidden opacity-0 sm:flex"
-                style={labelStyle}
-              >
-                {/* Name */}
-                <Link
-                  href={`/puzzle/${round.id}`}
-                  className="text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
                   prefetch={false}
                 >
-                  {round.name}
-                </Link>
-              </div>
-
-              {/* Round name */}
-              <div
-                className="pointer-events-none absolute hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
-                style={labelStyle}
-              >
-                {/* Pointer */}
-                {labelPosition === "top" ? (
-                  <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
-                ) : (
-                  <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
-                )}
-                {/* Name */}
-                <Link
-                  href={`/puzzle/${round.id}`}
-                  className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
-                  prefetch={false}
-                >
-                  {round.name}
-                </Link>
-                {round.solvedPuzzles === round.totalPuzzles ? (
-                  <img
-                    className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
-                    src="/circle-check.svg"
+                  <Image
+                    src={icon}
+                    alt={round.name}
+                    style={{ width: "100%", height: `${h}%` }}
                   />
-                ) : (
-                  round.monitor.length > 0 && (
-                    <SeenRoundImageIcon monitor={round.monitor} />
-                  )
-                )}
+                </Link>
+
+                {/* Dummy */}
+                <div
+                  className="peer absolute hidden opacity-0 sm:flex"
+                  style={labelStyle}
+                >
+                  {/* Name */}
+                  <Link
+                    href={`/puzzle/${round.id}`}
+                    className="text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
+                    prefetch={false}
+                  >
+                    {round.name}
+                  </Link>
+                </div>
+
+                {/* Round name */}
+                <div
+                  className="pointer-events-none absolute hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
+                  style={labelStyle}
+                >
+                  {/* Pointer */}
+                  {labelPosition === "top" ? (
+                    <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
+                  ) : (
+                    <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
+                  )}
+                  {/* Name */}
+                  <Link
+                    href={`/puzzle/${round.id}`}
+                    className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
+                    prefetch={false}
+                  >
+                    {round.name}
+                  </Link>
+                  {round.solvedPuzzles === round.totalPuzzles ? (
+                    <img
+                      className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
+                      src="/circle-check.svg"
+                    />
+                  ) : (
+                    round.monitor.length > 0 && (
+                      <SeenRoundImageIcon monitor={round.monitor} />
+                    )
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
       {/* Search bar */}
       {availablePuzzles.length > 0 && (
         <PuzzleSearch puzzles={availablePuzzles} />
       )}
       <div className="mx-auto w-full max-w-3xl px-4">
-        {/* Puzzle table */}
+        {/* Round table */}
         <h1 className="mb-2 text-center">Rounds</h1>
         <div className="overflow-hidden text-sm font-medium">
-          {availableRounds
-            .sort((a, b) => (priority[a.id] ?? 2) - (priority[b.id] ?? 2))
-            .map((round) => {
-              if (round.id === "capstone" && round.unlockedPuzzles === 0)
-                return null;
-
-              return (
-                <div key={round.id}>
-                  <Link
-                    href={
-                      round.id === "capstone"
-                        ? "/puzzle/fifth-year-masters"
-                        : `/puzzle/${round.id}`
-                    }
-                    className={cn(
-                      "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
-                      (round.id === "backpack" || round.id === "capstone") &&
-                        "bg-black/20 font-bold",
-                    )}
-                    prefetch={false}
-                  >
-                    <div className="flex space-x-2">
-                      <p>{round.name}</p>
-                      {round.monitor.length > 0 && (
-                        <SeenRoundTableIcon monitor={round.monitor} />
-                      )}
-                    </div>
-                    <div className="flex space-x-1">
-                      {Array.from({ length: round.totalPuzzles }, (_, i) => {
-                        const isUnlocked = i < round.unlockedPuzzles;
-                        if (round.id === "backpack" && !isUnlocked) return;
-                        const isSolved = i < round.solvedPuzzles;
-                        return (
-                          <div
-                            key={i}
-                            className={cn(
-                              "size-3 rounded-full",
-                              isSolved
-                                ? "bg-green-500"
-                                : isUnlocked
-                                  ? "bg-yellow-500"
-                                  : "bg-slate-300",
-                            )}
-                          />
-                        );
-                      })}
-                    </div>
-                  </Link>
-                  <hr />
+          {availableRounds.map((round) => (
+            <div key={round.id}>
+              <Link
+                href={`/puzzle/${round.id}`}
+                className={cn(
+                  "flex items-center justify-between p-2 transition-colors hover:bg-white/5",
+                )}
+                prefetch={false}
+              >
+                <div className="flex space-x-2">
+                  <p>{round.name}</p>
+                  {round.monitor.length > 0 && (
+                    <SeenRoundTableIcon monitor={round.monitor} />
+                  )}
                 </div>
-              );
-            })}
+                <div className="flex space-x-1">
+                  {Array.from({ length: round.totalPuzzles }, (_, i) => {
+                    const isUnlocked = i < round.unlockedPuzzles;
+                    const isSolved = i < round.solvedPuzzles;
+                    return (
+                      <div
+                        key={i}
+                        className={cn(
+                          "size-3 rounded-full",
+                          isSolved
+                            ? "bg-green-500"
+                            : isUnlocked
+                              ? "bg-yellow-500"
+                              : "bg-slate-300",
+                        )}
+                      />
+                    );
+                  })}
+                </div>
+              </Link>
+              <hr />
+            </div>
+          ))}
         </div>
         {/* Event table */}
         {availableEvents.length > 0 && (

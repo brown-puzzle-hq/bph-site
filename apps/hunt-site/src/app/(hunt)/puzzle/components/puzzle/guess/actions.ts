@@ -20,21 +20,13 @@ import {
   REMOTE,
 } from "@/config/client";
 import type { SolveType, Role, InteractionMode } from "@/config/client";
-import {
-  PUZZLE_UNLOCK_MAP,
-  META_PUZZLES,
-  POOL_UNLOCKS,
-  MIN_SOLVE_DELAY,
-  MAX_SOLVE_DELAY,
-  MIN_BLUENO_TIME,
-} from "@/config/server";
+import { PUZZLE_UNLOCK_MAP, META_PUZZLES, POOL_UNLOCKS } from "@/config/server";
 import { sendBotMessage, sendToWebsocketServer } from "~/lib/comms";
 import { formatDuration } from "~/lib/utils";
 import { isDupErr, assertPermissions } from "~/lib/server";
 
 export type TxType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-type PinInteractionResult = "none" | "brown" | "non-brown";
 type PuzzleDataModule = {
   tasks: Record<string, JSX.Element>;
   partialSolutions: Record<string, string>;
@@ -81,15 +73,10 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // TODO: Could have a TOCTTOU error here
   // Check if the number of guesses is exceeded
-  // Made an exception for wafflesyzygy in applied-criminology
-  const guessLimit =
-    teamId === "wafflesyzygy" && puzzleId === "applied-criminology"
-      ? NUMBER_OF_GUESSES_PER_PUZZLE + 10
-      : NUMBER_OF_GUESSES_PER_PUZZLE;
   if (
     puzzle.guesses.filter(
       ({ guess }) => !(guess in tasks || guess in partialSolutions),
-    ).length >= guessLimit
+    ).length >= NUMBER_OF_GUESSES_PER_PUZZLE
   ) {
     revalidatePath(`/puzzle/${puzzleId}`);
     return { error: "You have no guesses left. Please contact HQ for help." };
@@ -149,8 +136,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
   // Insert the guess into the guess table
   // If the guess is correct, handle the solve
-  let solvedMetas = 0;
-  let pinInteraction: PinInteractionResult = "none";
   let finishedHunt = false;
   let unlockedPuzzles: string[] = [];
   let solveTimeMs: number | null = null;
@@ -174,34 +159,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
           currDate,
         );
 
-        const solvedPuzzles = result.solvedPuzzles;
-        solvedMetas = result.solvedMetas;
         unlockedPuzzles = result.unlockedPuzzles;
         solveTimeMs = result.solveTimeMs;
 
         const wasMeta = META_PUZZLES.includes(puzzleId);
 
-        const eligible =
-          interactionMode === "in-person" &&
-          (solvedPuzzles === 8 || (wasMeta && solvedMetas === 1));
-
-        if (eligible) {
-          const { numCommunity } = (await tx.query.teams.findFirst({
-            where: eq(teams.id, teamId),
-            columns: { numCommunity: true },
-          })) ?? { numCommunity: "0" };
-          const brownTeam = Number(numCommunity) > 0;
-
-          if (brownTeam && solvedPuzzles === 8) {
-            pinInteraction = "brown";
-          } else if (!brownTeam && wasMeta && solvedMetas === 1) {
-            pinInteraction = "non-brown";
-          }
-        }
-
-        const finishThreshold =
-          META_PUZZLES.length - (interactionMode === "in-person" ? 1 : 0);
-        if (wasMeta && solvedMetas === finishThreshold) {
+        if (wasMeta && result.solvedMetas === META_PUZZLES.length) {
           await tx
             .update(teams)
             .set({ finishTime: currDate })
@@ -231,14 +194,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
   notifications.push(sendBotMessage(guessMessage, "guess"));
   /** END_SNIPPET:DISCORD_MESSAGE */
 
-  // If the team has unlocked the pin interaction, message the interaction channel
-  if (pinInteraction !== "none") {
-    const interactionMessage = `📌 **${pinInteraction === "brown" ? "Brown" : "Non-Brown"} Pin Interaction** for [${teamId}](${HUNT_URL}/admin/graph?team=${teamId}) after [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId})`;
-    notifications.push(
-      sendBotMessage(interactionMessage, "interaction", "@lore"),
-    );
-  }
-
   // If the team has finished the hunt, message the interaction channel
   // Only ping the lore role if it is the in-person hunt
   if (finishedHunt) {
@@ -248,23 +203,12 @@ export async function handleGuess(puzzleId: string, guess: string) {
   }
 
   if (isCorrect && solveTimeMs !== null) {
-    const minBluenoTime = solveTimeMs - MAX_SOLVE_DELAY;
-    const maxBluenoTime = solveTimeMs - MIN_SOLVE_DELAY;
-    const otherTimeMs = Math.floor(
-      Math.random() * (maxBluenoTime - minBluenoTime) + minBluenoTime,
-    );
-    const otherTeam = solvedMetas >= 7 ? "Blueno" : "???";
-    const otherTime = formatDuration(Math.max(otherTimeMs, MIN_BLUENO_TIME));
-
     notifications.push(
       sendToWebsocketServer(teamId, {
         type: "SolvedPuzzle",
         puzzleId,
         puzzleName: puzzle.name,
         solveTime: formatDuration(solveTimeMs),
-        // If solve was fast (e.g. with answer token), let them have their moment
-        otherTeam: solveTimeMs > MIN_BLUENO_TIME ? otherTeam : null,
-        otherTime: solveTimeMs > MIN_BLUENO_TIME ? otherTime : null,
       }),
     );
   }
@@ -319,7 +263,6 @@ export async function handleGuess(puzzleId: string, guess: string) {
 
 /** Handles a solve for a puzzle. Returns updated information. */
 type SolveOutcome = {
-  solvedPuzzles: number;
   solvedMetas: number;
   unlockedPuzzles: string[];
   solveTimeMs: number;
@@ -346,7 +289,9 @@ async function handleSolve(
 
   // Unlock the next puzzles
   // Graph unlocks
-  const nextPuzzles = PUZZLE_UNLOCK_MAP[puzzleId] ?? [];
+  // NOTE: copy, since pool unlocks below push onto this list and
+  // PUZZLE_UNLOCK_MAP is shared module state
+  const nextPuzzles = [...(PUZZLE_UNLOCK_MAP[puzzleId] ?? [])];
 
   for (const pool of POOL_UNLOCKS) {
     if (pool.feeders.includes(puzzleId)) {
@@ -380,10 +325,9 @@ async function handleSolve(
       .then((res) => res.map((r) => r.puzzleId));
   }
 
-  // Get solve counts
+  // Get meta solve count
   const [row] = await tx
     .select({
-      solvedPuzzles: count(),
       solvedMetas: count(
         sql`CASE WHEN ${inArray(solves.puzzleId, META_PUZZLES)} THEN 1 END`,
       ),
@@ -391,7 +335,6 @@ async function handleSolve(
     .from(solves)
     .where(eq(solves.teamId, teamId));
 
-  const solvedPuzzles = row?.solvedPuzzles ?? 0;
   const solvedMetas = row?.solvedMetas ?? 0;
 
   // Solve time shown to the team is duration since they could first see the puzzle.
@@ -403,7 +346,7 @@ async function handleSolve(
 
   if (unlockTime) {
     const solveTimeMs = currDate.getTime() - unlockTime.getTime();
-    return { solvedPuzzles, solvedMetas, unlockedPuzzles, solveTimeMs };
+    return { solvedMetas, unlockedPuzzles, solveTimeMs };
   }
 
   const teamRow = await tx.query.teams.findFirst({
@@ -418,5 +361,5 @@ async function handleSolve(
     role !== "user" || createTime > huntStartTime ? createTime : huntStartTime;
 
   const solveTimeMs = currDate.getTime() - effectiveUnlockTime.getTime();
-  return { solvedPuzzles, solvedMetas, unlockedPuzzles, solveTimeMs };
+  return { solvedMetas, unlockedPuzzles, solveTimeMs };
 }

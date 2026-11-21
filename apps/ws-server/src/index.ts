@@ -121,13 +121,15 @@ wss.on("connection", (ws, req) => {
   // Close
   ws.on("close", () => {
     const teamId = socketToTeam.get(ws);
-    if (teamId && channels.has(teamId)) {
-      const set = channels.get(teamId)!;
-      set.delete(ws);
-      socketToTeam.delete(ws);
-      if (set.size === 0) channels.delete(teamId);
-      console.log(prefix, "Removed from channel", teamId);
-    }
+    // Always drop the socket, even if its channel is already gone, so repeated
+    // close events cannot leave entries behind.
+    socketToTeam.delete(ws);
+    if (!teamId) return;
+    const set = channels.get(teamId);
+    if (!set) return;
+    set.delete(ws);
+    if (set.size === 0) channels.delete(teamId);
+    console.log(prefix, "Removed from channel", teamId);
   });
 
   try {

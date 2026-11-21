@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 import { ROUNDS, ALL_PUZZLES, FEEDER_ORDER } from "~/config/server";
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { cn, decodeSeen } from "~/lib/utils";
+import { decodeSeen } from "~/lib/utils";
 import SeenPuzzleIcon from "./SeenPuzzleIcon";
 
 export type PuzzleIcon = {
@@ -36,21 +36,24 @@ export type PuzzleIcon = {
 };
 
 type DefaultRoundPageProps = {
-  background: StaticImageData;
   roundName: string;
-  icons: Record<string, PuzzleIcon>;
+  /** Background art for the round map. Omit to render the puzzle table only. */
+  background?: StaticImageData;
+  /** Icon placement per puzzle id. Puzzles with no entry are table-only. */
+  icons?: Record<string, PuzzleIcon>;
 };
 
 export default async function DefaultRoundPage({
-  background,
   roundName,
-  icons,
+  background,
+  icons = {},
 }: DefaultRoundPageProps) {
   const { error, user } = await checkPermissions({ level: "userAny" });
   const currDate = new Date();
 
   const seen = decodeSeen(cookies().get("seen")?.value);
-  const round = ROUNDS.find((round) => round.name === roundName)!;
+  const round = ROUNDS.find((round) => round.name === roundName);
+  if (!round) redirect("/puzzle");
   let roundPuzzles: AvailablePuzzle[];
 
   // --- NOT LOGGED IN ---
@@ -81,128 +84,133 @@ export default async function DefaultRoundPage({
       .filter((puzzle) => round.puzzles.includes(puzzle.id))
       .sort(
         (puzzleA, puzzleB) =>
-          FEEDER_ORDER[puzzleA.id]! - FEEDER_ORDER[puzzleB.id]!,
+          (FEEDER_ORDER[puzzleA.id] ?? Infinity) -
+          (FEEDER_ORDER[puzzleB.id] ?? Infinity),
       );
   }
 
   return (
     <div>
-      <div className="relative overflow-hidden">
-        {/* Background art */}
-        <Image
-          src={background}
-          alt={roundName}
-          className="w-screen shadow-lg"
-        />
-        {/* Icons */}
-        {roundPuzzles.map((puzzle) => {
-          const {
-            icon,
-            x,
-            y,
-            w,
-            h,
-            z,
-            labelPosition = "bottom",
-            labelDx = 0,
-            labelDy = 0,
-            solveIcon,
-          } = icons[puzzle.id]!;
-          const puzzleIndex = ALL_PUZZLES.indexOf(puzzle.id);
-          const isSeen = seen[puzzleIndex] === "1";
+      {background && (
+        <div className="relative overflow-hidden">
+          {/* Background art */}
+          <Image
+            src={background}
+            alt={roundName}
+            className="w-screen shadow-lg"
+          />
+          {/* Icons */}
+          {roundPuzzles.map((puzzle) => {
+            const placement = icons[puzzle.id];
+            if (!placement) return null;
+            const {
+              icon,
+              x,
+              y,
+              w,
+              h,
+              z,
+              labelPosition = "bottom",
+              labelDx = 0,
+              labelDy = 0,
+              solveIcon,
+            } = placement;
+            const puzzleIndex = ALL_PUZZLES.indexOf(puzzle.id);
+            const isSeen = seen[puzzleIndex] === "1";
 
-          const labelStyle: CSSProperties = {
-            left: `calc(${x + w / 2 + labelDx}%)`,
-            top:
-              labelPosition === "top"
-                ? `calc(${y + labelDy}% - 0.5rem + var(--label-hover-shift, 0px))`
-                : `calc(${y + h + labelDy}% + 0.5rem - var(--label-hover-shift, 0px))`,
-            transform:
-              labelPosition === "top"
-                ? "translate(-50%, -100%)"
-                : "translate(-50%, 0)",
-            zIndex: 10,
-          };
+            const labelStyle: CSSProperties = {
+              left: `calc(${x + w / 2 + labelDx}%)`,
+              top:
+                labelPosition === "top"
+                  ? `calc(${y + labelDy}% - 0.5rem + var(--label-hover-shift, 0px))`
+                  : `calc(${y + h + labelDy}% + 0.5rem - var(--label-hover-shift, 0px))`,
+              transform:
+                labelPosition === "top"
+                  ? "translate(-50%, -100%)"
+                  : "translate(-50%, 0)",
+              zIndex: 10,
+            };
 
-          return (
-            <div key={puzzle.id}>
-              <Link
-                href={`/puzzle/${puzzle.id}`}
-                className="peer absolute"
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                  width: `${w}%`,
-                  zIndex: z,
-                }}
-                prefetch={false}
-              >
-                <Image
-                  src={(puzzle.answer && solveIcon) ?? icon}
-                  alt={puzzle.name}
+            return (
+              <div key={puzzle.id}>
+                <Link
+                  href={`/puzzle/${puzzle.id}`}
+                  className="peer absolute"
                   style={{
-                    width: "100%",
-                    height: `${h}%`,
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    width: `${w}%`,
+                    zIndex: z,
                   }}
-                />
-              </Link>
-
-              {/* Dummy */}
-              <div
-                className="peer absolute hidden opacity-0 sm:flex"
-                style={labelStyle}
-              >
-                {/* Name */}
-                <Link
-                  href={`/puzzle/${puzzle.id}`}
-                  className="text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
                   prefetch={false}
                 >
-                  {puzzle.name}
-                </Link>
-              </div>
-
-              {/* Puzzle name */}
-              <div
-                className="pointer-events-none absolute hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
-                style={labelStyle}
-              >
-                {/* Pointer */}
-                {labelPosition === "top" ? (
-                  <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
-                ) : (
-                  <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
-                )}
-                {/* Name */}
-                <Link
-                  href={`/puzzle/${puzzle.id}`}
-                  className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
-                  prefetch={false}
-                >
-                  {puzzle.name}
-                </Link>
-                {puzzle.answer ? (
-                  <img
-                    className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
-                    src="/circle-check.svg"
+                  <Image
+                    src={(puzzle.answer ? solveIcon : undefined) ?? icon}
+                    alt={puzzle.name}
+                    style={{
+                      width: "100%",
+                      height: `${h}%`,
+                    }}
                   />
-                ) : (
-                  !isSeen && <SeenPuzzleIcon index={puzzleIndex} />
-                )}
+                </Link>
+
+                {/* Dummy */}
+                <div
+                  className="peer absolute hidden opacity-0 sm:flex"
+                  style={labelStyle}
+                >
+                  {/* Name */}
+                  <Link
+                    href={`/puzzle/${puzzle.id}`}
+                    className="text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
+                    prefetch={false}
+                  >
+                    {puzzle.name}
+                  </Link>
+                </div>
+
+                {/* Puzzle name */}
+                <div
+                  className="pointer-events-none absolute hidden transition-[top] [--label-hover-shift:0px] peer-hover:[--label-hover-shift:-0.25rem] has-[a:hover]:[--label-hover-shift:-0.25rem] sm:flex"
+                  style={labelStyle}
+                >
+                  {/* Pointer */}
+                  {labelPosition === "top" ? (
+                    <div className="absolute -bottom-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black" />
+                  ) : (
+                    <div className="absolute -top-[5px] left-1/2 h-0 w-0 -translate-x-1/2 border-b-[6px] border-l-[6px] border-r-[6px] border-b-black border-l-transparent border-r-transparent" />
+                  )}
+                  {/* Name */}
+                  <Link
+                    href={`/puzzle/${puzzle.id}`}
+                    className="pointer-events-auto text-nowrap rounded-md bg-black px-2 py-0.5 text-main-text"
+                    prefetch={false}
+                  >
+                    {puzzle.name}
+                  </Link>
+                  {puzzle.answer ? (
+                    <img
+                      className="pointer-events-none absolute bottom-0 right-0 size-7 translate-x-1/2 translate-y-1/2"
+                      src="/circle-check.svg"
+                    />
+                  ) : (
+                    !isSeen && <SeenPuzzleIcon index={puzzleIndex} />
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-        {/* Back to main page */}
-        <Link
-          href={"/puzzle"}
-          className="fixed left-4 top-[72px] z-10 flex items-center space-x-0.5 rounded-md bg-black p-1 sm:pr-2"
-          prefetch={false}
-        >
-          <ChevronsLeft className="size-6 fill-white" />
-          <p className="hidden font-semibold sm:block">Rounds</p>
-        </Link>
-      </div>
+            );
+          })}
+        </div>
+      )}
+      {/* Back to main page */}
+      <Link
+        href={"/puzzle"}
+        className="fixed left-4 top-[72px] z-10 flex items-center space-x-0.5 rounded-md bg-black p-1 sm:pr-2"
+        prefetch={false}
+      >
+        <ChevronsLeft className="size-6 fill-white" />
+        <p className="hidden font-semibold sm:block">Rounds</p>
+      </Link>
       {roundPuzzles.length > 0 && (
         <div className="mx-auto mb-12 w-full max-w-3xl px-4 pt-6">
           {/* Puzzle table */}

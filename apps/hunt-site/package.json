@@ -4,10 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prebuild": "pnpm run preprocess:analogical-semantics",
     "build": "next build",
-    "predev": "pnpm run generate:docs && pnpm run generate:puzzle-locations && pnpm run check:folders && pnpm run preprocess:analogical-semantics",
-    "preprocess:analogical-semantics": "tsx src/app/api/analogical-semantics/preprocess.ts",
+    "predev": "pnpm run generate:docs && pnpm run generate:puzzle-locations && pnpm run check:folders",
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
@@ -19,7 +17,6 @@
     "db:dbml": "tsx src/server/db/dbml.ts",
     "generate:docs": "tsx scripts/generate-docs.ts",
     "generate:puzzle-locations": "tsx scripts/generate-puzzle-locations.ts",
-    "generate:jigsaw-locations": "tsx scripts/generate-jigsaw-locations.ts",
     "check:folders": "tsx scripts/check-puzzle-folders.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:folders": "tsx scripts/create-puzzle-folders.ts"

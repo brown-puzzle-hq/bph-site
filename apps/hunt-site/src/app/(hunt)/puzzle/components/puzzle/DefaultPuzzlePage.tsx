@@ -149,13 +149,8 @@ export default async function DefaultPuzzlePage({
 
   // Get the number of guesses left
   // If it is a puzzle with infinite guessses, set it to -1
-  const guessLimit =
-    teamId === "wafflesyzygy" && puzzleId === "applied-criminology"
-      ? NUMBER_OF_GUESSES_PER_PUZZLE + 10
-      : NUMBER_OF_GUESSES_PER_PUZZLE;
-
   const numberOfGuessesLeft: NumberOfGuesses =
-    guessLimit -
+    NUMBER_OF_GUESSES_PER_PUZZLE -
     previousGuesses.filter(
       ({ guess }) => !(guess in tasks || guess in partialSolutions),
     ).length;

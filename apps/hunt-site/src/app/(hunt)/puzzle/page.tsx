@@ -7,7 +7,7 @@ import {
 } from "./components/puzzle-list/puzzle-utils";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { ALL_PUZZLES, META_PUZZLES, ROUNDS } from "~/config/server";
+import { ALL_PUZZLES, ROUNDS } from "~/config/server";
 import { decodeSeen } from "~/lib/utils";
 
 export default async function Home() {
@@ -44,7 +44,6 @@ export default async function Home() {
         availableRounds={availableRounds}
         availableEvents={availableEvents}
         availablePuzzles={allPuzzles.map(({ id, name }) => ({ id, name }))}
-        solvedMetas={0}
       />
     );
   }
@@ -92,16 +91,11 @@ export default async function Home() {
     };
   });
 
-  const solvedMetas = availablePuzzles.filter(
-    (puzzle) => puzzle.answer !== null && META_PUZZLES.includes(puzzle.id),
-  ).length;
-
   return (
     <PuzzleListPage
       availableRounds={availableRounds}
       availableEvents={availableEvents}
       availablePuzzles={availablePuzzles.map(({ id, name }) => ({ id, name }))}
-      solvedMetas={solvedMetas}
     />
   );
 }

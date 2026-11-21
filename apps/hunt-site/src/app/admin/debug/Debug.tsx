@@ -12,10 +12,9 @@ import { removeCookie, getCookies } from "typescript-cookie";
 import { decodeSeen, formatDuration } from "~/lib/utils";
 import { X } from "lucide-react";
 
-const formatCookieValue = (key: string, value: string) => {
+const formatCookieValue = (key: string, value: string, groups: number[]) => {
   if (key === "seen") {
     const bits = decodeSeen(value);
-    const groups = [5, 5, 5, 5, 5, 5, 5, 11, 1];
     let offset = 0;
     const result = groups.map((size) => {
       const chunk = bits.slice(offset, offset + size);
@@ -56,13 +55,7 @@ const fetcher: (url: string) => Promise<WsStatsResponse> = async (url) => {
   return (await res.json()) as WsStatsResponse;
 };
 
-export default function Debug({
-  minSolveDelay,
-  maxSolveDelay,
-}: {
-  minSolveDelay: number;
-  maxSolveDelay: number;
-}) {
+export default function Debug({ seenGroups }: { seenGroups: number[] }) {
   const debug = useWebSocket();
 
   const [showWsTeamStats, setShowWsTeamStats] = useState(false);
@@ -158,19 +151,11 @@ export default function Debug({
             const max = 3 * 60 * 60 * 1000; // 3 hours
             const solveTimeMs = Math.floor(Math.random() * (max - min) + min);
 
-            const minBluenoTime = solveTimeMs - maxSolveDelay;
-            const maxBluenoTime = solveTimeMs - minSolveDelay;
-            const otherTimeMs = Math.floor(
-              Math.random() * (maxBluenoTime - minBluenoTime) + minBluenoTime,
-            );
-
             void sendWebsocketMessage({
               type: "SolvedPuzzle",
               puzzleId,
               puzzleName,
               solveTime: formatDuration(solveTimeMs),
-              otherTeam: "???",
-              otherTime: formatDuration(Math.max(otherTimeMs, 30 * 1000)),
             });
           }}
         >
@@ -334,7 +319,7 @@ export default function Debug({
           >
             <p>
               <span className="font-semibold">{key}:</span>{" "}
-              {formatCookieValue(key, value)}
+              {formatCookieValue(key, value, seenGroups)}
             </p>
             <Button
               variant="ghost"

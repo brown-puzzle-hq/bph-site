@@ -270,7 +270,7 @@ Sometimes, its useful to provide snippets of the codebase inside of the docs. To
 
 The site uses Discord for admin messages and Resend for automated hunt emails. Discord message templates are written inline using format strings (example below). Email templates are located in `src/lib/email-template.tsx`.
 
-```ts file=src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts:228-232
+```ts file=src/app/(hunt)/puzzle/components/puzzle/guess/actions.ts:191-195
 // Message the guess channel
 const guessMessage = `🧩 **Guess** by [${teamId}](${HUNT_URL}/team/${teamId}) on [${puzzleId}](${HUNT_URL}/puzzle/${puzzleId} ): \`${normalizedGuess}\` [${isCorrect ? (solveType === "guess" ? "✓" : "**E** → ✓") : "✕"}]`;
 notifications.push(sendBotMessage(guessMessage, "guess"));

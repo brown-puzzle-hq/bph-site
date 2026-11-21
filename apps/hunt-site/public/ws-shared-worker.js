@@ -1,5 +1,12 @@
+/** Ports are tracked with liveness and whether their tab wants the socket.
+ * A tab that is closed without sending DISCONNECT cannot be detected directly,
+ * so ports are swept with a periodic ping and reaped when they stop answering.
+ */
+const PING_INTERVAL = 30_000;
+const MISSED_PINGS_BEFORE_REAP = 2;
+
 const state = {
-  ports: new Set(),
+  ports: new Map(),
   socket: null,
   wsServer: null,
   protocol: null,
@@ -15,16 +22,41 @@ const WS_CONNECTED_MESSAGE = JSON.stringify({ kind: "__WS_CONNECTED" });
 function sendToPort(port, message) {
   try {
     port.postMessage(message);
+    return true;
   } catch {
-    // Ignore disconnected ports.
+    // The port is gone. Reap it so it stops holding the socket open.
+    state.ports.delete(port);
+    return false;
   }
 }
 
 function broadcast(message) {
-  for (const port of state.ports) {
+  for (const port of [...state.ports.keys()]) {
     sendToPort(port, message);
   }
 }
+
+/** True when at least one connected tab wants the socket. */
+function hasActivePort() {
+  for (const entry of state.ports.values()) {
+    if (entry.active) return true;
+  }
+  return false;
+}
+
+function sweepPorts() {
+  for (const [port, entry] of [...state.ports.entries()]) {
+    if (entry.missedPings >= MISSED_PINGS_BEFORE_REAP) {
+      state.ports.delete(port);
+      continue;
+    }
+    entry.missedPings += 1;
+    sendToPort(port, { kind: "PING" });
+  }
+  cleanupIfUnused();
+}
+
+setInterval(sweepPorts, PING_INTERVAL);
 
 function emitStatus() {
   broadcast({
@@ -39,7 +71,7 @@ function setReadyState(readyState) {
 }
 
 function cleanupIfUnused() {
-  if (state.ports.size > 0) return;
+  if (hasActivePort()) return;
   stop();
 }
 
@@ -181,15 +213,22 @@ onconnect = (event) => {
       if (wsServer) state.wsServer = wsServer;
       if (protocol) state.protocol = protocol;
       if (clientBuild) state.clientBuild = clientBuild;
-      state.ports.add(port);
+      state.ports.set(port, { active: active !== false, missedPings: 0 });
 
       sendToPort(port, { kind: "STATUS", readyState: state.readyState });
 
-      if (active === false) {
-        stop();
-      } else {
+      // One unauthenticated tab must not close the socket for the others.
+      if (hasActivePort()) {
         start();
+      } else {
+        stop();
       }
+      return;
+    }
+
+    if (kind === "PONG") {
+      const entry = state.ports.get(port);
+      if (entry) entry.missedPings = 0;
       return;
     }
 

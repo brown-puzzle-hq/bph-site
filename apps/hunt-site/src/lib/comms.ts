@@ -63,7 +63,7 @@ export async function sendBotMessage(
       const chunks = message.match(/[\s\S]{1,2000}/g);
       if (chunks) {
         for (const chunk of chunks) {
-          await fetch(webhookURL, {
+          const res = await fetch(webhookURL, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -72,10 +72,14 @@ export async function sendBotMessage(
               content: chunk,
             }),
           });
+          if (!res.ok)
+            throw new Error(
+              `Discord responded ${res.status} ${res.statusText}`,
+            );
         }
       }
     } else {
-      await fetch(webhookURL, {
+      const res = await fetch(webhookURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,6 +88,8 @@ export async function sendBotMessage(
           content: message,
         }),
       });
+      if (!res.ok)
+        throw new Error(`Discord responded ${res.status} ${res.statusText}`);
     }
   } catch (e) {
     console.error("Failed to send Discord message:", e);
@@ -130,6 +136,11 @@ export async function sendEmail(
     });
   }
 
+  if (batches.length === 0) {
+    console.warn("No email recipients after deduplication, skipping send.");
+    return;
+  }
+
   const { error } = await resend.batch.send(
     batches.map((batch) => ({
       from: `"${HUNT_NAME}" <notifications@${HUNT_DOMAIN}>`, // Dummy email
@@ -154,8 +165,6 @@ export type SocketMessage =
       puzzleName: string;
       puzzleId: string;
       solveTime: string;
-      otherTeam: string | null;
-      otherTime: string | null;
     }
   | { type: "UnlockedPuzzle"; puzzleName: string; puzzleId: string }
   | { type: "FinishedHunt" }
@@ -183,7 +192,7 @@ export async function sendToWebsocketServer(
 
   try {
     const url = new URL("/broadcast", `${protocol}//${wsServer}`);
-    await fetch(url.toString(), {
+    const res = await fetch(url.toString(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -194,6 +203,10 @@ export async function sendToWebsocketServer(
         ...msg,
       }),
     });
+    if (!res.ok)
+      throw new Error(
+        `Websocket server responded ${res.status} ${res.statusText}`,
+      );
   } catch (e) {
     console.error("Failed to send websocket message:", e);
   }

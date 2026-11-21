@@ -26,30 +26,10 @@ import { type GraphConfig } from "./page";
 import { type Team } from "@/db/types";
 import { toast } from "sonner";
 import { formatPhoneNumber } from "~/lib/team-members";
-
-const roundTextColor: Record<string, string> = {
-  business: "text-slate-600",
-  humanities: "text-red-600",
-  math: "text-blue-600",
-  "performing-arts": "text-purple-500",
-  "physical-sciences": "text-indigo-500",
-  risd: "text-lime-500",
-  "social-sciences": "text-orange-500",
-  backpack: "text-amber-400",
-  capstone: "text-green-500",
-};
-
-const roundNodeColor: Record<string, string> = {
-  business: "oklch(55.4% 0.046 257.417)",
-  humanities: "oklch(63.7% 0.237 25.331)",
-  math: "oklch(62.3% 0.214 259.815)",
-  "performing-arts": "oklch(62.7% 0.265 303.9)",
-  "physical-sciences": "oklch(58.5% 0.233 277.117)",
-  risd: "oklch(76.8% 0.233 130.85)",
-  "social-sciences": "oklch(70.5% 0.213 47.604)",
-  backpack: "oklch(87.9% 0.169 91.605)",
-  capstone: "oklch(72.3% 0.219 149.579)",
-};
+import {
+  ROUND_NODE_COLORS as roundNodeColor,
+  ROUND_TEXT_COLORS as roundTextColor,
+} from "~/config/styles";
 
 export type SearchedTeam = Omit<Team, "password"> & {
   unlocks: string[];
@@ -788,7 +768,7 @@ export default function Graph({
                                   : isUnlock
                                     ? "text-amber-500"
                                     : "text-neutral-500"
-                                : roundTextColor[round.id]
+                                : (roundTextColor[round.id] ?? "")
                             }`}
                           >
                             {puzzle}
@@ -813,7 +793,7 @@ export default function Graph({
                     metaPuzzles.includes(searchedPuzzle.puzzleId)
                       ? "font-bold"
                       : ""
-                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : roundTextColor[searchedPuzzle.roundId]}`}
+                  } ${searchedTeam ? (searchedTeam?.solves.includes(searchedPuzzle.puzzleId) ? "text-lime-600" : searchedTeam?.unlocks.includes(searchedPuzzle.puzzleId) ? "text-amber-500" : "text-neutral-500") : (roundTextColor[searchedPuzzle.roundId] ?? "")}`}
                 >
                   {searchedPuzzle.puzzleId}
                 </p>

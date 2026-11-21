@@ -1,8 +1,9 @@
 import Debug from "./Debug";
-import { MIN_SOLVE_DELAY, MAX_SOLVE_DELAY } from "~/config/server";
+import { ROUNDS } from "~/config/server";
 
 export default function Page() {
-  return (
-    <Debug minSolveDelay={MIN_SOLVE_DELAY} maxSolveDelay={MAX_SOLVE_DELAY} />
-  );
+  // The "seen" cookie is one bit per puzzle in ALL_PUZZLES order, so group the
+  // bits by round to make it readable.
+  const seenGroups = ROUNDS.map((round) => round.puzzles.length);
+  return <Debug seenGroups={seenGroups} />;
 }

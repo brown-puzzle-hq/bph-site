@@ -81,19 +81,6 @@ export const assertCanViewHint = assertCanViewPuzzle;
  * Returns a viewStatus string.
  */
 export async function canViewSolution(puzzleId: string): Promise<viewStatus> {
-  // const { error, user } = await checkPermissions({ level: "userAny" });
-  // if (error) return "not_authenticated";
-  // const { id: teamId, role } = user;
-
-  // // Made an exception for brumo in analogical-semantics
-  // if (teamId === "brumo" && puzzleId === "analogical-semantics")
-  //   return "success";
-
-  // return role === "admin" ? "success" : "not_authorized";
-
-  // NOTE: the rest of this code is unreachable
-  // Gate until solutions are written
-
   // If wrapup has released, anyone can view solutions
   if (new Date() > REMOTE.WRAPUP_TIME) return "success";
 
