@@ -31,7 +31,12 @@ import Link from "next/link";
 
 // Other
 import { insertTeam } from "./actions";
-import { IN_PERSON, INTERACTION_MODE_VALUES, HUNT_NAME } from "@/config/client";
+import {
+  IN_PERSON,
+  INTERACTION_MODE_VALUES,
+  HUNT_NAME,
+  HUNT_EMAIL,
+} from "@/config/client";
 import { serializeMembers } from "~/lib/team-members";
 import { signIn } from "next-auth/react";
 import { focusAtEnd, cn } from "~/lib/utils";
@@ -360,7 +365,7 @@ export default function RegisterForm() {
                 <FormItem>
                   <FormLabel className="flex flex-row justify-between">
                     <span className="text-main-header">
-                      Brown/RISD team members
+                      Community team members
                     </span>
                     <FormMessage className="text-error" />
                   </FormLabel>
@@ -630,11 +635,10 @@ export default function RegisterForm() {
           <FormDescription className="pt-2">
             In-person teams: please list all team members, which will be checked
             against valid government-issued ID for security reasons. Names will
-            only be visible to BPH staff and your team and will not be used for
+            only be visible to hunt staff and your team and will not be used for
             other purposes. The roster may be updated on the team profile page
             up to 24 hours before kickoff. For questions or concerns, please
-            email us at <u>brownpuzzleHQ [at] gmail [dot] com</u>.{" "}
-            <i>Press ENTER to add entries.</i>
+            email us at <u>{HUNT_EMAIL}</u>. <i>Press ENTER to add entries.</i>
           </FormDescription>
         </div>
 

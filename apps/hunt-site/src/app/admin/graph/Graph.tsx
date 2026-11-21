@@ -667,7 +667,7 @@ export default function Graph({
               {searchedTeam.interactionMode === "in-person" && (
                 <>
                   <p>
-                    <span className="font-semibold">Brown members: </span>
+                    <span className="font-semibold">Community members: </span>
                     {searchedTeam.numCommunity}
                   </p>
                   <p>

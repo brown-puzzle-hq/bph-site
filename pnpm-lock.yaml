@@ -124,6 +124,9 @@ importers:
       dotenv:
         specifier: ^17.0.1
         version: 17.0.1
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(@vercel/postgres@0.10.0)(postgres@3.4.7)
       framer-motion:
         specifier: ^11.11.17
         version: 11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -236,9 +239,6 @@ importers:
       drizzle-kit:
         specifier: ^0.31.10
         version: 0.31.10
-      drizzle-orm:
-        specifier: ^0.45.2
-        version: 0.45.2(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(@vercel/postgres@0.10.0)(postgres@3.4.7)
       eslint:
         specifier: ^8.57.1
         version: 8.57.1

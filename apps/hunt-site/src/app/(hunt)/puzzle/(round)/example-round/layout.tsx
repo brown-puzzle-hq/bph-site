@@ -2,7 +2,7 @@ import { ROUND_BACKGROUND_COLORS } from "~/config/styles";
 import { roundId, roundName } from "./data";
 
 export const metadata = {
-  title: `${roundName} - Brown Puzzlehunt`,
+  title: `${roundName} - Puzzlehunt`,
 };
 
 export default async function Layout({

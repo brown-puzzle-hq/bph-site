@@ -11,7 +11,6 @@ import type {
   feedback,
   events,
   answerTokens,
-  oneGuardNoDoors,
 } from "./schema";
 
 export type Team = InferSelectModel<typeof teams>;
@@ -25,4 +24,3 @@ export type Erratum = InferSelectModel<typeof errata>;
 export type Feedback = InferSelectModel<typeof feedback>;
 export type Event = InferSelectModel<typeof events>;
 export type AnswerToken = InferSelectModel<typeof answerTokens>;
-export type OneGuardThresholdsMet = InferSelectModel<typeof oneGuardNoDoors>;

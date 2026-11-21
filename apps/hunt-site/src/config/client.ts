@@ -1,31 +1,31 @@
 /** DO NOT PUT SENSITIVE INFORMATION IN THIS FILE */
 
-export const HUNT_NAME = "Brown Puzzlehunt";
-export const HUNT_DOMAIN = "brownpuzzlehunt.com";
+export const HUNT_NAME = "Puzzlehunt";
+export const HUNT_DOMAIN = "puzzlehunt.com";
 export const HUNT_URL = `https://www.${HUNT_DOMAIN}`;
 
 // This is for Resend, the emailing service
 // Check /src/lib/comms.ts
-export const HUNT_EMAIL = "brownpuzzlehq@gmail.com";
+export const HUNT_EMAIL = "puzzlehunt@gmail.com";
 
 /** TIMING */
 
-export const REGISTRATION_START_TIME = new Date("2026-02-18T15:00:00.000Z");
-export const REGISTRATION_END_TIME = new Date("2030-01-01T16:00:00.000Z");
+export const REGISTRATION_START_TIME = new Date("2024-11-17T17:00:00.000Z");
+export const REGISTRATION_END_TIME = new Date("2030-11-24T17:00:00Z");
 
 export const IN_PERSON = {
-  KICKOFF_DOOR_TIME: new Date("2026-04-11T15:30:00.000Z"),
-  KICKOFF_TIME: new Date("2026-04-11T16:00:00.000Z"),
-  START_TIME: new Date("2026-04-11T17:00:00.000Z"), // April 11th, 1 PM EDT
-  END_TIME: new Date("2026-04-12T23:00:00.000Z"), // April 12th, 7 PM EDT
-  WRAPUP_DOOR_TIME: new Date("2026-04-12T23:30:00.000Z"),
-  WRAPUP_TIME: new Date("2026-04-13T00:00:00Z"),
+  KICKOFF_DOOR_TIME: new Date("2024-04-12T15:30:00.000Z"),
+  KICKOFF_TIME: new Date("2024-04-12T16:00:00.000Z"),
+  START_TIME: new Date("2024-04-12T17:30:00.000Z"),
+  END_TIME: new Date("2030-04-13T23:00:00.000Z"),
+  WRAPUP_DOOR_TIME: new Date("2030-04-13T23:30:00.000Z"),
+  WRAPUP_TIME: new Date("2030-04-14T00:00:00Z"),
 };
 
 export const REMOTE = {
-  START_TIME: new Date("2026-04-18T16:00:00.000Z"), // April 18th, 12 PM EDT
-  END_TIME: new Date("2026-04-24T16:30:00.000Z"), // April 24th, 12:30 PM EDT
-  WRAPUP_TIME: new Date("2026-05-01T16:00:00.000Z"), // May 1st, 12 PM EDT
+  START_TIME: new Date("2024-04-19T16:00:00.000Z"),
+  END_TIME: new Date("2030-04-25T16:00:00.000Z"),
+  WRAPUP_TIME: new Date("2030-04-30T17:00:00.000Z"),
 };
 
 /** GUESSES */
